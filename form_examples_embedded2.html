@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>身近なフォームの例</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .intro {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .form-example {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .example-header {
+            padding: 15px 20px;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .google-header { background-color: #4285f4; }
+        .register-header { background-color: #ff9800; }
+        .contact-header { background-color: #9c27b0; }
+        
+        .example-content {
+            padding: 25px;
+        }
+        
+        /* Google検索スタイル */
+        .google-search {
+            text-align: center;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .google-logo {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #4285f4;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid #dfe1e5;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            box-sizing: border-box;
+        }
+        
+        .search-input:focus {
+            border-color: #4285f4;
+        }
+        
+        .search-button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            border: 1px solid #f8f9fa;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+            color: #3c4043;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .search-button:hover {
+            background-color: #e8eaed;
+        }
+        
+        /* 会員登録フォームスタイル */
+        .register-form {
+            max-width: 350px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+            font-size: 14px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #ff9800;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 10px 0;
+        }
+        
+        .checkbox {
+            width: 16px;
+            height: 16px;
+        }
+        
+        .submit-button {
+            width: 100%;
+            padding: 12px;
+            background-color: #ff9800;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .submit-button:hover {
+            background-color: #f57c00;
+        }
+        
+        /* お問い合わせフォームスタイル */
+        .contact-form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 80px;
+            box-sizing: border-box;
+        }
+        
+        .textarea:focus {
+            outline: none;
+            border-color: #9c27b0;
+        }
+        
+        .select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            background-color: white;
+            box-sizing: border-box;
+        }
+        
+        .select:focus {
+            outline: none;
+            border-color: #9c27b0;
+        }
+        
+        .purple-button {
+            background-color: #9c27b0;
+        }
+        
+        .purple-button:hover {
+            background-color: #7b1fa2;
+        }
+        
+        .form-note {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .note-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .summary {
+            background-color: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .summary h3 {
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="intro">
+            <h2>🌐 普段使っているフォームを見てみよう</h2>
+            <p>インターネットで毎日使っているこれらも、すべて<strong>HTMLフォーム</strong>です！</p>
+        </div>
+        
+        <!-- Google検索 -->
+        <div class="form-example">
+            <div class="example-header google-header">
+                🔍 Google検索（誰でも毎日使っている！）
+            </div>
+            
+            <div class="example-content">
+                <form class="google-search" action="https://www.google.com/search" method="get">
+                    <div class="google-logo">Google</div>
+                    <input type="text" name="q" class="search-input" placeholder="何かを検索してみてください" value="">
+                    <br>
+                    <button type="submit" class="search-button">Google 検索</button>
+                </form>
+                
+                <div class="form-note">
+                    <div class="note-title">💡 ここがポイント：</div>
+                    • <strong>method="get"</strong> → 検索結果をURLでシェアできる<br>
+                    • <strong>name="q"</strong> → Googleが検索語を受け取る名前<br>
+                    • <strong>type="text"</strong> → 自由にキーワードを入力
+                </div>
+            </div>
+        </div>
+        
+        <!-- 会員登録フォーム -->
+        <div class="form-example">
+            <div class="example-header register-header">
+                👤 会員登録（ネットショッピングでおなじみ）
+            </div>
+            
+            <div class="example-content">
+                <form class="register-form" action="#" method="post">
+                    <div class="form-group">
+                        <label class="form-label">お名前 *</label>
+                        <input type="text" name="name" class="form-input" placeholder="山田太郎" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">メールアドレス *</label>
+                        <input type="email" name="email" class="form-input" placeholder="yamada@example.com" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">パスワード *</label>
+                        <input type="password" name="password" class="form-input" placeholder="8文字以上" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">生年月日</label>
+                        <input type="date" name="birthday" class="form-input">
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" name="agree" class="checkbox" required>
+                        <label>利用規約に同意します</label>
+                    </div>
+                    
+                    <button type="submit" class="submit-button">登録する</button>
+                </form>
+                
+                <div class="form-note">
+                    <div class="note-title">💡 ここがポイント：</div>
+                    • <strong>method="post"</strong> → 個人情報を安全に送信<br>
+                    • <strong>type="email"</strong> → メール形式を自動チェック<br>
+                    • <strong>type="password"</strong> → 入力文字を●●●で隠す<br>
+                    • <strong>required</strong> → 必須入力項目の指定
+                </div>
+            </div>
+        </div>
+        
+        <!-- お問い合わせフォーム -->
+        <div class="form-example">
+            <div class="example-header contact-header">
+                📧 お問い合わせ（企業サイトでよく見る）
+            </div>
+            
+            <div class="example-content">
+                <form class="contact-form" action="#" method="post">
+                    <div class="form-group">
+                        <label class="form-label">お名前 *</label>
+                        <input type="text" name="name" class="form-input" placeholder="お名前をご入力ください" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">メールアドレス *</label>
+                        <input type="email" name="email" class="form-input" placeholder="返信先メールアドレス" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">お問い合わせ種別</label>
+                        <select name="category" class="select">
+                            <option value="">選択してください</option>
+                            <option value="product">商品について</option>
+                            <option value="shipping">配送について</option>
+                            <option value="return">返品・交換について</option>
+                            <option value="other">その他</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">お問い合わせ内容 *</label>
+                        <textarea name="message" class="textarea" placeholder="詳しい内容をお書きください" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-button purple-button">送信する</button>
+                </form>
+                
+                <div class="form-note">
+                    <div class="note-title">💡 ここがポイント：</div>
+                    • <strong>textarea</strong> → 長い文章を入力できる<br>
+                    • <strong>select</strong> → あらかじめ用意した選択肢から選ぶ<br>
+                    • <strong>placeholder</strong> → 入力ヒントでユーザーをサポート
+                </div>
+            </div>
+        </div>
+        
+        <div class="summary">
+            <h3>🎯 これらすべてHTMLの技術で作られています！</h3>
+            <p>今から学ぶ <strong>&lt;form&gt;</strong>、<strong>&lt;input&gt;</strong> などの要素で、<br>
+            あなたもこれと同じフォームが作れるようになります。</p>
+        </div>
+    </div>
+</body>
+</html>
