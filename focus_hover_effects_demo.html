@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>フォーカス状態とhover効果</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .intro {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .effects-section {
+            display: grid;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .effect-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid #007bff;
+        }
+        
+        .effect-title {
+            background-color: #007bff;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        
+        .hover-title {
+            background-color: #17a2b8;
+        }
+        
+        .focus-title {
+            background-color: #28a745;
+        }
+        
+        .combined-title {
+            background-color: #6f42c1;
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+        
+        .code-section {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+        }
+        
+        .code-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #495057;
+            font-size: 14px;
+        }
+        
+        .code-block {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            padding: 12px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            margin-bottom: 10px;
+        }
+        
+        .highlight-hover {
+            background-color: #17a2b8;
+            color: white;
+            padding: 1px 3px;
+            border-radius: 2px;
+        }
+        
+        .highlight-focus {
+            background-color: #28a745;
+            color: white;
+            padding: 1px 3px;
+            border-radius: 2px;
+        }
+        
+        .highlight-transition {
+            background-color: #ffc107;
+            color: #212529;
+            padding: 1px 3px;
+            border-radius: 2px;
+        }
+        
+        .demo-section {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 6px;
+            border: 2px dashed #dee2e6;
+        }
+        
+        .demo-section-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #495057;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        .instructions {
+            background-color: #e3f2fd;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            color: #1565c0;
+            text-align: center;
+        }
+        
+        /* hover効果のデモ */
+        .hover-demo-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            font-family: inherit;
+            background-color: white;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .hover-demo-input:hover {
+            border-color: #17a2b8;
+            background-color: #f0f8ff;
+            transform: scale(1.02);
+        }
+        
+        /* focus効果のデモ */
+        .focus-demo-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            font-family: inherit;
+            background-color: white;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .focus-demo-input:focus {
+            outline: none;
+            border-color: #28a745;
+            box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.25);
+            background-color: #f8fff8;
+        }
+        
+        /* 組み合わせデモ */
+        .combined-demo-form {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .combined-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            font-family: inherit;
+            background-color: white;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+        
+        .combined-input:hover {
+            border-color: #999;
+            background-color: #f9f9f9;
+        }
+        
+        .combined-input:focus {
+            outline: none;
+            border-color: #6f42c1;
+            box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.25);
+            background-color: #faf8ff;
+        }
+        
+        .combined-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            font-family: inherit;
+            background-color: white;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .combined-textarea:hover {
+            border-color: #999;
+            background-color: #f9f9f9;
+        }
+        
+        .combined-textarea:focus {
+            outline: none;
+            border-color: #6f42c1;
+            box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.25);
+            background-color: #faf8ff;
+        }
+        
+        .state-indicator {
+            margin-top: 10px;
+            padding: 8px;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .state-normal {
+            background-color: #e9ecef;
+            color: #495057;
+        }
+        
+        .state-hover {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .state-focus {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .benefits-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        
+        .benefits-title {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .benefit-card {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .benefit-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .benefit-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        
+        .benefit-desc {
+            font-size: 14px;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+        
+        .comparison-table {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .table-title {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .comparison-header {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .comparison-cell {
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .cell-normal {
+            border-left: 4px solid #6c757d;
+        }
+        
+        .cell-hover {
+            border-left: 4px solid #17a2b8;
+        }
+        
+        .cell-focus {
+            border-left: 4px solid #28a745;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="intro">
+            <h2>✨ フォーカス・hover効果でユーザー体験を向上</h2>
+            <p>ユーザーの操作に対する<strong>視覚的フィードバック</strong>が使いやすさを大きく左右します</p>
+        </div>
+        
+        <div class="effects-section">
+            <!-- hover効果 -->
+            <div class="effect-card">
+                <div class="effect-title hover-title">🖱️ hover効果（マウスを乗せた時）</div>
+                
+                <div class="demo-grid">
+                    <div class="code-section">
+                        <div class="code-title">CSSコード</div>
+                        <div class="code-block">
+.form-input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+  <span class="highlight-transition">transition: all 0.3s ease;</span>
+}
+
+.form-input<span class="highlight-hover">:hover</span> {
+  <span class="highlight-hover">border-color: #17a2b8;</span>
+  <span class="highlight-hover">background-color: #f0f8ff;</span>
+  <span class="highlight-hover">transform: scale(1.02);</span>
+}
+                        </div>
+                        
+                        <div style="font-size: 13px; color: #666; margin-top: 10px;">
+                            <strong>効果：</strong><br>
+                            • 枠線の色が変わる<br>
+                            • 背景色が薄い青に<br>
+                            • わずかに拡大してアクティブ感を演出
+                        </div>
+                    </div>
+                    
+                    <div class="demo-section">
+                        <div class="demo-section-title">実際にマウスを乗せてみてください</div>
+                        <div class="instructions">
+                            👆 入力欄にマウスカーソルを乗せてください
+                        </div>
+                        
+                        <input type="text" class="hover-demo-input" placeholder="マウスを乗せてみてください">
+                        <input type="email" class="hover-demo-input" placeholder="こちらにもマウスを乗せてみてください">
+                        
+                        <div class="state-indicator state-normal" id="hoverState">
+                            状態：通常
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- focus効果 -->
+            <div class="effect-card">
+                <div class="effect-title focus-title">🎯 focus効果（クリック・入力時）</div>
+                
+                <div class="demo-grid">
+                    <div class="code-section">
+                        <div class="code-title">CSSコード</div>
+                        <div class="code-block">
+.form-input<span class="highlight-focus">:focus</span> {
+  <span class="highlight-focus">outline: none;</span>
+  <span class="highlight-focus">border-color: #28a745;</span>
+  <span class="highlight-focus">box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.25);</span>
+  <span class="highlight-focus">background-color: #f8fff8;</span>
+}
+                        </div>
+                        
+                        <div style="font-size: 13px; color: #666; margin-top: 10px;">
+                            <strong>効果：</strong><br>
+                            • ブラウザ標準の青い枠線を削除<br>
+                            • 緑色の枠線に変更<br>
+                            • 光る効果（box-shadow）を追加<br>
+                            • 背景色を薄い緑に
+                        </div>
+                    </div>
+                    
+                    <div class="demo-section">
+                        <div class="demo-section-title">クリックして入力してみてください</div>
+                        <div class="instructions">
+                            👆 入力欄をクリックして文字を入力してください
+                        </div>
+                        
+                        <input type="text" class="focus-demo-input" placeholder="クリックして入力してください">
+                        <input type="email" class="focus-demo-input" placeholder="こちらにも入力してみてください">
+                        
+                        <div class="state-indicator state-normal" id="focusState">
+                            状態：通常
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 組み合わせ効果 -->
+            <div class="effect-card">
+                <div class="effect-title combined-title">🎨 hover + focus の組み合わせ</div>
+                
+                <div class="demo-grid">
+                    <div class="code-section">
+                        <div class="code-title">完全なCSSコード</div>
+                        <div class="code-block">
+.form-input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+  font-family: inherit;
+  background-color: white;
+  box-sizing: border-box;
+  <span class="highlight-transition">transition: all 0.3s ease;</span>
+}
+
+/* hover状態 */
+.form-input:hover {
+  border-color: #999;
+  background-color: #f9f9f9;
+}
+
+/* focus状態（hoverより優先） */
+.form-input:focus {
+  outline: none;
+  border-color: #6f42c1;
+  box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.25);
+  background-color: #faf8ff;
+}
+                        </div>
+                    </div>
+                    
+                    <div class="demo-section">
+                        <div class="demo-section-title">実用的なフォーム例</div>
+                        <div class="instructions">
+                            👆 マウスを乗せたり、クリックして入力してみてください
+                        </div>
+                        
+                        <form class="combined-demo-form">
+                            <div class="form-group">
+                                <label class="form-label">お名前</label>
+                                <input type="text" class="combined-input" placeholder="例：山田太郎">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">メールアドレス</label>
+                                <input type="email" class="combined-input" placeholder="例：yamada@example.com">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">メッセージ</label>
+                                <textarea class="combined-textarea" placeholder="メッセージをお書きください"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="comparison-table">
+            <div class="table-title">📊 3つの状態の比較</div>
+            
+            <div class="comparison-grid">
+                <div class="comparison-header">通常状態</div>
+                <div class="comparison-header">hover状態</div>
+                <div class="comparison-header">focus状態</div>
+                
+                <div class="comparison-cell cell-normal">
+                    <strong>外観：</strong><br>
+                    • グレーの枠線<br>
+                    • 白い背景<br>
+                    • 標準サイズ
+                </div>
+                
+                <div class="comparison-cell cell-hover">
+                    <strong>外観：</strong><br>
+                    • 濃いグレーの枠線<br>
+                    • 薄いグレーの背景<br>
+                    • マウスカーソルが指に
+                </div>
+                
+                <div class="comparison-cell cell-focus">
+                    <strong>外観：</strong><br>
+                    • 紫色の枠線<br>
+                    • 薄い紫の背景<br>
+                    • 光る効果（box-shadow）
+                </div>
+                
+                <div class="comparison-cell cell-normal">
+                    <strong>ユーザー体験：</strong><br>
+                    何もフィードバックがない
+                </div>
+                
+                <div class="comparison-cell cell-hover">
+                    <strong>ユーザー体験：</strong><br>
+                    「クリックできる」ことが分かる
+                </div>
+                
+                <div class="comparison-cell cell-focus">
+                    <strong>ユーザー体験：</strong><br>
+                    「入力中」であることが明確
+                </div>
+            </div>
+        </div>
+        
+        <div class="benefits-section">
+            <div class="benefits-title">🌟 hover・focus効果がもたらすメリット</div>
+            
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">👁️</div>
+                    <div class="benefit-title">視覚的フィードバック</div>
+                    <div class="benefit-desc">
+                        ユーザーの操作に対して即座に反応し、インタラクティブな体験を提供
+                    </div>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">🎯</div>
+                    <div class="benefit-title">使いやすさの向上</div>
+                    <div class="benefit-desc">
+                        現在操作中の項目が明確になり、入力ミスやフォーカスの迷いを減少
+                    </div>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">💫</div>
+                    <div class="benefit-title">プロフェッショナルな印象</div>
+                    <div class="benefit-desc">
+                        細かな配慮が感じられ、品質の高いサービスという印象を与える
+                    </div>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">🚀</div>
+                    <div class="benefit-title">エンゲージメント向上</div>
+                    <div class="benefit-desc">
+                        ユーザーがフォームに集中しやすくなり、完了率が向上する
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 25px; font-size: 16px;">
+                <strong>わずか数行のCSSで、</strong><br>
+                <strong>ユーザー体験が劇的に改善されます！</strong>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // hover状態の表示
+        const hoverInputs = document.querySelectorAll('.hover-demo-input');
+        const hoverState = document.getElementById('hoverState');
+        
+        hoverInputs.forEach(input => {
+            input.addEventListener('mouseenter', () => {
+                hoverState.textContent = '状態：hover中';
+                hoverState.className = 'state-indicator state-hover';
+            });
+            
+            input.addEventListener('mouseleave', () => {
+                hoverState.textContent = '状態：通常';
+                hoverState.className = 'state-indicator state-normal';
+            });
+        });
+        
+        // focus状態の表示
+        const focusInputs = document.querySelectorAll('.focus-demo-input');
+        const focusState = document.getElementById('focusState');
+        
+        focusInputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                focusState.textContent = '状態：focus中（入力中）';
+                focusState.className = 'state-indicator state-focus';
+            });
+            
+            input.addEventListener('blur', () => {
+                focusState.textContent = '状態：通常';
+                focusState.className = 'state-indicator state-normal';
+            });
+        });
+    </script>
+</body>
+</html>
