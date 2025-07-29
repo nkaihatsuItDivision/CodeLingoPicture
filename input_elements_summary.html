@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>フォーム要素まとめ - インタラクティブ学習</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 40px;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            font-size: 36px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .intro-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            text-align: center;
+            color: white;
+        }
+        
+        .intro-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .filter-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .filter-btn.active {
+            background: white;
+            color: #667eea;
+            border-color: white;
+        }
+        
+        .elements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .element-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-left: 6px solid;
+            transition: all 0.3s ease;
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .element-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        .element-card.hidden {
+            opacity: 0;
+            transform: scale(0.8);
+            pointer-events: none;
+        }
+        
+        .password-card { border-left-color: #e74c3c; }
+        .number-card { border-left-color: #3498db; }
+        .date-card { border-left-color: #9b59b6; }
+        .checkbox-card { border-left-color: #27ae60; }
+        .radio-card { border-left-color: #f39c12; }
+        .tel-card { border-left-color: #1abc9c; }
+        .textarea-card { border-left-color: #34495e; }
+        .select-card { border-left-color: #e67e22; }
+        .label-card { border-left-color: #95a5a6; }
+        
+        .element-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .element-icon {
+            font-size: 36px;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+            color: white;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .password-icon { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .number-icon { background: linear-gradient(135deg, #3498db, #2980b9); }
+        .date-icon { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+        .checkbox-icon { background: linear-gradient(135deg, #27ae60, #229954); }
+        .radio-icon { background: linear-gradient(135deg, #f39c12, #e67e22); }
+        .tel-icon { background: linear-gradient(135deg, #1abc9c, #16a085); }
+        .textarea-icon { background: linear-gradient(135deg, #34495e, #2c3e50); }
+        .select-icon { background: linear-gradient(135deg, #e67e22, #d35400); }
+        .label-icon { background: linear-gradient(135deg, #95a5a6, #7f8c8d); }
+        
+        .element-title {
+            flex: 1;
+        }
+        
+        .element-name {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .element-type {
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            color: #666;
+            background: #f8f9fa;
+            padding: 4px 8px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+        
+        .demo-section {
+            margin-bottom: 25px;
+        }
+        
+        .demo-label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #495057;
+            display: block;
+        }
+        
+        .demo-input, .demo-textarea, .demo-select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ced4da;
+            border-radius: 8px;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+        
+        .demo-input:focus, .demo-textarea:focus, .demo-select:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+            transform: scale(1.02);
+        }
+        
+        .demo-textarea {
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+        
+        .demo-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .demo-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .demo-option:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .demo-checkbox, .demo-radio {
+            transform: scale(1.3);
+        }
+        
+        .features-list {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        
+        .features-title {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 12px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .features-list ul {
+            margin: 0;
+            padding-left: 20px;
+            font-size: 14px;
+        }
+        
+        .features-list li {
+            margin-bottom: 6px;
+            color: #666;
+        }
+        
+        .usage-examples {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+        
+        .usage-title {
+            font-weight: bold;
+            color: #1976d2;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .usage-text {
+            font-size: 13px;
+            color: #1565c0;
+        }
+        
+        .try-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 15px;
+        }
+        
+        .try-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .decision-tree {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .tree-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        
+        .decision-flow {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .decision-card {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .decision-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .decision-question {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .decision-answer {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .decision-element {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-weight: bold;
+        }
+        
+        .quiz-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 40px;
+            color: white;
+        }
+        
+        .quiz-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+        
+        .quiz-question {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .quiz-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .quiz-option {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .quiz-option:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+        
+        .quiz-option.correct {
+            background: #27ae60;
+            animation: correct 0.5s ease;
+        }
+        
+        .quiz-option.incorrect {
+            background: #e74c3c;
+            animation: incorrect 0.5s ease;
+        }
+        
+        @keyframes correct {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes incorrect {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+            100% { transform: translateX(0); }
+        }
+        
+        .quiz-result {
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .final-message {
+            background: linear-gradient(135deg, #fd79a8, #fdcb6e);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-top: 40px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .final-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .final-content {
+            font-size: 18px;
+            line-height: 1.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 フォーム要素まとめ - インタラクティブ学習</h1>
+        
+        <div class="intro-section">
+            <div class="intro-title">学習した要素を実際に触って復習しよう！</div>
+            <div>各要素をクリックして動作を確認し、知識を定着させましょう</div>
+        </div>
+        
+        <div class="filter-section">
+            <div style="color: white; font-weight: bold; margin-bottom: 15px;">カテゴリで絞り込み:</div>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">すべて表示</button>
+                <button class="filter-btn" data-filter="input">input要素</button>
+                <button class="filter-btn" data-filter="other">その他要素</button>
+                <button class="filter-btn" data-filter="security">セキュリティ関連</button>
+                <button class="filter-btn" data-filter="selection">選択要素</button>
+            </div>
+        </div>
+        
+        <div class="elements-grid">
+            <!-- Password -->
+            <div class="element-card password-card" data-category="input security">
+                <div class="element-header">
+                    <div class="element-icon password-icon">🔒</div>
+                    <div class="element-title">
+                        <div class="element-name">パスワード入力</div>
+                        <div class="element-type">type="password"</div>
+                    </div>
+                </div>
+                
+                <div class="demo-section">
+                    <label class="demo-label">パスワードを入力してみてください:</label>
+                    <input type="password" class="demo-input" placeholder="安全に隠されます">
+                </div>
+                
+                <div class="features-list">
+                    <div class="features-title">✨ 特徴:</div>
+                    <ul>
+                        <li>入力文字が●や•で隠される</li>
+                        <li>セキュリティを保護</li>
+                        <li>他人に見られる心配なし</li>
+                    </ul>
+                </div>
+                
+                <div class="usage-examples">
+                    <div class="usage-title">🎯 使用場面:</div>
+                    <div class="usage-text">パスワード、PIN番号、秘密の質問の答えなど</div>
+                </div>
+                
+                <button class="try-button" onclick="demoPassword()">パスワード入力を体験</button>
+            </div>
+            
+            <!-- Number -->
+            <div class="element-card number-card" data-category="input">
+                <div class="element-header">
+                    <div class="element-icon number-icon">🔢</div>
+                    <div class="element-title">
+                        <div class="element-name">数値入力</div>
+                        <div class="element-type">type="number"</div>
+                    </div>
+                </div>
+                
+                <div class="demo-section">
+                    <label class="demo-label">年齢を入力してみてください:</label>
+                    <input type="number" class="demo-input" min="0" max="120" placeholder="例: 25">
+                </div>
+                
+                <div class="features-list">
+                    <div class="features-title">✨ 特徴:</div>
+                    <ul>
+                        <li>数字以外の入力を制限</li>
+                        <li>スマホで数字キーボード表示</li>
+                        <li>min/max属性で範囲指定可</li>
+                    </ul>
+                </div>
+                
+                <div class="usage-examples">
+                    <div class="usage-title">🎯 使用場面:</div>
+                    <div class="usage-text">年齢、個数、価格、評点など</div>
+                </div>
+                
+                <button class="try-button" onclick="demoNumber()">数値入力を体験</button>
+            </div>
+            
+            <!-- Date -->
+            <div class="element-card date-card" data-category="input">
+                <div class="element-header">
+                    <div class="element-icon date-icon">📅</div>
+                    <div class="element-title">
+                        <div class="element-name">日付入力</div>
+                        <div class="element-type">type="date"</div>
+                    </div>
+                </div>
+                
+                <div class="demo-section">
+                    <label class="demo-label">生年月日を選択してみてください:</label>
+                    <input type="date" class="demo-input">
+                </div>
+                
+                <div class="features-list">
+                    <div class="features-title">✨ 特徴:</div>
+                    <ul>
+                        <li>カレンダー表示で選択</li>
+                        <li>YYYY-MM-DD形式で統一</li>
+                        <li>無効な日付を自動防止</li>
+                    </ul>
+                </div>
+                
+                <div class="usage-examples">
+                    <div class="usage-title">🎯 使用場面:</div>
+                    <div class="usage-text">生年月日、予約日、開始日・終了日など</div>
+                </div>
+                
+                <button class="try-button" onclick="demoDate()">日付選択を体験</button>
+            </div>
+            
+            <!-- Checkbox -->
+            <div class="element-card checkbox-card" data-category="input selection">
+                <div class="element-header">
+                    <div class="element-icon checkbox-icon">☑️</div>
+                    <div class="element-title">
+                        <div class="element-name">チェックボックス</div>
+                        <div class="element-type">type="checkbox"</div>
+                    </div>
+                </div>
+                
+                <div class="demo-section">
+                    <div class="demo-label">好きなものを選んでください（複数選択可）:</div>
+                    <div class="demo-options">
+                        <div class="demo-option">
+                            <input type="checkbox" class="demo-checkbox" id="cb1">
+                            <label for="cb1">🍜 ラーメン</label>
+                        </div>
+                        <div class="demo-option">
+                            <input type="checkbox" class="demo-checkbox" id="cb2">
+                            <label for="cb2">🍣 寿司</label>
+                        </div>
+                        <div class="demo-option">
+                            <input type="checkbox" class="demo-checkbox" id="cb3">
+                            <label for="cb3">🍛 カレー</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="features-list">
+                    <div class="features-title">✨ 特徴:</div>
+                    <ul>
+                        <li>複数選択可能</li>
+                        <li>0個〜全部まで選択OK</li>
+                        <li>独立した選択肢</li>
+                    </ul>
+                </div>
+                
+                <div class="usage-examples">
+                    <div class="usage-title">🎯 使用場面:</div>
+                    <div class="usage-text">趣味、興味分野、利用規約同意、オプション選択など</div>
+                </div>
+                
+                <button class="try-button" onclick="demoCheckbox()">チェックボックスを体験</button>
+            </div>
+            
+            <!-- Radio -->
+            <div class="element-card radio-card" data-category="input selection">
+                <div class="element-header">
+                    <div class="element-icon radio-icon">🔘</div>
+                    <div class="element-title">
+                        <div class="element-name">ラジオボタン</div>
+                        <div class="element-type">type="radio"</div>
+                    </div>
+                </div>
+                
+                <div class="demo-section">
+                    <div class="demo-label">性別を選択してください（1つだけ）:</div>
+                    <div class="demo-options">
+                        <div class="demo-option">
+                            <input type="radio" name="demo-gender" class="demo-radio" id="r1">
+                            <label for="r1">👨 男性</label>
+                        </div>
+                        <div class="demo-option">
+                            <input type="radio" name="demo-gender" class="demo-radio" id="r2">
+                            <label for="r2">👩 女性</label>
+                        </div>
+                        <div class="demo-option">
+                            <input type="radio" name="demo-gender" class="demo-radio" id="r3">
+                            <label for="r3">🏳️‍⚧️ その他</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="features-list">
+                    <div class="features-title">✨ 特徴:</div>
+                    <ul>
+                        <li>1つだけ選択可能</li>
+                        <li>同じname属性でグループ化</li>
+                        <li>相互排他的な選択肢</li>
+                    </ul>
+                </div>
+                
+                <div class="usage-examples">
+                    <div class="usage-title">🎯 使用場面:</div>
+                    <div class="usage-text">性別、支払い方法、満足度、商品サイズなど</div>
+                </div>
+                
+                <button class="try-button" onclick="demoRadio()">ラジオボタンを体験</button>
+            </div>
+            
+            <!-- Tel -->
+            <div class="element-card tel-card" data-category="input">
+                <div class="element-header">
+                    <div class="element-icon tel-icon">📞</div>
+                    <div class="element-title">
+                        <div class="element-name">電話番号入力</div>
+                        <div class="element-type">type="tel"</div>
+                    </div>
+                </div>
+                
+                <div class="demo-section">
+                    <label class="demo-label">電話番号を入力してみてください:</label>
+                    <input type="tel" class="demo-input" placeholder="090-1234-5678">
+                </div>
+                
+                <div class="features-list">
+                    <div class="features-title">✨ 特徴:</div>
+                    <ul>
+                        <li>スマホで数字キーボード表示</li>
+                        <li>ハイフンも入力可能</li>
+                        <li>通話機能との連携</li>
+                    </ul>
+                </div>
+                
+                <div class="usage-examples">
+                    <div class="usage-title">🎯 使用場面:</div>
+                    <div class="usage-text">電話番号、FAX番号、緊急連絡先など</div>
+                </div>
+                
+                <button class="try-button" onclick="demoTel()">電話番号入力を体験</button>
+            </div>
+            
+            <!-- Textarea -->
+            <div class="element-card textarea-card" data-category="other">
+                <div class="element-header">
+                    <div class="element-icon textarea-icon">📝</div>
+                    <div class="element-title">
+                        <div class="element-name">複数行テキスト</div>
+                        <div class="element-type">textarea</div>
+                    </div>
+                </div>
+                
+                <div class="demo-section">
+                    <label class="demo-label">お問い合わせ内容を入力してみてください:</label>
+                    <textarea class="demo-textarea" placeholder="詳しい内容をお書きください"></textarea>
+                </div>
+                
+                <div class="features-list">
+                    <div class="features-title">✨ 特徴:</div>
+                    <ul>
+                        <li>複数行のテキスト入力</li>
+                        <li>サイズ調整可能</li>
+                        <li>改行を含む文章対応</li>
+                    </ul>
+                </div>
+                
+                <div class="usage-examples">
+                    <div class="usage-title">🎯 使用場面:</div>
+                    <div class="usage-text">お問い合わせ内容、感想、コメント、説明文など</div>
+                </div>
+                
+                <button class="try-button" onclick="demoTextarea()">テキストエリアを体験</button>
+            </div>
+            
+            <!-- Select -->
+            <div class="element-card select-card" data-category="other selection">
+                <div class="element-header">
+                    <div class="element-icon select-icon">📋</div>
+                    <div class="element-title">
+                        <div class="element-name">プルダウン選択</div>
+                        <div class="element-type">select</div>
+                    </div>
+                </div>
+                
+                <div class="demo-section">
+                    <label class="demo-label">都道府県を選択してみてください:</label>
+                    <select class="demo-select">
+                        <option value="">都道府県を選択</option>
+                        <option value="tokyo">東京都</option>
+                        <option value="osaka">大阪府</option>
+                        <option value="kyoto">京都府</option>
+                        <option value="aichi">愛知県</option>
+                    </select>
+                </div>
+                
+                <div class="features-list">
+                    <div class="features-title">✨ 特徴:</div>
+                    <ul>
+                        <li>省スペースで多くの選択肢</li>
+                        <li>1つだけ選択可能</li>
+                        <li>決まった選択肢から選ぶ</li>
+                    </ul>
+                </div>
+                
+                <div class="usage-examples">
+                    <div class="usage-title">🎯 使用場面:</div>
+                    <div class="usage-text">都道府県、職業、年代など選択肢が多い場合</div>
+                </div>
+                
+                <button class="try-button" onclick="demoSelect()">プルダウンを体験</button>
+            </div>
+            
+            <!-- Label -->
+            <div class="element-card label-card" data-category="other">
+                <div class="element-header">
+                    <div class="element-icon label-icon">🏷️</div>
+                    <div class="element-title">
+                        <div class="element-name">ラベル</div>
+                        <div class="element-type">label</div>
+                    </div>
+                </div>
+                
+                <div class="demo-section">
+                    <label class="demo-label" for="demo-label-input">このラベルをクリックしてみてください:</label>
+                    <input type="text" id="demo-label-input" class="demo-input" placeholder="ラベルクリックでフォーカス">
+                </div>
+                
+                <div class="features-list">
+                    <div class="features-title">✨ 特徴:</div>
+                    <ul>
+                        <li>クリック範囲を拡大</li>
+                        <li>アクセシビリティ向上</li>
+                        <li>ユーザビリティ改善</li>
+                    </ul>
+                </div>
+                
+                <div class="usage-examples">
+                    <div class="usage-title">🎯 使用場面:</div>
+                    <div class="usage-text">すべてのフォーム要素に必須</div>
+                </div>
+                
+                <button class="try-button" onclick="demoLabel()">ラベルの効果を体験</button>
+            </div>
+        </div>
+        
+        <!-- 判断基準 -->
+        <div class="decision-tree">
+            <div class="tree-title">🎯 要素選択の判断基準</div>
+            
+            <div class="decision-flow">
+                <div class="decision-card">
+                    <div class="decision-question">機密情報ですか？</div>
+                    <div class="decision-answer">YES ↓</div>
+                    <div class="decision-element">type="password"</div>
+                </div>
+                
+                <div class="decision-card">
+                    <div class="decision-question">数値のみですか？</div>
+                    <div class="decision-answer">YES ↓</div>
+                    <div class="decision-element">type="number"</div>
+                </div>
+                
+                <div class="decision-card">
+                    <div class="decision-question">日付ですか？</div>
+                    <div class="decision-answer">YES ↓</div>
+                    <div class="decision-element">type="date"</div>
+                </div>
+                
+                <div class="decision-card">
+                    <div class="decision-question">複数選択？</div>
+                    <div class="decision-answer">YES ↓</div>
+                    <div class="decision-element">type="checkbox"</div>
+                </div>
+                
+                <div class="decision-card">
+                    <div class="decision-question">選択肢が2-4個？</div>
+                    <div class="decision-answer">YES ↓</div>
+                    <div class="decision-element">type="radio"</div>
+                </div>
+                
+                <div class="decision-card">
+                    <div class="decision-question">選択肢が5個以上？</div>
+                    <div class="decision-answer">YES ↓</div>
+                    <div class="decision-element">select</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- クイズセクション -->
+        <div class="quiz-section">
+            <div class="quiz-title">🧩 理解度チェッククイズ</div>
+            
+            <div class="quiz-question" id="quizQuestion">
+                <div style="font-size: 20px; font-weight: bold; margin-bottom: 15px;">
+                    問題: パスワード入力に適した要素は？
+                </div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">type="text"</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, true)">type="password"</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">type="email"</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">type="secret"</div>
+                </div>
+            </div>
+            
+            <div class="quiz-result" id="quizResult" style="display: none;"></div>
+        </div>
+        
+        <!-- 最終メッセージ -->
+        <div class="final-message">
+            <div class="final-title">🎊 学習完了おめでとうございます！</div>
+            <div class="final-content">
+                フォーム要素の基本をマスターできました！<br>
+                適切な要素を選ぶことで、<strong>ユーザーにとって使いやすく、</strong><br>
+                <strong>開発者にとって保守しやすい</strong>フォームが作れます。<br><br>
+                次は実際にプロジェクトで活用してみましょう！🚀
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentQuizIndex = 0;
+        const quizQuestions = [
+            {
+                question: "パスワード入力に適した要素は？",
+                options: ["type=\"text\"", "type=\"password\"", "type=\"email\"", "type=\"secret\""],
+                correct: 1,
+                explanation: "type=\"password\"が正解！入力内容を安全に隠します。"
+            },
+            {
+                question: "複数選択が必要な場合は？",
+                options: ["type=\"radio\"", "type=\"checkbox\"", "select", "textarea"],
+                correct: 1,
+                explanation: "type=\"checkbox\"が正解！複数の選択肢を同時に選べます。"
+            },
+            {
+                question: "都道府県選択に最適な要素は？",
+                options: ["type=\"radio\"", "type=\"checkbox\"", "select", "textarea"],
+                correct: 2,
+                explanation: "selectが正解！47都道府県という多くの選択肢を省スペースで表示できます。"
+            }
+        ];
+
+        // フィルター機能
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const filter = this.dataset.filter;
+                const cards = document.querySelectorAll('.element-card');
+                
+                cards.forEach(card => {
+                    if (filter === 'all') {
+                        card.classList.remove('hidden');
+                    } else {
+                        const categories = card.dataset.category.split(' ');
+                        if (categories.includes(filter)) {
+                            card.classList.remove('hidden');
+                        } else {
+                            card.classList.add('hidden');
+                        }
+                    }
+                });
+            });
+        });
+
+        // デモ機能
+        function demoPassword() {
+            alert('🔒 パスワード入力では、入力内容が●や•で隠されます。\nセキュリティを保護するため、重要な情報には必ずtype="password"を使用しましょう！');
+        }
+
+        function demoNumber() {
+            const age = prompt('年齢を入力してください（数字のみ）:');
+            if (age && !isNaN(age)) {
+                alert(`✅ 入力された年齢: ${age}歳\ntype="number"により数値のみが入力されました！`);
+            } else {
+                alert('❌ 数値以外が入力されました。type="number"では自動的に検証されます！');
+            }
+        }
+
+        function demoDate() {
+            alert('📅 実際のフォームでは、この要素をクリックするとカレンダーが表示されます。\nYYYY-MM-DD形式で統一され、無効な日付は自動的に防がれます！');
+        }
+
+        function demoCheckbox() {
+            const checkboxes = document.querySelectorAll('#cb1, #cb2, #cb3');
+            checkboxes.forEach(cb => cb.checked = Math.random() > 0.5);
+            alert('☑️ チェックボックスでは複数の項目を同時に選択できます！\n上のデモでランダムに選択しました。');
+        }
+
+        function demoRadio() {
+            const radios = document.querySelectorAll('[name="demo-gender"]');
+            const randomIndex = Math.floor(Math.random() * radios.length);
+            radios[randomIndex].checked = true;
+            alert('🔘 ラジオボタンでは1つの項目のみ選択できます！\n他の項目を選ぶと、前の選択は自動的に解除されます。');
+        }
+
+        function demoTel() {
+            alert('📞 type="tel"はスマートフォンで数字キーボードが表示されます。\n電話番号入力に最適化されています！');
+        }
+
+        function demoTextarea() {
+            const textarea = document.querySelector('.demo-textarea');
+            textarea.value = '複数行のテキストを入力できます。\n改行も含めて長い文章を\n書くことができます！';
+            alert('📝 textareaでは複数行の長いテキストを入力できます！\n右下をドラッグしてサイズ調整も可能です。');
+        }
+
+        function demoSelect() {
+            const select = document.querySelector('.demo-select');
+            select.selectedIndex = Math.floor(Math.random() * (select.options.length - 1)) + 1;
+            alert('📋 selectでは多くの選択肢を省スペースで表示できます！\nクリックするとプルダウンが展開されます。');
+        }
+
+        function demoLabel() {
+            alert('🏷️ labelをクリックしてみてください！\n関連する入力欄に自動的にフォーカスします。\nこれによりユーザビリティとアクセシビリティが向上します！');
+        }
+
+        // クイズ機能
+        function checkAnswer(element, isCorrect) {
+            const options = document.querySelectorAll('.quiz-option');
+            options.forEach(option => {
+                option.style.pointerEvents = 'none';
+                if (option === element) {
+                    if (isCorrect) {
+                        option.classList.add('correct');
+                    } else {
+                        option.classList.add('incorrect');
+                    }
+                }
+            });
+
+            const resultDiv = document.getElementById('quizResult');
+            const currentQuestion = quizQuestions[currentQuizIndex];
+            
+            setTimeout(() => {
+                if (isCorrect) {
+                    resultDiv.innerHTML = `🎉 正解！<br>${currentQuestion.explanation}`;
+                    resultDiv.style.background = '#27ae60';
+                } else {
+                    resultDiv.innerHTML = `❌ 不正解。<br>${currentQuestion.explanation}`;
+                    resultDiv.style.background = '#e74c3c';
+                }
+                resultDiv.style.display = 'block';
+                
+                setTimeout(() => {
+                    nextQuestion();
+                }, 3000);
+            }, 1000);
+        }
+
+        function nextQuestion() {
+            currentQuizIndex++;
+            if (currentQuizIndex < quizQuestions.length) {
+                loadQuestion();
+            } else {
+                document.getElementById('quizResult').innerHTML = '🎊 全問終了！お疲れさまでした！';
+                document.getElementById('quizResult').style.background = '#667eea';
+            }
+        }
+
+        function loadQuestion() {
+            const question = quizQuestions[currentQuizIndex];
+            const questionDiv = document.getElementById('quizQuestion');
+            
+            questionDiv.innerHTML = `
+                <div style="font-size: 20px; font-weight: bold; margin-bottom: 15px;">
+                    問題${currentQuizIndex + 1}: ${question.question}
+                </div>
+                <div class="quiz-options">
+                    ${question.options.map((option, index) => 
+                        `<div class="quiz-option" onclick="checkAnswer(this, ${index === question.correct})">${option}</div>`
+                    ).join('')}
+                </div>
+            `;
+            
+            document.getElementById('quizResult').style.display = 'none';
+        }
+
+        // 初期表示でのアニメーション
+        window.addEventListener('load', function() {
+            const cards = document.querySelectorAll('.element-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(50px)';
+                    card.style.transition = 'all 0.5s ease';
+                    
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 100);
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
