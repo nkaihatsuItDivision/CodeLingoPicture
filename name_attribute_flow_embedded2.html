@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>name属性とデータ送信の仕組み</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .intro {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        /* データ送信の流れ */
+        .flow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+        
+        .flow-step {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .step-number {
+            background-color: #007bff;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .step-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-size: 14px;
+        }
+        
+        .step-desc {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        /* フォーム例 */
+        .form-demo {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .demo-title {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #495057;
+        }
+        
+        .input-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+        }
+        
+        .input-label {
+            min-width: 80px;
+            font-weight: bold;
+            color: #495057;
+            font-size: 14px;
+        }
+        
+        .demo-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 2px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+            background-color: white;
+        }
+        
+        .name-tag {
+            background-color: #28a745;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        /* データペア表示 */
+        .data-pairs {
+            background-color: #fff3cd;
+            border: 2px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .data-title {
+            text-align: center;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 15px;
+        }
+        
+        .data-pair {
+            background-color: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .pair-name {
+            background-color: #28a745;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        
+        .pair-equals {
+            font-size: 18px;
+            font-weight: bold;
+            color: #007bff;
+        }
+        
+        .pair-value {
+            background-color: #17a2b8;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        
+        /* サーバーデータ */
+        .server-data {
+            background-color: #d1ecf1;
+            border: 2px solid #bee5eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .server-title {
+            text-align: center;
+            font-weight: bold;
+            color: #0c5460;
+            margin-bottom: 15px;
+        }
+        
+        .server-output {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 13px;
+            word-break: break-all;
+        }
+        
+        .highlight-name {
+            color: #68d391;
+            font-weight: bold;
+        }
+        
+        .highlight-value {
+            color: #63b3ed;
+            font-weight: bold;
+        }
+        
+        /* 良い例・悪い例 */
+        .examples-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .example-card {
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid;
+        }
+        
+        .good-example {
+            background-color: #d4edda;
+            border-color: #28a745;
+        }
+        
+        .bad-example {
+            background-color: #f8d7da;
+            border-color: #dc3545;
+        }
+        
+        .example-title {
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        
+        .good-title { color: #155724; }
+        .bad-title { color: #721c24; }
+        
+        .example-code {
+            background-color: white;
+            padding: 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            margin: 6px 0;
+        }
+        
+        .example-notes {
+            font-size: 12px;
+            margin-top: 8px;
+            color: #666;
+        }
+        
+        .summary-box {
+            background-color: #e3f2fd;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #2196f3;
+        }
+        
+        .summary-box h3 {
+            color: #1565c0;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="intro">
+            <h2>🏷️ name属性の重要性</h2>
+            <p>フォームデータが<strong>どうやってサーバーに送られるか</strong>見てみましょう！</p>
+        </div>
+        
+        <!-- データ送信の流れ -->
+        <div class="flow-steps">
+            <div class="flow-step">
+                <div class="step-number">1</div>
+                <div class="step-title">ユーザーが入力</div>
+                <div class="step-desc">フォームにデータを入力</div>
+            </div>
+            
+            <div class="flow-step">
+                <div class="step-number">2</div>
+                <div class="step-title">ペア作成</div>
+                <div class="step-desc">name=value の形になる</div>
+            </div>
+            
+            <div class="flow-step">
+                <div class="step-number">3</div>
+                <div class="step-title">サーバーに送信</div>
+                <div class="step-desc">データがサーバーへ</div>
+            </div>
+            
+            <div class="flow-step">
+                <div class="step-number">4</div>
+                <div class="step-title">サーバーで処理</div>
+                <div class="step-desc">nameで識別して処理</div>
+            </div>
+        </div>
+        
+        <!-- フォーム例 -->
+        <div class="form-demo">
+            <div class="demo-title">📝 実際のフォーム例</div>
+            
+            <div class="input-row">
+                <div class="input-label">お名前:</div>
+                <input type="text" class="demo-input" value="山田太郎" readonly>
+                <span class="name-tag">name="username"</span>
+            </div>
+            
+            <div class="input-row">
+                <div class="input-label">メール:</div>
+                <input type="email" class="demo-input" value="yamada@example.com" readonly>
+                <span class="name-tag">name="email"</span>
+            </div>
+            
+            <div class="input-row">
+                <div class="input-label">年齢:</div>
+                <input type="number" class="demo-input" value="25" readonly>
+                <span class="name-tag">name="age"</span>
+            </div>
+        </div>
+        
+        <!-- データペア -->
+        <div class="data-pairs">
+            <div class="data-title">📤 作成されるデータペア</div>
+            
+            <div class="data-pair">
+                <span class="pair-name">username</span>
+                <span class="pair-equals">=</span>
+                <span class="pair-value">山田太郎</span>
+            </div>
+            
+            <div class="data-pair">
+                <span class="pair-name">email</span>
+                <span class="pair-equals">=</span>
+                <span class="pair-value">yamada@example.com</span>
+            </div>
+            
+            <div class="data-pair">
+                <span class="pair-name">age</span>
+                <span class="pair-equals">=</span>
+                <span class="pair-value">25</span>
+            </div>
+        </div>
+        
+        <!-- サーバーデータ -->
+        <div class="server-data">
+            <div class="server-title">🖥️ サーバーで受信されるデータ</div>
+            
+            <div class="server-output">
+<span class="highlight-name">username</span>=<span class="highlight-value">山田太郎</span>&<span class="highlight-name">email</span>=<span class="highlight-value">yamada@example.com</span>&<span class="highlight-name">age</span>=<span class="highlight-value">25</span>
+            </div>
+            
+            <div style="margin-top: 12px; font-size: 14px; color: #0c5460; text-align: center;">
+                💡 サーバーは <strong>name属性</strong> を見て、どのデータが何かを判断します
+            </div>
+        </div>
+        
+        <!-- 良い例・悪い例 -->
+        <div class="examples-grid">
+            <div class="example-card good-example">
+                <div class="example-title good-title">✅ 良い例</div>
+                <div class="example-code">name="user_name"</div>
+                <div class="example-code">name="email_address"</div>
+                <div class="example-code">name="birth_date"</div>
+                <div class="example-notes">
+                    ・分かりやすい名前<br>
+                    ・英数字とアンダースコア<br>
+                    ・内容が想像できる
+                </div>
+            </div>
+            
+            <div class="example-card bad-example">
+                <div class="example-title bad-title">❌ 悪い例</div>
+                <div class="example-code">name="a"</div>
+                <div class="example-code">name="データ"</div>
+                <div class="example-code">(nameなし)</div>
+                <div class="example-notes">
+                    ・名前が不明確<br>
+                    ・日本語使用<br>
+                    ・name属性なし
+                </div>
+            </div>
+        </div>
+        
+        <div class="summary-box">
+            <h3>💡 name属性 = データの「名札」</h3>
+            <p><strong>name属性がないと、サーバーはデータを識別できません！</strong><br>
+            分かりやすく、英語で名前をつけることで、サーバーが正しくデータを処理できます。</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>type属性の種類比較</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .intro {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .comparison-grid {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .type-example {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .type-header {
+            padding: 12px 20px;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .text-header { background-color: #28a745; }
+        .email-header { background-color: #007bff; }
+        .submit-header { background-color: #dc3545; }
+        
+        .type-content {
+            padding: 20px;
+        }
+        
+        .code-demo {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .code-section {
+            flex: 1;
+        }
+        
+        .code-block {
+            background-color: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 6px;
+            padding: 12px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+        
+        .demo-section {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            border: 2px dashed #dee2e6;
+        }
+        
+        .demo-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #495057;
+        }
+        
+        .demo-input {
+            width: 180px;
+            padding: 8px 12px;
+            border: 2px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .demo-input:focus {
+            outline: none;
+            border-color: #80bdff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        }
+        
+        .demo-submit {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .demo-submit:hover {
+            background-color: #c82333;
+        }
+        
+        .features-list {
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+        }
+        
+        .features-list li {
+            margin-bottom: 5px;
+        }
+        
+        .summary {
+            background-color: #e8f5e8;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #28a745;
+        }
+        
+        .summary h3 {
+            color: #155724;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="intro">
+            <h2>🎯 type属性で input要素 の動作が変わる</h2>
+            <p>同じ&lt;input&gt;でも、<strong>type属性</strong>を変えるだけで全く違う動作になります！</p>
+        </div>
+        
+        <div class="comparison-grid">
+            <!-- text type -->
+            <div class="type-example">
+                <div class="type-header text-header">
+                    📝 type="text" - 一般的な文字入力
+                </div>
+                <div class="type-content">
+                    <div class="code-demo">
+                        <div class="code-section">
+                            <div class="code-block">
+&lt;input type="text" name="username" 
+       placeholder="ユーザー名を入力"&gt;
+                            </div>
+                            <ul class="features-list">
+                                <li>どんな文字でも入力可能</li>
+                                <li>名前、住所などに使用</li>
+                                <li>最も基本的な入力形式</li>
+                            </ul>
+                        </div>
+                        <div class="demo-section">
+                            <div class="demo-title">実際の表示</div>
+                            <input type="text" class="demo-input" placeholder="ユーザー名を入力">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- email type -->
+            <div class="type-example">
+                <div class="type-header email-header">
+                    📧 type="email" - メールアドレス専用
+                </div>
+                <div class="type-content">
+                    <div class="code-demo">
+                        <div class="code-section">
+                            <div class="code-block">
+&lt;input type="email" name="email" 
+       placeholder="例: yamada@example.com"&gt;
+                            </div>
+                            <ul class="features-list">
+                                <li>メールアドレス形式をチェック</li>
+                                <li>スマホで@キーが出やすい</li>
+                                <li>送信前に自動検証</li>
+                            </ul>
+                        </div>
+                        <div class="demo-section">
+                            <div class="demo-title">実際の表示</div>
+                            <input type="email" class="demo-input" placeholder="例: yamada@example.com">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- submit type -->
+            <div class="type-example">
+                <div class="type-header submit-header">
+                    🚀 type="submit" - 送信ボタン
+                </div>
+                <div class="type-content">
+                    <div class="code-demo">
+                        <div class="code-section">
+                            <div class="code-block">
+&lt;input type="submit" value="送信"&gt;
+                            </div>
+                            <ul class="features-list">
+                                <li>フォームを送信するボタン</li>
+                                <li>valueの内容がボタンに表示</li>
+                                <li>クリックでフォーム送信実行</li>
+                            </ul>
+                        </div>
+                        <div class="demo-section">
+                            <div class="demo-title">実際の表示</div>
+                            <button type="submit" class="demo-submit">送信</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="summary">
+            <h3>💡 実際に試してみよう！</h3>
+            <p>上の入力欄に実際に文字を入力してみてください。特に<strong>type="email"</strong>では、無効なメールアドレスを入力すると、ブラウザが教えてくれます。</p>
+            <form style="margin-top: 15px; padding: 15px; background-color: white; border-radius: 6px;">
+                <div style="margin-bottom: 10px;">
+                    <input type="email" placeholder="メールアドレスを入力してテスト" style="width: 250px; padding: 8px; border: 2px solid #ccc; border-radius: 4px;">
+                </div>
+                <input type="submit" value="送信テスト" style="background-color: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">
+            </form>
+        </div>
+    </div>
+</body>
+</html>
