@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>maxlength/minlength文字数制限</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .intro {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .feature-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .maxlength-card {
+            border-left: 4px solid #28a745;
+        }
+        
+        .minlength-card {
+            border-left: 4px solid #dc3545;
+        }
+        
+        .feature-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            padding: 8px;
+            border-radius: 6px;
+            color: white;
+        }
+        
+        .maxlength-title {
+            background-color: #28a745;
+        }
+        
+        .minlength-title {
+            background-color: #dc3545;
+        }
+        
+        .code-demo {
+            background-color: #f8f9fa;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+        
+        .code-block {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+        
+        .highlight-attr {
+            background-color: #ffc107;
+            color: #212529;
+            padding: 1px 3px;
+            border-radius: 2px;
+        }
+        
+        .demo-input {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-bottom: 8px;
+            box-sizing: border-box;
+        }
+        
+        .char-counter {
+            font-size: 12px;
+            color: #666;
+            text-align: right;
+        }
+        
+        .over-limit {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        .under-limit {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        .within-limit {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .demo-description {
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+        }
+        
+        .combined-demo {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid #007bff;
+        }
+        
+        .combined-title {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .examples-grid {
+            display: grid;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .example-card {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #17a2b8;
+        }
+        
+        .example-title {
+            font-weight: bold;
+            color: #0c5460;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .number-limits {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid #6f42c1;
+        }
+        
+        .number-title {
+            background-color: #6f42c1;
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .number-examples {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .number-demo {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+        }
+        
+        .live-test {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid #28a745;
+        }
+        
+        .live-title {
+            font-weight: bold;
+            color: #155724;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .test-form {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .form-group {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        
+        .form-textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 80px;
+            box-sizing: border-box;
+        }
+        
+        .test-button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            justify-self: center;
+        }
+        
+        .tips-section {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .tips-title {
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .tips-list {
+            font-size: 14px;
+            color: #666;
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .tips-list li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="intro">
+            <h2>📏 文字数制限で入力をコントロール</h2>
+            <p><strong>maxlength</strong>と<strong>minlength</strong>で文字数の上限・下限を設定</p>
+        </div>
+        
+        <div class="feature-grid">
+            <!-- maxlength -->
+            <div class="feature-card maxlength-card">
+                <div class="feature-title maxlength-title">📝 maxlength - 最大文字数</div>
+                
+                <div class="code-demo">
+                    <div class="code-block">
+&lt;input type="text" name="name"
+       <span class="highlight-attr">maxlength="20"</span>
+       placeholder="お名前（20文字以内）"&gt;
+                    </div>
+                    
+                    <input type="text" class="demo-input" maxlength="20" placeholder="20文字まで入力可能" id="maxlengthDemo">
+                    <div class="char-counter" id="maxlengthCounter">0 / 20 文字</div>
+                </div>
+                
+                <div class="demo-description">
+                    💡 <strong>効果：</strong><br>
+                    • 指定文字数を超えて入力できない<br>
+                    • ユーザーが自然に制限を意識<br>
+                    • データベースの容量制限に対応
+                </div>
+            </div>
+            
+            <!-- minlength -->
+            <div class="feature-card minlength-card">
+                <div class="feature-title minlength-title">🔐 minlength - 最小文字数</div>
+                
+                <div class="code-demo">
+                    <div class="code-block">
+&lt;input type="password" name="password"
+       <span class="highlight-attr">minlength="8"</span>
+       placeholder="パスワード（8文字以上）"&gt;
+                    </div>
+                    
+                    <input type="password" class="demo-input" minlength="8" placeholder="8文字以上で入力" id="minlengthDemo">
+                    <div class="char-counter" id="minlengthCounter">0文字（8文字以上必要）</div>
+                </div>
+                
+                <div class="demo-description">
+                    💡 <strong>効果：</strong><br>
+                    • 短すぎる入力を防ぐ<br>
+                    • パスワードの強度確保<br>
+                    • 送信時にエラーチェック
+                </div>
+            </div>
+        </div>
+        
+        <div class="combined-demo">
+            <div class="combined-title">🎯 組み合わせ使用例</div>
+            
+            <div class="examples-grid">
+                <div class="example-card">
+                    <div class="example-title">パスワード（8-20文字）</div>
+                    <div class="code-block">
+&lt;input type="password" name="password"
+       <span class="highlight-attr">minlength="8" maxlength="20"</span>
+       placeholder="パスワード（8-20文字）"&gt;
+                    </div>
+                    <input type="password" class="demo-input" minlength="8" maxlength="20" placeholder="8-20文字で入力" id="passwordDemo">
+                    <div class="char-counter" id="passwordCounter">0文字（8-20文字）</div>
+                </div>
+                
+                <div class="example-card">
+                    <div class="example-title">メッセージ（500文字以内）</div>
+                    <div class="code-block">
+&lt;textarea name="message"
+          <span class="highlight-attr">maxlength="500"</span>
+          placeholder="メッセージを入力"&gt;&lt;/textarea&gt;
+                    </div>
+                    <textarea class="demo-input" maxlength="500" placeholder="メッセージを入力してください" id="messageDemo" style="min-height: 60px;"></textarea>
+                    <div class="char-counter" id="messageCounter">0 / 500 文字</div>
+                </div>
+                
+                <div class="example-card">
+                    <div class="example-title">タイトル（3-50文字）</div>
+                    <div class="code-block">
+&lt;input type="text" name="title"
+       <span class="highlight-attr">minlength="3" maxlength="50"</span>
+       placeholder="タイトル（3-50文字）"&gt;
+                    </div>
+                    <input type="text" class="demo-input" minlength="3" maxlength="50" placeholder="タイトルを入力" id="titleDemo">
+                    <div class="char-counter" id="titleCounter">0文字（3-50文字）</div>
+                </div>
+                
+                <div class="example-card">
+                    <div class="example-title">ユーザーID（4-16文字）</div>
+                    <div class="code-block">
+&lt;input type="text" name="userid"
+       <span class="highlight-attr">minlength="4" maxlength="16"</span>
+       pattern="[a-zA-Z0-9]+"
+       placeholder="ユーザーID（4-16文字）"&gt;
+                    </div>
+                    <input type="text" class="demo-input" minlength="4" maxlength="16" pattern="[a-zA-Z0-9]+" placeholder="英数字4-16文字" id="useridDemo">
+                    <div class="char-counter" id="useridCounter">0文字（4-16文字、英数字のみ）</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="number-limits">
+            <div class="number-title">🔢 数値の範囲制限（min/max）</div>
+            
+            <div class="number-examples">
+                <div class="number-demo">
+                    <div class="example-title">年齢（18-100歳）</div>
+                    <div class="code-block">
+&lt;input type="number" name="age"
+       <span class="highlight-attr">min="18" max="100"</span>
+       placeholder="年齢を入力"&gt;
+                    </div>
+                    <input type="number" class="demo-input" min="18" max="100" placeholder="18-100で入力">
+                    <div class="demo-description">
+                        ✅ 18-100の範囲内<br>
+                        ❌ 17以下、101以上はエラー
+                    </div>
+                </div>
+                
+                <div class="number-demo">
+                    <div class="example-title">評価（1-5点）</div>
+                    <div class="code-block">
+&lt;input type="number" name="rating"
+       <span class="highlight-attr">min="1" max="5"</span>
+       placeholder="1-5で評価"&gt;
+                    </div>
+                    <input type="number" class="demo-input" min="1" max="5" placeholder="1-5で評価">
+                    <div class="demo-description">
+                        ✅ 1-5の範囲内<br>
+                        ❌ 0以下、6以上はエラー
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="live-test">
+            <div class="live-title">🧪 実際に試してみよう！</div>
+            
+            <form class="test-form">
+                <div class="form-group">
+                    <label class="form-label">お名前（20文字以内）:</label>
+                    <input type="text" class="form-input" maxlength="20" placeholder="20文字まで入力可能" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">パスワード（8文字以上）:</label>
+                    <input type="password" class="form-input" minlength="8" placeholder="8文字以上で入力" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">年齢（18-100歳）:</label>
+                    <input type="number" class="form-input" min="18" max="100" placeholder="18-100で入力" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">自己紹介（200文字以内）:</label>
+                    <textarea class="form-textarea" maxlength="200" placeholder="自己紹介を入力してください"></textarea>
+                </div>
+                
+                <button type="submit" class="test-button">送信テスト</button>
+            </form>
+            
+            <div style="margin-top: 15px; padding: 10px; background-color: #f0f8ff; border-radius: 4px; font-size: 13px;">
+                💡 <strong>テスト方法：</strong><br>
+                • お名前：21文字入力しようとしても入力できない<br>
+                • パスワード：7文字で送信→エラー、8文字以上で送信→OK<br>
+                • 年齢：17や101を入力して送信→エラー<br>
+                • 自己紹介：201文字入力しようとしても入力できない
+            </div>
+        </div>
+        
+        <div class="tips-section">
+            <div class="tips-title">💡 文字数制限のベストプラクティス</div>
+            <ul class="tips-list">
+                <li><strong>適切な制限値：</strong> データベースの容量と使いやすさのバランス</li>
+                <li><strong>ユーザーへの事前通知：</strong> placeholderやラベルで制限を明示</li>
+                <li><strong>リアルタイム表示：</strong> 残り文字数をカウンター表示</li>
+                <li><strong>エラーメッセージ：</strong> 制限を超えた場合の分かりやすい説明</li>
+                <li><strong>組み合わせ使用：</strong> minlength + maxlengthで適切な範囲設定</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        // 文字数カウンター
+        function updateCounter(inputId, counterId, maxLength, minLength = null) {
+            const input = document.getElementById(inputId);
+            const counter = document.getElementById(counterId);
+            
+            input.addEventListener('input', function() {
+                const currentLength = this.value.length;
+                
+                if (maxLength && minLength) {
+                    counter.textContent = `${currentLength}文字（${minLength}-${maxLength}文字）`;
+                    if (currentLength < minLength) {
+                        counter.className = 'char-counter under-limit';
+                    } else if (currentLength <= maxLength) {
+                        counter.className = 'char-counter within-limit';
+                    }
+                } else if (maxLength) {
+                    counter.textContent = `${currentLength} / ${maxLength} 文字`;
+                    if (currentLength > maxLength * 0.8) {
+                        counter.className = 'char-counter over-limit';
+                    } else {
+                        counter.className = 'char-counter within-limit';
+                    }
+                } else if (minLength) {
+                    counter.textContent = `${currentLength}文字（${minLength}文字以上必要）`;
+                    if (currentLength < minLength) {
+                        counter.className = 'char-counter under-limit';
+                    } else {
+                        counter.className = 'char-counter within-limit';
+                    }
+                }
+            });
+        }
+        
+        // カウンター初期化
+        updateCounter('maxlengthDemo', 'maxlengthCounter', 20);
+        updateCounter('minlengthDemo', 'minlengthCounter', null, 8);
+        updateCounter('passwordDemo', 'passwordCounter', 20, 8);
+        updateCounter('messageDemo', 'messageCounter', 500);
+        updateCounter('titleDemo', 'titleCounter', 50, 3);
+        updateCounter('useridDemo', 'useridCounter', 16, 4);
+    </script>
+</body>
+</html>
