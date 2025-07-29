@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select要素プルダウン - インタラクティブデモ</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif;
+            background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+            margin: 0;
+            padding: 40px;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            font-size: 32px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .demo-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .section-title {
+            text-align: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+        
+        .demo-flow {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 30px;
+            align-items: center;
+            margin: 30px 0;
+        }
+        
+        .demo-box {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .demo-box:hover {
+            transform: translateY(-5px);
+        }
+        
+        .demo-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        
+        .demo-select {
+            width: 100%;
+            padding: 15px;
+            border: 3px solid #6c5ce7;
+            border-radius: 10px;
+            font-size: 18px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .demo-select:focus {
+            outline: none;
+            border-color: #fd79a8;
+            box-shadow: 0 0 0 4px rgba(253, 121, 168, 0.2);
+            transform: scale(1.05);
+        }
+        
+        .arrow {
+            font-size: 48px;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        
+        .dropdown-simulation {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: all 0.5s ease;
+        }
+        
+        .dropdown-header {
+            background: linear-gradient(135deg, #fd79a8, #fdcb6e);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .dropdown-options {
+            background: white;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .dropdown-option {
+            padding: 15px 20px;
+            border-bottom: 1px solid #e9ecef;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .dropdown-option:hover {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .dropdown-option.selected {
+            background: linear-gradient(135deg, #00b894, #00a085);
+            color: white;
+            font-weight: bold;
+            animation: glow 1s infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { box-shadow: inset 0 0 5px rgba(255,255,255,0.3); }
+            to { box-shadow: inset 0 0 20px rgba(255,255,255,0.6); }
+        }
+        
+        .dropdown-option:last-child {
+            border-bottom: none;
+        }
+        
+        .option-indicator {
+            background: #e74c3c;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .interactive-demos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .interactive-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .interactive-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .interactive-select {
+            width: 100%;
+            padding: 15px;
+            border: 3px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .interactive-select:focus {
+            border-color: #6c5ce7;
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+        }
+        
+        .selection-display {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #6c5ce7;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .comparison-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .comparison-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        
+        .comparison-card {
+            text-align: center;
+            padding: 30px;
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+        
+        .comparison-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .select-card {
+            background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+            color: white;
+        }
+        
+        .radio-card {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+        }
+        
+        .checkbox-card {
+            background: linear-gradient(135deg, #fd79a8, #e84393);
+            color: white;
+        }
+        
+        .comparison-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .comparison-card-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .comparison-desc {
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        
+        .comparison-example {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 13px;
+        }
+        
+        .usage-tips {
+            background: linear-gradient(135deg, #00b894, #00a085);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-top: 40px;
+            text-align: center;
+        }
+        
+        .tips-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .tips-content {
+            font-size: 18px;
+            line-height: 1.8;
+        }
+        
+        .highlight {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .reset-button {
+            background: linear-gradient(135deg, #e17055, #d63031);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+        
+        .reset-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(225, 112, 85, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📋 Select要素のプルダウン - 動作体験</h1>
+        
+        <div class="demo-section">
+            <div class="section-title">🎯 実際のプルダウン動作を体験</div>
+            
+            <div class="demo-flow">
+                <div class="demo-box">
+                    <div class="demo-title">📝 選択前の状態</div>
+                    <select class="demo-select" id="mainDemo">
+                        <option value="">都道府県を選択してください</option>
+                        <option value="hokkaido">北海道</option>
+                        <option value="tokyo">東京都</option>
+                        <option value="osaka">大阪府</option>
+                        <option value="kyoto">京都府</option>
+                        <option value="aichi">愛知県</option>
+                        <option value="fukuoka">福岡県</option>
+                        <option value="okinawa">沖縄県</option>
+                    </select>
+                    <div style="margin-top: 15px; font-size: 14px; color: #666;">
+                        👆 この選択欄をクリックしてください
+                    </div>
+                </div>
+                
+                <div class="arrow">📋</div>
+                
+                <div class="demo-box">
+                    <div class="demo-title">🎨 選択肢が展開されます</div>
+                    <div class="dropdown-simulation">
+                        <div class="dropdown-header">選択可能な項目</div>
+                        <div class="dropdown-options">
+                            <div class="dropdown-option">
+                                <span>都道府県を選択してください</span>
+                                <span class="option-indicator">初期値</span>
+                            </div>
+                            <div class="dropdown-option selected" id="selectedOption">
+                                <span>東京都</span>
+                                <span class="option-indicator">選択中</span>
+                            </div>
+                            <div class="dropdown-option">
+                                <span>大阪府</span>
+                            </div>
+                            <div class="dropdown-option">
+                                <span>愛知県</span>
+                            </div>
+                            <div class="dropdown-option">
+                                <span>福岡県</span>
+                            </div>
+                            <div class="dropdown-option">
+                                <span>北海道</span>
+                            </div>
+                            <div class="dropdown-option">
+                                <span>沖縄県</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="interactive-demos">
+            <div class="interactive-card">
+                <div class="card-title">🏢 職業選択</div>
+                <select class="interactive-select" id="jobSelect">
+                    <option value="">職業を選択してください</option>
+                    <option value="student">学生</option>
+                    <option value="office">会社員</option>
+                    <option value="freelance">フリーランス</option>
+                    <option value="housework">主婦/主夫</option>
+                    <option value="retired">退職</option>
+                </select>
+                <div class="selection-display" id="jobDisplay">
+                    選択してください...
+                </div>
+                <button class="reset-button" onclick="resetSelect('jobSelect', 'jobDisplay')">リセット</button>
+            </div>
+            
+            <div class="interactive-card">
+                <div class="card-title">🎂 年代選択</div>
+                <select class="interactive-select" id="ageSelect">
+                    <option value="">年代を選択してください</option>
+                    <option value="10s">10代</option>
+                    <option value="20s">20代</option>
+                    <option value="30s">30代</option>
+                    <option value="40s">40代</option>
+                    <option value="50s">50代以上</option>
+                </select>
+                <div class="selection-display" id="ageDisplay">
+                    選択してください...
+                </div>
+                <button class="reset-button" onclick="resetSelect('ageSelect', 'ageDisplay')">リセット</button>
+            </div>
+            
+            <div class="interactive-card">
+                <div class="card-title">🌟 満足度評価</div>
+                <select class="interactive-select" id="satisfactionSelect">
+                    <option value="">満足度を選択してください</option>
+                    <option value="5">⭐⭐⭐⭐⭐ とても満足</option>
+                    <option value="4">⭐⭐⭐⭐ 満足</option>
+                    <option value="3">⭐⭐⭐ 普通</option>
+                    <option value="2">⭐⭐ 不満</option>
+                    <option value="1">⭐ とても不満</option>
+                </select>
+                <div class="selection-display" id="satisfactionDisplay">
+                    選択してください...
+                </div>
+                <button class="reset-button" onclick="resetSelect('satisfactionSelect', 'satisfactionDisplay')">リセット</button>
+            </div>
+        </div>
+        
+        <div class="comparison-section">
+            <div class="comparison-title">🔍 選択要素の適切な使い分け</div>
+            
+            <div class="comparison-grid">
+                <div class="comparison-card select-card">
+                    <div class="comparison-icon">📋</div>
+                    <div class="comparison-card-title">Select</div>
+                    <div class="comparison-desc">
+                        選択肢が多い場合に最適<br>
+                        省スペースで美しい表示
+                    </div>
+                    <div class="comparison-example">
+                        <strong>使用例：</strong><br>
+                        都道府県、職業、学校名<br>
+                        商品カテゴリ、言語設定
+                    </div>
+                </div>
+                
+                <div class="comparison-card radio-card">
+                    <div class="comparison-icon">🔘</div>
+                    <div class="comparison-card-title">Radio</div>
+                    <div class="comparison-desc">
+                        選択肢が少ない場合に最適<br>
+                        すべて表示で一覧性が高い
+                    </div>
+                    <div class="comparison-example">
+                        <strong>使用例：</strong><br>
+                        性別、支払い方法<br>
+                        満足度（3段階程度）
+                    </div>
+                </div>
+                
+                <div class="comparison-card checkbox-card">
+                    <div class="comparison-icon">☑️</div>
+                    <div class="comparison-card-title">Checkbox</div>
+                    <div class="comparison-desc">
+                        複数選択が必要な場合<br>
+                        自由度の高い選択
+                    </div>
+                    <div class="comparison-example">
+                        <strong>使用例：</strong><br>
+                        趣味、興味分野<br>
+                        利用規約同意
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="usage-tips">
+            <div class="tips-title">💡 使い分けの黄金ルール</div>
+            <div class="tips-content">
+                <span class="highlight">選択肢が5個以上</span> → Select（プルダウン）<br>
+                <span class="highlight">選択肢が2-4個</span> → Radio（ラジオボタン）<br>
+                <span class="highlight">複数選択必要</span> → Checkbox（チェックボックス）<br><br>
+                <strong>迷ったときは、ユーザーの使いやすさを最優先に考えましょう！</strong>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // メインデモの動作
+        document.getElementById('mainDemo').addEventListener('change', function() {
+            const selectedText = this.options[this.selectedIndex].text;
+            const selectedValue = this.value;
+            
+            // シミュレーション部分の更新
+            document.querySelectorAll('.dropdown-option').forEach(option => {
+                option.classList.remove('selected');
+                const indicator = option.querySelector('.option-indicator');
+                if (indicator && !indicator.textContent.includes('初期値')) {
+                    indicator.remove();
+                }
+            });
+            
+            if (selectedValue) {
+                // 選択された項目をハイライト
+                document.querySelectorAll('.dropdown-option').forEach(option => {
+                    if (option.querySelector('span').textContent === selectedText) {
+                        option.classList.add('selected');
+                        if (!option.querySelector('.option-indicator')) {
+                            const indicator = document.createElement('span');
+                            indicator.className = 'option-indicator';
+                            indicator.textContent = '選択中';
+                            option.appendChild(indicator);
+                        }
+                    }
+                });
+            }
+        });
+
+        // インタラクティブデモの動作
+        function setupSelectDemo(selectId, displayId) {
+            const select = document.getElementById(selectId);
+            const display = document.getElementById(displayId);
+            
+            select.addEventListener('change', function() {
+                const selectedText = this.options[this.selectedIndex].text;
+                const selectedValue = this.value;
+                
+                if (selectedValue) {
+                    display.innerHTML = `選択結果: "${selectedText}"<br>値: ${selectedValue}`;
+                    display.style.borderLeft = '4px solid #00b894';
+                    display.style.background = '#d4edda';
+                } else {
+                    display.innerHTML = '選択してください...';
+                    display.style.borderLeft = '4px solid #6c5ce7';
+                    display.style.background = '#f8f9fa';
+                }
+            });
+        }
+
+        // 各デモの初期化
+        setupSelectDemo('jobSelect', 'jobDisplay');
+        setupSelectDemo('ageSelect', 'ageDisplay');
+        setupSelectDemo('satisfactionSelect', 'satisfactionDisplay');
+
+        // リセット機能
+        function resetSelect(selectId, displayId) {
+            const select = document.getElementById(selectId);
+            const display = document.getElementById(displayId);
+            
+            select.selectedIndex = 0;
+            display.innerHTML = '選択してください...';
+            display.style.borderLeft = '4px solid #6c5ce7';
+            display.style.background = '#f8f9fa';
+        }
+
+        // ドロップダウンオプションのホバー効果
+        document.querySelectorAll('.dropdown-option').forEach(option => {
+            option.addEventListener('click', function() {
+                // すべての選択を解除
+                document.querySelectorAll('.dropdown-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                    const indicator = opt.querySelector('.option-indicator');
+                    if (indicator && !indicator.textContent.includes('初期値')) {
+                        indicator.remove();
+                    }
+                });
+                
+                // クリックされた項目を選択
+                this.classList.add('selected');
+                if (!this.querySelector('.option-indicator')) {
+                    const indicator = document.createElement('span');
+                    indicator.className = 'option-indicator';
+                    indicator.textContent = '選択中';
+                    this.appendChild(indicator);
+                }
+                
+                // メインのselectも更新
+                const mainSelect = document.getElementById('mainDemo');
+                const optionText = this.querySelector('span').textContent;
+                for (let i = 0; i < mainSelect.options.length; i++) {
+                    if (mainSelect.options[i].text === optionText) {
+                        mainSelect.selectedIndex = i;
+                        break;
+                    }
+                }
+            });
+        });
+
+        // 初期選択状態の設定
+        document.getElementById('mainDemo').selectedIndex = 2; // 東京都を初期選択
+    </script>
+</body>
+</html>

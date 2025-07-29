@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkbox vs Radio - インタラクティブ比較</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif;
+            background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);
+            margin: 0;
+            padding: 40px;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            font-size: 32px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .intro-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            text-align: center;
+            color: white;
+        }
+        
+        .intro-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .demo-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .demo-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .card-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .checkbox-title { 
+            color: #00b894;
+            animation: glow-green 2s ease-in-out infinite alternate;
+        }
+        
+        .radio-title { 
+            color: #0984e3;
+            animation: glow-blue 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow-green {
+            from { text-shadow: 0 0 5px #00b894; }
+            to { text-shadow: 0 0 20px #00b894, 0 0 30px #00b894; }
+        }
+        
+        @keyframes glow-blue {
+            from { text-shadow: 0 0 5px #0984e3; }
+            to { text-shadow: 0 0 20px #0984e3, 0 0 30px #0984e3; }
+        }
+        
+        .card-subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .demo-form {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 30px;
+            border-radius: 15px;
+            border: 3px dashed #dee2e6;
+            margin-bottom: 25px;
+        }
+        
+        .form-question {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            text-align: center;
+        }
+        
+        .option-group {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .option-group:hover {
+            background: rgba(52, 152, 219, 0.1);
+            border-color: #3498db;
+            transform: translateX(5px);
+        }
+        
+        .option-input {
+            margin-right: 12px;
+            transform: scale(1.5);
+            cursor: pointer;
+        }
+        
+        .option-label {
+            font-size: 16px;
+            cursor: pointer;
+            flex: 1;
+        }
+        
+        .selection-indicator {
+            background: #e74c3c;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .option-group.selected .selection-indicator {
+            opacity: 1;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .result-display {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            text-align: center;
+        }
+        
+        .reset-button {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            width: 100%;
+        }
+        
+        .reset-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(116, 185, 255, 0.4);
+        }
+        
+        .visual-demo {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 40px 0;
+            color: white;
+        }
+        
+        .visual-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+        
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .scenario-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .scenario-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .scenario-question {
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        
+        .interactive-options {
+            margin: 15px 0;
+        }
+        
+        .demo-option {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin: 8px 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .demo-option:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .demo-option input {
+            margin-right: 10px;
+            transform: scale(1.3);
+        }
+        
+        .selection-result {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-family: monospace;
+            font-size: 14px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .key-differences {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .differences-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        
+        .differences-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .difference-card {
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .checkbox-card-style {
+            background: linear-gradient(135deg, #00b894, #00a085);
+            color: white;
+        }
+        
+        .radio-card-style {
+            background: linear-gradient(135deg, #0984e3, #074fb5);
+            color: white;
+        }
+        
+        .difference-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .difference-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .difference-description {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .difference-examples {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+        
+        .memory-tip {
+            background: linear-gradient(135deg, #fdcb6e, #e17055);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-top: 40px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .tip-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .tip-content {
+            font-size: 18px;
+            line-height: 1.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>☑️ Checkbox vs 🔘 Radio - 体験して理解しよう！</h1>
+        
+        <div class="intro-section">
+            <div class="intro-title">実際に選択して違いを体感してください</div>
+            <div>それぞれの選択肢をクリックして、動作の違いを確認してみましょう</div>
+        </div>
+        
+        <div class="comparison-grid">
+            <!-- Checkbox デモ -->
+            <div class="demo-card">
+                <div class="card-header">
+                    <div class="card-title checkbox-title">☑️ Checkbox（チェックボックス）</div>
+                    <div class="card-subtitle">複数選択可能 - 何個でも選べます</div>
+                </div>
+                
+                <div class="demo-form">
+                    <div class="form-question">好きな食べ物を選んでください</div>
+                    
+                    <div class="option-group" data-type="checkbox" data-name="food" data-value="ramen">
+                        <input type="checkbox" class="option-input" id="food1">
+                        <label class="option-label" for="food1">🍜 ラーメン</label>
+                        <span class="selection-indicator">選択中</span>
+                    </div>
+                    
+                    <div class="option-group" data-type="checkbox" data-name="food" data-value="sushi">
+                        <input type="checkbox" class="option-input" id="food2">
+                        <label class="option-label" for="food2">🍣 寿司</label>
+                        <span class="selection-indicator">選択中</span>
+                    </div>
+                    
+                    <div class="option-group" data-type="checkbox" data-name="food" data-value="curry">
+                        <input type="checkbox" class="option-input" id="food3">
+                        <label class="option-label" for="food3">🍛 カレー</label>
+                        <span class="selection-indicator">選択中</span>
+                    </div>
+                    
+                    <div class="option-group" data-type="checkbox" data-name="food" data-value="pizza">
+                        <input type="checkbox" class="option-input" id="food4">
+                        <label class="option-label" for="food4">🍕 ピザ</label>
+                        <span class="selection-indicator">選択中</span>
+                    </div>
+                    
+                    <button class="reset-button" onclick="resetCheckboxes()">すべてリセット</button>
+                </div>
+                
+                <div class="result-display" id="checkboxResult">
+                    選択してください...
+                </div>
+            </div>
+            
+            <!-- Radio デモ -->
+            <div class="demo-card">
+                <div class="card-header">
+                    <div class="card-title radio-title">🔘 Radio（ラジオボタン）</div>
+                    <div class="card-subtitle">単一選択のみ - 1つだけ選べます</div>
+                </div>
+                
+                <div class="demo-form">
+                    <div class="form-question">性別を選んでください</div>
+                    
+                    <div class="option-group" data-type="radio" data-name="gender" data-value="male">
+                        <input type="radio" name="gender" class="option-input" id="gender1">
+                        <label class="option-label" for="gender1">👨 男性</label>
+                        <span class="selection-indicator">選択中</span>
+                    </div>
+                    
+                    <div class="option-group" data-type="radio" data-name="gender" data-value="female">
+                        <input type="radio" name="gender" class="option-input" id="gender2">
+                        <label class="option-label" for="gender2">👩 女性</label>
+                        <span class="selection-indicator">選択中</span>
+                    </div>
+                    
+                    <div class="option-group" data-type="radio" data-name="gender" data-value="other">
+                        <input type="radio" name="gender" class="option-input" id="gender3">
+                        <label class="option-label" for="gender3">🏳️‍⚧️ その他</label>
+                        <span class="selection-indicator">選択中</span>
+                    </div>
+                    
+                    <div class="option-group" data-type="radio" data-name="gender" data-value="no-answer">
+                        <input type="radio" name="gender" class="option-input" id="gender4">
+                        <label class="option-label" for="gender4">🤐 回答しない</label>
+                        <span class="selection-indicator">選択中</span>
+                    </div>
+                    
+                    <button class="reset-button" onclick="resetRadios()">選択をリセット</button>
+                </div>
+                
+                <div class="result-display" id="radioResult">
+                    選択してください...
+                </div>
+            </div>
+        </div>
+        
+        <!-- 実際のシナリオデモ -->
+        <div class="visual-demo">
+            <div class="visual-title">🎯 実際の使用場面で比較</div>
+            
+            <div class="scenario-grid">
+                <div class="scenario-card">
+                    <div class="scenario-title">☑️ アンケート（複数回答）</div>
+                    <div class="scenario-question">興味のある分野は？（複数選択可）</div>
+                    
+                    <div class="interactive-options">
+                        <div class="demo-option">
+                            <input type="checkbox" id="interest1">
+                            <label for="interest1">テクノロジー</label>
+                        </div>
+                        <div class="demo-option">
+                            <input type="checkbox" id="interest2">
+                            <label for="interest2">デザイン</label>
+                        </div>
+                        <div class="demo-option">
+                            <input type="checkbox" id="interest3">
+                            <label for="interest3">マーケティング</label>
+                        </div>
+                        <div class="demo-option">
+                            <input type="checkbox" id="interest4">
+                            <label for="interest4">音楽</label>
+                        </div>
+                    </div>
+                    
+                    <div class="selection-result" id="interestResult">
+                        選択結果が表示されます...
+                    </div>
+                </div>
+                
+                <div class="scenario-card">
+                    <div class="scenario-title">🔘 支払い方法（単一選択）</div>
+                    <div class="scenario-question">支払い方法を選択してください</div>
+                    
+                    <div class="interactive-options">
+                        <div class="demo-option">
+                            <input type="radio" name="payment" id="payment1">
+                            <label for="payment1">💳 クレジットカード</label>
+                        </div>
+                        <div class="demo-option">
+                            <input type="radio" name="payment" id="payment2">
+                            <label for="payment2">🏧 銀行振込</label>
+                        </div>
+                        <div class="demo-option">
+                            <input type="radio" name="payment" id="payment3">
+                            <label for="payment3">📱 電子マネー</label>
+                        </div>
+                        <div class="demo-option">
+                            <input type="radio" name="payment" id="payment4">
+                            <label for="payment4">💵 代金引換</label>
+                        </div>
+                    </div>
+                    
+                    <div class="selection-result" id="paymentResult">
+                        選択結果が表示されます...
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 重要な違い -->
+        <div class="key-differences">
+            <div class="differences-title">🔍 重要な違いまとめ</div>
+            
+            <div class="differences-grid">
+                <div class="difference-card checkbox-card-style">
+                    <div class="difference-icon">☑️</div>
+                    <div class="difference-title">Checkbox</div>
+                    <div class="difference-description">
+                        「複数の箱にチェック」<br>
+                        好きなものを全部選んでOK！
+                    </div>
+                    <div class="difference-examples">
+                        <strong>使用例：</strong><br>
+                        • 趣味・興味<br>
+                        • 利用規約同意<br>
+                        • 検索フィルター<br>
+                        • 持っているスキル
+                    </div>
+                </div>
+                
+                <div class="difference-card radio-card-style">
+                    <div class="difference-icon">🔘</div>
+                    <div class="difference-title">Radio</div>
+                    <div class="difference-description">
+                        「ラジオの周波数」<br>
+                        1つの周波数しか選べない！
+                    </div>
+                    <div class="difference-examples">
+                        <strong>使用例：</strong><br>
+                        • 性別<br>
+                        • 支払い方法<br>
+                        • 満足度評価<br>
+                        • 商品サイズ
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 覚え方のコツ -->
+        <div class="memory-tip">
+            <div class="tip-title">💡 簡単な判断方法</div>
+            <div class="tip-content">
+                <strong>「複数選択してもいいですか？」</strong><br><br>
+                → YES なら <strong>☑️ Checkbox</strong><br>
+                → NO なら <strong>🔘 Radio</strong><br><br>
+                これだけ覚えておけば完璧です！
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Checkbox の動作
+        document.querySelectorAll('[data-type="checkbox"]').forEach(group => {
+            const input = group.querySelector('input');
+            
+            group.addEventListener('click', function(e) {
+                if (e.target !== input) {
+                    input.checked = !input.checked;
+                }
+                
+                if (input.checked) {
+                    group.classList.add('selected');
+                } else {
+                    group.classList.remove('selected');
+                }
+                
+                updateCheckboxResult();
+            });
+            
+            input.addEventListener('change', function() {
+                if (this.checked) {
+                    group.classList.add('selected');
+                } else {
+                    group.classList.remove('selected');
+                }
+                updateCheckboxResult();
+            });
+        });
+
+        // Radio の動作
+        document.querySelectorAll('[data-type="radio"]').forEach(group => {
+            const input = group.querySelector('input');
+            
+            group.addEventListener('click', function(e) {
+                if (e.target !== input) {
+                    input.checked = true;
+                }
+                
+                // 他のradioの選択を解除
+                document.querySelectorAll('[data-type="radio"]').forEach(otherGroup => {
+                    otherGroup.classList.remove('selected');
+                });
+                
+                group.classList.add('selected');
+                updateRadioResult();
+            });
+            
+            input.addEventListener('change', function() {
+                document.querySelectorAll('[data-type="radio"]').forEach(otherGroup => {
+                    otherGroup.classList.remove('selected');
+                });
+                
+                group.classList.add('selected');
+                updateRadioResult();
+            });
+        });
+
+        function updateCheckboxResult() {
+            const selected = [];
+            document.querySelectorAll('[data-type="checkbox"] input:checked').forEach(input => {
+                const group = input.closest('[data-type="checkbox"]');
+                selected.push(group.dataset.value);
+            });
+            
+            const result = document.getElementById('checkboxResult');
+            if (selected.length === 0) {
+                result.innerHTML = '何も選択されていません';
+            } else {
+                result.innerHTML = `選択された項目: ${selected.length}個<br>food=${selected.join('&food=')}`;
+            }
+        }
+
+        function updateRadioResult() {
+            const selected = document.querySelector('[data-type="radio"] input:checked');
+            const result = document.getElementById('radioResult');
+            
+            if (selected) {
+                const group = selected.closest('[data-type="radio"]');
+                result.innerHTML = `選択された項目: 1個<br>gender=${group.dataset.value}`;
+            } else {
+                result.innerHTML = '何も選択されていません';
+            }
+        }
+
+        function resetCheckboxes() {
+            document.querySelectorAll('[data-type="checkbox"] input').forEach(input => {
+                input.checked = false;
+            });
+            document.querySelectorAll('[data-type="checkbox"]').forEach(group => {
+                group.classList.remove('selected');
+            });
+            updateCheckboxResult();
+        }
+
+        function resetRadios() {
+            document.querySelectorAll('[data-type="radio"] input').forEach(input => {
+                input.checked = false;
+            });
+            document.querySelectorAll('[data-type="radio"]').forEach(group => {
+                group.classList.remove('selected');
+            });
+            updateRadioResult();
+        }
+
+        // シナリオデモの動作
+        document.querySelectorAll('#interest1, #interest2, #interest3, #interest4').forEach(input => {
+            input.addEventListener('change', function() {
+                const selected = [];
+                document.querySelectorAll('#interest1, #interest2, #interest3, #interest4').forEach(i => {
+                    if (i.checked) {
+                        selected.push(i.nextElementSibling.textContent);
+                    }
+                });
+                
+                const result = document.getElementById('interestResult');
+                if (selected.length === 0) {
+                    result.innerHTML = '選択結果が表示されます...';
+                } else {
+                    result.innerHTML = `${selected.length}個選択: ${selected.join(', ')}`;
+                }
+            });
+        });
+
+        document.querySelectorAll('[name="payment"]').forEach(input => {
+            input.addEventListener('change', function() {
+                const result = document.getElementById('paymentResult');
+                result.innerHTML = `選択: ${this.nextElementSibling.textContent}`;
+            });
+        });
+    </script>
+</body>
+</html>
