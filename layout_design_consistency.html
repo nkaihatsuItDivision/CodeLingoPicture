@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>レイアウトと統一感のあるデザイン</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .intro {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .comparison-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .layout-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .bad-layout {
+            border-left: 4px solid #dc3545;
+        }
+        
+        .good-layout {
+            border-left: 4px solid #28a745;
+        }
+        
+        .card-title {
+            font-weight: bold;
+            text-align: center;
+            padding: 12px;
+            border-radius: 6px;
+            color: white;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        
+        .bad-title {
+            background-color: #dc3545;
+        }
+        
+        .good-title {
+            background-color: #28a745;
+        }
+        
+        /* 悪いレイアウトの例 */
+        .bad-form {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+        }
+        
+        .bad-form label {
+            color: #333;
+            font-weight: normal;
+            margin-bottom: 3px;
+            display: inline-block;
+        }
+        
+        .bad-form .required-bad {
+            color: #dc3545;
+            font-size: 18px;
+        }
+        
+        .bad-form input,
+        .bad-form textarea,
+        .bad-form select {
+            padding: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            margin-bottom: 8px;
+            width: 180px;
+        }
+        
+        .bad-form button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        .bad-form .checkbox-bad {
+            margin-top: 10px;
+        }
+        
+        .bad-form .checkbox-bad input {
+            width: auto;
+            margin-right: 5px;
+        }
+        
+        /* 良いレイアウトの例 */
+        .good-form {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .good-form .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .good-form label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .good-form .required-good {
+            color: #dc3545;
+            margin-left: 3px;
+        }
+        
+        .good-form input,
+        .good-form textarea,
+        .good-form select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: inherit;
+            background-color: white;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+        
+        .good-form input:focus,
+        .good-form textarea:focus,
+        .good-form select:focus {
+            outline: none;
+            border-color: #28a745;
+            box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.25);
+        }
+        
+        .good-form textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .good-form .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+        
+        .good-form .checkbox-group input {
+            width: auto;
+            margin-right: 8px;
+        }
+        
+        .good-form .checkbox-group label {
+            margin-bottom: 0;
+            font-weight: normal;
+        }
+        
+        .good-form button {
+            width: 100%;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .good-form button:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+        
+        .problem-list, .solution-list {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+        
+        .problem-list {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        
+        .solution-list {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .problem-list h5, .solution-list h5 {
+            margin-top: 0;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .problem-list ul, .solution-list ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .problem-list li, .solution-list li {
+            margin-bottom: 4px;
+        }
+        
+        .techniques-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid #007bff;
+        }
+        
+        .section-title {
+            background-color: #007bff;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        
+        .techniques-grid {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .technique-item {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #17a2b8;
+        }
+        
+        .technique-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .technique-icon {
+            font-size: 24px;
+            margin-right: 12px;
+            color: #17a2b8;
+        }
+        
+        .technique-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #0c5460;
+        }
+        
+        .technique-demo {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .code-section {
+            background-color: white;
+            padding: 15px;
+            border-radius: 6px;
+            border: 2px dashed #dee2e6;
+        }
+        
+        .code-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #495057;
+            font-size: 14px;
+        }
+        
+        .code-block {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 11px;
+            margin-bottom: 10px;
+        }
+        
+        .highlight-new {
+            background-color: #48bb78;
+            color: white;
+            padding: 1px 3px;
+            border-radius: 2px;
+        }
+        
+        .demo-section {
+            background-color: white;
+            padding: 15px;
+            border-radius: 6px;
+            border: 2px dashed #dee2e6;
+        }
+        
+        .demo-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #495057;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        /* Form Group デモ */
+        .demo-form-groups .form-group-demo {
+            background-color: #e3f2fd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border: 2px dashed #2196f3;
+        }
+        
+        .demo-form-groups .form-group-demo:last-child {
+            margin-bottom: 0;
+        }
+        
+        .demo-form-groups label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .demo-form-groups input {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        
+        /* 色の統一デモ */
+        .color-palette {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid #6f42c1;
+        }
+        
+        .palette-title {
+            background-color: #6f42c1;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        
+        .colors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .color-card {
+            text-align: center;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .color-sample {
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .color-info {
+            background-color: white;
+            padding: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .color-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 3px;
+        }
+        
+        .css-variables-demo {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+        
+        .variables-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .final-example {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        
+        .final-title {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .final-form {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 10px;
+            max-width: 500px;
+            margin: 0 auto;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+        
+        .final-form h3 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .final-form .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .final-form label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .final-form .required {
+            color: #dc3545;
+            margin-left: 3px;
+        }
+        
+        .final-form input,
+        .final-form textarea,
+        .final-form select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            font-family: inherit;
+            background-color: white;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+        
+        .final-form input:focus,
+        .final-form textarea:focus,
+        .final-form select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.25);
+        }
+        
+        .final-form textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .final-form .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+        
+        .final-form .checkbox-group input {
+            width: auto;
+            margin-right: 8px;
+        }
+        
+        .final-form .checkbox-group label {
+            margin-bottom: 0;
+            font-weight: normal;
+        }
+        
+        .final-form .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .final-form .submit-btn:hover {
+            background: linear-gradient(135deg, #218838 0%, #1ba085 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(40, 167, 69, 0.3);
+        }
+        
+        .checklist {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .checklist-title {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .checklist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .checklist-item {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #28a745;
+        }
+        
+        .checklist-item h5 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #155724;
+            font-size: 14px;
+        }
+        
+        .checklist-item ul {
+            margin: 0;
+            padding-left: 18px;
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .checklist-item li {
+            margin-bottom: 4px;
+        }
+        
+        .checklist-item li::marker {
+            content: "✅ ";
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="intro">
+            <h2>🎨 統一感のあるデザインでプロフェッショナルな印象を</h2>
+            <p><strong>レイアウトの整理</strong>と<strong>色の統一</strong>で、ユーザーが迷わない美しいフォームを作りましょう</p>
+        </div>
+        
+        <div class="comparison-section">
+            <!-- 悪いレイアウト -->
+            <div class="layout-card bad-layout">
+                <div class="card-title bad-title">❌ 統一感のないレイアウト</div>
+                
+                <form class="bad-form">
+                    <div>
+                        <label>名前<span class="required-bad">*</span></label>
+                        <input type="text" placeholder="名前">
+                    </div>
+                    
+                    <div>
+                        <label>メール<span class="required-bad">**</span></label><br>
+                        <input type="email" placeholder="email">
+                    </div>
+                    
+                    <div>
+                        <label>種別</label>
+                        <select>
+                            <option>選択</option>
+                            <option>質問</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label>内容<span class="required-bad">必須</span></label><br>
+                        <textarea placeholder="内容" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="checkbox-bad">
+                        <input type="checkbox">
+                        <label>同意</label>
+                    </div>
+                    
+                    <button type="submit">送信</button>
+                </form>
+                
+                <div class="problem-list">
+                    <h5>⚠️ 問題点</h5>
+                    <ul>
+                        <li>要素のサイズがバラバラ</li>
+                        <li>余白が不統一</li>
+                        <li>必須マークの表記が混在</li>
+                        <li>文字サイズが統一されていない</li>
+                        <li>要素の配置が不規則</li>
+                        <li>全体的にまとまりがない</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 良いレイアウト -->
+            <div class="layout-card good-layout">
+                <div class="card-title good-title">✅ 統一感のあるレイアウト</div>
+                
+                <form class="good-form">
+                    <div class="form-group">
+                        <label>お名前<span class="required-good">*</span></label>
+                        <input type="text" placeholder="例：山田太郎">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>メールアドレス<span class="required-good">*</span></label>
+                        <input type="email" placeholder="例：yamada@example.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>お問い合わせ種別<span class="required-good">*</span></label>
+                        <select>
+                            <option>選択してください</option>
+                            <option>商品について</option>
+                            <option>サービスについて</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>お問い合わせ内容<span class="required-good">*</span></label>
+                        <textarea placeholder="詳しい内容をお書きください"></textarea>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" required>
+                        <label>個人情報の取り扱いに同意します<span class="required-good">*</span></label>
+                    </div>
+                    
+                    <button type="submit">送信する</button>
+                </form>
+                
+                <div class="solution-list">
+                    <h5>🌟 改善効果</h5>
+                    <ul>
+                        <li>統一されたサイズと配置</li>
+                        <li>適切で一貫した余白</li>
+                        <li>統一された必須マーク</li>
+                        <li>一貫した文字サイズ</li>
+                        <li>整理されたグループ化</li>
+                        <li>プロフェッショナルな印象</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="techniques-section">
+            <div class="section-title">🛠️ レイアウト改善テクニック</div>
+            
+            <div class="techniques-grid">
+                <div class="technique-item">
+                    <div class="technique-header">
+                        <div class="technique-icon">📦</div>
+                        <div class="technique-name">フォームグループの作成</div>
+                    </div>
+                    
+                    <div class="technique-demo">
+                        <div class="code-section">
+                            <div class="code-title">CSSコード</div>
+                            <div class="code-block">
+<span class="highlight-new">.form-group</span> {
+  <span class="highlight-new">margin-bottom: 25px;</span>
+}
+
+<span class="highlight-new">.form-group:last-child</span> {
+  <span class="highlight-new">margin-bottom: 0;</span>
+}
+                            </div>
+                            <div style="font-size: 13px; color: #666; margin-top: 8px;">
+                                関連要素をグループ化して整理
+                            </div>
+                        </div>
+                        
+                        <div class="demo-section">
+                            <div class="demo-title">視覚的な効果</div>
+                            <div class="demo-form-groups">
+                                <div class="form-group-demo">
+                                    <label>グループ 1</label>
+                                    <input type="text" placeholder="入力欄">
+                                </div>
+                                <div class="form-group-demo">
+                                    <label>グループ 2</label>
+                                    <input type="text" placeholder="入力欄">
+                                </div>
+                                <div class="form-group-demo">
+                                    <label>グループ 3</label>
+                                    <input type="text" placeholder="入力欄">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="technique-item">
+                    <div class="technique-header">
+                        <div class="technique-icon">🎯</div>
+                        <div class="technique-name">必須項目の統一表示</div>
+                    </div>
+                    
+                    <div class="technique-demo">
+                        <div class="code-section">
+                            <div class="code-title">CSSコード</div>
+                            <div class="code-block">
+<span class="highlight-new">.required</span> {
+  <span class="highlight-new">color: #dc3545;</span>
+  <span class="highlight-new">font-weight: bold;</span>
+  <span class="highlight-new">margin-left: 3px;</span>
+}
+
+/* HTMLでの使用例 */
+&lt;label&gt;お名前&lt;span class="required"&gt;*&lt;/span&gt;&lt;/label&gt;
+                            </div>
+                        </div>
+                        
+                        <div class="demo-section">
+                            <div class="demo-title">統一された表示</div>
+                            <div style="font-size: 14px; color: #333;">
+                                <div style="margin-bottom: 8px;">
+                                    <strong>お名前</strong><span style="color: #dc3545; margin-left: 3px; font-weight: bold;">*</span>
+                                </div>
+                                <div style="margin-bottom: 8px;">
+                                    <strong>メールアドレス</strong><span style="color: #dc3545; margin-left: 3px; font-weight: bold;">*</span>
+                                </div>
+                                <div style="margin-bottom: 8px;">
+                                    <strong>電話番号</strong><span style="color: #666; margin-left: 3px;">（任意）</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="technique-item">
+                    <div class="technique-header">
+                        <div class="technique-icon">☑️</div>
+                        <div class="technique-name">チェックボックスの整列</div>
+                    </div>
+                    
+                    <div class="technique-demo">
+                        <div class="code-section">
+                            <div class="code-title">CSSコード</div>
+                            <div class="code-block">
+<span class="highlight-new">.checkbox-group</span> {
+  <span class="highlight-new">display: flex;</span>
+  <span class="highlight-new">align-items: center;</span>
+  <span class="highlight-new">margin: 20px 0;</span>
+}
+
+.checkbox-group input {
+  <span class="highlight-new">width: auto;</span>
+  <span class="highlight-new">margin-right: 10px;</span>
+}
+
+.checkbox-group label {
+  <span class="highlight-new">font-weight: normal;</span>
+  <span class="highlight-new">margin-bottom: 0;</span>
+}
+                            </div>
+                        </div>
+                        
+                        <div class="demo-section">
+                            <div class="demo-title">整列されたチェックボックス</div>
+                            <div style="display: flex; align-items: center; margin: 10px 0;">
+                                <input type="checkbox" style="width: auto; margin-right: 8px;">
+                                <label style="margin-bottom: 0; font-weight: normal; font-size: 13px;">利用規約に同意します</label>
+                            </div>
+                            <div style="display: flex; align-items: center; margin: 10px 0;">
+                                <input type="checkbox" style="width: auto; margin-right: 8px;">
+                                <label style="margin-bottom: 0; font-weight: normal; font-size: 13px;">メルマガを受け取る</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="color-palette">
+            <div class="palette-title">🎨 統一されたカラーパレット</div>
+            
+            <div class="colors-grid">
+                <div class="color-card">
+                    <div class="color-sample" style="background-color: #007bff;">
+                        Primary
+                    </div>
+                    <div class="color-info">
+                        <div class="color-name">プライマリ</div>
+                        <div>#007bff</div>
+                        <div>メインカラー</div>
+                    </div>
+                </div>
+                
+                <div class="color-card">
+                    <div class="color-sample" style="background-color: #28a745;">
+                        Success
+                    </div>
+                    <div class="color-info">
+                        <div class="color-name">成功</div>
+                        <div>#28a745</div>
+                        <div>成功・完了</div>
+                    </div>
+                </div>
+                
+                <div class="color-card">
+                    <div class="color-sample" style="background-color: #dc3545;">
+                        Danger
+                    </div>
+                    <div class="color-info">
+                        <div class="color-name">エラー</div>
+                        <div>#dc3545</div>
+                        <div>必須・エラー</div>
+                    </div>
+                </div>
+                
+                <div class="color-card">
+                    <div class="color-sample" style="background-color: #333; color: white;">
+                        Text
+                    </div>
+                    <div class="color-info">
+                        <div class="color-name">テキスト</div>
+                        <div>#333</div>
+                        <div>文字色</div>
+                    </div>
+                </div>
+                
+                <div class="color-card">
+                    <div class="color-sample" style="background-color: #ddd; color: #333;">
+                        Border
+                    </div>
+                    <div class="color-info">
+                        <div class="color-name">枠線</div>
+                        <div>#ddd</div>
+                        <div>入力欄の枠線</div>
+                    </div>
+                </div>
+                
+                <div class="color-card">
+                    <div class="color-sample" style="background-color: #f8f9fa; color: #333;">
+                        Background
+                    </div>
+                    <div class="color-info">
+                        <div class="color-name">背景</div>
+                        <div>#f8f9fa</div>
+                        <div>ページ背景</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="css-variables-demo">
+                <div class="variables-title">💡 CSS変数で色を統一管理</div>
+                <div class="code-block">
+:root {
+  --primary-color: #007bff;
+  --success-color: #28a745;
+  --danger-color: #dc3545;
+  --text-color: #333;
+  --border-color: #ddd;
+  --background-color: #f8f9fa;
+}
+
+/* 使用例 */
+.btn-primary {
+  background-color: var(--primary-color);
+}
+
+.required {
+  color: var(--danger-color);
+}
+                </div>
+            </div>
+        </div>
+        
+        <div class="final-example">
+            <div class="final-title">🏆 完成：統一感のある美しいフォーム</div>
+            
+            <form class="final-form">
+                <h3>お問い合わせフォーム</h3>
+                
+                <div class="form-group">
+                    <label>お名前<span class="required">*</span></label>
+                    <input type="text" placeholder="例：山田太郎" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>メールアドレス<span class="required">*</span></label>
+                    <input type="email" placeholder="例：yamada@example.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>お問い合わせ種別<span class="required">*</span></label>
+                    <select required>
+                        <option value="">選択してください</option>
+                        <option value="product">商品について</option>
+                        <option value="service">サービスについて</option>
+                        <option value="support">サポートについて</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>お問い合わせ内容<span class="required">*</span></label>
+                    <textarea placeholder="詳しい内容をお書きください" required></textarea>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" required>
+                    <label>個人情報の取り扱いに同意します<span class="required">*</span></label>
+                </div>
+                
+                <button type="submit" class="submit-btn">送信する</button>
+            </form>
+            
+            <div style="text-align: center; margin-top: 25px; font-size: 16px; opacity: 0.9;">
+                🎨 <strong>統一されたデザインで</strong><br>
+                <strong>プロフェッショナルな印象を実現！</strong>
+            </div>
+        </div>
+        
+        <div class="checklist">
+            <div class="checklist-title">📋 デザイン統一チェックリスト</div>
+            
+            <div class="checklist-grid">
+                <div class="checklist-item">
+                    <h5>📐 レイアウト</h5>
+                    <ul>
+                        <li>要素間の余白が統一されている</li>
+                        <li>入力欄のサイズが揃っている</li>
+                        <li>関連要素がグループ化されている</li>
+                        <li>視覚的な階層が明確</li>
+                    </ul>
+                </div>
+                
+                <div class="checklist-item">
+                    <h5>🎨 色使い</h5>
+                    <ul>
+                        <li>統一されたカラーパレットを使用</li>
+                        <li>必須マークの色が統一されている</li>
+                        <li>エラー状態の色が統一されている</li>
+                        <li>CSS変数で色を管理</li>
+                    </ul>
+                </div>
+                
+                <div class="checklist-item">
+                    <h5>📝 文字・ラベル</h5>
+                    <ul>
+                        <li>フォントサイズが統一されている</li>
+                        <li>文字の太さが統一されている</li>
+                        <li>ラベルの表記が統一されている</li>
+                        <li>必須・任意の表記が統一されている</li>
+                    </ul>
+                </div>
+                
+                <div class="checklist-item">
+                    <h5>🎯 操作性</h5>
+                    <ul>
+                        <li>hover・focus効果が統一されている</li>
+                        <li>ボタンのスタイルが統一されている</li>
+                        <li>チェックボックスが適切に配置</li>
+                        <li>全体的な統一感がある</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
