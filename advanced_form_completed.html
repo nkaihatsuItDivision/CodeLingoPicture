@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>お問い合わせフォーム完成イメージ</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        form {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #495057;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ced4da;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        }
+
+        input[type="checkbox"], input[type="radio"] {
+            width: auto;
+            margin-right: 8px;
+            transform: scale(1.2);
+        }
+
+        .checkbox-group, .radio-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 8px;
+            border-radius: 6px;
+            transition: background-color 0.2s;
+        }
+
+        .checkbox-group:hover, .radio-group:hover {
+            background-color: #f8f9fa;
+        }
+
+        .question {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 15px;
+        }
+
+        .submit-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .required {
+            color: #dc3545;
+        }
+
+        .completed-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(40, 167, 69, 0.3);
+            font-size: 14px;
+        }
+
+        .demo-note {
+            background-color: #e3f2fd;
+            border: 2px solid #2196f3;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .demo-title {
+            font-weight: bold;
+            color: #1976d2;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .demo-desc {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .file-structure {
+            background-color: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+
+        .file-icon {
+            color: #6c757d;
+            margin-right: 8px;
+        }
+
+        .html-file { color: #e34c26; }
+        .css-file { color: #1572b6; }
+    </style>
+</head>
+<body>
+    <div class="completed-badge">✅ 完成形</div>
+    
+    <div class="demo-note">
+        <div class="demo-title">🎯 これから作成するフォームの完成イメージ</div>
+        <div class="demo-desc">
+            外部スタイルシート（style.css）を使用して、このような美しいフォームを作成します
+        </div>
+    </div>
+
+    <div class="file-structure">
+        📁 プロジェクト構成<br>
+        <span class="file-icon">├──</span><span class="html-file">📄 form-advanced.html</span> (HTMLファイル)<br>
+        <span class="file-icon">└──</span><span class="css-file">🎨 style.css</span> (CSSファイル)
+    </div>
+
+    <h1>お問い合わせフォーム</h1>
+    
+    <form action="#" method="post">
+        <!-- 基本情報セクション -->
+        <div class="form-group">
+            <label for="name">お名前 <span class="required">*</span></label>
+            <input type="text" name="name" id="name" placeholder="山田太郎" value="山田太郎">
+        </div>
+        
+        <div class="form-group">
+            <label for="email">メールアドレス <span class="required">*</span></label>
+            <input type="email" name="email" id="email" placeholder="yamada@example.com" value="yamada@example.com">
+        </div>
+        
+        <div class="form-group">
+            <label for="age">年齢</label>
+            <input type="number" name="age" id="age" min="0" max="120" placeholder="例: 25" value="28">
+        </div>
+        
+        <div class="form-group">
+            <label for="phone">電話番号</label>
+            <input type="tel" name="phone" id="phone" placeholder="090-1234-5678" value="090-1234-5678">
+        </div>
+        
+        <!-- 選択項目セクション -->
+        <div class="form-group">
+            <label for="prefecture">お住まいの都道府県</label>
+            <select name="prefecture" id="prefecture">
+                <option value="">都道府県を選択してください</option>
+                <option value="hokkaido">北海道</option>
+                <option value="tokyo" selected>東京都</option>
+                <option value="osaka">大阪府</option>
+                <option value="kyoto">京都府</option>
+                <option value="aichi">愛知県</option>
+                <option value="fukuoka">福岡県</option>
+                <option value="other">その他</option>
+            </select>
+        </div>
+        
+        <!-- ラジオボタンセクション -->
+        <div class="form-group">
+            <div class="question">お問い合わせの種別をお選びください:</div>
+            <div class="radio-group">
+                <input type="radio" name="inquiry_type" value="product" id="product" checked>
+                <label for="product">商品について</label>
+            </div>
+            <div class="radio-group">
+                <input type="radio" name="inquiry_type" value="service" id="service">
+                <label for="service">サービスについて</label>
+            </div>
+            <div class="radio-group">
+                <input type="radio" name="inquiry_type" value="support" id="support">
+                <label for="support">サポートについて</label>
+            </div>
+            <div class="radio-group">
+                <input type="radio" name="inquiry_type" value="other" id="inquiry_other">
+                <label for="inquiry_other">その他</label>
+            </div>
+        </div>
+        
+        <!-- チェックボックスセクション -->
+        <div class="form-group">
+            <div class="question">興味のある分野をお選びください（複数選択可）:</div>
+            <div class="checkbox-group">
+                <input type="checkbox" name="interest" value="web" id="web" checked>
+                <label for="web">Web制作</label>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" name="interest" value="programming" id="programming">
+                <label for="programming">プログラミング</label>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" name="interest" value="design" id="design" checked>
+                <label for="design">デザイン</label>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" name="interest" value="marketing" id="marketing">
+                <label for="marketing">マーケティング</label>
+            </div>
+        </div>
+        
+        <!-- テキストエリアセクション -->
+        <div class="form-group">
+            <label for="message">お問い合わせ内容 <span class="required">*</span></label>
+            <textarea name="message" id="message" rows="6" 
+                      placeholder="お問い合わせの内容を詳しくお書きください">Webサイトのリニューアルについてご相談があります。現在のサイトのデザインが古くなってしまったため、モダンで使いやすいデザインに変更したいと考えています。</textarea>
+        </div>
+        
+        <!-- 同意チェックセクション -->
+        <div class="form-group">
+            <div class="checkbox-group">
+                <input type="checkbox" name="agreement" value="yes" id="agreement" checked>
+                <label for="agreement">プライバシーポリシーに同意します <span class="required">*</span></label>
+            </div>
+        </div>
+        
+        <!-- 送信ボタン -->
+        <button type="submit" class="submit-btn">送信する</button>
+    </form>
+
+    <div style="margin-top: 30px; padding: 20px; background-color: #d4edda; border: 2px solid #28a745; border-radius: 10px;">
+        <div style="font-weight: bold; color: #155724; margin-bottom: 10px; text-align: center;">
+            ✨ このフォームの特徴
+        </div>
+        <ul style="color: #155724; font-size: 14px; margin: 0; padding-left: 20px;">
+            <li><strong>外部CSS使用:</strong> HTMLとCSSが分離され、管理しやすい</li>
+            <li><strong>様々な入力要素:</strong> text、email、number、tel、date、radio、checkbox、select、textarea</li>
+            <li><strong>アクセシビリティ:</strong> すべてにlabel要素が適切に設定</li>
+            <li><strong>レスポンシブ:</strong> スマートフォンでも美しく表示</li>
+            <li><strong>ユーザビリティ:</strong> フォーカス時のハイライト、ホバー効果</li>
+        </ul>
+    </div>
+</body>
+</html>
