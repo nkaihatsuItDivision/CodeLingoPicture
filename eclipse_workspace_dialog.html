@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eclipse起動時のワークスペース選択画面</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+            font-family: 'Yu Gothic', 'Hiragino Sans', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .dialog-container {
+            background-color: white;
+            border: 2px solid #d0d0d0;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            width: 520px;
+            overflow: hidden;
+        }
+
+        .title-bar {
+            background: linear-gradient(to bottom, #e8e8e8, #d8d8d8);
+            border-bottom: 1px solid #c0c0c0;
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: bold;
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-buttons {
+            display: flex;
+            gap: 2px;
+        }
+
+        .close-btn {
+            width: 16px;
+            height: 16px;
+            border-radius: 2px;
+            border: 1px solid #999;
+            background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .dialog-content {
+            padding: 20px;
+        }
+
+        .eclipse-logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .eclipse-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #4a90e2, #357abd);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .dialog-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .dialog-text {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .workspace-section {
+            margin-bottom: 20px;
+        }
+
+        .workspace-label {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .workspace-input-container {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .workspace-input {
+            flex: 1;
+            padding: 6px 8px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 13px;
+            background-color: white;
+        }
+
+        .browse-btn {
+            padding: 6px 12px;
+            background: linear-gradient(to bottom, #f8f8f8, #e8e8e8);
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 13px;
+            cursor: pointer;
+            color: #333;
+        }
+
+        .browse-btn:hover {
+            background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+        }
+
+        .checkbox-section {
+            margin-bottom: 25px;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox {
+            width: 16px;
+            height: 16px;
+            border: 1px solid #999;
+            border-radius: 2px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .checkbox.checked::after {
+            content: '✓';
+            position: absolute;
+            top: -2px;
+            left: 2px;
+            font-size: 12px;
+            color: #007acc;
+            font-weight: bold;
+        }
+
+        .checkbox-label {
+            font-size: 13px;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .button-section {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            border-top: 1px solid #e0e0e0;
+            padding-top: 15px;
+        }
+
+        .dialog-btn {
+            padding: 8px 20px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 13px;
+            cursor: pointer;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .btn-cancel {
+            background: linear-gradient(to bottom, #f8f8f8, #e8e8e8);
+            color: #333;
+        }
+
+        .btn-launch {
+            background: linear-gradient(to bottom, #4a90e2, #357abd);
+            color: white;
+            font-weight: bold;
+        }
+
+        .btn-cancel:hover {
+            background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+        }
+
+        .btn-launch:hover {
+            background: linear-gradient(to bottom, #5a9ff2, #4680cd);
+        }
+
+        .highlight-box {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 12px;
+            margin-top: 15px;
+        }
+
+        .highlight-text {
+            font-size: 13px;
+            color: #856404;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="dialog-container">
+        <div class="title-bar">
+            <span>ワークスペース起動ツール</span>
+            <div class="close-buttons">
+                <div class="close-btn">_</div>
+                <div class="close-btn">□</div>
+                <div class="close-btn">×</div>
+            </div>
+        </div>
+        
+        <div class="dialog-content">
+            <div class="eclipse-logo">
+                <div class="eclipse-icon">E</div>
+            </div>
+            
+            <div class="dialog-title">ワークスペースを選択</div>
+            
+            <div class="dialog-text">
+                Eclipseは、プロジェクトを格納するワークスペースフォルダーを使用します。<br>
+                新しいワークスペースを選択するか、既存のワークスペースを使用してください。
+            </div>
+            
+            <div class="workspace-section">
+                <div class="workspace-label">ワークスペース:</div>
+                <div class="workspace-input-container">
+                    <input type="text" class="workspace-input" value="C:\Users\ユーザー名\eclipse-workspace" readonly>
+                    <button class="browse-btn">参照...</button>
+                </div>
+            </div>
+            
+            <div class="checkbox-section">
+                <div class="checkbox-container">
+                    <div class="checkbox checked"></div>
+                    <label class="checkbox-label">この選択をデフォルトとして使用し、今後この質問を表示しない</label>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <div class="highlight-text">
+                    💡 初回は既定の場所でOKです！「起動」をクリックしてください。
+                </div>
+            </div>
+            
+            <div class="button-section">
+                <button class="dialog-btn btn-cancel">キャンセル</button>
+                <button class="dialog-btn btn-launch">起動</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
