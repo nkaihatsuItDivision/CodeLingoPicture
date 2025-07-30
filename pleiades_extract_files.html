@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pleiadesファイル解凍手順</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            font-family: 'Yu Gothic', 'Hiragino Sans', Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .step-container {
+            background-color: white;
+            border: 2px solid #d0d0d0;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .step-header {
+            background: linear-gradient(135deg, #007acc, #0056b3);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .step-number {
+            background-color: white;
+            color: #007acc;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .step-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .step-content {
+            padding: 20px;
+        }
+
+        /* ファイルエクスプローラー */
+        .explorer-container {
+            border: 1px solid #d0d0d0;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .explorer-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .explorer-controls {
+            display: flex;
+            gap: 4px;
+        }
+
+        .control-btn {
+            background-color: #e8e8e8;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 4px 8px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .address-path {
+            flex: 1;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 4px 8px;
+            font-size: 13px;
+            margin-left: 10px;
+        }
+
+        .explorer-content {
+            padding: 15px;
+            background-color: white;
+            min-height: 200px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 5px;
+            position: relative;
+        }
+
+        .file-item:hover {
+            background-color: #f0f8ff;
+        }
+
+        .file-item.selected {
+            background-color: #e3f2fd;
+            border: 1px solid #2196f3;
+        }
+
+        .file-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .file-icon.zip {
+            background: linear-gradient(135deg, #ffc107, #ff8f00);
+        }
+
+        .file-icon.folder {
+            background: linear-gradient(135deg, #2196f3, #1976d2);
+        }
+
+        .file-info {
+            flex: 1;
+        }
+
+        .file-name {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 2px;
+        }
+
+        .file-details {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* 右クリックメニュー */
+        .context-menu {
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 100;
+            min-width: 200px;
+            top: 20px;
+            right: 20px;
+        }
+
+        .context-item {
+            padding: 10px 15px;
+            font-size: 13px;
+            color: #333;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .context-item:hover {
+            background-color: #f0f8ff;
+        }
+
+        .context-item.highlighted {
+            background-color: #007acc;
+            color: white;
+        }
+
+        .context-item:last-child {
+            border-bottom: none;
+        }
+
+        .context-icon {
+            width: 16px;
+            height: 16px;
+            background-color: #4a90e2;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+        }
+
+        /* 解凍プログレス */
+        .extract-dialog {
+            background-color: white;
+            border: 2px solid #d0d0d0;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            width: 400px;
+            margin: 20px auto;
+            overflow: hidden;
+        }
+
+        .dialog-title-bar {
+            background: linear-gradient(to bottom, #e8e8e8, #d8d8d8);
+            border-bottom: 1px solid #c0c0c0;
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .dialog-content {
+            padding: 20px;
+        }
+
+        .dialog-message {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .progress-container {
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50, #45a049);
+            width: 65%;
+            transition: width 2s ease-in-out;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background-image: linear-gradient(
+                -45deg,
+                rgba(255, 255, 255, .2) 25%,
+                transparent 25%,
+                transparent 50%,
+                rgba(255, 255, 255, .2) 50%,
+                rgba(255, 255, 255, .2) 75%,
+                transparent 75%,
+                transparent
+            );
+            background-size: 50px 50px;
+            animation: move 2s linear infinite;
+        }
+
+        @keyframes move {
+            0% { background-position: 0 0; }
+            100% { background-position: 50px 50px; }
+        }
+
+        .progress-text {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .extract-info {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+        }
+
+        /* ハイライト要素 */
+        .highlight-arrow {
+            position: absolute;
+            right: -40px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ff4444;
+            font-size: 20px;
+            font-weight: bold;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .highlight-text {
+            position: absolute;
+            right: -150px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #ff4444;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        /* 説明テキスト */
+        .step-description {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .warning-box {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .warning-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 8px;
+        }
+
+        .warning-content {
+            font-size: 13px;
+            color: #856404;
+            line-height: 1.4;
+        }
+
+        .success-box {
+            background-color: #e8f5e8;
+            border: 1px solid #4caf50;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .success-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2e7d32;
+            margin-bottom: 8px;
+        }
+
+        .success-content {
+            font-size: 13px;
+            color: #2e7d32;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- ステップ1: ダウンロードファイルの確認 -->
+        <div class="step-container">
+            <div class="step-header">
+                <div class="step-number">1</div>
+                <div class="step-title">ダウンロードしたZIPファイルを確認</div>
+            </div>
+            <div class="step-content">
+                <div class="step-description">
+                    ダウンロードが完了したら、「ダウンロード」フォルダにPleiadesのZIPファイルがあることを確認します。
+                </div>
+                
+                <div class="explorer-container">
+                    <div class="explorer-header">
+                        <div class="explorer-controls">
+                            <div class="control-btn">←</div>
+                            <div class="control-btn">→</div>
+                            <div class="control-btn">↑</div>
+                        </div>
+                        <div class="address-path">C:\Users\ユーザー名\Downloads</div>
+                    </div>
+                    <div class="explorer-content">
+                        <div class="file-item">
+                            <div class="file-icon zip">ZIP</div>
+                            <div class="file-info">
+                                <div class="file-name">その他のファイル.pdf</div>
+                                <div class="file-details">2024/03/15 14:30 | 2.5 MB</div>
+                            </div>
+                        </div>
+                        <div class="file-item selected" style="position: relative;">
+                            <div class="file-icon zip">ZIP</div>
+                            <div class="file-info">
+                                <div class="file-name">pleiades-2024-03-java-win-64bit-jre_20240312.zip</div>
+                                <div class="file-details">2024/03/15 15:45 | 1.2 GB</div>
+                            </div>
+                            <div class="highlight-arrow">←</div>
+                            <div class="highlight-text">このファイルです</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <div class="warning-title">⚠️ 確認ポイント</div>
+                    <div class="warning-content">
+                        ファイル名に「java」「win-64bit」が含まれていることを確認してください。ファイルサイズは約1.2GBです。
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ステップ2: 右クリックで解凍メニューを表示 -->
+        <div class="step-container">
+            <div class="step-header">
+                <div class="step-number">2</div>
+                <div class="step-title">ZIPファイルを右クリックして解凍</div>
+            </div>
+            <div class="step-content">
+                <div class="step-description">
+                    ZIPファイルを右クリックして、コンテキストメニューから「すべて展開」を選択します。
+                </div>
+                
+                <div class="explorer-container">
+                    <div class="explorer-header">
+                        <div class="explorer-controls">
+                            <div class="control-btn">←</div>
+                            <div class="control-btn">→</div>
+                            <div class="control-btn">↑</div>
+                        </div>
+                        <div class="address-path">C:\Users\ユーザー名\Downloads</div>
+                    </div>
+                    <div class="explorer-content">
+                        <div class="file-item selected" style="position: relative;">
+                            <div class="file-icon zip">ZIP</div>
+                            <div class="file-info">
+                                <div class="file-name">pleiades-2024-03-java-win-64bit-jre_20240312.zip</div>
+                                <div class="file-details">2024/03/15 15:45 | 1.2 GB</div>
+                            </div>
+                        </div>
+
+                        <!-- 右クリックメニュー -->
+                        <div class="context-menu">
+                            <div class="context-item">
+                                <div class="context-icon">📂</div>
+                                <span>開く</span>
+                            </div>
+                            <div class="context-item highlighted" style="position: relative;">
+                                <div class="context-icon">📤</div>
+                                <span>すべて展開...</span>
+                                <div class="highlight-arrow">←</div>
+                                <div class="highlight-text">ここをクリック</div>
+                            </div>
+                            <div class="context-item">
+                                <div class="context-icon">📋</div>
+                                <span>コピー</span>
+                            </div>
+                            <div class="context-item">
+                                <div class="context-icon">✂️</div>
+                                <span>切り取り</span>
+                            </div>
+                            <div class="context-item">
+                                <div class="context-icon">🗑️</div>
+                                <span>削除</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ステップ3: 解凍先の指定と実行 -->
+        <div class="step-container">
+            <div class="step-header">
+                <div class="step-number">3</div>
+                <div class="step-title">解凍先フォルダを指定して実行</div>
+            </div>
+            <div class="step-content">
+                <div class="step-description">
+                    解凍先のフォルダを「C:\pleiades」に変更して、「展開」ボタンをクリックします。
+                </div>
+                
+                <div class="extract-dialog">
+                    <div class="dialog-title-bar">圧縮 (ZIP 形式) フォルダーの展開</div>
+                    <div class="dialog-content">
+                        <div class="dialog-message">
+                            ファイルは下のフォルダーに展開されます:
+                        </div>
+                        
+                        <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 20px;">
+                            <input type="text" value="C:\pleiades" style="flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 3px; background-color: #fffacd; font-weight: bold;">
+                            <button style="padding: 8px 12px; background-color: #e8e8e8; border: 1px solid #ccc; border-radius: 3px; cursor: pointer;">参照...</button>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px;">
+                                <input type="checkbox" checked>
+                                <span>完了時に展開されたファイルを表示する</span>
+                            </label>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                            <button style="padding: 8px 20px; background-color: #f0f0f0; border: 1px solid #ccc; border-radius: 3px; cursor: pointer;">キャンセル</button>
+                            <button style="padding: 8px 20px; background-color: #007acc; color: white; border: none; border-radius: 3px; cursor: pointer; font-weight: bold;">展開</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <div class="warning-title">💡 解凍先のポイント</div>
+                    <div class="warning-content">
+                        「C:\pleiades」のようにシンプルなパスにすることで、後でアクセスしやすくなります。日本語が含まれるフォルダ名は避けてください。
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ステップ4: 解凍プロセス -->
+        <div class="step-container">
+            <div class="step-header">
+                <div class="step-number">4</div>
+                <div class="step-title">解凍の完了を待つ</div>
+            </div>
+            <div class="step-content">
+                <div class="step-description">
+                    ファイルサイズが大きいため、解凍には5-10分程度かかります。プログレスバーが100%になるまでお待ちください。
+                </div>
+                
+                <div class="extract-dialog">
+                    <div class="dialog-title-bar">展開中...</div>
+                    <div class="dialog-content">
+                        <div class="dialog-message">
+                            ファイルを展開しています...
+                        </div>
+                        
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill"></div>
+                            </div>
+                            <div class="progress-text">65% 完了 (785 MB / 1.2 GB)</div>
+                        </div>
+                        
+                        <div class="extract-info">
+                            現在処理中: eclipse\plugins\org.eclipse.jdt.core_3.29.0.v20230411-1309.jar
+                        </div>
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <div class="success-title">✅ 解凍完了後の確認</div>
+                    <div class="success-content">
+                        解凍が完了すると、「C:\pleiades」フォルダに「eclipse」フォルダが作成されます。その中に「eclipse.exe」ファイルがあることを確認してください。
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

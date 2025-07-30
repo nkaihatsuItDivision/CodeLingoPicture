@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pleiadesダウンロードページ</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            font-family: 'Yu Gothic', 'Hiragino Sans', Arial, sans-serif;
+        }
+
+        .browser-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+
+        /* ブラウザ上部 */
+        .browser-header {
+            background-color: #e8e8e8;
+            padding: 8px 12px;
+            border-bottom: 1px solid #d0d0d0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .browser-controls {
+            display: flex;
+            gap: 4px;
+        }
+
+        .control-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+        }
+
+        .control-close {
+            background-color: #ff5f57;
+        }
+
+        .control-minimize {
+            background-color: #ffbd2e;
+        }
+
+        .control-maximize {
+            background-color: #28ca42;
+        }
+
+        .address-bar {
+            flex: 1;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            padding: 6px 15px;
+            font-size: 14px;
+            color: #333;
+            margin-left: 20px;
+        }
+
+        /* ページコンテンツ */
+        .page-content {
+            padding: 0;
+            min-height: 600px;
+            background-color: white;
+        }
+
+        /* ヘッダー */
+        .site-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 40px;
+            text-align: center;
+        }
+
+        .site-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .site-subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        /* メインコンテンツ */
+        .main-content {
+            padding: 40px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .page-description {
+            font-size: 16px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        /* ダウンロードセクション */
+        .download-section {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .version-category {
+            margin-bottom: 30px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .category-header {
+            background-color: #f8f9fa;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .category-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .category-description {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .download-items {
+            padding: 20px;
+        }
+
+        .download-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            background-color: #fafafa;
+            transition: all 0.3s ease;
+        }
+
+        .download-item:hover {
+            background-color: #f0f8ff;
+            border-color: #007acc;
+        }
+
+        .download-item.recommended {
+            border-color: #28a745;
+            background-color: #f8fff8;
+            position: relative;
+        }
+
+        .recommended-badge {
+            position: absolute;
+            top: -8px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .download-info {
+            flex: 1;
+        }
+
+        .download-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .download-details {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .download-specs {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .download-button {
+            background: linear-gradient(135deg, #007acc, #0056b3);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .download-button:hover {
+            background: linear-gradient(135deg, #0056b3, #004085);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 122, 204, 0.3);
+        }
+
+        .download-button.recommended {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7); }
+            50% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
+        }
+
+        .download-button.recommended:hover {
+            background: linear-gradient(135deg, #1e7e34, #155724);
+        }
+
+        /* ハイライト矢印 */
+        .highlight-arrow {
+            position: absolute;
+            right: -60px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ff4444;
+            font-size: 24px;
+            font-weight: bold;
+            animation: bounce 1.5s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(-50%); }
+            40% { transform: translateY(-60%); }
+            60% { transform: translateY(-55%); }
+        }
+
+        .highlight-text {
+            position: absolute;
+            right: -180px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #ff4444;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .highlight-text::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+            border-right: 8px solid #ff4444;
+        }
+
+        /* 注意事項 */
+        .notice-box {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .notice-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .notice-content {
+            font-size: 14px;
+            color: #856404;
+            line-height: 1.5;
+        }
+
+        .notice-list {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .notice-list li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="browser-container">
+        <!-- ブラウザヘッダー -->
+        <div class="browser-header">
+            <div class="browser-controls">
+                <div class="control-btn control-close"></div>
+                <div class="control-btn control-minimize"></div>
+                <div class="control-btn control-maximize"></div>
+            </div>
+            <div class="address-bar">https://willbrains.jp/</div>
+        </div>
+
+        <!-- ページコンテンツ -->
+        <div class="page-content">
+            <!-- サイトヘッダー -->
+            <div class="site-header">
+                <div class="site-title">Pleiades All in One</div>
+                <div class="site-subtitle">Java統合開発環境 Eclipse日本語化プラグイン</div>
+            </div>
+
+            <!-- メインコンテンツ -->
+            <div class="main-content">
+                <div class="page-title">Eclipse IDE ダウンロード</div>
+                <div class="page-description">
+                    Java開発に最適化されたEclipse統合開発環境をダウンロードできます。<br>
+                    初心者の方には「Java Full Edition」をおすすめします。
+                </div>
+
+                <div class="download-section">
+                    <!-- Java Full Edition -->
+                    <div class="version-category">
+                        <div class="category-header">
+                            <div class="category-title">Java Full Edition</div>
+                            <div class="category-description">Java開発に必要な全てのツールが含まれた完全版（推奨）</div>
+                        </div>
+                        <div class="download-items">
+                            <div class="download-item recommended" style="position: relative;">
+                                <div class="recommended-badge">おすすめ</div>
+                                <div class="download-info">
+                                    <div class="download-title">Pleiades All in One Java Full Edition</div>
+                                    <div class="download-details">Eclipse 2024-03 (4.31) ベース | Windows 64bit</div>
+                                    <div class="download-specs">ファイルサイズ: 1.2GB | JDK 17 同梱</div>
+                                </div>
+                                <button class="download-button recommended">ダウンロード</button>
+                                <div class="highlight-arrow">←</div>
+                                <div class="highlight-text">ここをクリック！</div>
+                            </div>
+
+                            <div class="download-item">
+                                <div class="download-info">
+                                    <div class="download-title">Pleiades All in One Java Full Edition</div>
+                                    <div class="download-details">Eclipse 2024-03 (4.31) ベース | macOS 64bit</div>
+                                    <div class="download-specs">ファイルサイズ: 1.1GB | JDK 17 同梱</div>
+                                </div>
+                                <button class="download-button">ダウンロード</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Java Standard Edition -->
+                    <div class="version-category">
+                        <div class="category-header">
+                            <div class="category-title">Java Standard Edition</div>
+                            <div class="category-description">基本的なJava開発機能のみの軽量版</div>
+                        </div>
+                        <div class="download-items">
+                            <div class="download-item">
+                                <div class="download-info">
+                                    <div class="download-title">Pleiades All in One Java Standard Edition</div>
+                                    <div class="download-details">Eclipse 2024-03 (4.31) ベース | Windows 64bit</div>
+                                    <div class="download-specs">ファイルサイズ: 650MB | JDK 17 同梱</div>
+                                </div>
+                                <button class="download-button">ダウンロード</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ultimate Edition -->
+                    <div class="version-category">
+                        <div class="category-header">
+                            <div class="category-title">Ultimate Edition</div>
+                            <div class="category-description">Java + Web開発 + その他言語対応の最上位版</div>
+                        </div>
+                        <div class="download-items">
+                            <div class="download-item">
+                                <div class="download-info">
+                                    <div class="download-title">Pleiades All in One Ultimate Edition</div>
+                                    <div class="download-details">Eclipse 2024-03 (4.31) ベース | Windows 64bit</div>
+                                    <div class="download-specs">ファイルサイズ: 2.1GB | 全言語対応</div>
+                                </div>
+                                <button class="download-button">ダウンロード</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 注意事項 -->
+                <div class="notice-box">
+                    <div class="notice-title">
+                        💡 ダウンロード前の注意事項
+                    </div>
+                    <div class="notice-content">
+                        <ul class="notice-list">
+                            <li><strong>推奨環境:</strong> Windows 10/11 64bit、macOS 10.15以降</li>
+                            <li><strong>必要容量:</strong> 解凍後に約2.5GB の空き容量が必要</li>
+                            <li><strong>初心者の方:</strong> 迷ったら「Java Full Edition（Windows 64bit）」を選択</li>
+                            <li><strong>ダウンロード時間:</strong> 回線速度により10-30分程度かかる場合があります</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
