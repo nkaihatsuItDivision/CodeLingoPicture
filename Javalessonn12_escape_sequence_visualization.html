@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>エスケープシーケンスの視覚化図</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+        
+        .main-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .header p {
+            margin: 10px 0 0 0;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .concept-section {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 2px solid #2196f3;
+        }
+        
+        .concept-title {
+            color: #1976d2;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .concept-explanation {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #424242;
+            text-align: center;
+        }
+        
+        .escape-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        
+        .escape-item {
+            background: #fff;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .escape-item:hover {
+            border-color: #ff6b6b;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .escape-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .escape-symbol {
+            background: #ff6b6b;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 18px;
+            font-weight: bold;
+            margin-right: 15px;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .escape-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .escape-description {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        .code-example {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 12px 15px;
+            border-radius: 6px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            margin-bottom: 10px;
+            border-left: 4px solid #ff6b6b;
+        }
+        
+        .output-example {
+            background: #1a202c;
+            color: #68d391;
+            padding: 12px 15px;
+            border-radius: 6px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            border-left: 4px solid #68d391;
+        }
+        
+        .visual-demo {
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px dashed #666;
+        }
+        
+        .demo-title {
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .tab-demo {
+            display: flex;
+            font-family: 'Consolas', monospace;
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        
+        .tab-content {
+            margin-right: 40px;
+        }
+        
+        .newline-demo {
+            font-family: 'Consolas', monospace;
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 10px;
+            border-radius: 4px;
+            line-height: 1.8;
+        }
+        
+        .quote-demo {
+            font-family: 'Consolas', monospace;
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        
+        .backslash-demo {
+            font-family: 'Consolas', monospace;
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        
+        .why-section {
+            background: linear-gradient(135deg, #fff3e0 0%, #fce4ec 100%);
+            border: 2px solid #ff9800;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+        
+        .why-title {
+            color: #f57c00;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .why-content {
+            color: #424242;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        
+        .problem-solution {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .problem-box, .solution-box {
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .problem-box {
+            background: #ffebee;
+            border: 2px solid #f44336;
+        }
+        
+        .solution-box {
+            background: #e8f5e8;
+            border: 2px solid #4caf50;
+        }
+        
+        .box-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .problem-title {
+            color: #d32f2f;
+        }
+        
+        .solution-title {
+            color: #388e3c;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="header">
+            <h1>🔤 エスケープシーケンス</h1>
+            <p>通常では表現できない特殊文字を表現する方法</p>
+        </div>
+        
+        <div class="content">
+            <!-- 概念説明 -->
+            <div class="concept-section">
+                <div class="concept-title">💡 エスケープシーケンスとは？</div>
+                <div class="concept-explanation">
+                    文字列の中で<strong>「改行」「タブ」「引用符」</strong>などの特殊な文字を表現するために、<br>
+                    <strong>バックスラッシュ（\）</strong>と<strong>特定の文字</strong>を組み合わせた記号のことです。
+                </div>
+            </div>
+            
+            <!-- エスケープシーケンス一覧 -->
+            <div class="escape-grid">
+                <!-- \n (改行) -->
+                <div class="escape-item">
+                    <div class="escape-header">
+                        <div class="escape-symbol">\n</div>
+                        <div class="escape-name">改行（newline）</div>
+                    </div>
+                    <div class="escape-description">
+                        文字列の途中で改行を行います。println を使わずに改行できます。
+                    </div>
+                    <div class="code-example">
+System.out.print("1行目\n2行目\n3行目");
+                    </div>
+                    <div class="visual-demo">
+                        <div class="demo-title">👁️ 表示結果:</div>
+                        <div class="newline-demo">
+1行目<br>
+2行目<br>
+3行目
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- \t (タブ) -->
+                <div class="escape-item">
+                    <div class="escape-header">
+                        <div class="escape-symbol">\t</div>
+                        <div class="escape-name">タブ（tab）</div>
+                    </div>
+                    <div class="escape-description">
+                        タブ文字を挿入します。表形式のデータを整列させるときに便利です。
+                    </div>
+                    <div class="code-example">
+System.out.println("名前\t年齢\t職業");
+                    </div>
+                    <div class="visual-demo">
+                        <div class="demo-title">👁️ 表示結果:</div>
+                        <div class="tab-demo">
+                            <div class="tab-content">名前</div>
+                            <div class="tab-content">年齢</div>
+                            <div class="tab-content">職業</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- \" (ダブルクォート) -->
+                <div class="escape-item">
+                    <div class="escape-header">
+                        <div class="escape-symbol">\"</div>
+                        <div class="escape-name">ダブルクォート</div>
+                    </div>
+                    <div class="escape-description">
+                        文字列の中にダブルクォート（"）を表示したい時に使います。
+                    </div>
+                    <div class="code-example">
+System.out.println("彼は\"こんにちは\"と言った");
+                    </div>
+                    <div class="visual-demo">
+                        <div class="demo-title">👁️ 表示結果:</div>
+                        <div class="quote-demo">
+彼は"こんにちは"と言った
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- \\ (バックスラッシュ) -->
+                <div class="escape-item">
+                    <div class="escape-header">
+                        <div class="escape-symbol">\\</div>
+                        <div class="escape-name">バックスラッシュ</div>
+                    </div>
+                    <div class="escape-description">
+                        バックスラッシュ（\）自体を表示したい時に使います。ファイルパスなどで使用。
+                    </div>
+                    <div class="code-example">
+System.out.println("C:\\Users\\Documents");
+                    </div>
+                    <div class="visual-demo">
+                        <div class="demo-title">👁️ 表示結果:</div>
+                        <div class="backslash-demo">
+C:\Users\Documents
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- なぜ必要かの説明 -->
+            <div class="why-section">
+                <div class="why-title">🤔 なぜエスケープシーケンスが必要なの？</div>
+                <div class="why-content">
+                    プログラムでは、文字列を<strong>ダブルクォート（"）</strong>で囲みます。<br>
+                    そのため、文字列の中に特殊文字を含めたい場合、通常の方法では困ってしまいます。
+                </div>
+                
+                <div class="problem-solution">
+                    <div class="problem-box">
+                        <div class="box-title problem-title">❌ 問題</div>
+                        <div class="code-example" style="margin-bottom: 10px;">
+// これはエラーになる！
+System.out.println("彼は"こんにちは"と言った");
+                        </div>
+                        <p style="margin: 0; color: #d32f2f; font-size: 14px;">
+                            → どこまでが文字列かわからない
+                        </p>
+                    </div>
+                    
+                    <div class="solution-box">
+                        <div class="box-title solution-title">✅ 解決</div>
+                        <div class="code-example" style="margin-bottom: 10px; background: #2d3748;">
+// エスケープシーケンスで解決！
+System.out.println("彼は\"こんにちは\"と言った");
+                        </div>
+                        <p style="margin: 0; color: #388e3c; font-size: 14px;">
+                            → \" で文字列内の引用符を表現
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
