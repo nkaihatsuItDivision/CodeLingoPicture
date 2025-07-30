@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formspree.io設定手順図</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .title {
+            color: #2c3e50;
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .time-estimate {
+            background: #e74c3c;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        .steps-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid #3498db;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .step:hover {
+            transform: translateX(10px);
+            box-shadow: 0 10px 25px rgba(52, 152, 219, 0.2);
+        }
+        
+        .step-number {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            flex-shrink: 0;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-title {
+            color: #2c3e50;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .step-description {
+            color: #5a6c7d;
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        
+        .step-action {
+            background: #ecf0f1;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #2c3e50;
+            border-left: 3px solid #95a5a6;
+        }
+        
+        .step-visual {
+            width: 120px;
+            height: 80px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #ecf0f1;
+            flex-shrink: 0;
+        }
+        
+        .browser-mockup {
+            width: 100px;
+            height: 60px;
+            background: #34495e;
+            border-radius: 6px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .browser-bar {
+            height: 15px;
+            background: #2c3e50;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            gap: 4px;
+        }
+        
+        .browser-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+        
+        .dot-red { background: #e74c3c; }
+        .dot-yellow { background: #f39c12; }
+        .dot-green { background: #27ae60; }
+        
+        .browser-content {
+            background: white;
+            height: calc(100% - 15px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #7f8c8d;
+        }
+        
+        .form-icon {
+            font-size: 40px;
+            color: #3498db;
+        }
+        
+        .email-icon {
+            font-size: 40px;
+            color: #e74c3c;
+        }
+        
+        .code-icon {
+            font-size: 40px;
+            color: #27ae60;
+        }
+        
+        .url-highlight {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .url-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .url-example {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 12px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+        
+        .final-step {
+            background: linear-gradient(135deg, #00b894, #00cec9);
+            color: white;
+            border-left: 5px solid #00a085;
+        }
+        
+        .final-step .step-title {
+            color: white;
+        }
+        
+        .final-step .step-description {
+            color: rgba(255,255,255,0.9);
+        }
+        
+        .final-step .step-action {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border-left: 3px solid rgba(255,255,255,0.3);
+        }
+        
+        .arrow-down {
+            text-align: center;
+            color: #3498db;
+            font-size: 24px;
+            margin: 10px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .step {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .step-visual {
+                order: -1;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">📧 Formspree.io 設定手順</h1>
+            <p class="subtitle">HTMLフォームに実際のメール送信機能を追加する</p>
+            <div class="time-estimate">⏱️ 所要時間：約15分</div>
+        </div>
+        
+        <div class="steps-flow">
+            <!-- Step 1 -->
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <div class="step-title">Formspree.ioにアクセス</div>
+                    <div class="step-description">
+                        公式サイトにアクセスして、アカウント作成を開始します
+                    </div>
+                    <div class="step-action">
+                        📍 https://formspree.io/ にアクセス<br>
+                        🔘 「Get Started」ボタンをクリック
+                    </div>
+                </div>
+                <div class="step-visual">
+                    <div class="browser-mockup">
+                        <div class="browser-bar">
+                            <div class="browser-dot dot-red"></div>
+                            <div class="browser-dot dot-yellow"></div>
+                            <div class="browser-dot dot-green"></div>
+                        </div>
+                        <div class="browser-content">Formspree</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="arrow-down">↓</div>
+            
+            <!-- Step 2 -->
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <div class="step-title">アカウント作成</div>
+                    <div class="step-description">
+                        メールアドレスとパスワードを入力してアカウントを作成します
+                    </div>
+                    <div class="step-action">
+                        📧 メールアドレス入力<br>
+                        🔐 パスワード設定<br>
+                        ✅ メール認証を完了
+                    </div>
+                </div>
+                <div class="step-visual">
+                    <div class="email-icon">📧</div>
+                </div>
+            </div>
+            
+            <div class="arrow-down">↓</div>
+            
+            <!-- Step 3 -->
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <div class="step-title">新しいフォーム作成</div>
+                    <div class="step-description">
+                        ダッシュボードから新しいフォームを作成します
+                    </div>
+                    <div class="step-action">
+                        🆕 「New Form」をクリック<br>
+                        📝 フォーム名：「お問い合わせフォーム」<br>
+                        📧 通知先メールアドレスを入力
+                    </div>
+                </div>
+                <div class="step-visual">
+                    <div class="form-icon">📋</div>
+                </div>
+            </div>
+            
+            <div class="arrow-down">↓</div>
+            
+            <!-- Step 4 -->
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <div class="step-title">エンドポイントURL取得</div>
+                    <div class="step-description">
+                        作成されたフォームのエンドポイントURLをコピーします
+                    </div>
+                    <div class="step-action">
+                        🔗 エンドポイントURLをコピー<br>
+                        📋 安全な場所に保存
+                    </div>
+                </div>
+                <div class="step-visual">
+                    <div class="code-icon">🔗</div>
+                </div>
+            </div>
+            
+            <div class="url-highlight">
+                <div class="url-title">🎯 取得するURL例</div>
+                <div class="url-example">https://formspree.io/f/YOUR_FORM_ID</div>
+            </div>
+            
+            <!-- Step 5 -->
+            <div class="step final-step">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                    <div class="step-title">HTMLフォームに適用</div>
+                    <div class="step-description">
+                        取得したURLをHTMLフォームのaction属性に設定します
+                    </div>
+                    <div class="step-action">
+                        &lt;form action="https://formspree.io/f/YOUR_FORM_ID" method="POST"&gt;<br>
+                        YOUR_FORM_ID を実際のIDに置き換え
+                    </div>
+                </div>
+                <div class="step-visual">
+                    <div style="color: white; font-size: 40px;">🎉</div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="background: #dff0d8; border: 1px solid #d6e9c6; color: #3c763d; padding: 20px; border-radius: 10px; margin-top: 30px; text-align: center;">
+            <strong>🎉 設定完了！</strong><br>
+            これで実際にメールが送信できるフォームの完成です
+        </div>
+    </div>
+</body>
+</html>
