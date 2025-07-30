@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>変数値変更の流れ - count変数の変化</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 1000px;
+            width: 100%;
+        }
+        
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #74b9ff;
+            padding-bottom: 10px;
+        }
+        
+        .step-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .step {
+            display: flex;
+            align-items: center;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 5px solid #74b9ff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .step-number {
+            background: #74b9ff;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+            margin-right: 25px;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .step-visual {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            font-weight: bold;
+            min-width: 200px;
+            text-align: center;
+        }
+        
+        .keyword { color: #8e44ad; }
+        .variable { color: #3498db; }
+        .number { color: #e74c3c; }
+        .string { color: #f39c12; }
+        
+        .arrow {
+            font-size: 30px;
+            color: #e74c3c;
+            margin: 0 15px;
+        }
+        
+        .variable-box {
+            width: 120px;
+            height: 80px;
+            border: 3px solid #74b9ff;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .variable-name {
+            font-size: 14px;
+            font-weight: bold;
+            color: #74b9ff;
+            margin-bottom: 5px;
+        }
+        
+        .variable-value {
+            font-size: 24px;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        
+        .old-value {
+            opacity: 0.3;
+            text-decoration: line-through;
+        }
+        
+        .new-value {
+            color: #27ae60;
+            animation: highlight 1s ease-in-out;
+        }
+        
+        @keyframes highlight {
+            0% { background: #27ae60; color: white; }
+            100% { background: transparent; color: #27ae60; }
+        }
+        
+        .explanation {
+            background: #e8f5e8;
+            border: 2px solid #27ae60;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .explanation-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 8px;
+        }
+        
+        .explanation-text {
+            color: #155724;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .memory-visualization {
+            background: #f0f8ff;
+            border: 2px solid #4169e1;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .memory-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #4169e1;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .memory-steps {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .memory-step {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .memory-box {
+            width: 100px;
+            height: 70px;
+            border: 2px solid #4169e1;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: white;
+            margin: 0 auto 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        
+        .memory-label {
+            font-size: 12px;
+            font-weight: bold;
+            color: #4169e1;
+        }
+        
+        .memory-value {
+            font-size: 18px;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        
+        .memory-arrow {
+            font-size: 24px;
+            color: #e74c3c;
+            margin: 0 10px;
+        }
+        
+        .memory-caption {
+            font-size: 14px;
+            color: #4169e1;
+            font-weight: bold;
+        }
+        
+        .console-output {
+            background: #1a1a1a;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin: 20px 0;
+            border: 2px solid #333;
+        }
+        
+        .console-title {
+            color: #ecf0f1;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .output-line {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+        
+        .key-concept {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .key-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .key-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .key-point {
+            background: white;
+            border: 1px solid #ffc107;
+            border-radius: 6px;
+            padding: 15px;
+            text-align: left;
+        }
+        
+        .key-point-title {
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 5px;
+        }
+        
+        .key-point-text {
+            color: #856404;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">変数の値が変わる仕組み</div>
+        
+        <div class="step-flow">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <div class="step-visual">
+                        <div class="code-block">
+                            <span class="keyword">int</span> <span class="variable">count</span> = <span class="number">0</span>;
+                        </div>
+                        <div class="arrow">→</div>
+                        <div class="variable-box">
+                            <div class="variable-name">count</div>
+                            <div class="variable-value">0</div>
+                        </div>
+                    </div>
+                    <div class="explanation">
+                        <div class="explanation-title">変数の初期化</div>
+                        <div class="explanation-text">
+                            「count」という名前の箱に「0」を入れる
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <div class="step-visual">
+                        <div class="code-block">
+                            System.out.println(<span class="string">"最初のcount: "</span> + <span class="variable">count</span>);
+                        </div>
+                        <div class="arrow">→</div>
+                        <div style="background: #1a1a1a; color: #00ff00; padding: 10px; border-radius: 6px; font-family: 'Courier New', monospace;">
+                            最初のcount: 0
+                        </div>
+                    </div>
+                    <div class="explanation">
+                        <div class="explanation-title">値の表示</div>
+                        <div class="explanation-text">
+                            変数countの中身「0」をコンソールに表示
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <div class="step-visual">
+                        <div class="code-block">
+                            <span class="variable">count</span> = <span class="number">10</span>;
+                        </div>
+                        <div class="arrow">→</div>
+                        <div class="variable-box">
+                            <div class="variable-name">count</div>
+                            <div class="variable-value">
+                                <span class="old-value">0</span> → <span class="new-value">10</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="explanation">
+                        <div class="explanation-title">値の変更</div>
+                        <div class="explanation-text">
+                            同じ箱に新しい値「10」を入れる<br>
+                            古い値「0」は消える
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <div class="step-visual">
+                        <div class="code-block">
+                            System.out.println(<span class="string">"変更後のcount: "</span> + <span class="variable">count</span>);
+                        </div>
+                        <div class="arrow">→</div>
+                        <div style="background: #1a1a1a; color: #00ff00; padding: 10px; border-radius: 6px; font-family: 'Courier New', monospace;">
+                            変更後のcount: 10
+                        </div>
+                    </div>
+                    <div class="explanation">
+                        <div class="explanation-title">新しい値の表示</div>
+                        <div class="explanation-text">
+                            変更された値「10」をコンソールに表示
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                    <div class="step-visual">
+                        <div class="code-block">
+                            <span class="variable">count</span> = <span class="number">20</span>;
+                        </div>
+                        <div class="arrow">→</div>
+                        <div class="variable-box">
+                            <div class="variable-name">count</div>
+                            <div class="variable-value">
+                                <span class="old-value">10</span> → <span class="new-value">20</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="explanation">
+                        <div class="explanation-title">再度変更</div>
+                        <div class="explanation-text">
+                            再び新しい値「20」に変更<br>
+                            何度でも変更可能！
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="memory-visualization">
+            <div class="memory-title">🧠 メモリー内での変化</div>
+            <div class="memory-steps">
+                <div class="memory-step">
+                    <div class="memory-box">
+                        <div class="memory-label">count</div>
+                        <div class="memory-value">0</div>
+                    </div>
+                    <div class="memory-caption">初期状態</div>
+                </div>
+                
+                <div class="memory-arrow">→</div>
+                
+                <div class="memory-step">
+                    <div class="memory-box">
+                        <div class="memory-label">count</div>
+                        <div class="memory-value">10</div>
+                    </div>
+                    <div class="memory-caption">1回目変更</div>
+                </div>
+                
+                <div class="memory-arrow">→</div>
+                
+                <div class="memory-step">
+                    <div class="memory-box">
+                        <div class="memory-label">count</div>
+                        <div class="memory-value">20</div>
+                    </div>
+                    <div class="memory-caption">2回目変更</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="console-output">
+            <div class="console-title">📟 実行結果（コンソール出力）</div>
+            <div class="output-line">最初のcount: 0</div>
+            <div class="output-line">変更後のcount: 10</div>
+            <div class="output-line">再変更後のcount: 20</div>
+        </div>
+        
+        <div class="key-concept">
+            <div class="key-title">🔑 変数変更の重要ポイント</div>
+            <div class="key-points">
+                <div class="key-point">
+                    <div class="key-point-title">1. 同じ箱を再利用</div>
+                    <div class="key-point-text">
+                        変数名は同じ「count」だが、中身は変わる
+                    </div>
+                </div>
+                <div class="key-point">
+                    <div class="key-point-title">2. 古い値は消える</div>
+                    <div class="key-point-text">
+                        新しい値を入れると、前の値は自動的に消去
+                    </div>
+                </div>
+                <div class="key-point">
+                    <div class="key-point-title">3. 何度でも変更可能</div>
+                    <div class="key-point-text">
+                        同じ変数に何度でも異なる値を代入できる
+                    </div>
+                </div>
+                <div class="key-point">
+                    <div class="key-point-title">4. 最新の値が有効</div>
+                    <div class="key-point-text">
+                        変数を使用する時は、その時点の最新の値が使われる
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
