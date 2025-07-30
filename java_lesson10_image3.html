@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>短絡評価（ショートサーキット）の動作説明</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background-color: white;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+        }
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .section {
+            margin: 30px 0;
+        }
+        .section-title {
+            color: #2c3e50;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .flow-container {
+            display: flex;
+            gap: 30px;
+            margin: 20px 0;
+        }
+        .flow-section {
+            flex: 1;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        .flow-title {
+            color: #3498db;
+            font-weight: bold;
+            font-size: 16px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .expression {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            text-align: center;
+            margin: 10px 0;
+        }
+        .flow-step {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 12px;
+            margin: 10px 0;
+            position: relative;
+        }
+        .step-evaluation {
+            background: #e8f4fd;
+            border-left: 4px solid #3498db;
+        }
+        .step-skip {
+            background: #fff5f5;
+            border-left: 4px solid #e74c3c;
+        }
+        .step-result {
+            background: #f0fff4;
+            border-left: 4px solid #27ae60;
+        }
+        .condition {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .result {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .skip-text {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .arrow-down {
+            text-align: center;
+            font-size: 20px;
+            color: #3498db;
+            margin: 5px 0;
+        }
+        .danger-example {
+            background: #fff5f5;
+            border: 2px solid #e74c3c;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .danger-title {
+            color: #e74c3c;
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.4;
+            margin: 10px 0;
+        }
+        .benefit {
+            background: #f0fff4;
+            border: 2px solid #27ae60;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .benefit-title {
+            color: #27ae60;
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .summary-box {
+            background: #f8f9fa;
+            border: 2px solid #6c757d;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        .summary-title {
+            color: #495057;
+            font-weight: bold;
+            font-size: 18px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .summary-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
+        }
+        .operator-symbol {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 18px;
+            color: #e74c3c;
+            width: 50px;
+            text-align: center;
+        }
+        .operator-behavior {
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">短絡評価（ショートサーキット）の動作説明</div>
+        
+        <div class="section">
+            <div class="section-title">&&演算子の短絡評価</div>
+            <div class="flow-container">
+                <div class="flow-section">
+                    <div class="flow-title">左の条件がfalseの場合</div>
+                    <div class="expression">false && (複雑な処理)</div>
+                    <div class="flow-step step-evaluation">
+                        <div class="condition">左の条件を評価: false</div>
+                    </div>
+                    <div class="arrow-down">⬇️</div>
+                    <div class="flow-step step-skip">
+                        <div class="skip-text">右の条件は評価しない（スキップ）</div>
+                    </div>
+                    <div class="arrow-down">⬇️</div>
+                    <div class="flow-step step-result">
+                        <div class="result">結果: false</div>
+                    </div>
+                </div>
+                
+                <div class="flow-section">
+                    <div class="flow-title">左の条件がtrueの場合</div>
+                    <div class="expression">true && (右の条件)</div>
+                    <div class="flow-step step-evaluation">
+                        <div class="condition">左の条件を評価: true</div>
+                    </div>
+                    <div class="arrow-down">⬇️</div>
+                    <div class="flow-step step-evaluation">
+                        <div class="condition">右の条件も評価する</div>
+                    </div>
+                    <div class="arrow-down">⬇️</div>
+                    <div class="flow-step step-result">
+                        <div class="result">結果: 右の条件の値</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">||演算子の短絡評価</div>
+            <div class="flow-container">
+                <div class="flow-section">
+                    <div class="flow-title">左の条件がtrueの場合</div>
+                    <div class="expression">true || (複雑な処理)</div>
+                    <div class="flow-step step-evaluation">
+                        <div class="condition">左の条件を評価: true</div>
+                    </div>
+                    <div class="arrow-down">⬇️</div>
+                    <div class="flow-step step-skip">
+                        <div class="skip-text">右の条件は評価しない（スキップ）</div>
+                    </div>
+                    <div class="arrow-down">⬇️</div>
+                    <div class="flow-step step-result">
+                        <div class="result">結果: true</div>
+                    </div>
+                </div>
+                
+                <div class="flow-section">
+                    <div class="flow-title">左の条件がfalseの場合</div>
+                    <div class="expression">false || (右の条件)</div>
+                    <div class="flow-step step-evaluation">
+                        <div class="condition">左の条件を評価: false</div>
+                    </div>
+                    <div class="arrow-down">⬇️</div>
+                    <div class="flow-step step-evaluation">
+                        <div class="condition">右の条件も評価する</div>
+                    </div>
+                    <div class="arrow-down">⬇️</div>
+                    <div class="flow-step step-result">
+                        <div class="result">結果: 右の条件の値</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="danger-example">
+            <div class="danger-title">⚠️ 短絡評価による安全なプログラミング例</div>
+            <div class="code-block">int a = 5;
+int b = 0;
+
+// 危険：ゼロ除算エラーが発生する可能性
+if (a / b > 2) {  // b が 0 だとエラー！
+    System.out.println("条件成立");
+}
+
+// 安全：短絡評価でゼロ除算を回避
+if (b != 0 && a / b > 2) {  // b != 0 がfalseなら a / b は実行されない
+    System.out.println("条件成立");
+}</div>
+        </div>
+        
+        <div class="benefit">
+            <div class="benefit-title">✅ 短絡評価の3つのメリット</div>
+            <div style="margin: 10px 0;">
+                <strong>1. パフォーマンス向上</strong><br>
+                不要な計算をスキップして処理を高速化
+            </div>
+            <div style="margin: 10px 0;">
+                <strong>2. エラー回避</strong><br>
+                ゼロ除算やnullアクセスなどの実行時エラーを防止
+            </div>
+            <div style="margin: 10px 0;">
+                <strong>3. 安全なプログラミング</strong><br>
+                条件チェックの順序で安全性を担保
+            </div>
+        </div>
+        
+        <div class="summary-box">
+            <div class="summary-title">📝 短絡評価のルール まとめ</div>
+            <div class="summary-item">
+                <div class="operator-symbol">&&</div>
+                <div class="operator-behavior">左がfalseなら右は評価せずfalse</div>
+            </div>
+            <div class="summary-item">
+                <div class="operator-symbol">||</div>
+                <div class="operator-behavior">左がtrueなら右は評価せずtrue</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

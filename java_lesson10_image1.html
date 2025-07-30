@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>論理演算子による条件判定の改善</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background-color: white;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+        }
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .comparison {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        .before, .after {
+            flex: 1;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            background: #f9f9f9;
+        }
+        .before {
+            border-color: #e74c3c;
+        }
+        .after {
+            border-color: #27ae60;
+        }
+        .section-title {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 18px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .before .section-title {
+            color: #e74c3c;
+        }
+        .after .section-title {
+            color: #27ae60;
+        }
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.4;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        .problem-list {
+            background: #fff5f5;
+            border-left: 4px solid #e74c3c;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .solution-list {
+            background: #f0fff4;
+            border-left: 4px solid #27ae60;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .list-item {
+            margin: 5px 0;
+            color: #2c3e50;
+        }
+        .arrow {
+            text-align: center;
+            font-size: 30px;
+            color: #3498db;
+            margin: 20px 0;
+        }
+        .logical-operators {
+            background: #f8f9fa;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .operators-title {
+            color: #3498db;
+            font-weight: bold;
+            font-size: 18px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .operator-row {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .operator-symbol {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #e74c3c;
+            font-size: 16px;
+            width: 40px;
+            text-align: center;
+        }
+        .operator-meaning {
+            color: #2c3e50;
+            font-weight: bold;
+            width: 80px;
+        }
+        .operator-example {
+            color: #7f8c8d;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">論理演算子による条件判定の改善</div>
+        
+        <div class="comparison">
+            <div class="before">
+                <div class="section-title">❌ 従来の書き方（レッスン4まで）</div>
+                <div class="code-block">if (age >= 18) {
+    if (age < 65) {
+        if (hasLicense) {
+            System.out.println("運転できます");
+        } else {
+            System.out.println("免許が必要です");
+        }
+    } else {
+        System.out.println("年齢制限があります");
+    }
+} else {
+    System.out.println("年齢制限があります");
+}</div>
+                <div class="problem-list">
+                    <div class="list-item">• ネストが深くて読みにくい</div>
+                    <div class="list-item">• 同じメッセージを複数箇所に記述</div>
+                    <div class="list-item">• 条件が増えると管理が困難</div>
+                    <div class="list-item">• 13行もの長いコード</div>
+                </div>
+            </div>
+            
+            <div class="after">
+                <div class="section-title">✅ 論理演算子を使った改善版</div>
+                <div class="code-block">if (age >= 18 && age < 65 && hasLicense) {
+    System.out.println("運転できます");
+} else {
+    System.out.println("運転できません");
+}</div>
+                <div class="solution-list">
+                    <div class="list-item">• 条件が1行で明確に表現</div>
+                    <div class="list-item">• ネストなしでスッキリ</div>
+                    <div class="list-item">• メンテナンスが簡単</div>
+                    <div class="list-item">• わずか5行の簡潔なコード</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="arrow">⬇️ 論理演算子の活用 ⬇️</div>
+        
+        <div class="logical-operators">
+            <div class="operators-title">主要な論理演算子</div>
+            <div class="operator-row">
+                <div class="operator-symbol">&&</div>
+                <div class="operator-meaning">かつ（AND）</div>
+                <div class="operator-example">すべての条件がtrueの時だけtrue</div>
+            </div>
+            <div class="operator-row">
+                <div class="operator-symbol">||</div>
+                <div class="operator-meaning">または（OR）</div>
+                <div class="operator-example">どれか一つでもtrueならtrue</div>
+            </div>
+            <div class="operator-row">
+                <div class="operator-symbol">!</div>
+                <div class="operator-meaning">ではない（NOT）</div>
+                <div class="operator-example">trueをfalseに、falseをtrueに反転</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

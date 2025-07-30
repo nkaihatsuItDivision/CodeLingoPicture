@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>演算子の優先順位完全版</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background-color: white;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+        }
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .priority-table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+            background: white;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .priority-table th {
+            background: #3498db;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .priority-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ecf0f1;
+            text-align: center;
+        }
+        .priority-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        .priority-number {
+            font-weight: bold;
+            color: #e74c3c;
+            font-size: 18px;
+            width: 80px;
+        }
+        .operator-symbols {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 16px;
+            width: 150px;
+        }
+        .operator-name {
+            color: #2c3e50;
+            font-weight: bold;
+            width: 150px;
+        }
+        .operator-examples {
+            font-family: 'Courier New', monospace;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        .calculation-example {
+            background: #f8f9fa;
+            border: 2px solid #27ae60;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        .example-title {
+            color: #27ae60;
+            font-weight: bold;
+            font-size: 18px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .expression {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            text-align: center;
+            margin: 10px 0;
+        }
+        .step {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+        }
+        .step-number {
+            background: #27ae60;
+            color: white;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            font-size: 12px;
+        }
+        .step-content {
+            font-family: 'Courier New', monospace;
+            color: #2c3e50;
+        }
+        .tip-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .tip-title {
+            color: #856404;
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .tip-content {
+            color: #856404;
+        }
+        .highlight {
+            background: #ffffcc;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">演算子の優先順位完全版（高い順）</div>
+        
+        <table class="priority-table">
+            <thead>
+                <tr>
+                    <th>優先順位</th>
+                    <th>演算子</th>
+                    <th>種類</th>
+                    <th>例</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="priority-number">1</td>
+                    <td class="operator-symbols">( )</td>
+                    <td class="operator-name">括弧</td>
+                    <td class="operator-examples">(a + b) * c</td>
+                </tr>
+                <tr>
+                    <td class="priority-number">2</td>
+                    <td class="operator-symbols">++, --, !</td>
+                    <td class="operator-name">単項演算子</td>
+                    <td class="operator-examples">++i, --j, !flag</td>
+                </tr>
+                <tr>
+                    <td class="priority-number">3</td>
+                    <td class="operator-symbols">*, /, %</td>
+                    <td class="operator-name">乗除余</td>
+                    <td class="operator-examples">a * b, x / y, n % 2</td>
+                </tr>
+                <tr>
+                    <td class="priority-number">4</td>
+                    <td class="operator-symbols">+, -</td>
+                    <td class="operator-name">加減</td>
+                    <td class="operator-examples">a + b, x - y</td>
+                </tr>
+                <tr>
+                    <td class="priority-number">5</td>
+                    <td class="operator-symbols">&lt;, &gt;, &lt;=, &gt;=</td>
+                    <td class="operator-name">比較</td>
+                    <td class="operator-examples">a &lt; b, x &gt;= 10</td>
+                </tr>
+                <tr>
+                    <td class="priority-number">6</td>
+                    <td class="operator-symbols">==, !=</td>
+                    <td class="operator-name">等価</td>
+                    <td class="operator-examples">a == b, flag != true</td>
+                </tr>
+                <tr>
+                    <td class="priority-number">7</td>
+                    <td class="operator-symbols">&&</td>
+                    <td class="operator-name">論理AND</td>
+                    <td class="operator-examples">a &gt; 0 && b &lt; 10</td>
+                </tr>
+                <tr>
+                    <td class="priority-number">8</td>
+                    <td class="operator-symbols">||</td>
+                    <td class="operator-name">論理OR</td>
+                    <td class="operator-examples">x == 1 || y == 2</td>
+                </tr>
+                <tr>
+                    <td class="priority-number">9</td>
+                    <td class="operator-symbols">? :</td>
+                    <td class="operator-name">三項演算子</td>
+                    <td class="operator-examples">score &gt;= 60 ? "合格" : "不合格"</td>
+                </tr>
+                <tr>
+                    <td class="priority-number">10</td>
+                    <td class="operator-symbols">=, +=, -=</td>
+                    <td class="operator-name">代入</td>
+                    <td class="operator-examples">x = 5, count += 1</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="calculation-example">
+            <div class="example-title">🔍 複雑な式の計算順序例</div>
+            <div class="expression">boolean result = 5 + 3 * 2 > 10 && true || false;</div>
+            
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">3 * 2 = 6 <span class="highlight">(乗算が最優先)</span></div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">5 + 6 = 11 <span class="highlight">(次に加算)</span></div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">11 > 10 = true <span class="highlight">(比較演算)</span></div>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">true && true = true <span class="highlight">(論理AND)</span></div>
+            </div>
+            <div class="step">
+                <div class="step-number">5</div>
+                <div class="step-content">true || false = true <span class="highlight">(論理OR)</span></div>
+            </div>
+            <div class="step">
+                <div class="step-number">6</div>
+                <div class="step-content">result = true <span class="highlight">(最後に代入)</span></div>
+            </div>
+        </div>
+        
+        <div class="tip-box">
+            <div class="tip-title">💡 優先順位で迷った時の対策</div>
+            <div class="tip-content">
+                <strong>括弧を積極的に使いましょう！</strong><br>
+                • 可読性が向上します<br>
+                • バグを防げます<br>
+                • チーム開発で意図が明確になります<br><br>
+                例: <code>((a + (b * c)) > d && flag) || (!otherFlag)</code>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
