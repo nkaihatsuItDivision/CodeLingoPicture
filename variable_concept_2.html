@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>プログラムでの変数イメージ - 箱とデータの関係</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 900px;
+            width: 100%;
+        }
+        
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .step-container {
+            margin-bottom: 30px;
+        }
+        
+        .step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+        
+        .variable-visual {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin: 15px 0;
+        }
+        
+        .box {
+            width: 100px;
+            height: 60px;
+            border: 3px solid #667eea;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .box-label {
+            position: absolute;
+            top: -25px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .box-name {
+            font-size: 14px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .box-value {
+            font-size: 16px;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        
+        .empty-box {
+            border-style: dashed;
+            color: #95a5a6;
+        }
+        
+        .arrow {
+            font-size: 24px;
+            color: #e74c3c;
+        }
+        
+        .explanation {
+            background: #e8f5e8;
+            border: 2px solid #27ae60;
+            border-radius: 10px;
+            padding: 15px;
+            color: #27ae60;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .memory-visual {
+            background: #f0f8ff;
+            border: 2px solid #4169e1;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .memory-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #4169e1;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .memory-boxes {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .memory-box {
+            width: 80px;
+            height: 50px;
+            border: 2px solid #4169e1;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: white;
+            font-size: 12px;
+        }
+        
+        .memory-name {
+            font-weight: bold;
+            color: #4169e1;
+        }
+        
+        .memory-value {
+            color: #2c3e50;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">変数の仕組み - データを箱に入れる</div>
+        
+        <div class="step-container">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <div class="step-title">変数の宣言（箱を用意）</div>
+                    <div class="code-example">int age;</div>
+                    <div class="variable-visual">
+                        <div class="box empty-box">
+                            <div class="box-label">変数名</div>
+                            <div class="box-name">age</div>
+                            <div class="box-value">?</div>
+                        </div>
+                        <div class="explanation" style="margin:0; padding:10px;">「age」という名前の箱を用意</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <div class="step-title">値の代入（箱にデータを入れる）</div>
+                    <div class="code-example">age = 25;</div>
+                    <div class="variable-visual">
+                        <div class="box empty-box">
+                            <div class="box-name">age</div>
+                            <div class="box-value">?</div>
+                        </div>
+                        <div class="arrow">➡️</div>
+                        <div class="box">
+                            <div class="box-name">age</div>
+                            <div class="box-value">25</div>
+                        </div>
+                        <div class="explanation" style="margin:0; padding:10px;">箱に「25」を入れる</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <div class="step-title">宣言と代入を同時に</div>
+                    <div class="code-example">int age = 25;</div>
+                    <div class="variable-visual">
+                        <div class="box">
+                            <div class="box-name">age</div>
+                            <div class="box-value">25</div>
+                        </div>
+                        <div class="explanation" style="margin:0; padding:10px;">箱の用意とデータ投入を1行で</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <div class="step-title">値の変更（箱の中身を入れ替え）</div>
+                    <div class="code-example">age = 30;</div>
+                    <div class="variable-visual">
+                        <div class="box">
+                            <div class="box-name">age</div>
+                            <div class="box-value">25</div>
+                        </div>
+                        <div class="arrow">➡️</div>
+                        <div class="box">
+                            <div class="box-name">age</div>
+                            <div class="box-value">30</div>
+                        </div>
+                        <div class="explanation" style="margin:0; padding:10px;">古い値は消え、新しい値に置き換わる</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="memory-visual">
+            <div class="memory-title">🧠 コンピューターのメモリー内の様子</div>
+            <div class="memory-boxes">
+                <div class="memory-box">
+                    <div class="memory-name">name</div>
+                    <div class="memory-value">"田中"</div>
+                </div>
+                <div class="memory-box">
+                    <div class="memory-name">age</div>
+                    <div class="memory-value">25</div>
+                </div>
+                <div class="memory-box">
+                    <div class="memory-name">score</div>
+                    <div class="memory-value">85</div>
+                </div>
+                <div class="memory-box">
+                    <div class="memory-name">city</div>
+                    <div class="memory-value">"東京"</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="explanation">
+            💡 変数は「名前付きの箱」<br>
+            同じ箱に違うデータを入れることで、値を変更できる！
+        </div>
+    </div>
+</body>
+</html>
