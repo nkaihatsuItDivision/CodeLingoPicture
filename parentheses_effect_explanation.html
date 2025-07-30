@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>括弧の効果説明</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-width: 800px;
+            width: 100%;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 26px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+        
+        .comparison {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .example {
+            flex: 1;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            border: 3px solid #ddd;
+            transition: transform 0.2s;
+        }
+        
+        .example:hover {
+            transform: translateY(-5px);
+        }
+        
+        .wrong {
+            border-color: #e74c3c;
+            background: #fdf2f2;
+        }
+        
+        .correct {
+            border-color: #27ae60;
+            background: #f0f9f4;
+        }
+        
+        .example-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            padding: 8px;
+            border-radius: 8px;
+            color: white;
+        }
+        
+        .wrong .example-title {
+            background: #e74c3c;
+        }
+        
+        .correct .example-title {
+            background: #27ae60;
+        }
+        
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin: 10px 0;
+            line-height: 1.5;
+        }
+        
+        .result-block {
+            background: #34495e;
+            color: #f39c12;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            text-align: center;
+            margin: 10px 0;
+            border: 2px solid #f39c12;
+        }
+        
+        .wrong .result-block {
+            color: #e74c3c;
+            border-color: #e74c3c;
+        }
+        
+        .correct .result-block {
+            color: #27ae60;
+            border-color: #27ae60;
+        }
+        
+        .explanation {
+            font-size: 14px;
+            color: #2c3e50;
+            background: #ecf0f1;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .flow-diagram {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border: 2px solid #3498db;
+        }
+        
+        .flow-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .flow-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .step {
+            text-align: center;
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .step-box {
+            background: white;
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .arrow {
+            font-size: 24px;
+            color: #3498db;
+            margin: 0 10px;
+        }
+        
+        .key-point {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .key-point-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .key-point-content {
+            color: #856404;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .highlight {
+            background: #ffeb3b;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .flow-steps {
+                flex-direction: column;
+            }
+            
+            .arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">🔍 括弧の効果：文字列連結 vs 算術演算</div>
+        
+        <div class="comparison">
+            <div class="example wrong">
+                <div class="example-title">❌ 括弧なし（間違い）</div>
+                <div class="code-block">
+System.out.println("a + b = " + a + b);
+                </div>
+                <div class="result-block">
+結果: "a + b = 103"
+                </div>
+                <div class="explanation">
+                    文字列連結として処理され、<br>
+                    "a + b = " + 10 + 3 = "a + b = 103"<br>
+                    となってしまいます
+                </div>
+            </div>
+            
+            <div class="example correct">
+                <div class="example-title">✅ 括弧あり（正解）</div>
+                <div class="code-block">
+System.out.println("a + b = " + (a + b));
+                </div>
+                <div class="result-block">
+結果: "a + b = 13"
+                </div>
+                <div class="explanation">
+                    括弧内が先に計算され、<br>
+                    "a + b = " + (10 + 3) = "a + b = 13"<br>
+                    となります
+                </div>
+            </div>
+        </div>
+        
+        <div class="flow-diagram">
+            <div class="flow-title">📊 処理の流れを比較</div>
+            
+            <div style="margin-bottom: 20px;">
+                <h4 style="color: #e74c3c; text-align: center;">❌ 括弧なしの場合</h4>
+                <div class="flow-steps">
+                    <div class="step">
+                        <div class="step-box">"a + b = " + 10</div>
+                        <div>文字列連結</div>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="step">
+                        <div class="step-box">"a + b = 10" + 3</div>
+                        <div>さらに文字列連結</div>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="step">
+                        <div class="step-box">"a + b = 103"</div>
+                        <div>間違った結果</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <h4 style="color: #27ae60; text-align: center;">✅ 括弧ありの場合</h4>
+                <div class="flow-steps">
+                    <div class="step">
+                        <div class="step-box">(10 + 3)</div>
+                        <div>括弧内を先に計算</div>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="step">
+                        <div class="step-box">"a + b = " + 13</div>
+                        <div>文字列連結</div>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="step">
+                        <div class="step-box">"a + b = 13"</div>
+                        <div>正しい結果</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="key-point">
+            <div class="key-point-title">🎯 重要なポイント</div>
+            <div class="key-point-content">
+                数値の計算結果を文字列と連結したい場合は、<br>
+                <span class="highlight">必ず括弧 ( ) を使って計算を先に実行</span>させましょう！<br><br>
+                括弧がないと、左から順番に処理されて文字列連結になってしまいます。
+            </div>
+        </div>
+    </div>
+</body>
+</html>
