@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 3への橋渡し・学習継続図（シンプル版）</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: white;
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 800px;
+            height: 500px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        
+        .learning-flow {
+            display: flex;
+            height: 350px;
+            gap: 40px;
+            align-items: center;
+        }
+        
+        .week-block {
+            flex: 1;
+            height: 100%;
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .week2-block {
+            background: linear-gradient(135deg, #e8f5e8, #c8e6c9);
+            border: 3px solid #4caf50;
+        }
+        
+        .week3-block {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border: 3px solid #2196f3;
+        }
+        
+        .week-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .week-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .week-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+        }
+        
+        .week2-title {
+            background: #4caf50;
+        }
+        
+        .week3-title {
+            background: #2196f3;
+        }
+        
+        .skills-container {
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .skill-item {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 6px;
+            padding: 8px 12px;
+            margin: 6px 0;
+            text-align: center;
+            font-size: 13px;
+            font-weight: bold;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .completed-skill {
+            color: #2e7d32;
+            border: 2px solid #4caf50;
+        }
+        
+        .upcoming-skill {
+            color: #1565c0;
+            border: 2px solid #2196f3;
+        }
+        
+        .arrow-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 120px;
+        }
+        
+        .arrow-circle {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #ff9800, #ffc107);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-bottom: 10px;
+        }
+        
+        .arrow-text {
+            font-size: 14px;
+            font-weight: bold;
+            color: #ff9800;
+            text-align: center;
+        }
+        
+        .bottom-message {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 16px;
+            color: #e91e63;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Week 2 完成！次はWeek 3でさらにパワーアップ！</div>
+        
+        <div class="learning-flow">
+            <div class="week-block week2-block">
+                <div class="week-header">
+                    <div class="week-icon">✅</div>
+                    <div class="week-title week2-title">Week 2 習得完了</div>
+                </div>
+                <div class="skills-container">
+                    <div class="skill-item completed-skill">8つの基本データ型</div>
+                    <div class="skill-item completed-skill">String型・参照型</div>
+                    <div class="skill-item completed-skill">型変換・キャスト</div>
+                    <div class="skill-item completed-skill">全演算子マスター</div>
+                    <div class="skill-item completed-skill">if文・for文</div>
+                    <div class="skill-item completed-skill">メソッド作成</div>
+                    <div class="skill-item completed-skill">実践的統合スキル</div>
+                    <div class="skill-item completed-skill">エラー対応技術</div>
+                </div>
+            </div>
+            
+            <div class="arrow-section">
+                <div class="arrow-circle">🚀</div>
+                <div class="arrow-text">LEVEL<br>UP!</div>
+            </div>
+            
+            <div class="week-block week3-block">
+                <div class="week-header">
+                    <div class="week-icon">🎯</div>
+                    <div class="week-title week3-title">Week 3 学習予定</div>
+                </div>
+                <div class="skills-container">
+                    <div class="skill-item upcoming-skill">配列とArrayList</div>
+                    <div class="skill-item upcoming-skill">Scanner入力処理</div>
+                    <div class="skill-item upcoming-skill">文字列操作詳細</div>
+                    <div class="skill-item upcoming-skill">デバッグ技法</div>
+                    <div class="skill-item upcoming-skill">オブジェクト指向基礎</div>
+                    <div class="skill-item upcoming-skill">より大規模プログラム</div>
+                    <div class="skill-item upcoming-skill">例外処理</div>
+                    <div class="skill-item upcoming-skill">実用的なアプリ作成</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bottom-message">
+            今回学んだ技術がWeek 3でさらに活用され、<br>
+            もっとインタラクティブなプログラムが作れるようになります！
+        </div>
+    </div>
+</body>
+</html>

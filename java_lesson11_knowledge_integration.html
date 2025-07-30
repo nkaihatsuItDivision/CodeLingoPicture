@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>知識統合の重要性説明図（改良版）</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: white;
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 800px;
+            height: 500px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        
+        .comparison {
+            display: flex;
+            height: 380px;
+            gap: 40px;
+        }
+        
+        .left-side, .right-side {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        .individual-title {
+            background: #ffebee;
+            color: #c62828;
+            border: 2px solid #ffcdd2;
+        }
+        
+        .integrated-title {
+            background: #e8f5e8;
+            color: #2e7d32;
+            border: 2px solid #c8e6c9;
+        }
+        
+        .content-area {
+            flex: 1;
+            width: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .tech-box {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin: 8px 0;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            color: #495057;
+            width: 80%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tech-box:nth-child(1) { border-color: #e74c3c; color: #e74c3c; }
+        .tech-box:nth-child(2) { border-color: #3498db; color: #3498db; }
+        .tech-box:nth-child(3) { border-color: #f39c12; color: #f39c12; }
+        .tech-box:nth-child(4) { border-color: #9b59b6; color: #9b59b6; }
+        .tech-box:nth-child(5) { border-color: #1abc9c; color: #1abc9c; }
+        
+        .problem-text {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #e74c3c;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .integrated-system {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border: 3px solid #1976d2;
+            border-radius: 15px;
+            padding: 25px;
+            width: 85%;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .system-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        .system-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1976d2;
+            margin-bottom: 15px;
+        }
+        
+        .system-features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        
+        .feature {
+            background: #ffffff;
+            border: 1px solid #1976d2;
+            border-radius: 6px;
+            padding: 6px 8px;
+            font-size: 12px;
+            color: #1976d2;
+            font-weight: bold;
+        }
+        
+        .benefit-text {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #2e7d32;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .arrow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, #4caf50, #66bb6a);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .arrow-icon {
+            font-size: 24px;
+            margin-bottom: 2px;
+        }
+        
+        .arrow-text {
+            font-size: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">個別学習と統合実践の違い</div>
+        
+        <div class="comparison">
+            <div class="left-side">
+                <div class="section-title individual-title">個別学習</div>
+                <div class="content-area">
+                    <div class="tech-box">8つの基本データ型</div>
+                    <div class="tech-box">String型・参照型</div>
+                    <div class="tech-box">型変換・キャスト</div>
+                    <div class="tech-box">論理演算子・三項演算子</div>
+                    <div class="tech-box">メソッド・制御文</div>
+                    <div class="problem-text">❌ バラバラで活用しにくい</div>
+                </div>
+            </div>
+            
+            <div class="right-side">
+                <div class="section-title integrated-title">統合実践</div>
+                <div class="content-area">
+                    <div class="integrated-system">
+                        <div class="system-icon">🛒</div>
+                        <div class="system-title">ショッピング計算システム</div>
+                        <div class="system-features">
+                            <div class="feature">顧客管理</div>
+                            <div class="feature">商品計算</div>
+                            <div class="feature">割引判定</div>
+                            <div class="feature">エラー処理</div>
+                            <div class="feature">結果表示</div>
+                            <div class="feature">データ検証</div>
+                        </div>
+                    </div>
+                    <div class="benefit-text">✅ 実用的で価値のあるプログラム</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="arrow">
+            <div class="arrow-icon">🔧</div>
+            <div class="arrow-text">統合</div>
+        </div>
+    </div>
+</body>
+</html>
