@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>演算子の優先順位説明</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-width: 900px;
+            width: 100%;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 26px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #ff6b6b;
+            padding-bottom: 15px;
+        }
+        
+        .math-analogy {
+            background: #e8f4fd;
+            border: 2px solid #3498db;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .math-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .math-example {
+            font-size: 20px;
+            font-family: 'Courier New', monospace;
+            color: #2c3e50;
+            margin: 15px 0;
+        }
+        
+        .math-step {
+            background: #3498db;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin: 0 5px;
+            font-weight: bold;
+        }
+        
+        .priority-table {
+            background: #f8f9fa;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            border: 3px solid #e9ecef;
+        }
+        
+        .table-title {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .priority-row {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #dee2e6;
+            transition: background-color 0.2s;
+        }
+        
+        .priority-row:hover {
+            background-color: #e3f2fd;
+        }
+        
+        .priority-row:last-child {
+            border-bottom: none;
+        }
+        
+        .priority-rank {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        
+        .priority-operators {
+            flex: 1;
+            margin-right: 20px;
+        }
+        
+        .operators-list {
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 5px;
+        }
+        
+        .operators-desc {
+            color: #6c757d;
+            font-size: 14px;
+        }
+        
+        .priority-example {
+            background: #f0f9f4;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #27ae60;
+            min-width: 200px;
+        }
+        
+        .example-expression {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .example-result {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        .comparison-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .comparison-card {
+            border-radius: 15px;
+            padding: 25px;
+            border: 3px solid;
+        }
+        
+        .wrong-card {
+            background: #fdf2f2;
+            border-color: #e74c3c;
+        }
+        
+        .correct-card {
+            background: #f0f9f4;
+            border-color: #27ae60;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 8px;
+            color: white;
+        }
+        
+        .wrong-title {
+            background: #e74c3c;
+        }
+        
+        .correct-title {
+            background: #27ae60;
+        }
+        
+        .step-by-step {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+        
+        .step-highlight {
+            background: #3498db;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        
+        .final-result {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+        
+        .wrong-result {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .correct-result {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .solution {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .solution-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 15px;
+        }
+        
+        .solution-content {
+            color: #856404;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .highlight {
+            background: #ffeb3b;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .priority-row {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            
+            .priority-rank {
+                margin-right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">📊 演算子の優先順位説明</div>
+        
+        <div class="math-analogy">
+            <div class="math-title">
+                <span>🧮</span>
+                <span>数学と同じ！計算の順序があります</span>
+            </div>
+            
+            <div class="math-example">
+                2 + 3 × 4 = <span class="math-step">3 × 4</span> → <span class="math-step">2 + 12</span> = <strong>14</strong>
+            </div>
+            
+            <div style="color: #6c757d; margin-top: 15px;">
+                掛け算が先に計算されるのと同じように、<br>
+                プログラミングでも演算子に優先順位があります！
+            </div>
+        </div>
+        
+        <div class="priority-table">
+            <div class="table-title">🏆 演算子の優先順位（高い順）</div>
+            
+            <div class="priority-row">
+                <div class="priority-rank">1</div>
+                <div class="priority-operators">
+                    <div class="operators-list">( )</div>
+                    <div class="operators-desc">括弧 - 最優先で計算</div>
+                </div>
+                <div class="priority-example">
+                    <div class="example-expression">(2 + 3) * 4</div>
+                    <div class="example-result">結果: 20</div>
+                </div>
+            </div>
+            
+            <div class="priority-row">
+                <div class="priority-rank">2</div>
+                <div class="priority-operators">
+                    <div class="operators-list">* / %</div>
+                    <div class="operators-desc">掛け算・割り算・余り</div>
+                </div>
+                <div class="priority-example">
+                    <div class="example-expression">2 + 3 * 4</div>
+                    <div class="example-result">結果: 14</div>
+                </div>
+            </div>
+            
+            <div class="priority-row">
+                <div class="priority-rank">3</div>
+                <div class="priority-operators">
+                    <div class="operators-list">+ -</div>
+                    <div class="operators-desc">足し算・引き算</div>
+                </div>
+                <div class="priority-example">
+                    <div class="example-expression">10 - 3 + 2</div>
+                    <div class="example-result">結果: 9</div>
+                </div>
+            </div>
+            
+            <div class="priority-row">
+                <div class="priority-rank">4</div>
+                <div class="priority-operators">
+                    <div class="operators-list">< > <= >=</div>
+                    <div class="operators-desc">大小比較</div>
+                </div>
+                <div class="priority-example">
+                    <div class="example-expression">5 + 3 > 6</div>
+                    <div class="example-result">結果: true</div>
+                </div>
+            </div>
+            
+            <div class="priority-row">
+                <div class="priority-rank">5</div>
+                <div class="priority-operators">
+                    <div class="operators-list">== !=</div>
+                    <div class="operators-desc">等価比較</div>
+                </div>
+                <div class="priority-example">
+                    <div class="example-expression">2 * 3 == 6</div>
+                    <div class="example-result">結果: true</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="comparison-section">
+            <div class="comparison-card wrong-card">
+                <div class="card-title wrong-title">❌ 間違った理解</div>
+                
+                <div class="step-by-step">
+式: 2 + 3 * 4<br><br>
+左から順番に計算すると思って...<br>
+<span class="step-highlight">2 + 3</span> = 5<br>
+<span class="step-highlight">5 * 4</span> = 20
+                </div>
+                
+                <div class="final-result wrong-result">
+                    間違った結果: 20
+                </div>
+            </div>
+            
+            <div class="comparison-card correct-card">
+                <div class="card-title correct-title">✅ 正しい理解</div>
+                
+                <div class="step-by-step">
+式: 2 + 3 * 4<br><br>
+優先順位に従って計算<br>
+<span class="step-highlight">3 * 4</span> = 12 （掛け算が先）<br>
+<span class="step-highlight">2 + 12</span> = 14 （その後足し算）
+                </div>
+                
+                <div class="final-result correct-result">
+                    正しい結果: 14
+                </div>
+            </div>
+        </div>
+        
+        <div style="background: #f0f9f4; border: 2px solid #27ae60; border-radius: 15px; padding: 25px; margin-bottom: 30px;">
+            <div style="font-size: 18px; font-weight: bold; color: #27ae60; margin-bottom: 15px; text-align: center;">
+                🧠 実際のJavaプログラムで確認
+            </div>
+            
+            <div style="background: #2c3e50; color: #ecf0f1; padding: 20px; border-radius: 10px; font-family: 'Courier New', monospace; line-height: 1.6;">
+int result1 = 2 + 3 * 4;        <span style="color: #95a5a6;">// 結果: 14</span><br>
+int result2 = (2 + 3) * 4;      <span style="color: #95a5a6;">// 結果: 20</span><br>
+boolean check = 5 + 3 > 6;      <span style="color: #95a5a6;">// 結果: true (8 > 6)</span><br>
+boolean equal = 2 * 3 == 6;     <span style="color: #95a5a6;">// 結果: true</span>
+            </div>
+        </div>
+        
+        <div class="solution">
+            <div class="solution-title">💡 迷ったときの解決策</div>
+            <div class="solution-content">
+                <strong>括弧 ( ) を積極的に使いましょう！</strong><br><br>
+                
+                優先順位を覚えるより、<span class="highlight">括弧で明確にする</span>方が安全です。<br><br>
+                
+                <strong>例：</strong><br>
+                • <code>a + b * c</code> → <code>a + (b * c)</code><br>
+                • <code>(a + b) * c</code> → 足し算を先にしたい場合<br>
+                • <code>(score >= 60) && (age >= 18)</code> → 比較を明確に<br><br>
+                
+                <span class="highlight">括弧は何重にしても大丈夫</span>です！<br>
+                読みやすさと正確性が最優先。
+            </div>
+        </div>
+    </div>
+</body>
+</html>
