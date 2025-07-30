@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>プリミティブ型vs参照型のメモリ概念図</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+        
+        .type-section {
+            border: 2px solid #ecf0f1;
+            border-radius: 12px;
+            padding: 20px;
+            background: #fafbfc;
+        }
+        
+        .primitive-section {
+            border-color: #27ae60;
+            background: linear-gradient(135deg, #d5f4e6 0%, #fafbfc 100%);
+        }
+        
+        .reference-section {
+            border-color: #e74c3c;
+            background: linear-gradient(135deg, #ffeaa7 0%, #fafbfc 100%);
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 8px;
+            color: white;
+        }
+        
+        .primitive-title {
+            background: #27ae60;
+        }
+        
+        .reference-title {
+            background: #e74c3c;
+        }
+        
+        .memory-box {
+            border: 2px solid #bdc3c7;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            background: white;
+            position: relative;
+        }
+        
+        .variable-name {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .memory-content {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 15px;
+            border-radius: 6px;
+        }
+        
+        .primitive-content {
+            background: #2ecc71;
+            color: white;
+        }
+        
+        .reference-content {
+            background: #f39c12;
+            color: white;
+        }
+        
+        .actual-object {
+            border: 2px dashed #e74c3c;
+            background: #fff5f5;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .object-label {
+            font-size: 12px;
+            color: #e74c3c;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .object-content {
+            text-align: center;
+            font-size: 16px;
+            color: #2c3e50;
+            background: #ecf0f1;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        
+        .arrow {
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-left: 10px solid #f39c12;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+        }
+        
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .explanation {
+            background: #e8f4fd;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .key-point {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .title {
+                font-size: 20px;
+            }
+            
+            .section-title {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">プリミティブ型 vs 参照型のメモリ構造</div>
+        
+        <div class="comparison">
+            <!-- プリミティブ型 -->
+            <div class="type-section primitive-section">
+                <div class="section-title primitive-title">プリミティブ型（基本型）</div>
+                
+                <div class="code-example">int a = 10;<br>int b = 10;</div>
+                
+                <div class="memory-box">
+                    <div class="variable-name">変数 a</div>
+                    <div class="memory-content primitive-content">10</div>
+                </div>
+                
+                <div class="memory-box">
+                    <div class="variable-name">変数 b</div>  
+                    <div class="memory-content primitive-content">10</div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 15px; color: #27ae60; font-weight: bold;">
+                    📦 変数に直接値を保存
+                </div>
+            </div>
+            
+            <!-- 参照型 -->
+            <div class="type-section reference-section">
+                <div class="section-title reference-title">参照型（String等）</div>
+                
+                <div class="code-example">String s1 = new String("Hello");<br>String s2 = new String("Hello");</div>
+                
+                <div class="memory-box">
+                    <div class="variable-name">変数 s1</div>
+                    <div class="memory-content reference-content">住所: 0x1001</div>
+                    <div class="arrow"></div>
+                    <div class="actual-object">
+                        <div class="object-label">実際のオブジェクト (0x1001)</div>
+                        <div class="object-content">"Hello"</div>
+                    </div>
+                </div>
+                
+                <div class="memory-box">
+                    <div class="variable-name">変数 s2</div>
+                    <div class="memory-content reference-content">住所: 0x2001</div>
+                    <div class="arrow"></div>
+                    <div class="actual-object">
+                        <div class="object-label">実際のオブジェクト (0x2001)</div>
+                        <div class="object-content">"Hello"</div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 15px; color: #e74c3c; font-weight: bold;">
+                    📍 変数にオブジェクトの場所（住所）を保存
+                </div>
+            </div>
+        </div>
+        
+        <div class="explanation">
+            <h3 style="color: #2c3e50; margin-top: 0;">== 演算子の動作の違い</h3>
+            <p><strong>プリミティブ型：</strong> <span class="key-point">値同士を比較</span><br>
+            → <code>a == b</code> は <code>10 == 10</code> なので <strong>true</strong></p>
+            
+            <p><strong>参照型：</strong> <span class="key-point">住所同士を比較</span><br>
+            → <code>s1 == s2</code> は <code>0x1001 == 0x2001</code> なので <strong>false</strong></p>
+            
+            <p><strong>文字列の内容を比較したい場合：</strong><br>
+            → <code>s1.equals(s2)</code> を使用（中身の "Hello" 同士を比較）</p>
+        </div>
+    </div>
+</body>
+</html>
