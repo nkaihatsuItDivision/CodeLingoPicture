@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eclipse エラー画面例</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #e74c3c;
+            padding-bottom: 10px;
+        }
+        
+        .error-section {
+            margin-bottom: 40px;
+            border: 2px solid #e74c3c;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .error-header {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 15px 20px;
+            font-weight: bold;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .error-content {
+            padding: 20px;
+            background: #fdf2f2;
+        }
+        
+        .eclipse-window {
+            background: #2c3e50;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .eclipse-header {
+            background: #34495e;
+            color: white;
+            padding: 8px 15px;
+            font-size: 12px;
+            border-radius: 5px 5px 0 0;
+            border-bottom: 1px solid #4a4a4a;
+        }
+        
+        .eclipse-content {
+            padding: 15px;
+            color: #ecf0f1;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .error-line {
+            background: rgba(231, 76, 60, 0.2);
+            margin: 2px -15px;
+            padding: 2px 15px;
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .error-text {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .line-number {
+            color: #95a5a6;
+            margin-right: 10px;
+            font-size: 12px;
+        }
+        
+        .solution {
+            background: linear-gradient(135deg, #27ae60 0%, #16a085 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        
+        .solution-title {
+            font-size: 16px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .before-after {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .before, .after {
+            flex: 1;
+        }
+        
+        .before-title, .after-title {
+            background: #34495e;
+            color: white;
+            padding: 8px 12px;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .before-title {
+            background: #e74c3c;
+        }
+        
+        .after-title {
+            background: #27ae60;
+        }
+        
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        
+        .highlight-error {
+            background: rgba(231, 76, 60, 0.3);
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .highlight-fix {
+            background: rgba(39, 174, 96, 0.3);
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        .tip {
+            background: #f39c12;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 30px;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">🚨 Eclipse でよく見るエラーと対処法</div>
+        
+        <!-- エラー1: セミコロン忘れ -->
+        <div class="error-section">
+            <div class="error-header">
+                <span>❌</span>
+                <span>エラー1: セミコロン忘れ</span>
+            </div>
+            <div class="error-content">
+                <div class="eclipse-window">
+                    <div class="eclipse-header">Problems - ConditionalBasic.java</div>
+                    <div class="eclipse-content">
+                        <div class="error-line">
+                            <span class="line-number">4:</span>
+                            <span class="error-text">Syntax error, insert ";" to complete Statement</span>
+                        </div>
+                        <div style="margin-top: 10px; font-size: 12px; color: #95a5a6;">
+                            System.out.println("成人です")  // ←ここにセミコロンがない
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="solution">
+                    <div class="solution-title">
+                        <span>✅</span>
+                        <span>解決方法</span>
+                    </div>
+                    <div class="before-after">
+                        <div class="before">
+                            <div class="before-title">❌ 間違い</div>
+                            <div class="code-block">
+                                if (age >= 18) {<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;System.out.println("成人です")<span class="highlight-error"> </span>  <span style="color: #95a5a6;">// セミコロンなし</span><br>
+                                }
+                            </div>
+                        </div>
+                        <div class="after">
+                            <div class="after-title">✅ 正しい</div>
+                            <div class="code-block">
+                                if (age >= 18) {<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;System.out.println("成人です")<span class="highlight-fix">;</span>  <span style="color: #95a5a6;">// セミコロン追加</span><br>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- エラー2: 波括弧不対応 -->
+        <div class="error-section">
+            <div class="error-header">
+                <span>❌</span>
+                <span>エラー2: 波括弧の対応が間違い</span>
+            </div>
+            <div class="error-content">
+                <div class="eclipse-window">
+                    <div class="eclipse-header">Problems - ConditionalBasic.java</div>
+                    <div class="eclipse-content">
+                        <div class="error-line">
+                            <span class="line-number">7:</span>
+                            <span class="error-text">Syntax error, insert "}" to complete BlockStatements</span>
+                        </div>
+                        <div style="margin-top: 10px; font-size: 12px; color: #95a5a6;">
+                            else文の波括弧が不足しています
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="solution">
+                    <div class="solution-title">
+                        <span>✅</span>
+                        <span>解決方法</span>
+                    </div>
+                    <div class="before-after">
+                        <div class="before">
+                            <div class="before-title">❌ 間違い</div>
+                            <div class="code-block">
+                                if (age >= 18) {<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;System.out.println("成人です");<br>
+                                } else {<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;System.out.println("未成年です");<br>
+                                <span class="highlight-error">// 閉じ括弧がない</span>
+                            </div>
+                        </div>
+                        <div class="after">
+                            <div class="after-title">✅ 正しい</div>
+                            <div class="code-block">
+                                if (age >= 18) {<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;System.out.println("成人です");<br>
+                                } else {<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;System.out.println("未成年です");<br>
+                                <span class="highlight-fix">}</span>  <span style="color: #95a5a6;">// 閉じ括弧を追加</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- エラー3: 条件式の括弧忘れ -->
+        <div class="error-section">
+            <div class="error-header">
+                <span>❌</span>
+                <span>エラー3: 条件式の括弧忘れ</span>
+            </div>
+            <div class="error-content">
+                <div class="eclipse-window">
+                    <div class="eclipse-header">Problems - ConditionalBasic.java</div>
+                    <div class="eclipse-content">
+                        <div class="error-line">
+                            <span class="line-number">3:</span>
+                            <span class="error-text">Syntax error on token "age", ( expected after this token</span>
+                        </div>
+                        <div style="margin-top: 10px; font-size: 12px; color: #95a5a6;">
+                            if文の条件を括弧で囲む必要があります
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="solution">
+                    <div class="solution-title">
+                        <span>✅</span>
+                        <span>解決方法</span>
+                    </div>
+                    <div class="before-after">
+                        <div class="before">
+                            <div class="before-title">❌ 間違い</div>
+                            <div class="code-block">
+                                if <span class="highlight-error">age >= 18</span> {  <span style="color: #95a5a6;">// 括弧がない</span><br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;System.out.println("成人です");<br>
+                                }
+                            </div>
+                        </div>
+                        <div class="after">
+                            <div class="after-title">✅ 正しい</div>
+                            <div class="code-block">
+                                if <span class="highlight-fix">(age >= 18)</span> {  <span style="color: #95a5a6;">// 括弧で囲む</span><br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;System.out.println("成人です");<br>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tip">
+            💡 エラーが出たら慌てずに：<br>
+            1️⃣ エラーメッセージを読む → 2️⃣ 行番号を確認 → 3️⃣ 文法をチェック → 4️⃣ 修正して再実行
+        </div>
+    </div>
+</body>
+</html>
