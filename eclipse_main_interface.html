@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eclipse画面の見方</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            font-family: 'Yu Gothic', 'Hiragino Sans', Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .eclipse-container {
+            background-color: white;
+            border: 2px solid #d0d0d0;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        /* タイトルバー */
+        .title-bar {
+            background: linear-gradient(to bottom, #e8e8e8, #d8d8d8);
+            border-bottom: 1px solid #c0c0c0;
+            padding: 8px 12px;
+            font-size: 13px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .eclipse-icon {
+            width: 16px;
+            height: 16px;
+            background: #4a90e2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 8px;
+            font-weight: bold;
+        }
+
+        /* メニューバー */
+        .menu-bar {
+            background-color: #f8f8f8;
+            border-bottom: 1px solid #d0d0d0;
+            padding: 4px 8px;
+            font-size: 12px;
+            color: #333;
+        }
+
+        .menu-items {
+            display: flex;
+            gap: 20px;
+        }
+
+        .menu-item {
+            padding: 4px 8px;
+            cursor: pointer;
+        }
+
+        .menu-item:hover {
+            background-color: #e0e0e0;
+            border-radius: 3px;
+        }
+
+        /* ツールバー */
+        .toolbar {
+            background-color: #f0f0f0;
+            border-bottom: 1px solid #d0d0d0;
+            padding: 6px 8px;
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .toolbar-btn {
+            width: 24px;
+            height: 24px;
+            background-color: #e8e8e8;
+            border: 1px solid #c0c0c0;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .toolbar-btn.run {
+            background-color: #4caf50;
+            color: white;
+            font-weight: bold;
+        }
+
+        .toolbar-btn:hover {
+            background-color: #d8d8d8;
+        }
+
+        .toolbar-btn.run:hover {
+            background-color: #45a049;
+        }
+
+        /* メインワークスペース */
+        .workspace {
+            display: flex;
+            height: 400px;
+        }
+
+        /* ①パッケージエクスプローラー */
+        .package-explorer {
+            width: 250px;
+            background-color: #fafafa;
+            border-right: 1px solid #d0d0d0;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-header {
+            background-color: #e8e8e8;
+            border-bottom: 1px solid #d0d0d0;
+            padding: 6px 10px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #333;
+            flex-shrink: 0;
+        }
+
+        .package-content {
+            padding: 10px;
+            font-size: 12px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .project-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+
+        .folder-icon {
+            width: 16px;
+            height: 16px;
+            background-color: #ffc107;
+            border-radius: 2px;
+            position: relative;
+        }
+
+        .folder-icon::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: 2px;
+            width: 6px;
+            height: 3px;
+            background-color: #ffb300;
+            border-radius: 1px 1px 0 0;
+        }
+
+        .java-icon {
+            width: 16px;
+            height: 16px;
+            background-color: #ff6b35;
+            border-radius: 2px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            font-weight: bold;
+        }
+
+        /* 右側エリア */
+        .right-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ②エディター */
+        .editor-area {
+            flex: 1;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            position: relative; /* 相対配置を追加 */
+        }
+
+        .editor-tabs {
+            background-color: #f0f0f0;
+            border-bottom: 1px solid #d0d0d0;
+            display: flex;
+            flex-shrink: 0;
+        }
+
+        .editor-tab {
+            padding: 8px 16px;
+            background-color: white;
+            border-right: 1px solid #d0d0d0;
+            border-bottom: 1px solid #d0d0d0;
+            font-size: 12px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .editor-tab.active {
+            background-color: white;
+            border-bottom: none;
+            margin-bottom: -1px;
+        }
+
+        .editor-content {
+            padding: 15px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            line-height: 1.4;
+            background-color: white;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .code-line {
+            margin-bottom: 2px;
+        }
+
+        .line-number {
+            color: #999;
+            width: 30px;
+            display: inline-block;
+            text-align: right;
+            margin-right: 10px;
+            user-select: none;
+        }
+
+        .keyword {
+            color: #0000ff;
+            font-weight: bold;
+        }
+
+        .string {
+            color: #008000;
+        }
+
+        /* ③コンソール */
+        .console-area {
+            height: 120px;
+            background-color: #f8f8f8;
+            border-top: 1px solid #d0d0d0;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            position: relative; /* 相対配置を追加 */
+        }
+
+        .console-content {
+            padding: 10px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 12px;
+            background-color: #000;
+            color: #fff;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        /* 番号ラベル */
+        .area-label {
+            position: absolute;
+            background-color: #ff4444;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            z-index: 10;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .label-1 {
+            top: 10px;
+            left: 10px;
+        }
+
+        .label-2 {
+            top: 50px;
+            left: 10px;
+        }
+
+        .label-3 {
+            top: 10px;
+            left: 10px;
+        }
+
+        /* 説明ボックス - 完全に独立 */
+        .explanation-box {
+            background-color: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .explanation-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .explanation-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .explanation-item {
+            background-color: #f9f9f9;
+            border-radius: 6px;
+            padding: 15px;
+            border-left: 4px solid #ff4444;
+        }
+
+        .explanation-number {
+            background-color: #ff4444;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .explanation-name {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .explanation-desc {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Eclipse画面 -->
+        <div class="eclipse-container">
+            <!-- タイトルバー -->
+            <div class="title-bar">
+                <div class="eclipse-icon">E</div>
+                <span>Eclipse IDE for Java Developers - HelloWorldProject</span>
+            </div>
+
+            <!-- メニューバー -->
+            <div class="menu-bar">
+                <div class="menu-items">
+                    <div class="menu-item">ファイル(F)</div>
+                    <div class="menu-item">編集(E)</div>
+                    <div class="menu-item">実行(R)</div>
+                    <div class="menu-item">ウィンドウ(W)</div>
+                    <div class="menu-item">ヘルプ(H)</div>
+                </div>
+            </div>
+
+            <!-- ツールバー -->
+            <div class="toolbar">
+                <div class="toolbar-btn">📁</div>
+                <div class="toolbar-btn">💾</div>
+                <div class="toolbar-btn">✂️</div>
+                <div class="toolbar-btn">📋</div>
+                <div class="toolbar-btn">↩️</div>
+                <div class="toolbar-btn">↪️</div>
+                <div class="toolbar-btn run">▶</div>
+            </div>
+
+            <!-- メインワークスペース -->
+            <div class="workspace">
+                <!-- ①パッケージエクスプローラー -->
+                <div class="package-explorer">
+                    <div class="area-label label-1">①</div>
+                    <div class="panel-header">パッケージ・エクスプローラー</div>
+                    <div class="package-content">
+                        <div class="project-item">
+                            <div class="folder-icon"></div>
+                            <span>HelloWorldProject</span>
+                        </div>
+                        <div class="project-item" style="margin-left: 20px;">
+                            <div class="folder-icon"></div>
+                            <span>src</span>
+                        </div>
+                        <div class="project-item" style="margin-left: 40px;">
+                            <div class="java-icon">J</div>
+                            <span>HelloWorld.java</span>
+                        </div>
+                        <div class="project-item" style="margin-left: 40px;">
+                            <div class="java-icon">J</div>
+                            <span>MyName.java</span>
+                        </div>
+                        <div class="project-item" style="margin-left: 20px;">
+                            <div class="folder-icon"></div>
+                            <span>JRE システム・ライブラリー</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 右側エリア -->
+                <div class="right-area">
+                    <!-- ②エディター -->
+                    <div class="editor-area">
+                        <div class="area-label label-2">②</div>
+                        <div class="editor-tabs">
+                            <div class="editor-tab active">HelloWorld.java</div>
+                            <div class="editor-tab">MyName.java</div>
+                        </div>
+                        <div class="editor-content">
+                            <div class="code-line">
+                                <span class="line-number">1</span>
+                                <span class="keyword">public class</span> HelloWorld {
+                            </div>
+                            <div class="code-line">
+                                <span class="line-number">2</span>
+                            </div>
+                            <div class="code-line">
+                                <span class="line-number">3</span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public static void</span> main(String[] args) {
+                            </div>
+                            <div class="code-line">
+                                <span class="line-number">4</span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(<span class="string">"Hello, World!"</span>);
+                            </div>
+                            <div class="code-line">
+                                <span class="line-number">5</span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;}
+                            </div>
+                            <div class="code-line">
+                                <span class="line-number">6</span>
+                            </div>
+                            <div class="code-line">
+                                <span class="line-number">7</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ③コンソール -->
+                    <div class="console-area">
+                        <div class="area-label label-3">③</div>
+                        <div class="panel-header">コンソール</div>
+                        <div class="console-content">
+                            Hello, World!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 説明ボックス - 完全に分離 -->
+        <div class="explanation-box">
+            <div class="explanation-title">Eclipse画面の構成</div>
+            <div class="explanation-grid">
+                <div class="explanation-item">
+                    <div class="explanation-number">①</div>
+                    <div class="explanation-name">パッケージエクスプローラー</div>
+                    <div class="explanation-desc">
+                        プロジェクト（作品フォルダ）の一覧が表示されます。<br>
+                        ファイルの作成・編集・削除をここから行います。
+                    </div>
+                </div>
+                <div class="explanation-item">
+                    <div class="explanation-number">②</div>
+                    <div class="explanation-name">エディター</div>
+                    <div class="explanation-desc">
+                        Javaコードを書く場所です。<br>
+                        タブで複数のファイルを同時に開けます。
+                    </div>
+                </div>
+                <div class="explanation-item">
+                    <div class="explanation-number">③</div>
+                    <div class="explanation-name">コンソール</div>
+                    <div class="explanation-desc">
+                        プログラムの実行結果が表示される場所です。<br>
+                        エラーメッセージもここに表示されます。
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
