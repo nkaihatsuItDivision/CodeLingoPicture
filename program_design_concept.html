@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>プログラム全体の設計思想</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background-color: white;
+            line-height: 1.5;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 50px;
+        }
+        
+        .file-class-section {
+            background-color: #f8f9fa;
+            border: 4px solid #6c757d;
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 50px;
+        }
+        
+        .section-header {
+            background-color: #6c757d;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .relationship-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+        
+        .file-box {
+            background-color: #fff3e0;
+            border: 4px solid #ff9800;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            width: 200px;
+        }
+        
+        .file-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        .file-label {
+            font-size: 16px;
+            font-weight: bold;
+            color: #ff9800;
+            margin-bottom: 10px;
+        }
+        
+        .file-name {
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            font-weight: bold;
+            background-color: white;
+            border: 2px solid #ff9800;
+            border-radius: 6px;
+            padding: 10px;
+        }
+        
+        .equals-sign {
+            font-size: 60px;
+            font-weight: bold;
+            color: #6c757d;
+        }
+        
+        .class-box {
+            background-color: #e3f2fd;
+            border: 4px solid #2196f3;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            width: 200px;
+        }
+        
+        .class-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        .class-label {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2196f3;
+            margin-bottom: 10px;
+        }
+        
+        .class-name {
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            font-weight: bold;
+            background-color: white;
+            border: 2px solid #2196f3;
+            border-radius: 6px;
+            padding: 10px;
+        }
+        
+        .rule-note {
+            background-color: #fff8e1;
+            border: 3px solid #ffc107;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .class-structure-section {
+            background-color: #e3f2fd;
+            border: 4px solid #2196f3;
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 50px;
+        }
+        
+        .class-structure-header {
+            background-color: #2196f3;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .methods-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .main-method-box {
+            background-color: #ffebee;
+            border: 4px solid #f44336;
+            border-radius: 12px;
+            padding: 25px;
+            position: relative;
+        }
+        
+        .main-badge {
+            position: absolute;
+            top: -12px;
+            right: 15px;
+            background-color: #ff9800;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .method-header {
+            background-color: #f44336;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .method-code {
+            background-color: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        
+        .method-call-highlight {
+            background-color: #fff3e0;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        
+        .other-methods-box {
+            background-color: #f1f8e9;
+            border: 4px solid #4caf50;
+            border-radius: 12px;
+            padding: 25px;
+        }
+        
+        .other-header {
+            background-color: #4caf50;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .method-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .method-item {
+            background-color: white;
+            border: 2px solid #4caf50;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .method-name {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #2e7d32;
+            margin-bottom: 5px;
+        }
+        
+        .method-desc {
+            font-size: 12px;
+            color: #555;
+        }
+        
+        .execution-flow-section {
+            background-color: #fff8e1;
+            border: 4px solid #ffc107;
+            border-radius: 12px;
+            padding: 40px;
+        }
+        
+        .flow-header {
+            background-color: #ffc107;
+            color: #333;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .flow-steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .step {
+            text-align: center;
+        }
+        
+        .step-circle {
+            width: 60px;
+            height: 60px;
+            background-color: #ffc107;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin: 0 auto 15px;
+        }
+        
+        .step-text {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            line-height: 1.3;
+        }
+        
+        .arrow {
+            text-align: center;
+            font-size: 36px;
+            color: #ffc107;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">プログラム全体の設計思想</h1>
+        
+        <div class="file-class-section">
+            <div class="section-header">ファイルとクラスの関係</div>
+            
+            <div class="relationship-display">
+                <div class="file-box">
+                    <div class="file-icon">📄</div>
+                    <div class="file-label">Javaファイル</div>
+                    <div class="file-name">Calculator.java</div>
+                </div>
+                
+                <div class="equals-sign">=</div>
+                
+                <div class="class-box">
+                    <div class="class-icon">📦</div>
+                    <div class="class-label">クラス</div>
+                    <div class="class-name">Calculator</div>
+                </div>
+            </div>
+            
+            <div class="rule-note">
+                <strong>重要なルール：</strong><br>
+                1つのファイル = 1つのクラス<br>
+                ファイル名とクラス名は同じにする
+            </div>
+        </div>
+        
+        <div class="class-structure-section">
+            <div class="class-structure-header">クラスの中身：メソッドの集まり</div>
+            
+            <div class="methods-container">
+                <div class="main-method-box">
+                    <div class="main-badge">エントリーポイント</div>
+                    <div class="method-header">mainメソッド</div>
+                    <div class="method-code">
+public static void main(String[] args) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("計算開始");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="method-call-highlight">int result1 = add(10, 5);</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("10 + 5 = " + result1);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="method-call-highlight">int result2 = subtract(20, 8);</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("20 - 8 = " + result2);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("計算終了");<br>
+}
+                    </div>
+                </div>
+                
+                <div class="other-methods-box">
+                    <div class="other-header">その他のメソッド</div>
+                    <div class="method-list">
+                        <div class="method-item">
+                            <div class="method-name">add(int a, int b)</div>
+                            <div class="method-desc">2つの数値を足し算</div>
+                        </div>
+                        <div class="method-item">
+                            <div class="method-name">subtract(int a, int b)</div>
+                            <div class="method-desc">2つの数値を引き算</div>
+                        </div>
+                        <div class="method-item">
+                            <div class="method-name">multiply(int a, int b)</div>
+                            <div class="method-desc">2つの数値を掛け算</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="execution-flow-section">
+            <div class="flow-header">プログラム実行の流れ</div>
+            
+            <div class="flow-steps">
+                <div class="step">
+                    <div class="step-circle">1</div>
+                    <div class="step-text">Javaプログラム<br>実行開始</div>
+                </div>
+                
+                <div class="arrow">→</div>
+                
+                <div class="step">
+                    <div class="step-circle">2</div>
+                    <div class="step-text">mainメソッドが<br>最初に実行される</div>
+                </div>
+                
+                <div class="arrow">→</div>
+                
+                <div class="step">
+                    <div class="step-circle">3</div>
+                    <div class="step-text">mainから他の<br>メソッドを呼び出し</div>
+                </div>
+                
+                <div class="arrow">→</div>
+                
+                <div class="step">
+                    <div class="step-circle">4</div>
+                    <div class="step-text">結果を受け取って<br>処理を続行</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
