@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>データ型選択フローチャート</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: white;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        
+        .flowchart {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+        }
+        
+        .start-node {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .arrow-down {
+            font-size: 24px;
+            color: #666;
+            margin: 5px 0;
+        }
+        
+        .level-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            width: 100%;
+            margin: 20px 0;
+            flex-wrap: nowrap;
+        }
+        
+        .data-path {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+            max-width: 280px;
+            min-width: 220px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+        
+        .data-type {
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 16px;
+            text-align: center;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+        }
+        
+        .question {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 15px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 14px;
+            position: relative;
+        }
+        
+        .question::before {
+            content: "❓";
+            margin-right: 8px;
+        }
+        
+        .choices {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+        }
+        
+        .choice-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 10px;
+            border: 2px solid #dee2e6;
+            transition: all 0.3s ease;
+        }
+        
+        .choice-row:hover {
+            border-color: #007bff;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .choice-condition {
+            font-weight: bold;
+            color: #495057;
+            font-size: 14px;
+        }
+        
+        .choice-arrow {
+            color: #6c757d;
+            font-size: 16px;
+        }
+        
+        .choice-result {
+            background: linear-gradient(135deg, #28a745, #218838);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 13px;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .number-path .choice-result {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+        }
+        
+        .text-path .choice-result {
+            background: linear-gradient(135deg, #fd7e14, #e66100);
+        }
+        
+        .boolean-path .choice-result {
+            background: linear-gradient(135deg, #6f42c1, #5a3296);
+        }
+        
+        .quick-guide {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        
+        .guide-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .guide-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .guide-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .guide-integer { border-left-color: #dc3545; }
+        .guide-decimal { border-left-color: #28a745; }
+        .guide-character { border-left-color: #fd7e14; }
+        .guide-boolean { border-left-color: #6f42c1; }
+        
+        .guide-category {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .guide-rule {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .guide-default {
+            color: #007bff;
+            font-weight: bold;
+        }
+        
+        .simple-flow {
+            background: #e8f4fd;
+            border: 2px solid #17a2b8;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .simple-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #0c5460;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .simple-steps {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .simple-step {
+            background: white;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-weight: bold;
+            color: #0c5460;
+            border: 2px solid #b6d7ff;
+            text-align: center;
+            min-width: 100px;
+        }
+        
+        .simple-arrow {
+            font-size: 20px;
+            color: #17a2b8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">データ型選択フローチャート</div>
+        
+        <!-- 簡単な流れ -->
+        <div class="simple-flow">
+            <div class="simple-title">💡 基本的な選択の流れ</div>
+            <div class="simple-steps">
+                <div class="simple-step">データの種類を<br/>特定する</div>
+                <div class="simple-arrow">➡️</div>
+                <div class="simple-step">サイズ・精度<br/>を考える</div>
+                <div class="simple-arrow">➡️</div>
+                <div class="simple-step">適切な型<br/>を選択</div>
+            </div>
+        </div>
+        
+        <div class="flowchart">
+            <!-- スタート -->
+            <div class="start-node">扱うデータは何？</div>
+            <div class="arrow-down">⬇️</div>
+            
+            <!-- 第1段階：データの種類 -->
+            <div class="level-container">
+                <!-- 数値の分岐 -->
+                <div class="data-path number-path">
+                    <div class="data-type">🔢 数値</div>
+                    <div class="arrow-down">⬇️</div>
+                    <div class="question">小数点が必要？</div>
+                    
+                    <div class="choices">
+                        <div class="choice-row">
+                            <div class="choice-condition">小数点あり</div>
+                            <div class="choice-arrow">➡️</div>
+                            <div class="choice-result">double</div>
+                        </div>
+                        <div class="choice-row">
+                            <div class="choice-condition">メモリ節約</div>
+                            <div class="choice-arrow">➡️</div>
+                            <div class="choice-result">float</div>
+                        </div>
+                        <div class="choice-row">
+                            <div class="choice-condition">小さな整数</div>
+                            <div class="choice-arrow">➡️</div>
+                            <div class="choice-result">byte</div>
+                        </div>
+                        <div class="choice-row">
+                            <div class="choice-condition">普通の整数</div>
+                            <div class="choice-arrow">➡️</div>
+                            <div class="choice-result">int</div>
+                        </div>
+                        <div class="choice-row">
+                            <div class="choice-condition">大きな整数</div>
+                            <div class="choice-arrow">➡️</div>
+                            <div class="choice-result">long</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 文字の分岐 -->
+                <div class="data-path text-path">
+                    <div class="data-type">📝 文字</div>
+                    <div class="arrow-down">⬇️</div>
+                    <div class="question">文字数は？</div>
+                    
+                    <div class="choices">
+                        <div class="choice-row">
+                            <div class="choice-condition">文字1個</div>
+                            <div class="choice-arrow">➡️</div>
+                            <div class="choice-result">char</div>
+                        </div>
+                        <div class="choice-row">
+                            <div class="choice-condition">文字列</div>
+                            <div class="choice-arrow">➡️</div>
+                            <div class="choice-result">String</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 真偽値の分岐 -->
+                <div class="data-path boolean-path">
+                    <div class="data-type">✅ 真偽値</div>
+                    <div class="arrow-down">⬇️</div>
+                    <div class="question">ON/OFF?</div>
+                    
+                    <div class="choices">
+                        <div class="choice-row">
+                            <div class="choice-condition">true/false</div>
+                            <div class="choice-arrow">➡️</div>
+                            <div class="choice-result">boolean</div>
+                        </div>
+                        <div class="choice-row">
+                            <div class="choice-condition">フラグ判定</div>
+                            <div class="choice-arrow">➡️</div>
+                            <div class="choice-result">boolean</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- クイックガイド -->
+        <div class="quick-guide">
+            <div class="guide-title">⚡ 迷った時のクイック選択ガイド</div>
+            <div class="guide-grid">
+                <div class="guide-item guide-integer">
+                    <div class="guide-category">🔢 整数の場合</div>
+                    <div class="guide-rule">
+                        <span class="guide-default">基本：int型</span><br/>
+                        大きな値のみ：long型<br/>
+                        メモリ節約時：byte, short型
+                    </div>
+                </div>
+                
+                <div class="guide-item guide-decimal">
+                    <div class="guide-category">📊 小数の場合</div>
+                    <div class="guide-rule">
+                        <span class="guide-default">基本：double型</span><br/>
+                        （高精度で推奨）<br/>
+                        メモリ節約時のみ：float型
+                    </div>
+                </div>
+                
+                <div class="guide-item guide-character">
+                    <div class="guide-category">📝 文字の場合</div>
+                    <div class="guide-rule">
+                        文字1個：<span class="guide-default">char型</span><br/>
+                        文字列：<span class="guide-default">String型</span><br/>
+                        （0文字以上の文字列）
+                    </div>
+                </div>
+                
+                <div class="guide-item guide-boolean">
+                    <div class="guide-category">✅ 真偽値の場合</div>
+                    <div class="guide-rule">
+                        true/false：<span class="guide-default">boolean型</span><br/>
+                        フラグ、条件判定<br/>
+                        ON/OFF状態など
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

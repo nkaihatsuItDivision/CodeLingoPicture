@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>データの多様性説明図</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: white;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        
+        .data-examples {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .data-item {
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+        
+        .data-item h3 {
+            color: #495057;
+            margin-top: 0;
+            font-size: 18px;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+        }
+        
+        .data-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+            margin: 10px 0;
+        }
+        
+        .problem-section {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .problem-title {
+            color: #856404;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .problem-title::before {
+            content: "⚠️";
+            margin-right: 10px;
+        }
+        
+        .code-examples {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        
+        .code-item {
+            background: #f8f9fa;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            border-radius: 5px;
+        }
+        
+        .code-item.success {
+            border-left-color: #28a745;
+        }
+        
+        .code-comment {
+            color: #6c757d;
+            font-style: italic;
+            margin-left: 10px;
+        }
+        
+        .error-text {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        .success-text {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .solution-section {
+            background: #d1ecf1;
+            border: 2px solid #17a2b8;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .solution-title {
+            color: #0c5460;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .solution-title::before {
+            content: "💡";
+            margin-right: 10px;
+        }
+        
+        .type-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .type-tag {
+            background: #007bff;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">なぜ int と String だけでは不十分なのか？</div>
+        
+        <div class="data-examples">
+            <div class="data-item">
+                <h3>🧑 学生の年齢</h3>
+                <div class="data-value">20歳</div>
+                <p>小さな整数で十分<br/>範囲: 0〜120程度</p>
+            </div>
+            
+            <div class="data-item">
+                <h3>🌍 世界の人口</h3>
+                <div class="data-value">約80億人</div>
+                <p>とても大きな数値が必要<br/>範囲: 8,000,000,000</p>
+            </div>
+            
+            <div class="data-item">
+                <h3>💰 商品の価格</h3>
+                <div class="data-value">298.5円</div>
+                <p>小数点が必要<br/>精密な計算が重要</p>
+            </div>
+            
+            <div class="data-item">
+                <h3>🔤 文字コード</h3>
+                <div class="data-value">65 = 'A'</div>
+                <p>文字1個を数値で表現<br/>Unicode対応が必要</p>
+            </div>
+        </div>
+        
+        <div class="problem-section">
+            <div class="problem-title">現在のint型だけでは表現できない！</div>
+            <div class="code-examples">
+                <div class="code-item success">
+                    <code>int age = 20;</code>
+                    <span class="code-comment success-text">✅ 年齢：問題なし</span>
+                </div>
+                <div class="code-item">
+                    <code>int worldPopulation = 8000000000;</code>
+                    <span class="code-comment error-text">❌ エラー！大きすぎる数値</span>
+                </div>
+                <div class="code-item">
+                    <code>int price = 298.5;</code>
+                    <span class="code-comment error-text">❌ エラー！小数点は使えない</span>
+                </div>
+                <div class="code-item">
+                    <code>int character = 'A';</code>
+                    <span class="code-comment error-text">❌ 文字の扱いが不自然</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="solution-section">
+            <div class="solution-title">解決策：多様なデータ型を使い分け！</div>
+            <p>様々な種類・サイズのデータに対応するため、<strong>Javaには8つの基本データ型</strong>が用意されています。</p>
+            <div class="type-preview">
+                <div class="type-tag">byte</div>
+                <div class="type-tag">short</div>
+                <div class="type-tag">int</div>
+                <div class="type-tag">long</div>
+                <div class="type-tag">float</div>
+                <div class="type-tag">double</div>
+                <div class="type-tag">char</div>
+                <div class="type-tag">boolean</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
