@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>boolean型の結果表示</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-width: 800px;
+            width: 100%;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 26px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #ff6b6b;
+            padding-bottom: 15px;
+        }
+        
+        .concept-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 3px solid #e9ecef;
+        }
+        
+        .concept-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .boolean-values {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            gap: 20px;
+        }
+        
+        .boolean-card {
+            flex: 1;
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            border: 3px solid;
+            transition: transform 0.2s;
+        }
+        
+        .boolean-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .true-card {
+            border-color: #27ae60;
+            background: linear-gradient(145deg, #d5f4e6, #a8e6cf);
+        }
+        
+        .false-card {
+            border-color: #e74c3c;
+            background: linear-gradient(145deg, #ffeaea, #ffcccb);
+        }
+        
+        .boolean-value {
+            font-size: 32px;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 10px;
+        }
+        
+        .true-value {
+            color: #27ae60;
+        }
+        
+        .false-value {
+            color: #e74c3c;
+        }
+        
+        .boolean-meaning {
+            font-size: 16px;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        
+        .code-comment {
+            color: #95a5a6;
+            font-style: italic;
+        }
+        
+        .output-section {
+            background: #34495e;
+            color: #f39c12;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .output-title {
+            color: #74b9ff;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 16px;
+            border-bottom: 2px solid #74b9ff;
+            padding-bottom: 5px;
+        }
+        
+        .output-line {
+            font-family: 'Courier New', monospace;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .output-true {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        .output-false {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .usage-examples {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .usage-card {
+            background: #f0f9f4;
+            border: 2px solid #27ae60;
+            border-radius: 15px;
+            padding: 20px;
+        }
+        
+        .usage-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .usage-code {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+        
+        .key-points {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+        
+        .key-points-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .key-point {
+            margin-bottom: 12px;
+            color: #856404;
+            font-size: 14px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        
+        .point-icon {
+            color: #ffc107;
+            font-weight: bold;
+            margin-top: 2px;
+        }
+        
+        .highlight {
+            background: #ffeb3b;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        @media (max-width: 768px) {
+            .boolean-values {
+                flex-direction: column;
+            }
+            
+            .usage-examples {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">✅❌ boolean型の結果表示</div>
+        
+        <div class="concept-section">
+            <div class="concept-title">
+                <span>🤔</span>
+                <span>boolean型とは？</span>
+            </div>
+            
+            <div style="text-align: center; margin-bottom: 20px; color: #2c3e50; font-size: 16px;">
+                比較演算子の結果を保存する特別な型です。<br>
+                <strong>「正しい（true）」か「間違い（false）」の2つの値だけ</strong>を持てます。
+            </div>
+            
+            <div class="boolean-values">
+                <div class="boolean-card true-card">
+                    <div class="boolean-value true-value">true</div>
+                    <div class="boolean-meaning">正しい・真</div>
+                </div>
+                
+                <div class="boolean-card false-card">
+                    <div class="boolean-value false-value">false</div>
+                    <div class="boolean-meaning">間違い・偽</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="code-example">
+<span class="code-comment">// boolean型の変数宣言と使用例</span>
+boolean result = (10 > 3);
+System.out.println("10 > 3 は " + result);
+
+boolean isEqual = (5 == 5);
+System.out.println("5 == 5 は " + isEqual);
+
+boolean isDifferent = (8 != 8);
+System.out.println("8 != 8 は " + isDifferent);
+        </div>
+        
+        <div class="output-section">
+            <div class="output-title">🖥️ 実行結果</div>
+            <div class="output-line">10 > 3 は <span class="output-true">true</span></div>
+            <div class="output-line">5 == 5 は <span class="output-true">true</span></div>
+            <div class="output-line">8 != 8 は <span class="output-false">false</span></div>
+        </div>
+        
+        <div class="usage-examples">
+            <div class="usage-card">
+                <div class="usage-title">🎯 年齢制限チェック</div>
+                <div class="usage-code">
+int age = 18;
+boolean canVote = (age >= 18);
+System.out.println("選挙権: " + canVote);
+<span class="code-comment">// 結果: 選挙権: true</span>
+                </div>
+            </div>
+            
+            <div class="usage-card">
+                <div class="usage-title">📊 成績判定</div>
+                <div class="usage-code">
+int score = 75;
+boolean isPass = (score >= 60);
+boolean isExcellent = (score >= 80);
+System.out.println("合格: " + isPass);
+System.out.println("優秀: " + isExcellent);
+<span class="code-comment">// 結果: 合格: true
+// 結果: 優秀: false</span>
+                </div>
+            </div>
+            
+            <div class="usage-card">
+                <div class="usage-title">💰 予算チェック</div>
+                <div class="usage-code">
+int money = 1500;
+int itemPrice = 2000;
+boolean canBuy = (money >= itemPrice);
+System.out.println("購入可能: " + canBuy);
+<span class="code-comment">// 結果: 購入可能: false</span>
+                </div>
+            </div>
+            
+            <div class="usage-card">
+                <div class="usage-title">🔢 偶数・奇数判定</div>
+                <div class="usage-code">
+int number = 7;
+boolean isEven = (number % 2 == 0);
+System.out.println("偶数: " + isEven);
+<span class="code-comment">// 結果: 偶数: false
+// （7は奇数なので）</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="key-points">
+            <div class="key-points-title">🎯 重要なポイント</div>
+            
+            <div class="key-point">
+                <span class="point-icon">•</span>
+                <span>boolean型は <span class="highlight">true</span> と <span class="highlight">false</span> の2つの値だけを持てます</span>
+            </div>
+            
+            <div class="key-point">
+                <span class="point-icon">•</span>
+                <span>比較演算子（==, !=, >, <, >=, <=）の結果は必ずboolean型になります</span>
+            </div>
+            
+            <div class="key-point">
+                <span class="point-icon">•</span>
+                <span>true/falseは <span class="highlight">そのまま文字列と連結</span> して表示できます</span>
+            </div>
+            
+            <div class="key-point">
+                <span class="point-icon">•</span>
+                <span>次回学習する<span class="highlight">if文（条件分岐）</span>で大活躍します！</span>
+            </div>
+            
+            <div class="key-point">
+                <span class="point-icon">•</span>
+                <span>日常の判断（「合格？」「購入可能？」）をプログラムで表現できます</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
