@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eclipse実行例（計算プログラム）</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .eclipse-container {
+            background: #2b2b2b;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            width: 900px;
+            max-width: 95vw;
+        }
+        
+        .title-bar {
+            background: #3c3c3c;
+            color: #cccccc;
+            padding: 8px 15px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #555;
+        }
+        
+        .title-bar::before {
+            content: "🟢 🟡 🔴";
+            margin-right: 10px;
+            font-size: 12px;
+        }
+        
+        .main-content {
+            display: flex;
+            height: 600px;
+        }
+        
+        .editor-area {
+            flex: 1;
+            background: #1e1e1e;
+            padding: 0;
+            position: relative;
+        }
+        
+        .editor-tab {
+            background: #2d2d30;
+            color: #cccccc;
+            padding: 8px 15px;
+            border-bottom: 1px solid #3e3e42;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .editor-tab::before {
+            content: "☕";
+            margin-right: 8px;
+            color: #f4a261;
+        }
+        
+        .code-area {
+            padding: 15px;
+            color: #d4d4d4;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            height: calc(100% - 40px);
+            overflow-y: auto;
+        }
+        
+        .line-number {
+            color: #858585;
+            margin-right: 15px;
+            user-select: none;
+            display: inline-block;
+            width: 20px;
+            text-align: right;
+        }
+        
+        .keyword {
+            color: #c586c0;
+            font-weight: bold;
+        }
+        
+        .string {
+            color: #ce9178;
+        }
+        
+        .comment {
+            color: #6a9955;
+            font-style: italic;
+        }
+        
+        .number {
+            color: #b5cea8;
+        }
+        
+        .method {
+            color: #dcdcaa;
+        }
+        
+        .console-area {
+            width: 350px;
+            background: #1e1e1e;
+            border-left: 1px solid #3e3e42;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .console-tab {
+            background: #2d2d30;
+            color: #cccccc;
+            padding: 8px 15px;
+            border-bottom: 1px solid #3e3e42;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .console-tab::before {
+            content: "📟";
+            margin-right: 8px;
+        }
+        
+        .console-output {
+            flex: 1;
+            padding: 15px;
+            color: #d4d4d4;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            background: #0c0c0c;
+            overflow-y: auto;
+        }
+        
+        .output-line {
+            margin-bottom: 4px;
+            color: #ffffff;
+        }
+        
+        .output-result {
+            color: #4fc3f7;
+            font-weight: bold;
+        }
+        
+        .run-button {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: #007acc;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .run-button::before {
+            content: "▶️";
+            font-size: 10px;
+        }
+        
+        .highlight-box {
+            position: absolute;
+            top: 480px;
+            right: 20px;
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 10px;
+            color: #856404;
+            font-size: 12px;
+            font-weight: bold;
+            max-width: 200px;
+        }
+        
+        .highlight-box::before {
+            content: "💡 ";
+        }
+    </style>
+</head>
+<body>
+    <div class="eclipse-container">
+        <div class="title-bar">
+            Eclipse IDE - BasicOperation.java
+        </div>
+        
+        <div class="main-content">
+            <div class="editor-area">
+                <div class="editor-tab">BasicOperation.java</div>
+                <div class="code-area">
+<span class="line-number">1</span><span class="keyword">public</span> <span class="keyword">class</span> BasicOperation {
+<span class="line-number">2</span>    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="method">main</span>(String[] args) {
+<span class="line-number">3</span>        <span class="comment">// 計算に使う数値を変数に格納</span>
+<span class="line-number">4</span>        <span class="keyword">int</span> a = <span class="number">10</span>;
+<span class="line-number">5</span>        <span class="keyword">int</span> b = <span class="number">3</span>;
+<span class="line-number">6</span>        
+<span class="line-number">7</span>        <span class="comment">// 各種計算を実行</span>
+<span class="line-number">8</span>        System.out.<span class="method">println</span>(<span class="string">"a = "</span> + a + <span class="string">", b = "</span> + b);
+<span class="line-number">9</span>        System.out.<span class="method">println</span>(<span class="string">"a + b = "</span> + (a + b));
+<span class="line-number">10</span>        System.out.<span class="method">println</span>(<span class="string">"a - b = "</span> + (a - b));
+<span class="line-number">11</span>        System.out.<span class="method">println</span>(<span class="string">"a * b = "</span> + (a * b));
+<span class="line-number">12</span>        System.out.<span class="method">println</span>(<span class="string">"a / b = "</span> + (a / b));
+<span class="line-number">13</span>        System.out.<span class="method">println</span>(<span class="string">"a % b = "</span> + (a % b));
+<span class="line-number">14</span>    }
+<span class="line-number">15</span>}
+                </div>
+                <button class="run-button">実行</button>
+            </div>
+            
+            <div class="console-area">
+                <div class="console-tab">コンソール</div>
+                <div class="console-output">
+                    <div class="output-line">a = <span class="output-result">10</span>, b = <span class="output-result">3</span></div>
+                    <div class="output-line">a + b = <span class="output-result">13</span></div>
+                    <div class="output-line">a - b = <span class="output-result">7</span></div>
+                    <div class="output-line">a * b = <span class="output-result">30</span></div>
+                    <div class="output-line">a / b = <span class="output-result">3</span></div>
+                    <div class="output-line">a % b = <span class="output-result">1</span></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="highlight-box">
+            実行結果がコンソールに表示されました！
+        </div>
+    </div>
+</body>
+</html>
