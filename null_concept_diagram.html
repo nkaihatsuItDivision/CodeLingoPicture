@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>null概念の説明図</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            border-bottom: 3px solid #ff6b6b;
+            padding-bottom: 10px;
+        }
+        
+        .states-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .state-box {
+            border: 3px solid;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+            background: white;
+        }
+        
+        .normal-state {
+            border-color: #27ae60;
+            background: linear-gradient(135deg, #d5f4e6, #ffffff);
+        }
+        
+        .empty-state {
+            border-color: #f39c12;
+            background: linear-gradient(135deg, #ffeaa7, #ffffff);
+        }
+        
+        .null-state {
+            border-color: #e74c3c;
+            background: linear-gradient(135deg, #ffebee, #ffffff);
+        }
+        
+        .state-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            color: white;
+        }
+        
+        .normal-title {
+            background: #27ae60;
+        }
+        
+        .empty-title {
+            background: #f39c12;
+        }
+        
+        .null-title {
+            background: #e74c3c;
+        }
+        
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+        
+        .visual-representation {
+            height: 80px;
+            border: 2px dashed #bdc3c7;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 15px 0;
+            font-size: 24px;
+            position: relative;
+        }
+        
+        .normal-visual {
+            background: #e8f8f5;
+            border-color: #27ae60;
+        }
+        
+        .empty-visual {
+            background: #fef9e7;
+            border-color: #f39c12;
+        }
+        
+        .null-visual {
+            background: #fdedec;
+            border-color: #e74c3c;
+        }
+        
+        .null-pointer {
+            font-size: 48px;
+            color: #95a5a6;
+            opacity: 0.5;
+        }
+        
+        .description {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+        
+        .danger-section {
+            background: linear-gradient(135deg, #ffebee, #ffffff);
+            border: 2px solid #e74c3c;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .danger-title {
+            color: #c62828;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .danger-title::before {
+            content: "⚠️";
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        
+        .danger-examples {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .danger-example {
+            border: 2px solid #ffcdd2;
+            border-radius: 8px;
+            padding: 15px;
+            background: white;
+        }
+        
+        .example-title {
+            font-weight: bold;
+            color: #d32f2f;
+            margin-bottom: 10px;
+        }
+        
+        .example-code {
+            background: #37474f;
+            color: #ffcdd2;
+            padding: 12px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin: 8px 0;
+        }
+        
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .safe-section {
+            background: linear-gradient(135deg, #e8f5e8, #ffffff);
+            border: 2px solid #27ae60;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+        
+        .safe-title {
+            color: #2e7d32;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .safe-title::before {
+            content: "✅";
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        
+        .safe-practices {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        
+        .practice-item {
+            background: white;
+            border: 2px solid #c8e6c9;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .practice-title {
+            font-weight: bold;
+            color: #2e7d32;
+            margin-bottom: 8px;
+        }
+        
+        .practice-code {
+            background: #1b5e20;
+            color: #c8e6c9;
+            padding: 12px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin: 8px 0;
+        }
+        
+        .memory-analogy {
+            background: #f8f9fa;
+            border: 2px dashed #6c757d;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .analogy-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 20px;
+        }
+        
+        .analogy-items {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .analogy-item {
+            text-align: center;
+            max-width: 200px;
+        }
+        
+        .analogy-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        
+        .analogy-text {
+            font-size: 14px;
+            color: #6c757d;
+            line-height: 1.4;
+        }
+        
+        @media (max-width: 768px) {
+            .states-comparison {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .danger-examples {
+                grid-template-columns: 1fr;
+            }
+            
+            .analogy-items {
+                flex-direction: column;
+            }
+            
+            .title {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">null概念の理解</div>
+        
+        <!-- 3つの状態の比較 -->
+        <div class="states-comparison">
+            <div class="state-box normal-state">
+                <div class="state-title normal-title">正常な状態</div>
+                <div class="code-example">String name = "田中";</div>
+                <div class="visual-representation normal-visual">
+                    📦 "田中"
+                </div>
+                <div class="description">
+                    変数が実際の文字列オブジェクトを参照している状態。
+                    メソッドを安全に呼び出せる。
+                </div>
+            </div>
+            
+            <div class="state-box empty-state">
+                <div class="state-title empty-title">空文字列</div>
+                <div class="code-example">String name = "";</div>
+                <div class="visual-representation empty-visual">
+                    📦 ""
+                </div>
+                <div class="description">
+                    長さ0の文字列オブジェクトを参照している状態。
+                    オブジェクトは存在するのでメソッド呼び出し可能。
+                </div>
+            </div>
+            
+            <div class="state-box null-state">
+                <div class="state-title null-title">null状態</div>
+                <div class="code-example">String name = null;</div>
+                <div class="visual-representation null-visual">
+                    <div class="null-pointer">∅</div>
+                </div>
+                <div class="description">
+                    何も参照していない状態。
+                    メソッドを呼び出すとNullPointerExceptionが発生。
+                </div>
+            </div>
+        </div>
+        
+        <!-- 身近なアナロジー -->
+        <div class="memory-analogy">
+            <div class="analogy-title">🏠 身近な例で理解しよう</div>
+            <div class="analogy-items">
+                <div class="analogy-item">
+                    <div class="analogy-icon">📋</div>
+                    <div class="analogy-text">
+                        <strong>正常状態</strong><br>
+                        住所が書かれた紙<br>
+                        「東京都新宿区1-1-1」
+                    </div>
+                </div>
+                
+                <div class="analogy-item">
+                    <div class="analogy-icon">📄</div>
+                    <div class="analogy-text">
+                        <strong>空文字列</strong><br>
+                        何も書かれていない紙<br>
+                        （紙自体は存在）
+                    </div>
+                </div>
+                
+                <div class="analogy-item">
+                    <div class="analogy-icon">❌</div>
+                    <div class="analogy-text">
+                        <strong>null状態</strong><br>
+                        紙自体が存在しない<br>
+                        （手に何も持っていない）
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 危険な例 -->
+        <div class="danger-section">
+            <div class="danger-title">nullで起こる問題（NullPointerException）</div>
+            <div class="danger-examples">
+                <div class="danger-example">
+                    <div class="example-title">❌ 危険なパターン1</div>
+                    <div class="example-code">
+String name = null;
+int length = name.length();  // エラー！
+                    </div>
+                    <div class="error-message">
+                        NullPointerException発生
+                    </div>
+                </div>
+                
+                <div class="danger-example">
+                    <div class="example-title">❌ 危険なパターン2</div>
+                    <div class="example-code">
+String message = null;
+boolean result = message.equals("Hello");  // エラー！
+                    </div>
+                    <div class="error-message">
+                        NullPointerException発生
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 安全な対策 -->
+        <div class="safe-section">
+            <div class="safe-title">nullの安全な扱い方</div>
+            <div class="safe-practices">
+                <div class="practice-item">
+                    <div class="practice-title">✅ 対策1: 事前にnullチェック</div>
+                    <div class="practice-code">
+String name = getUserInput();
+if (name != null) {
+    int length = name.length();  // 安全
+    System.out.println("文字数: " + length);
+} else {
+    System.out.println("名前が設定されていません");
+}
+                    </div>
+                </div>
+                
+                <div class="practice-item">
+                    <div class="practice-title">✅ 対策2: nullセーフな比較メソッド</div>
+                    <div class="practice-code">
+// 危険: message.equals("Hello")
+// 安全: "Hello".equals(message)
+
+String message = null;
+boolean result = "Hello".equals(message);  // false（エラーなし）
+                    </div>
+                </div>
+                
+                <div class="practice-item">
+                    <div class="practice-title">✅ 対策3: デフォルト値の設定</div>
+                    <div class="practice-code">
+String name = getUserInput();
+if (name == null) {
+    name = "名前未設定";  // デフォルト値を設定
+}
+System.out.println("こんにちは、" + name + "さん");
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
