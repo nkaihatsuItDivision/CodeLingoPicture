@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新規プロジェクト作成 ステップ1: メニュー選択</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            font-family: 'Yu Gothic', 'Hiragino Sans', Arial, sans-serif;
+        }
+
+        .eclipse-container {
+            background-color: white;
+            border: 2px solid #d0d0d0;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* タイトルバー */
+        .title-bar {
+            background: linear-gradient(to bottom, #e8e8e8, #d8d8d8);
+            border-bottom: 1px solid #c0c0c0;
+            padding: 8px 12px;
+            font-size: 13px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .eclipse-icon {
+            width: 16px;
+            height: 16px;
+            background: #4a90e2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 8px;
+            font-weight: bold;
+        }
+
+        /* メニューバー */
+        .menu-bar {
+            background-color: #f8f8f8;
+            border-bottom: 1px solid #d0d0d0;
+            padding: 4px 8px;
+            font-size: 12px;
+            color: #333;
+            position: relative;
+        }
+
+        .menu-items {
+            display: flex;
+            gap: 20px;
+        }
+
+        .menu-item {
+            padding: 4px 8px;
+            cursor: pointer;
+            border-radius: 3px;
+            position: relative;
+        }
+
+        .menu-item.active {
+            background-color: #007acc;
+            color: white;
+        }
+
+        .menu-item:hover:not(.active) {
+            background-color: #e0e0e0;
+        }
+
+        /* ドロップダウンメニュー */
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 8px;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            z-index: 100;
+            min-width: 200px;
+        }
+
+        .dropdown-item {
+            padding: 8px 12px;
+            font-size: 12px;
+            color: #333;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f0f8ff;
+        }
+
+        .dropdown-item.highlighted {
+            background-color: #007acc;
+            color: white;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .menu-icon {
+            width: 16px;
+            height: 16px;
+            background-color: #4a90e2;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+        }
+
+        .submenu-arrow {
+            margin-left: auto;
+            font-size: 10px;
+            color: #666;
+        }
+
+        /* サブメニュー */
+        .submenu {
+            position: absolute;
+            top: -1px;
+            left: 100%;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            min-width: 150px;
+        }
+
+        /* メインコンテンツエリア */
+        .main-content {
+            height: 400px;
+            background-color: #fafafa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 14px;
+        }
+
+        /* ステップ表示 */
+        .step-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #007acc;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* 説明ボックス */
+        .explanation-box {
+            margin-top: 20px;
+            background-color: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .explanation-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .step-number {
+            background-color: #007acc;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .explanation-content {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .highlight-text {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 10px;
+            margin-top: 15px;
+            font-size: 13px;
+            color: #856404;
+        }
+
+        .arrow-pointer {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 12px solid #ff4444;
+            top: 32px;
+            left: 180px;
+            z-index: 150;
+        }
+
+        .arrow-text {
+            position: absolute;
+            top: 50px;
+            left: 140px;
+            background-color: #ff4444;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            z-index: 150;
+        }
+    </style>
+</head>
+<body>
+    <div class="eclipse-container">
+        <div class="step-indicator">ステップ 1/4</div>
+        
+        <!-- タイトルバー -->
+        <div class="title-bar">
+            <div class="eclipse-icon">E</div>
+            <span>Eclipse IDE for Java Developers</span>
+        </div>
+
+        <!-- メニューバー -->
+        <div class="menu-bar">
+            <div class="menu-items">
+                <div class="menu-item active">ファイル(F)</div>
+                <div class="menu-item">編集(E)</div>
+                <div class="menu-item">実行(R)</div>
+                <div class="menu-item">ウィンドウ(W)</div>
+                <div class="menu-item">ヘルプ(H)</div>
+            </div>
+
+            <!-- ドロップダウンメニュー -->
+            <div class="dropdown-menu">
+                <div class="dropdown-item">
+                    <div class="menu-icon">📄</div>
+                    <span>新規ファイル</span>
+                    <span class="submenu-arrow">Ctrl+N</span>
+                </div>
+                <div class="dropdown-item highlighted">
+                    <div class="menu-icon">📁</div>
+                    <span>新規</span>
+                    <span class="submenu-arrow">▶</span>
+                    
+                    <!-- サブメニュー -->
+                    <div class="submenu">
+                        <div class="dropdown-item highlighted">
+                            <div class="menu-icon">🏗️</div>
+                            <span>プロジェクト...</span>
+                        </div>
+                        <div class="dropdown-item">
+                            <div class="menu-icon">📝</div>
+                            <span>ファイル</span>
+                        </div>
+                        <div class="dropdown-item">
+                            <div class="menu-icon">📂</div>
+                            <span>フォルダー</span>
+                        </div>
+                        <div class="dropdown-item">
+                            <div class="menu-icon">☕</div>
+                            <span>クラス</span>
+                        </div>
+                        <div class="dropdown-item">
+                            <div class="menu-icon">📦</div>
+                            <span>パッケージ</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="dropdown-item">
+                    <div class="menu-icon">📂</div>
+                    <span>開く</span>
+                    <span class="submenu-arrow">Ctrl+O</span>
+                </div>
+                <div class="dropdown-item">
+                    <div class="menu-icon">📂</div>
+                    <span>ファイルを開く...</span>
+                    <span class="submenu-arrow">Ctrl+Shift+O</span>
+                </div>
+                <div style="border-top: 1px solid #e0e0e0; margin: 4px 0;"></div>
+                <div class="dropdown-item">
+                    <div class="menu-icon">💾</div>
+                    <span>保存</span>
+                    <span class="submenu-arrow">Ctrl+S</span>
+                </div>
+                <div class="dropdown-item">
+                    <div class="menu-icon">💾</div>
+                    <span>すべて保存</span>
+                    <span class="submenu-arrow">Ctrl+Shift+S</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 矢印とテキスト -->
+        <div class="arrow-pointer"></div>
+        <div class="arrow-text">ここをクリック！</div>
+
+        <!-- メインコンテンツ -->
+        <div class="main-content">
+            Eclipseワークスペース
+        </div>
+    </div>
+
+    <!-- 説明ボックス -->
+    <div class="explanation-box">
+        <div class="explanation-title">
+            <div class="step-number">1</div>
+            ステップ1: メニューから新規プロジェクトを選択
+        </div>
+        <div class="explanation-content">
+            <p><strong>「ファイル」</strong> メニューをクリックして、ドロップダウンメニューを表示します。</p>
+            <p>次に <strong>「新規」</strong> にマウスを合わせると、サブメニューが表示されます。</p>
+            <p>サブメニューの中から <strong>「プロジェクト...」</strong> をクリックします。</p>
+        </div>
+        <div class="highlight-text">
+            <strong>💡 ポイント:</strong> ショートカットキー「Ctrl+N」でも新規作成ダイアログを開けますが、最初は手順を覚えるためにメニューから操作しましょう。
+        </div>
+    </div>
+</body>
+</html>
