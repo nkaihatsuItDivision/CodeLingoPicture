@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>プログラムの実行の流れ</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background-color: white;
+            line-height: 1.5;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 50px;
+        }
+        
+        .flow-container {
+            background-color: #f8f9fa;
+            border: 4px solid #495057;
+            border-radius: 15px;
+            padding: 40px;
+            position: relative;
+        }
+        
+        .main-method {
+            background-color: #fff3e0;
+            border: 4px solid #ff9800;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .method-title {
+            background-color: #ff9800;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .code-line {
+            background-color: white;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 12px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        
+        .step-number {
+            background-color: #2196f3;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .step-1 { background-color: #2196f3; }
+        .step-2 { background-color: #ff5722; }
+        .step-3 { background-color: #4caf50; }
+        .step-4 { background-color: #9c27b0; }
+        .step-5 { background-color: #607d8b; }
+        
+        .method-call {
+            background-color: #ffecb3;
+            border-color: #ffa000;
+            font-weight: bold;
+        }
+        
+        .normal-line {
+            background-color: #f5f5f5;
+        }
+        
+        .called-methods {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .called-method {
+            background-color: #e8f5e8;
+            border: 3px solid #4caf50;
+            border-radius: 10px;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .called-title {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .called-code {
+            background-color: white;
+            border: 2px solid #4caf50;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        
+        .return-value {
+            background-color: #e3f2fd;
+            border: 2px solid #2196f3;
+            border-radius: 6px;
+            padding: 10px;
+            margin-top: 10px;
+            text-align: center;
+            font-weight: bold;
+            color: #1976d2;
+        }
+        
+        .flow-arrow {
+            position: absolute;
+            right: -40px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 30px;
+            color: #ff5722;
+            font-weight: bold;
+        }
+        
+        .return-arrow {
+            position: absolute;
+            left: -40px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 30px;
+            color: #4caf50;
+            font-weight: bold;
+        }
+        
+        .execution-notes {
+            background-color: #fff8e1;
+            border: 3px solid #ffc107;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 40px;
+        }
+        
+        .notes-title {
+            background-color: #ffc107;
+            color: #333;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .note-item {
+            display: flex;
+            align-items: flex-start;
+            margin: 15px 0;
+            font-size: 15px;
+        }
+        
+        .note-step {
+            background-color: #ffc107;
+            color: #333;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .note-text {
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .highlight {
+            background-color: #ffeb3b;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">プログラムの実行の流れ</h1>
+        
+        <div class="flow-container">
+            <div class="main-method">
+                <div class="method-title">mainメソッドの実行</div>
+                
+                <div class="code-line normal-line">
+                    <div class="step-number step-1">1</div>
+                    <div>System.out.println("プログラム開始");</div>
+                </div>
+                
+                <div class="code-line method-call">
+                    <div class="step-number step-2">2</div>
+                    <div>int result = calculateSum(10, 20);</div>
+                    <div class="flow-arrow">→</div>
+                </div>
+                
+                <div class="code-line normal-line">
+                    <div class="step-number step-4">4</div>
+                    <div>System.out.println("合計: " + result);</div>
+                </div>
+                
+                <div class="code-line normal-line">
+                    <div class="step-number step-5">5</div>
+                    <div>System.out.println("プログラム終了");</div>
+                </div>
+            </div>
+            
+            <div class="called-methods">
+                <div class="called-method">
+                    <div class="return-arrow">←</div>
+                    <div class="called-title">calculateSumメソッド</div>
+                    <div class="called-code">
+public static int calculateSum(int a, int b) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;int sum = a + b;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return sum;<br>
+}
+                    </div>
+                    <div class="return-value">
+                        <div class="step-number step-3" style="display: inline-flex; margin-right: 10px;">3</div>
+                        戻り値: 30
+                    </div>
+                </div>
+                
+                <div class="called-method" style="opacity: 0.3;">
+                    <div class="called-title">その他のメソッド例</div>
+                    <div class="called-code">
+public static boolean checkEven(int num) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return num % 2 == 0;<br>
+}<br>
+<br>
+public static void greetUser(String name) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("こんにちは" + name);<br>
+}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="execution-notes">
+            <div class="notes-title">📋 実行の流れの詳細説明</div>
+            
+            <div class="note-item">
+                <div class="note-step">1</div>
+                <div class="note-text">
+                    <strong>プログラム開始：</strong><br>
+                    Javaプログラムが実行されると、必ず<span class="highlight">mainメソッド</span>から開始されます
+                </div>
+            </div>
+            
+            <div class="note-item">
+                <div class="note-step">2</div>
+                <div class="note-text">
+                    <strong>メソッド呼び出し：</strong><br>
+                    mainメソッドから<span class="highlight">calculateSum(10, 20)</span>を呼び出し、引数（10と20）を渡します
+                </div>
+            </div>
+            
+            <div class="note-item">
+                <div class="note-step">3</div>
+                <div class="note-text">
+                    <strong>メソッド実行と戻り値：</strong><br>
+                    calculateSumメソッドで計算を実行し、<span class="highlight">結果（30）をreturn</span>でmainメソッドに返します
+                </div>
+            </div>
+            
+            <div class="note-item">
+                <div class="note-step">4</div>
+                <div class="note-text">
+                    <strong>結果を受け取り：</strong><br>
+                    mainメソッドに戻り、<span class="highlight">戻り値をresult変数</span>で受け取って処理を続行します
+                </div>
+            </div>
+            
+            <div class="note-item">
+                <div class="note-step">5</div>
+                <div class="note-text">
+                    <strong>プログラム終了：</strong><br>
+                    mainメソッドの最後まで実行されると、プログラムが終了します
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
