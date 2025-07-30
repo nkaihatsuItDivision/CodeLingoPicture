@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>対話型プログラムの魅力</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .comparison {
+            display: flex;
+            min-height: 500px;
+        }
+        
+        .program-type {
+            flex: 1;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .fixed-program {
+            background-color: #fff5f5;
+            border-right: 3px solid #e0e0e0;
+        }
+        
+        .interactive-program {
+            background-color: #f0fff4;
+        }
+        
+        .program-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            padding: 12px;
+            border-radius: 8px;
+            color: white;
+        }
+        
+        .fixed-title {
+            background-color: #dc3545;
+        }
+        
+        .interactive-title {
+            background-color: #28a745;
+        }
+        
+        .code-block {
+            background-color: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin: 15px 0;
+            position: relative;
+        }
+        
+        .code-block::before {
+            content: "Java";
+            position: absolute;
+            top: -8px;
+            left: 10px;
+            background-color: #007bff;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .execution-example {
+            background-color: #333;
+            color: #00ff00;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin: 15px 0;
+            position: relative;
+        }
+        
+        .execution-example::before {
+            content: "実行結果";
+            position: absolute;
+            top: -8px;
+            left: 10px;
+            background-color: #333;
+            color: #00ff00;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .problems {
+            background-color: #fff3cd;
+            border: 2px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .problems h3 {
+            color: #856404;
+            margin: 0 0 10px 0;
+            font-size: 16px;
+        }
+        
+        .problems ul {
+            margin: 0;
+            padding-left: 20px;
+            color: #856404;
+        }
+        
+        .benefits {
+            background-color: #d1ecf1;
+            border: 2px solid #bee5eb;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .benefits h3 {
+            color: #0c5460;
+            margin: 0 0 10px 0;
+            font-size: 16px;
+        }
+        
+        .benefits ul {
+            margin: 0;
+            padding-left: 20px;
+            color: #0c5460;
+        }
+        
+        .arrow {
+            position: absolute;
+            top: 50%;
+            right: -25px;
+            transform: translateY(-50%);
+            font-size: 30px;
+            color: #007bff;
+            z-index: 10;
+        }
+        
+        .fixed-program {
+            position: relative;
+        }
+        
+        .impact-examples {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #e8f4fd;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .impact-examples h3 {
+            color: #0056b3;
+            margin: 0 0 15px 0;
+            font-size: 16px;
+        }
+        
+        .example-item {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            padding: 8px;
+            background-color: white;
+            border-radius: 6px;
+        }
+        
+        .example-icon {
+            font-size: 20px;
+            margin-right: 10px;
+            width: 30px;
+            text-align: center;
+        }
+        
+        .example-text {
+            color: #0056b3;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔄 固定値プログラム vs 対話型プログラム</h1>
+        </div>
+        
+        <div class="comparison">
+            <div class="program-type fixed-program">
+                <div class="program-title fixed-title">
+                    ❌ 固定値プログラム（従来）
+                </div>
+                
+                <div class="code-block">
+public class FixedCalculator {
+    public static void main(String[] args) {
+        // 値がプログラム内で固定
+        int a = 10;
+        int b = 5;
+        
+        int result = a + b;
+        System.out.printf("%d + %d = %d%n", 
+                         a, b, result);
+    }
+}
+                </div>
+                
+                <div class="execution-example">
+10 + 5 = 15
+                </div>
+                
+                <div class="problems">
+                    <h3>🚫 問題点</h3>
+                    <ul>
+                        <li><strong>値が固定</strong>されている</li>
+                        <li><strong>コード変更</strong>が必要</li>
+                        <li><strong>再コンパイル</strong>が必要</li>
+                        <li><strong>ユーザーが自由に使えない</strong></li>
+                        <li><strong>実用性が低い</strong></li>
+                    </ul>
+                </div>
+                
+                <div class="arrow">→</div>
+            </div>
+            
+            <div class="program-type interactive-program">
+                <div class="program-title interactive-title">
+                    ✅ 対話型プログラム（Scanner使用）
+                </div>
+                
+                <div class="code-block">
+import java.util.Scanner;
+
+public class InteractiveCalculator {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.print("1つ目の数値: ");
+        int a = scanner.nextInt();
+        
+        System.out.print("2つ目の数値: ");
+        int b = scanner.nextInt();
+        
+        int result = a + b;
+        System.out.printf("%d + %d = %d%n", 
+                         a, b, result);
+        
+        scanner.close();
+    }
+}
+                </div>
+                
+                <div class="execution-example">
+1つ目の数値: 25
+2つ目の数値: 13
+25 + 13 = 38
+                </div>
+                
+                <div class="benefits">
+                    <h3>🌟 利点</h3>
+                    <ul>
+                        <li><strong>ユーザーが自由</strong>に値を入力</li>
+                        <li><strong>同じプログラム</strong>で様々な計算</li>
+                        <li><strong>リアルタイム</strong>で結果確認</li>
+                        <li><strong>実用的</strong>なアプリケーション</li>
+                        <li><strong>ユーザー体験</strong>の向上</li>
+                    </ul>
+                </div>
+                
+                <div class="impact-examples">
+                    <h3>🚀 実現できること</h3>
+                    <div class="example-item">
+                        <div class="example-icon">🧮</div>
+                        <div class="example-text">電卓プログラム</div>
+                    </div>
+                    <div class="example-item">
+                        <div class="example-icon">📝</div>
+                        <div class="example-text">アンケートシステム</div>
+                    </div>
+                    <div class="example-item">
+                        <div class="example-icon">👥</div>
+                        <div class="example-text">データ管理システム</div>
+                    </div>
+                    <div class="example-item">
+                        <div class="example-icon">🎮</div>
+                        <div class="example-text">対話型ゲーム</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

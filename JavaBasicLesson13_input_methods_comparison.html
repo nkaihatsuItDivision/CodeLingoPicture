@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scanner入力メソッド比較表</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .header p {
+            margin: 8px 0 0 0;
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        
+        .comparison-table th {
+            background-color: #007bff;
+            color: white;
+            padding: 15px 10px;
+            text-align: center;
+            font-weight: bold;
+            border: 1px solid #0056b3;
+        }
+        
+        .comparison-table td {
+            padding: 12px 10px;
+            border: 1px solid #dee2e6;
+            vertical-align: top;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .comparison-table tr:hover {
+            background-color: #e3f2fd;
+        }
+        
+        .method-name {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #0056b3;
+            background-color: #e3f2fd;
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .data-type {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #28a745;
+            text-align: center;
+        }
+        
+        .usage-example {
+            font-family: 'Courier New', monospace;
+            background-color: #f8f9fa;
+            padding: 8px;
+            border-radius: 4px;
+            margin: 5px 0;
+            font-size: 12px;
+        }
+        
+        .feature-list {
+            margin: 0;
+            padding-left: 15px;
+        }
+        
+        .feature-list li {
+            margin: 4px 0;
+            line-height: 1.4;
+        }
+        
+        .positive {
+            color: #28a745;
+            font-weight: 500;
+        }
+        
+        .negative {
+            color: #dc3545;
+            font-weight: 500;
+        }
+        
+        .neutral {
+            color: #6c757d;
+            font-weight: 500;
+        }
+        
+        .attention-box {
+            background-color: #fff3cd;
+            border: 2px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .attention-box h3 {
+            color: #856404;
+            margin: 0 0 15px 0;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .attention-box h3::before {
+            content: "⚠️";
+            margin-right: 8px;
+            font-size: 20px;
+        }
+        
+        .code-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .code-block {
+            background-color: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+        
+        .code-block h4 {
+            margin: 0 0 10px 0;
+            color: #495057;
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            font-size: 14px;
+        }
+        
+        .best-practices {
+            background-color: #d1ecf1;
+            border: 2px solid #bee5eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .best-practices h3 {
+            color: #0c5460;
+            margin: 0 0 15px 0;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .best-practices h3::before {
+            content: "💡";
+            margin-right: 8px;
+            font-size: 20px;
+        }
+        
+        .recommendation {
+            background-color: #e8f5e8;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .recommendation-title {
+            font-weight: bold;
+            color: #155724;
+            margin: 0 0 8px 0;
+        }
+        
+        .recommendation-desc {
+            color: #155724;
+            margin: 0;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Scanner入力メソッド完全比較表</h1>
+            <p>適切なメソッドを選択して安全で使いやすい入力処理を実現しよう</p>
+        </div>
+        
+        <div class="content">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th style="width: 15%;">メソッド</th>
+                        <th style="width: 12%;">戻り値型</th>
+                        <th style="width: 25%;">用途・特徴</th>
+                        <th style="width: 20%;">使用例</th>
+                        <th style="width: 28%;">注意点</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="method-name">nextLine()</td>
+                        <td class="data-type">String</td>
+                        <td>
+                            <ul class="feature-list">
+                                <li class="positive">改行まで全て取得</li>
+                                <li class="positive">スペース含む文字列OK</li>
+                                <li class="positive">日本語入力OK</li>
+                                <li class="positive">最も安全で推奨</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <div class="usage-example">
+String name = scanner.nextLine();<br>
+// 入力: "山田 太郎"<br>
+// 結果: "山田 太郎"
+                            </div>
+                        </td>
+                        <td>
+                            <ul class="feature-list">
+                                <li class="neutral">空文字列も有効な入力</li>
+                                <li class="neutral">数値変換が必要な場合あり</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="method-name">next()</td>
+                        <td class="data-type">String</td>
+                        <td>
+                            <ul class="feature-list">
+                                <li class="neutral">最初の単語のみ取得</li>
+                                <li class="neutral">スペースで区切り</li>
+                                <li class="negative">限定的な用途</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <div class="usage-example">
+String word = scanner.next();<br>
+// 入力: "Hello World"<br>
+// 結果: "Hello"<br>
+// ("World"は残る)
+                            </div>
+                        </td>
+                        <td>
+                            <ul class="feature-list">
+                                <li class="negative">スペース以降は取得されない</li>
+                                <li class="negative">残りデータが入力バッファに残る</li>
+                                <li class="negative">一般的には非推奨</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="method-name">nextInt()</td>
+                        <td class="data-type">int</td>
+                        <td>
+                            <ul class="feature-list">
+                                <li class="positive">整数値を直接取得</li>
+                                <li class="positive">型変換不要</li>
+                                <li class="positive">数値計算に便利</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <div class="usage-example">
+int age = scanner.nextInt();<br>
+// 入力: "25"<br>
+// 結果: 25 (int型)
+                            </div>
+                        </td>
+                        <td>
+                            <ul class="feature-list">
+                                <li class="negative">数値以外でエラー発生</li>
+                                <li class="negative">改行文字が残る</li>
+                                <li class="negative">hasNextInt()での事前チェック推奨</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="method-name">nextDouble()</td>
+                        <td class="data-type">double</td>
+                        <td>
+                            <ul class="feature-list">
+                                <li class="positive">小数値を直接取得</li>
+                                <li class="positive">型変換不要</li>
+                                <li class="positive">精密な計算に最適</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <div class="usage-example">
+double price = scanner.nextDouble();<br>
+// 入力: "1980.5"<br>
+// 結果: 1980.5 (double型)
+                            </div>
+                        </td>
+                        <td>
+                            <ul class="feature-list">
+                                <li class="negative">数値以外でエラー発生</li>
+                                <li class="negative">改行文字が残る</li>
+                                <li class="negative">hasNextDouble()での事前チェック推奨</li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="attention-box">
+                <h3>重要な注意点：nextInt() → nextLine() の組み合わせ</h3>
+                
+                <div class="code-comparison">
+                    <div class="code-block">
+                        <h4>❌ 問題のあるコード</h4>
+int age = scanner.nextInt();<br>
+String name = scanner.nextLine();<br>
+// nameが空文字になる問題
+                    </div>
+                    <div class="code-block">
+                        <h4>✅ 正しいコード</h4>
+int age = scanner.nextInt();<br>
+scanner.nextLine(); // 改行文字を消去<br>
+String name = scanner.nextLine();
+                    </div>
+                </div>
+                
+                <p><strong>理由:</strong> nextInt()は数値のみを読み取り、改行文字を残すため、続くnextLine()が空文字を返してしまいます。</p>
+            </div>
+            
+            <div class="best-practices">
+                <h3>使い分けの推奨パターン</h3>
+                
+                <div class="recommendation">
+                    <div class="recommendation-title">🥇 最優先：nextLine() + 文字列変換</div>
+                    <div class="recommendation-desc">
+                        全ての入力をnextLine()で受け取り、必要に応じてInteger.parseInt()やDouble.parseDouble()で変換する方法。最も安全で予測可能。
+                    </div>
+                </div>
+                
+                <div class="recommendation">
+                    <div class="recommendation-title">🥈 次善：型別メソッド + hasNext系チェック</div>
+                    <div class="recommendation-desc">
+                        nextInt()やnextDouble()を使用するが、必ずhasNextInt()やhasNextDouble()で事前チェックを行う方法。
+                    </div>
+                </div>
+                
+                <div class="recommendation">
+                    <div class="recommendation-title">🏅 学習用：段階的に理解</div>
+                    <div class="recommendation-desc">
+                        まず基本的な使い方を理解し、エラーを体験してから安全な処理を学ぶアプローチ。今回のレッスンはこの方針。
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px; color: #6c757d; font-size: 14px;">
+                <p>💡 <strong>プロのアドバイス:</strong> 実用的なプログラムでは一貫してnextLine()を使用し、<br>
+                必要に応じて型変換することを強く推奨します。</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
