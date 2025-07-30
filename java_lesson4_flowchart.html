@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>if-else文フローチャート</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 700px;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .flowchart {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .start-end {
+            background: linear-gradient(135deg, #27ae60 0%, #16a085 100%);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 16px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+        }
+        
+        .condition {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+            padding: 25px;
+            width: 180px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+            margin: 20px 0;
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+        }
+        
+        .condition-text {
+            line-height: 1.2;
+        }
+        
+        .process {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            text-align: center;
+            min-width: 200px;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .arrow {
+            font-size: 24px;
+            color: #e74c3c;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .branch-container {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin: 20px 0;
+        }
+        
+        .branch {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .branch-label {
+            background: #e74c3c;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .true-label {
+            background: #27ae60;
+        }
+        
+        .false-label {
+            background: #e74c3c;
+        }
+        
+        .merge-arrow {
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+        
+        .merge-visual {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            width: 400px;
+            height: 30px;
+            position: relative;
+        }
+        
+        .merge-line-left {
+            width: 3px;
+            height: 30px;
+            background: #e74c3c;
+            position: absolute;
+            left: 80px;
+        }
+        
+        .merge-line-right {
+            width: 3px;
+            height: 30px;
+            background: #e74c3c;
+            position: absolute;
+            right: 80px;
+        }
+        
+        .merge-line-horizontal {
+            width: 240px;
+            height: 3px;
+            background: #e74c3c;
+            position: absolute;
+            bottom: 0;
+        }
+        
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin-top: 30px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .highlight {
+            background: rgba(241, 196, 15, 0.3);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .code-comment {
+            color: #95a5a6;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">if-else文の処理の流れ</div>
+        
+        <div class="flowchart">
+            <div class="start-end">📍 プログラム開始</div>
+            
+            <div class="arrow">⬇️</div>
+            
+            <div class="condition">
+                <div class="condition-text">
+                    条件を<br>チェック<br>
+                    <small>(score >= 60)</small>
+                </div>
+            </div>
+            
+            <div class="branch-container">
+                <div class="branch">
+                    <div class="branch-label true-label">✅ true</div>
+                    <div class="arrow">⬇️</div>
+                    <div class="process">
+                        合格です！<br>
+                        <small>System.out.println<br>("合格です！");</small>
+                    </div>
+                </div>
+                
+                <div class="branch">
+                    <div class="branch-label false-label">❌ false</div>
+                    <div class="arrow">⬇️</div>
+                    <div class="process">
+                        不合格です<br>
+                        <small>System.out.println<br>("不合格です");</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="merge-arrow">
+                <div class="merge-visual">
+                    <div class="merge-line-left"></div>
+                    <div class="merge-line-right"></div>
+                    <div class="merge-line-horizontal"></div>
+                </div>
+            </div>
+            
+            <div class="arrow">⬇️</div>
+            
+            <div class="process">
+                次の処理へ<br>
+                <small>System.out.println<br>("成績: " + score + "点");</small>
+            </div>
+            
+            <div class="arrow">⬇️</div>
+            
+            <div class="start-end">🏁 プログラム終了</div>
+        </div>
+        
+        <div class="code-example">
+            <div><span class="code-comment">// 対応するJavaコード</span></div>
+            <div>int score = 75;</div>
+            <div></div>
+            <div><span class="highlight">if</span> (score >= 60) {</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("合格です！");</div>
+            <div><span class="highlight">} else {</span></div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("不合格です");</div>
+            <div>}</div>
+            <div></div>
+            <div>System.out.println("成績: " + score + "点");</div>
+        </div>
+    </div>
+</body>
+</html>
