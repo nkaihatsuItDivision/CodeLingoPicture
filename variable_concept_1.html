@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>変数の概念図 - 財布・連絡先の例</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 800px;
+            width: 100%;
+        }
+        
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .examples {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+        
+        .example {
+            flex: 1;
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+        }
+        
+        .example-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .wallet {
+            width: 80px;
+            height: 60px;
+            background: #8b4513;
+            border-radius: 10px;
+            margin: 0 auto 15px;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .wallet::before {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            height: 20px;
+            background: #654321;
+            border-radius: 5px;
+        }
+        
+        .phone {
+            width: 50px;
+            height: 80px;
+            background: #2c3e50;
+            border-radius: 8px;
+            margin: 0 auto 15px;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .phone::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 5px;
+            right: 5px;
+            bottom: 15px;
+            background: #ecf0f1;
+            border-radius: 3px;
+        }
+        
+        .phone::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 5px;
+            background: #95a5a6;
+            border-radius: 3px;
+        }
+        
+        .money-states {
+            font-size: 14px;
+            color: #7f8c8d;
+            line-height: 1.6;
+        }
+        
+        .contacts {
+            font-size: 14px;
+            color: #7f8c8d;
+            line-height: 1.6;
+        }
+        
+        .arrow {
+            text-align: center;
+            font-size: 24px;
+            color: #e74c3c;
+            margin: 20px 0;
+        }
+        
+        .programming-concept {
+            background: #e8f5e8;
+            border: 2px solid #27ae60;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .programming-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 15px;
+        }
+        
+        .variable-boxes {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .variable-box {
+            width: 120px;
+            height: 80px;
+            border: 3px dashed #27ae60;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .variable-name {
+            font-size: 14px;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 5px;
+        }
+        
+        .variable-value {
+            font-size: 16px;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        
+        .explanation {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            text-align: center;
+            color: #856404;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">変数の概念 - 身近な例から理解しよう</div>
+        
+        <div class="examples">
+            <div class="example">
+                <div class="example-title">💰 財布の例</div>
+                <div class="wallet"></div>
+                <div class="money-states">
+                    朝：5000円<br>
+                    昼：4500円<br>
+                    夕：3500円
+                </div>
+            </div>
+            
+            <div class="example">
+                <div class="example-title">📱 連絡先の例</div>
+                <div class="phone"></div>
+                <div class="contacts">
+                    田中：090-1234-5678<br>
+                    山田：080-9876-5432<br>
+                    佐藤：070-1111-2222
+                </div>
+            </div>
+        </div>
+        
+        <div class="arrow">⬇️</div>
+        
+        <div class="programming-concept">
+            <div class="programming-title">プログラムでの変数</div>
+            <p>データを入れる「名前付きの箱」</p>
+            
+            <div class="variable-boxes">
+                <div class="variable-box">
+                    <div class="variable-name">money</div>
+                    <div class="variable-value">5000</div>
+                </div>
+                <div class="variable-box">
+                    <div class="variable-name">name</div>
+                    <div class="variable-value">"田中"</div>
+                </div>
+                <div class="variable-box">
+                    <div class="variable-name">age</div>
+                    <div class="variable-value">25</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="explanation">
+            変数 = データを保存する名前付きの場所<br>
+            中身は変更可能！
+        </div>
+    </div>
+</body>
+</html>
