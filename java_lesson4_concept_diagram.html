@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日常の判断からプログラムへの概念説明図</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 800px;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #34495e;
+            margin-bottom: 15px;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+        }
+        
+        .daily-examples {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .example-box {
+            flex: 1;
+            min-width: 200px;
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(116, 185, 255, 0.3);
+        }
+        
+        .condition {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            padding-bottom: 8px;
+        }
+        
+        .action {
+            font-size: 14px;
+            background: rgba(255,255,255,0.2);
+            padding: 8px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        
+        .arrow-down {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 40px;
+            color: #e74c3c;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .program-section {
+            background: linear-gradient(135deg, #55a3ff 0%, #003d82 100%);
+            padding: 25px;
+            border-radius: 15px;
+            color: white;
+        }
+        
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin: 15px 0;
+            position: relative;
+            border-left: 4px solid #3498db;
+        }
+        
+        .code-comment {
+            color: #95a5a6;
+            font-style: italic;
+        }
+        
+        .highlight {
+            background: rgba(241, 196, 15, 0.3);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .connection-line {
+            text-align: center;
+            margin: 25px 0;
+            position: relative;
+        }
+        
+        .connection-text {
+            background: #e74c3c;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            display: inline-block;
+            font-size: 16px;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+        
+        .icon {
+            font-size: 24px;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">日常生活での判断 → プログラムでの条件分岐</div>
+        
+        <div class="section">
+            <div class="section-title">🌟 日常生活での条件判断</div>
+            <div class="daily-examples">
+                <div class="example-box">
+                    <div class="icon">☔</div>
+                    <div class="condition">もし雨が降っているなら</div>
+                    <div class="action">傘を持って行く</div>
+                </div>
+                <div class="example-box">
+                    <div class="icon">🚦</div>
+                    <div class="condition">もし信号が赤なら</div>
+                    <div class="action">止まる</div>
+                </div>
+                <div class="example-box">
+                    <div class="icon">⏰</div>
+                    <div class="condition">もし時間があるなら</div>
+                    <div class="action">コーヒーを飲む</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="connection-line">
+            <div class="connection-text">⬇️ これをプログラムで表現すると ⬇️</div>
+        </div>
+        
+        <div class="section">
+            <div class="program-section">
+                <div class="section-title" style="background: rgba(255,255,255,0.2); color: white;">💻 プログラムでの条件分岐</div>
+                
+                <div class="code-example">
+                    <div><span class="code-comment">// 雨の場合の判断</span></div>
+                    <div><span class="highlight">if</span> (isRaining) {</div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("傘を持って行きましょう");</div>
+                    <div>}</div>
+                </div>
+                
+                <div class="code-example">
+                    <div><span class="code-comment">// 年齢の場合の判断</span></div>
+                    <div><span class="highlight">if</span> (age >= 18) {</div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("成人です");</div>
+                    <div><span class="highlight">} else {</span></div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("未成年です");</div>
+                    <div>}</div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 20px; font-size: 16px; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
+                    <strong>🎯 同じ仕組み！</strong><br>
+                    「条件を確認 → 結果に応じて行動」
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
