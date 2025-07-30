@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>==と.equals()の動作比較図</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+        
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .scenario {
+            margin-bottom: 40px;
+            border: 2px solid #ecf0f1;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .scenario-header {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 15px 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .scenario-content {
+            padding: 20px;
+            background: #fafbfc;
+        }
+        
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .comparison-item {
+            border: 2px solid #bdc3c7;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .wrong-method {
+            border-color: #e74c3c;
+            background: linear-gradient(135deg, #ffebee, #ffffff);
+        }
+        
+        .correct-method {
+            border-color: #27ae60;
+            background: linear-gradient(135deg, #e8f5e8, #ffffff);
+        }
+        
+        .method-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            padding: 8px 15px;
+            border-radius: 20px;
+            color: white;
+        }
+        
+        .wrong-title {
+            background: #e74c3c;
+        }
+        
+        .correct-title {
+            background: #27ae60;
+        }
+        
+        .method-code {
+            background: #34495e;
+            color: #ecf0f1;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin: 10px 0;
+        }
+        
+        .result {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .result-false {
+            background: #ffebee;
+            color: #c62828;
+            border: 2px solid #e74c3c;
+        }
+        
+        .result-true {
+            background: #e8f5e8;
+            color: #2e7d32;
+            border: 2px solid #27ae60;
+        }
+        
+        .explanation {
+            font-size: 14px;
+            color: #555;
+            font-style: italic;
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 6px;
+        }
+        
+        .visual-representation {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 2px dashed #6c757d;
+        }
+        
+        .memory-box {
+            border: 2px solid #495057;
+            border-radius: 8px;
+            padding: 15px;
+            background: white;
+            text-align: center;
+            min-width: 120px;
+        }
+        
+        .memory-label {
+            font-size: 12px;
+            color: #6c757d;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .memory-value {
+            font-size: 14px;
+            font-weight: bold;
+            color: #495057;
+            background: #e9ecef;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        
+        .vs-text {
+            font-size: 20px;
+            font-weight: bold;
+            color: #495057;
+            margin: 0 20px;
+        }
+        
+        .key-takeaway {
+            background: linear-gradient(135deg, #fff3cd, #ffffff);
+            border: 2px solid #ffc107;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        
+        .takeaway-title {
+            color: #856404;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .takeaway-title::before {
+            content: "💡";
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .rule {
+            background: white;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .title {
+                font-size: 22px;
+            }
+            
+            .visual-representation {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .vs-text {
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">== と .equals() の動作比較</div>
+        
+        <!-- シナリオ1: 文字列リテラル -->
+        <div class="scenario">
+            <div class="scenario-header">📝 シナリオ1: 文字列リテラル同士の比較</div>
+            <div class="scenario-content">
+                <div class="code-block">
+String name1 = "田中";
+String name2 = "田中";
+                </div>
+                
+                <div class="visual-representation">
+                    <div class="memory-box">
+                        <div class="memory-label">name1</div>
+                        <div class="memory-value">→ "田中"</div>
+                    </div>
+                    <div class="vs-text">同じオブジェクト</div>
+                    <div class="memory-box">
+                        <div class="memory-label">name2</div>
+                        <div class="memory-value">→ "田中"</div>
+                    </div>
+                </div>
+                
+                <div class="comparison-grid">
+                    <div class="comparison-item correct-method">
+                        <div class="method-title correct-title">== での比較</div>
+                        <div class="method-code">name1 == name2</div>
+                        <div class="result result-true">true</div>
+                        <div class="explanation">同じオブジェクトを参照しているため</div>
+                    </div>
+                    
+                    <div class="comparison-item correct-method">
+                        <div class="method-title correct-title">.equals() での比較</div>
+                        <div class="method-code">name1.equals(name2)</div>
+                        <div class="result result-true">true</div>
+                        <div class="explanation">内容が同じため</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- シナリオ2: new String -->
+        <div class="scenario">
+            <div class="scenario-header">⚠️ シナリオ2: new String で作成した場合</div>
+            <div class="scenario-content">
+                <div class="code-block">
+String input = new String("田中");
+String stored = "田中";
+                </div>
+                
+                <div class="visual-representation">
+                    <div class="memory-box">
+                        <div class="memory-label">input</div>
+                        <div class="memory-value">→ "田中" (0x001)</div>
+                    </div>
+                    <div class="vs-text">異なるオブジェクト</div>
+                    <div class="memory-box">
+                        <div class="memory-label">stored</div>
+                        <div class="memory-value">→ "田中" (0x002)</div>
+                    </div>
+                </div>
+                
+                <div class="comparison-grid">
+                    <div class="comparison-item wrong-method">
+                        <div class="method-title wrong-title">❌ == での比較</div>
+                        <div class="method-code">input == stored</div>
+                        <div class="result result-false">false</div>
+                        <div class="explanation">異なるオブジェクトを参照しているため</div>
+                    </div>
+                    
+                    <div class="comparison-item correct-method">
+                        <div class="method-title correct-title">✅ .equals() での比較</div>
+                        <div class="method-code">input.equals(stored)</div>
+                        <div class="result result-true">true</div>
+                        <div class="explanation">内容が同じため</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- シナリオ3: 実用例 -->
+        <div class="scenario">
+            <div class="scenario-header">🔐 シナリオ3: パスワード認証の例</div>
+            <div class="scenario-content">
+                <div class="code-block">
+String correctPassword = "secret123";
+String userInput = getUserInput(); // ユーザーからの入力
+                </div>
+                
+                <div class="comparison-grid">
+                    <div class="comparison-item wrong-method">
+                        <div class="method-title wrong-title">❌ 危険な方法</div>
+                        <div class="method-code">userInput == correctPassword</div>
+                        <div class="result result-false">多くの場合 false</div>
+                        <div class="explanation">正しいパスワードでもログイン失敗！</div>
+                    </div>
+                    
+                    <div class="comparison-item correct-method">
+                        <div class="method-title correct-title">✅ 正しい方法</div>
+                        <div class="method-code">userInput.equals(correctPassword)</div>
+                        <div class="result result-true">正しく判定</div>
+                        <div class="explanation">内容で判定するため安全</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="key-takeaway">
+            <div class="takeaway-title">重要なルール</div>
+            
+            <div class="rule">
+                <strong>== 演算子：</strong> オブジェクトの<span style="color: #e74c3c;">参照（住所）</span>を比較
+                <br>→ 同じオブジェクトかどうかを判定
+            </div>
+            
+            <div class="rule">
+                <strong>.equals() メソッド：</strong> オブジェクトの<span style="color: #27ae60;">内容</span>を比較
+                <br>→ 値が同じかどうかを判定
+            </div>
+            
+            <div class="rule">
+                <strong>文字列比較のベストプラクティス：</strong>
+                <br>常に <code style="background: #e9ecef; padding: 2px 6px; border-radius: 3px;">.equals()</code> を使用する
+            </div>
+        </div>
+    </div>
+</body>
+</html>
