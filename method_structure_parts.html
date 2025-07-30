@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>メソッドの構造と部品</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background-color: white;
+            line-height: 1.5;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 50px;
+        }
+        
+        .syntax-section {
+            background-color: #f8f9fa;
+            border: 4px solid #007bff;
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 50px;
+        }
+        
+        .section-header {
+            background-color: #007bff;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .syntax-display {
+            background-color: white;
+            border: 3px solid #007bff;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .syntax-code {
+            font-family: 'Courier New', monospace;
+            font-size: 20px;
+            font-weight: bold;
+            line-height: 1.8;
+            color: #333;
+        }
+        
+        .part-public-static {
+            background-color: #17a2b8;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            margin: 0 5px;
+        }
+        
+        .part-return-type {
+            background-color: #28a745;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            margin: 0 5px;
+        }
+        
+        .part-method-name {
+            background-color: #dc3545;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            margin: 0 5px;
+        }
+        
+        .part-parameters {
+            background-color: #ffc107;
+            color: #333;
+            padding: 8px 12px;
+            border-radius: 5px;
+            margin: 0 5px;
+        }
+        
+        .explanations {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .explanation-box {
+            background-color: white;
+            border: 3px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        
+        .exp-modifier {
+            border-color: #17a2b8;
+        }
+        
+        .exp-return {
+            border-color: #28a745;
+        }
+        
+        .exp-name {
+            border-color: #dc3545;
+        }
+        
+        .exp-params {
+            border-color: #ffc107;
+        }
+        
+        .exp-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding: 8px;
+            border-radius: 5px;
+            text-align: center;
+            color: white;
+        }
+        
+        .exp-modifier .exp-title {
+            background-color: #17a2b8;
+        }
+        
+        .exp-return .exp-title {
+            background-color: #28a745;
+        }
+        
+        .exp-name .exp-title {
+            background-color: #dc3545;
+        }
+        
+        .exp-params .exp-title {
+            background-color: #ffc107;
+            color: #333;
+        }
+        
+        .exp-content {
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .examples-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 50px;
+        }
+        
+        .example-box {
+            background-color: #f8f9fa;
+            border: 4px solid #6c757d;
+            border-radius: 12px;
+            padding: 30px;
+        }
+        
+        .void-example {
+            border-color: #6f42c1;
+            background-color: #f8f5ff;
+        }
+        
+        .return-example {
+            border-color: #fd7e14;
+            background-color: #fff8f0;
+        }
+        
+        .example-header {
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+        
+        .void-header {
+            background-color: #6f42c1;
+        }
+        
+        .return-header {
+            background-color: #fd7e14;
+        }
+        
+        .code-block {
+            background-color: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        
+        .highlight-void {
+            background-color: #e8e2ff;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        
+        .highlight-return {
+            background-color: #ffe8d6;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        
+        .usage-note {
+            background-color: #e3f2fd;
+            border: 2px solid #2196f3;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #333;
+        }
+        
+        .note-title {
+            font-weight: bold;
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">メソッドの構造と部品を理解しよう</h1>
+        
+        <div class="syntax-section">
+            <div class="section-header">メソッドの基本構文</div>
+            
+            <div class="syntax-display">
+                <div class="syntax-code">
+                    <span class="part-public-static">public static</span>
+                    <span class="part-return-type">int</span>
+                    <span class="part-method-name">calculateSum</span><span class="part-parameters">(int a, int b)</span>
+                    <span style="color: #666;"> { }</span>
+                </div>
+            </div>
+            
+            <div class="explanations">
+                <div class="explanation-box exp-modifier">
+                    <div class="exp-title">修飾子</div>
+                    <div class="exp-content">
+                        <strong>public static</strong><br>
+                        現在は「おまじない」として覚えてOK<br>
+                        <small style="color: #666;">※ Week 3で詳しく学習予定</small>
+                    </div>
+                </div>
+                
+                <div class="explanation-box exp-return">
+                    <div class="exp-title">戻り値の型</div>
+                    <div class="exp-content">
+                        メソッドが返す値の種類：<br>
+                        • <strong>void</strong> → 何も返さない<br>
+                        • <strong>int</strong> → 整数を返す<br>
+                        • <strong>String</strong> → 文字列を返す<br>
+                        • <strong>boolean</strong> → true/falseを返す
+                    </div>
+                </div>
+                
+                <div class="explanation-box exp-name">
+                    <div class="exp-title">メソッド名</div>
+                    <div class="exp-content">
+                        処理内容が分かる名前をつける：<br>
+                        • <strong>calculate</strong> → 計算する<br>
+                        • <strong>show</strong> → 表示する<br>
+                        • <strong>check</strong> → 判定する<br>
+                        • <strong>judge</strong> → 評価する
+                    </div>
+                </div>
+                
+                <div class="explanation-box exp-params">
+                    <div class="exp-title">引数（パラメータ）</div>
+                    <div class="exp-content">
+                        メソッドに渡すデータ：<br>
+                        • <strong>int a, int b</strong> → 2つの整数<br>
+                        • <strong>String name</strong> → 1つの文字列<br>
+                        • <strong>()</strong> → 引数なし<br>
+                        複数の場合はカンマで区切る
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="examples-section">
+            <div class="example-box void-example">
+                <div class="example-header void-header">void型（戻り値なし）</div>
+                
+                <div class="code-block">
+public static <span class="highlight-void">void</span> greetUser(String name) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("こんにちは、" + name + "！");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("頑張って学習しましょう！");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// returnは書かない<br>
+}
+                </div>
+                
+                <div class="usage-note">
+                    <div class="note-title">使い方：</div>
+                    greetUser("田中さん");<br>
+                    greetUser("佐藤さん");<br><br>
+                    <strong>結果：</strong> 画面に文字が表示される
+                </div>
+            </div>
+            
+            <div class="example-box return-example">
+                <div class="example-header return-header">戻り値あり型</div>
+                
+                <div class="code-block">
+public static <span class="highlight-return">int</span> calculateSum(int a, int b) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;int sum = a + b;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-return">return sum;</span> // 結果を返す<br>
+}<br>
+<br>
+public static <span class="highlight-return">boolean</span> isEven(int num) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-return">return num % 2 == 0;</span><br>
+}
+                </div>
+                
+                <div class="usage-note">
+                    <div class="note-title">使い方：</div>
+                    int result = calculateSum(10, 20);<br>
+                    boolean even = isEven(5);<br><br>
+                    <strong>結果：</strong> 変数で受け取って使用
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
