@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新規クラス作成 ステップ1: プロジェクト右クリックメニュー</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            font-family: 'Yu Gothic', 'Hiragino Sans', Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .eclipse-container {
+            background-color: white;
+            border: 2px solid #d0d0d0;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .step-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #007acc;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        /* タイトルバー */
+        .title-bar {
+            background: linear-gradient(to bottom, #e8e8e8, #d8d8d8);
+            border-bottom: 1px solid #c0c0c0;
+            padding: 8px 12px;
+            font-size: 13px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .eclipse-icon {
+            width: 16px;
+            height: 16px;
+            background: #4a90e2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 8px;
+            font-weight: bold;
+        }
+
+        /* メニューバー */
+        .menu-bar {
+            background-color: #f8f8f8;
+            border-bottom: 1px solid #d0d0d0;
+            padding: 4px 8px;
+            font-size: 12px;
+            color: #333;
+        }
+
+        .menu-items {
+            display: flex;
+            gap: 20px;
+        }
+
+        .menu-item {
+            padding: 4px 8px;
+            cursor: pointer;
+        }
+
+        .menu-item:hover {
+            background-color: #e0e0e0;
+            border-radius: 3px;
+        }
+
+        /* ツールバー */
+        .toolbar {
+            background-color: #f0f0f0;
+            border-bottom: 1px solid #d0d0d0;
+            padding: 6px 8px;
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .toolbar-btn {
+            width: 24px;
+            height: 24px;
+            background-color: #e8e8e8;
+            border: 1px solid #c0c0c0;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .toolbar-btn.run {
+            background-color: #4caf50;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* メインワークスペース */
+        .workspace {
+            display: flex;
+            height: 350px;
+        }
+
+        /* パッケージエクスプローラー */
+        .package-explorer {
+            width: 300px;
+            background-color: #fafafa;
+            border-right: 1px solid #d0d0d0;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-header {
+            background-color: #e8e8e8;
+            border-bottom: 1px solid #d0d0d0;
+            padding: 6px 10px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #333;
+            flex-shrink: 0;
+        }
+
+        .package-content {
+            padding: 10px;
+            font-size: 12px;
+            flex: 1;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .project-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 3px;
+            position: relative;
+        }
+
+        .project-item.highlighted {
+            background-color: #007acc;
+            color: white;
+        }
+
+        .project-item.selected {
+            background-color: #e3f2fd;
+            border: 1px solid #2196f3;
+        }
+
+        .folder-icon {
+            width: 16px;
+            height: 16px;
+            background-color: #ffc107;
+            border-radius: 2px;
+            position: relative;
+        }
+
+        .folder-icon::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: 2px;
+            width: 6px;
+            height: 3px;
+            background-color: #ffb300;
+            border-radius: 1px 1px 0 0;
+        }
+
+        .java-icon {
+            width: 16px;
+            height: 16px;
+            background-color: #ff6b35;
+            border-radius: 2px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            font-weight: bold;
+        }
+
+        /* コンテキストメニュー */
+        .context-menu {
+            position: absolute;
+            top: 50px;
+            left: 20px;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 100;
+            min-width: 180px;
+        }
+
+        .context-item {
+            padding: 8px 12px;
+            font-size: 12px;
+            color: #333;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .context-item:hover {
+            background-color: #f0f8ff;
+        }
+
+        .context-item.highlighted {
+            background-color: #007acc;
+            color: white;
+        }
+
+        .context-item:last-child {
+            border-bottom: none;
+        }
+
+        .context-icon {
+            width: 16px;
+            height: 16px;
+            background-color: #4a90e2;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+        }
+
+        .submenu-arrow {
+            margin-left: auto;
+            font-size: 10px;
+            color: #666;
+        }
+
+        .context-item.highlighted .submenu-arrow {
+            color: white;
+        }
+
+        /* サブメニュー */
+        .submenu {
+            position: absolute;
+            top: -1px;
+            left: 100%;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            min-width: 130px;
+        }
+
+        .submenu .context-item.class-item {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+        }
+
+        /* エディターエリア */
+        .editor-area {
+            flex: 1;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 14px;
+        }
+
+        /* ハイライト矢印 */
+        .highlight-arrow {
+            position: absolute;
+            right: -40px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ff4444;
+            font-size: 20px;
+            font-weight: bold;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .highlight-text {
+            position: absolute;
+            right: -120px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #ff4444;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        /* 説明ボックス */
+        .explanation-box {
+            background-color: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .explanation-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .step-number {
+            background-color: #007acc;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .explanation-content {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .highlight-note {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 10px;
+            margin-top: 15px;
+            font-size: 13px;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Eclipse画面 -->
+        <div class="eclipse-container">
+            <div class="step-indicator">ステップ 1/2</div>
+            
+            <!-- タイトルバー -->
+            <div class="title-bar">
+                <div class="eclipse-icon">E</div>
+                <span>Eclipse IDE for Java Developers - HelloWorldProject</span>
+            </div>
+
+            <!-- メニューバー -->
+            <div class="menu-bar">
+                <div class="menu-items">
+                    <div class="menu-item">ファイル(F)</div>
+                    <div class="menu-item">編集(E)</div>
+                    <div class="menu-item">実行(R)</div>
+                    <div class="menu-item">ウィンドウ(W)</div>
+                    <div class="menu-item">ヘルプ(H)</div>
+                </div>
+            </div>
+
+            <!-- ツールバー -->
+            <div class="toolbar">
+                <div class="toolbar-btn">📁</div>
+                <div class="toolbar-btn">💾</div>
+                <div class="toolbar-btn">✂️</div>
+                <div class="toolbar-btn">📋</div>
+                <div class="toolbar-btn">↩️</div>
+                <div class="toolbar-btn">↪️</div>
+                <div class="toolbar-btn run">▶</div>
+            </div>
+
+            <!-- メインワークスペース -->
+            <div class="workspace">
+                <!-- パッケージエクスプローラー -->
+                <div class="package-explorer">
+                    <div class="panel-header">パッケージ・エクスプローラー</div>
+                    <div class="package-content">
+                        <div class="project-item selected">
+                            <div class="folder-icon"></div>
+                            <span><strong>HelloWorldProject</strong></span>
+                        </div>
+                        <div class="project-item" style="margin-left: 20px;">
+                            <div class="folder-icon"></div>
+                            <span>src</span>
+                        </div>
+                        <div class="project-item" style="margin-left: 40px;">
+                            <div class="folder-icon"></div>
+                            <span>(default package)</span>
+                        </div>
+                        <div class="project-item" style="margin-left: 20px;">
+                            <div class="folder-icon"></div>
+                            <span>JRE システム・ライブラリー</span>
+                        </div>
+
+                        <!-- コンテキストメニュー -->
+                        <div class="context-menu">
+                            <div class="context-item">
+                                <div class="context-icon">📄</div>
+                                <span>新規</span>
+                                <span class="submenu-arrow">▶</span>
+                                
+                                <!-- サブメニュー -->
+                                <div class="submenu">
+                                    <div class="context-item class-item" style="position: relative;">
+                                        <div class="context-icon">☕</div>
+                                        <span>クラス</span>
+                                        <div class="highlight-arrow">←</div>
+                                        <div class="highlight-text">ここをクリック！</div>
+                                    </div>
+                                    <div class="context-item">
+                                        <div class="context-icon">📄</div>
+                                        <span>ファイル</span>
+                                    </div>
+                                    <div class="context-item">
+                                        <div class="context-icon">📂</div>
+                                        <span>フォルダー</span>
+                                    </div>
+                                    <div class="context-item">
+                                        <div class="context-icon">📦</div>
+                                        <span>パッケージ</span>
+                                    </div>
+                                    <div class="context-item">
+                                        <div class="context-icon">🔧</div>
+                                        <span>インターフェース</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="context-item">
+                                <div class="context-icon">📂</div>
+                                <span>インポート...</span>
+                            </div>
+                            <div class="context-item">
+                                <div class="context-icon">📤</div>
+                                <span>エクスポート...</span>
+                            </div>
+                            <div style="border-top: 1px solid #e0e0e0; margin: 4px 0;"></div>
+                            <div class="context-item">
+                                <div class="context-icon">🔄</div>
+                                <span>リフレッシュ</span>
+                            </div>
+                            <div class="context-item">
+                                <div class="context-icon">⚙️</div>
+                                <span>プロパティ</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- エディターエリア -->
+                <div class="editor-area">
+                    プロジェクトが選択されています
+                </div>
+            </div>
+        </div>
+
+        <!-- 説明ボックス -->
+        <div class="explanation-box">
+            <div class="explanation-title">
+                <div class="step-number">1</div>
+                ステップ1: プロジェクトを右クリックして新規クラスを選択
+            </div>
+            <div class="explanation-content">
+                <p><strong>「HelloWorldProject」</strong> を右クリックします。</p>
+                <p>コンテキストメニューが表示されるので、<strong>「新規」</strong> にマウスを合わせます。</p>
+                <p>サブメニューが表示されたら、<strong>「クラス」</strong> をクリックします。</p>
+                <p>これで新しいJavaクラスを作成するダイアログが開きます。</p>
+            </div>
+            <div class="highlight-note">
+                <strong>💡 ポイント:</strong> プロジェクト名が青色にハイライトされている状態で右クリックしてください。他の項目が選択されていると、正しいメニューが表示されません。
+            </div>
+        </div>
+    </div>
+</body>
+</html>
