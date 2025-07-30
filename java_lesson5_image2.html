@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>for文構文説明図</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: white;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+
+        .syntax-display {
+            background: #2c3e50;
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .syntax-parts {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .part {
+            flex: 1;
+            min-width: 200px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .part:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .part-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding: 8px 12px;
+            border-radius: 20px;
+            color: white;
+        }
+
+        .initialization {
+            border-left: 5px solid #e74c3c;
+        }
+
+        .initialization .part-title {
+            background: #e74c3c;
+        }
+
+        .condition {
+            border-left: 5px solid #f39c12;
+        }
+
+        .condition .part-title {
+            background: #f39c12;
+        }
+
+        .update {
+            border-left: 5px solid #27ae60;
+        }
+
+        .update .part-title {
+            background: #27ae60;
+        }
+
+        .code-example {
+            background: #34495e;
+            color: #ecf0f1;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+
+        .description {
+            font-size: 14px;
+            color: #2c3e50;
+            line-height: 1.6;
+            text-align: left;
+        }
+
+        .execution-flow {
+            margin-top: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+        }
+
+        .flow-title {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .flow-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .flow-step {
+            flex: 1;
+            min-width: 150px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 auto 10px;
+        }
+
+        .step-text {
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .arrow-flow {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            align-self: center;
+        }
+
+        .highlight-syntax {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .syntax-annotation {
+            position: absolute;
+            background: #3498db;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .ann-init {
+            top: -25px;
+            left: 80px;
+            background: #e74c3c;
+        }
+
+        .ann-cond {
+            top: -25px;
+            left: 200px;
+            background: #f39c12;
+        }
+
+        .ann-update {
+            top: -25px;
+            right: 80px;
+            background: #27ae60;
+        }
+
+        @media (max-width: 768px) {
+            .syntax-parts {
+                flex-direction: column;
+            }
+            
+            .flow-steps {
+                flex-direction: column;
+            }
+            
+            .arrow-flow {
+                transform: rotate(90deg);
+                margin: 10px 0;
+            }
+            
+            .syntax-annotation {
+                position: static;
+                display: inline-block;
+                margin: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">for文の構文と各部分の役割</div>
+        
+        <div class="syntax-display">
+            for (初期化; 条件; 更新) { 処理 }
+        </div>
+
+        <div class="highlight-syntax">
+            <div class="syntax-annotation ann-init">初期化</div>
+            <div class="syntax-annotation ann-cond">条件</div>
+            <div class="syntax-annotation ann-update">更新</div>
+            for (int i = 1; i <= 5; i++) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;System.out.println(i + "回目");<br>
+            }
+        </div>
+
+        <div class="syntax-parts">
+            <div class="part initialization">
+                <div class="part-title">① 初期化</div>
+                <div class="code-example">int i = 1</div>
+                <div class="description">
+                    <strong>実行タイミング:</strong> 繰り返し開始前に1回だけ<br><br>
+                    <strong>役割:</strong><br>
+                    • カウンター変数の宣言と初期値設定<br>
+                    • 繰り返し処理の起点を決める<br><br>
+                    <strong>例:</strong><br>
+                    • int i = 1 (1から開始)<br>
+                    • int i = 0 (0から開始)<br>
+                    • int i = 10 (10から開始)
+                </div>
+            </div>
+
+            <div class="part condition">
+                <div class="part-title">② 条件</div>
+                <div class="code-example">i <= 5</div>
+                <div class="description">
+                    <strong>実行タイミング:</strong> 毎回の繰り返し前にチェック<br><br>
+                    <strong>役割:</strong><br>
+                    • 繰り返しを続けるかの判定<br>
+                    • trueなら続行、falseなら終了<br><br>
+                    <strong>例:</strong><br>
+                    • i <= 5 (5以下の間続ける)<br>
+                    • i < 10 (10未満の間続ける)<br>
+                    • i != 0 (0でない間続ける)
+                </div>
+            </div>
+
+            <div class="part update">
+                <div class="part-title">③ 更新</div>
+                <div class="code-example">i++</div>
+                <div class="description">
+                    <strong>実行タイミング:</strong> 毎回の処理終了後<br><br>
+                    <strong>役割:</strong><br>
+                    • カウンター変数の値を変更<br>
+                    • 次の繰り返しに向けた準備<br><br>
+                    <strong>例:</strong><br>
+                    • i++ (1ずつ増加)<br>
+                    • i += 2 (2ずつ増加)<br>
+                    • i-- (1ずつ減少)
+                </div>
+            </div>
+        </div>
+
+        <div class="execution-flow">
+            <div class="flow-title">📋 実行フローの詳細</div>
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-text">
+                        <strong>初期化実行</strong><br>
+                        int i = 1<br>
+                        (1回のみ)
+                    </div>
+                </div>
+                
+                <div class="arrow-flow">→</div>
+                
+                <div class="flow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-text">
+                        <strong>条件チェック</strong><br>
+                        i <= 5<br>
+                        (毎回)
+                    </div>
+                </div>
+                
+                <div class="arrow-flow">→</div>
+                
+                <div class="flow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-text">
+                        <strong>処理実行</strong><br>
+                        System.out.println<br>
+                        (条件がtrue時)
+                    </div>
+                </div>
+                
+                <div class="arrow-flow">→</div>
+                
+                <div class="flow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-text">
+                        <strong>更新実行</strong><br>
+                        i++<br>
+                        (処理後)
+                    </div>
+                </div>
+                
+                <div class="arrow-flow">→</div>
+                
+                <div class="flow-step">
+                    <div class="step-number">5</div>
+                    <div class="step-text">
+                        <strong>ステップ2へ</strong><br>
+                        条件チェックに戻る<br>
+                        (falseまで繰り返し)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 30px; padding: 20px; background: #e8f4fd; border-radius: 10px; border-left: 5px solid #3498db;">
+            <h3 style="color: #2980b9; margin-top: 0;">💡 重要なポイント</h3>
+            <ul style="color: #2c3e50; line-height: 1.8;">
+                <li><strong>初期化は1回だけ</strong>：最初に1回実行され、その後は実行されません</li>
+                <li><strong>条件は毎回チェック</strong>：処理前に必ず確認し、falseになると即座に終了</li>
+                <li><strong>更新は処理後</strong>：{ }内の処理が終わってから実行されます</li>
+                <li><strong>3つの部分は省略可能</strong>：ただし、初心者のうちは全て書くことを推奨</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
