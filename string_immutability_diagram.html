@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>String不変性のメモリ状態図</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .step {
+            margin-bottom: 40px;
+            border: 2px solid #ecf0f1;
+            border-radius: 12px;
+            overflow: hidden;
+            background: white;
+        }
+        
+        .step-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 25px;
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        
+        .step-number {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+        
+        .step-content {
+            padding: 25px;
+        }
+        
+        .code-section {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+        
+        .memory-visualization {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            margin: 25px 0;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border: 2px dashed #dee2e6;
+            flex-wrap: wrap;
+        }
+        
+        .variable-box {
+            text-align: center;
+            border: 2px solid #495057;
+            border-radius: 10px;
+            padding: 15px;
+            background: white;
+            min-width: 120px;
+        }
+        
+        .variable-name {
+            font-size: 14px;
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 10px;
+            background: #e9ecef;
+            padding: 5px 10px;
+            border-radius: 15px;
+        }
+        
+        .variable-value {
+            font-size: 12px;
+            color: #6c757d;
+            background: #f8f9fa;
+            padding: 8px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+        
+        .points-to {
+            font-size: 16px;
+            font-weight: bold;
+            color: #007bff;
+        }
+        
+        .arrow {
+            font-size: 24px;
+            color: #6c757d;
+            margin: 0 10px;
+        }
+        
+        .string-object {
+            border: 2px solid #28a745;
+            border-radius: 10px;
+            padding: 20px;
+            background: linear-gradient(135deg, #d4edda, #ffffff);
+            text-align: center;
+            min-width: 150px;
+            position: relative;
+        }
+        
+        .string-object.old {
+            border-color: #dc3545;
+            background: linear-gradient(135deg, #f8d7da, #ffffff);
+            opacity: 0.7;
+        }
+        
+        .object-label {
+            font-size: 12px;
+            color: #495057;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .object-content {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px solid #dee2e6;
+        }
+        
+        .status-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #28a745;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        
+        .status-badge.garbage {
+            background: #dc3545;
+        }
+        
+        .explanation {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .key-point {
+            color: #1976d2;
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .performance-section {
+            background: linear-gradient(135deg, #fff3cd, #ffffff);
+            border: 2px solid #ffc107;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+        
+        .performance-title {
+            color: #856404;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .performance-title::before {
+            content: "⚡";
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .comparison-item {
+            border: 2px solid;
+            border-radius: 10px;
+            padding: 20px;
+            background: white;
+        }
+        
+        .inefficient {
+            border-color: #dc3545;
+            background: linear-gradient(135deg, #f8d7da, #ffffff);
+        }
+        
+        .efficient {
+            border-color: #28a745;
+            background: linear-gradient(135deg, #d4edda, #ffffff);
+        }
+        
+        .comparison-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding: 8px 15px;
+            border-radius: 20px;
+            color: white;
+            text-align: center;
+        }
+        
+        .inefficient-title {
+            background: #dc3545;
+        }
+        
+        .efficient-title {
+            background: #28a745;
+        }
+        
+        .comparison-code {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin: 10px 0;
+        }
+        
+        .impact-note {
+            font-size: 14px;
+            color: #555;
+            font-style: italic;
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 6px;
+        }
+        
+        .timeline {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            font-size: 24px;
+            color: #6c757d;
+        }
+        
+        @media (max-width: 768px) {
+            .memory-visualization {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .comparison-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .arrow {
+                transform: rotate(90deg);
+            }
+            
+            .title {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">String不変性（Immutability）のメモリ動作</div>
+        
+        <!-- ステップ1: 初期状態 -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">1</div>
+                初期状態: Stringオブジェクトの作成
+            </div>
+            <div class="step-content">
+                <div class="code-section">String message = "Hello";</div>
+                
+                <div class="memory-visualization">
+                    <div class="variable-box">
+                        <div class="variable-name">message</div>
+                        <div class="variable-value">参照先: 0x1001</div>
+                        <div class="points-to">→</div>
+                    </div>
+                    
+                    <div class="string-object">
+                        <div class="status-badge">活性</div>
+                        <div class="object-label">Stringオブジェクト (0x1001)</div>
+                        <div class="object-content">"Hello"</div>
+                    </div>
+                </div>
+                
+                <div class="explanation">
+                    <div class="key-point">📍 ポイント</div>
+                    "Hello"という文字列オブジェクトがメモリ上に作成され、変数messageがそれを参照しています。
+                </div>
+            </div>
+        </div>
+        
+        <!-- ステップ2: 文字列結合の実行 -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">2</div>
+                文字列結合の実行（新しいオブジェクト作成）
+            </div>
+            <div class="step-content">
+                <div class="code-section">message = message + " World";</div>
+                
+                <div class="memory-visualization">
+                    <div class="variable-box">
+                        <div class="variable-name">message</div>
+                        <div class="variable-value">参照先: 0x2001</div>
+                        <div class="points-to">→</div>
+                    </div>
+                    
+                    <div class="string-object">
+                        <div class="status-badge">活性</div>
+                        <div class="object-label">新Stringオブジェクト (0x2001)</div>
+                        <div class="object-content">"Hello World"</div>
+                    </div>
+                </div>
+                
+                <div class="timeline">⬇️ 同時に、古いオブジェクトは残る ⬇️</div>
+                
+                <div class="memory-visualization">
+                    <div class="string-object old">
+                        <div class="status-badge garbage">GC待ち</div>
+                        <div class="object-label">元Stringオブジェクト (0x1001)</div>
+                        <div class="object-content">"Hello"</div>
+                    </div>
+                </div>
+                
+                <div class="explanation">
+                    <div class="key-point">🔄 重要な動作</div>
+                    既存の"Hello"オブジェクトは変更されません。代わりに"Hello World"という新しいオブジェクトが作成され、messageの参照先が変更されます。元の"Hello"オブジェクトはガベージコレクションの対象になります。
+                </div>
+            </div>
+        </div>
+        
+        <!-- ステップ3: 複数回の結合 -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">3</div>
+                複数回の文字列結合（問題のある例）
+            </div>
+            <div class="step-content">
+                <div class="code-section">
+String result = "";
+for (int i = 1; i <= 3; i++) {
+    result = result + i + " ";  // 毎回新しいオブジェクト作成！
+}
+                </div>
+                
+                <div class="memory-visualization">
+                    <div style="display: flex; flex-direction: column; gap: 15px; align-items: center;">
+                        <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap; justify-content: center;">
+                            <div class="string-object old">
+                                <div class="object-label">1回目後</div>
+                                <div class="object-content">"1 "</div>
+                            </div>
+                            <div class="string-object old">
+                                <div class="object-label">2回目後</div>
+                                <div class="object-content">"1 2 "</div>
+                            </div>
+                            <div class="string-object">
+                                <div class="status-badge">最終</div>
+                                <div class="object-label">3回目後（最終）</div>
+                                <div class="object-content">"1 2 3 "</div>
+                            </div>
+                        </div>
+                        <div style="color: #dc3545; font-weight: bold; text-align: center;">
+                            ⚠️ 合計4個のStringオブジェクトが作成される！<br>
+                            （初期の空文字列 + 各ループでの新オブジェクト）
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="explanation">
+                    <div class="key-point">❌ 非効率な処理</div>
+                    ループのたびに新しいStringオブジェクトが作成され、古いオブジェクトは破棄されます。大量のデータを扱う場合、メモリとCPUの無駄遣いになります。
+                </div>
+            </div>
+        </div>
+        
+        <!-- パフォーマンス比較 -->
+        <div class="performance-section">
+            <div class="performance-title">効率的な文字列処理の比較</div>
+            
+            <div class="comparison-grid">
+                <div class="comparison-item inefficient">
+                    <div class="comparison-title inefficient-title">❌ 非効率な方法</div>
+                    <div class="comparison-code">
+String result = "";
+for (int i = 1; i <= 1000; i++) {
+    result = result + i + " ";
+}
+// 1000個以上のStringオブジェクトを作成
+                    </div>
+                    <div class="impact-note">
+                        <strong>影響:</strong> メモリ使用量大、処理速度遅、ガベージコレクション頻発
+                    </div>
+                </div>
+                
+                <div class="comparison-item efficient">
+                    <div class="comparison-title efficient-title">✅ 効率的な方法</div>
+                    <div class="comparison-code">
+StringBuilder sb = new StringBuilder();
+for (int i = 1; i <= 1000; i++) {
+    sb.append(i).append(" ");
+}
+String result = sb.toString();
+// 内部バッファで文字列を構築、最後に1個のStringを作成
+                    </div>
+                    <div class="impact-note">
+                        <strong>影響:</strong> メモリ効率的、高速処理、ガベージコレクション最小限
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background: #e3f2fd; padding: 20px; border-radius: 8px; margin-top: 20px;">
+                <div style="color: #1565c0; font-weight: bold; margin-bottom: 10px;">📈 パフォーマンス差</div>
+                <ul style="color: #555; margin: 0; padding-left: 20px;">
+                    <li>少量の文字列結合（10回以下）: 差はほとんどない</li>
+                    <li>中程度の文字列結合（100回程度）: StringBuilderが2-3倍高速</li>
+                    <li>大量の文字列結合（1000回以上）: StringBuilderが10-100倍高速</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
