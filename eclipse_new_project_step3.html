@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新規プロジェクト作成 ステップ3: プロジェクト名入力</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            font-family: 'Yu Gothic', 'Hiragino Sans', Arial, sans-serif;
+        }
+
+        .dialog-container {
+            background-color: white;
+            border: 2px solid #d0d0d0;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            width: 650px;
+            margin: 0 auto;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .step-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #007acc;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        .title-bar {
+            background: linear-gradient(to bottom, #e8e8e8, #d8d8d8);
+            border-bottom: 1px solid #c0c0c0;
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: bold;
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-buttons {
+            display: flex;
+            gap: 2px;
+        }
+
+        .close-btn {
+            width: 16px;
+            height: 16px;
+            border-radius: 2px;
+            border: 1px solid #999;
+            background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .dialog-content {
+            padding: 20px;
+        }
+
+        .dialog-header {
+            margin-bottom: 25px;
+        }
+
+        .dialog-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .dialog-subtitle {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .form-section {
+            background-color: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 13px;
+            background-color: white;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus {
+            border-color: #007acc;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.2);
+        }
+
+        .form-input.highlighted {
+            border: 2px solid #ff4444;
+            background-color: #fffacd;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .checkbox {
+            width: 16px;
+            height: 16px;
+            border: 1px solid #999;
+            border-radius: 2px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .checkbox.checked::after {
+            content: '✓';
+            position: absolute;
+            top: -2px;
+            left: 2px;
+            font-size: 12px;
+            color: #007acc;
+            font-weight: bold;
+        }
+
+        .checkbox-label {
+            font-size: 13px;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .info-section {
+            background-color: #f0f8ff;
+            border: 1px solid #b8d4f0;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        .info-label {
+            font-weight: bold;
+        }
+
+        .info-value {
+            color: #007acc;
+        }
+
+        .button-section {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            border-top: 1px solid #e0e0e0;
+            padding-top: 15px;
+        }
+
+        .dialog-btn {
+            padding: 8px 20px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 13px;
+            cursor: pointer;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .btn-cancel {
+            background: linear-gradient(to bottom, #f8f8f8, #e8e8e8);
+            color: #333;
+        }
+
+        .btn-back {
+            background: linear-gradient(to bottom, #f8f8f8, #e8e8e8);
+            color: #333;
+        }
+
+        .btn-finish {
+            background: linear-gradient(to bottom, #4caf50, #45a049);
+            color: white;
+            font-weight: bold;
+        }
+
+        .btn-cancel:hover {
+            background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+        }
+
+        .btn-back:hover {
+            background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+        }
+
+        .btn-finish:hover {
+            background: linear-gradient(to bottom, #5cbf60, #4caf50);
+        }
+
+        .highlight-box {
+            position: absolute;
+            top: 190px;
+            right: -200px;
+            background-color: #ff4444;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 20;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .highlight-box::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+            border-right: 8px solid #ff4444;
+        }
+
+        .explanation-box {
+            margin-top: 20px;
+            background-color: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .explanation-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .step-number {
+            background-color: #007acc;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .explanation-content {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .highlight-text {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 10px;
+            margin-top: 15px;
+            font-size: 13px;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="dialog-container">
+        <div class="step-indicator">ステップ 3/4</div>
+        
+        <div class="title-bar">
+            <span>新規Javaプロジェクト</span>
+            <div class="close-buttons">
+                <div class="close-btn">_</div>
+                <div class="close-btn">□</div>
+                <div class="close-btn">×</div>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            ここに入力！
+        </div>
+        
+        <div class="dialog-content">
+            <div class="dialog-header">
+                <div class="dialog-title">Javaプロジェクト</div>
+                <div class="dialog-subtitle">
+                    Javaプロジェクトを作成してください。
+                </div>
+            </div>
+
+            <div class="form-section">
+                <div class="form-group">
+                    <label class="form-label">プロジェクト名:</label>
+                    <input type="text" class="form-input highlighted" value="HelloWorldProject" />
+                </div>
+
+                <div class="checkbox-group">
+                    <div class="checkbox"></div>
+                    <label class="checkbox-label">デフォルト・ロケーションを使用</label>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">ロケーション:</label>
+                    <input type="text" class="form-input" value="C:\Users\ユーザー名\eclipse-workspace\HelloWorldProject" readonly />
+                </div>
+
+                <div class="checkbox-group">
+                    <div class="checkbox checked"></div>
+                    <label class="checkbox-label">プロジェクト・レイアウトにsrcとbinのフォルダーを使用</label>
+                </div>
+
+                <div class="checkbox-group">
+                    <div class="checkbox"></div>
+                    <label class="checkbox-label">module-info.javaファイルを作成</label>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <div class="info-title">プロジェクト設定</div>
+                <div class="info-item">
+                    <span class="info-label">JRE:</span>
+                    <span class="info-value">JavaSE-17 を使用</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">プロジェクト・レイアウト:</span>
+                    <span class="info-value">srcとbinのフォルダーを使用</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">作成後のサイズ:</span>
+                    <span class="info-value">約 1.2 MB</span>
+                </div>
+            </div>
+            
+            <div class="button-section">
+                <button class="dialog-btn btn-cancel">キャンセル</button>
+                <button class="dialog-btn btn-back">< 戻る</button>
+                <button class="dialog-btn btn-finish">完了</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 説明ボックス -->
+    <div class="explanation-box">
+        <div class="explanation-title">
+            <div class="step-number">3</div>
+            ステップ3: プロジェクト名を入力
+        </div>
+        <div class="explanation-content">
+            <p><strong>「プロジェクト名」</strong> フィールドに <code>HelloWorldProject</code> と入力します。</p>
+            <p>その他の設定項目は初期値のままで問題ありません：</p>
+            <ul>
+                <li><strong>デフォルト・ロケーションを使用</strong>: チェックを外さない</li>
+                <li><strong>srcとbinのフォルダーを使用</strong>: チェック済みのまま</li>
+                <li><strong>module-info.javaファイルを作成</strong>: チェックしない</li>
+            </ul>
+            <p>入力が完了したら <strong>「完了」</strong> ボタンをクリックします。</p>
+        </div>
+        <div class="highlight-text">
+            <strong>💡 名前のルール:</strong><br>
+            ・英数字のみ使用<br>
+            ・スペースは使わない（代わりに大文字で区切る）<br>
+            ・日本語は避ける<br>
+            ・最初は大文字で始める
+        </div>
+    </div>
+</body>
+</html>

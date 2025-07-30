@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新規プロジェクト作成 ステップ2: Javaプロジェクト選択</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            font-family: 'Yu Gothic', 'Hiragino Sans', Arial, sans-serif;
+        }
+
+        .dialog-container {
+            background-color: white;
+            border: 2px solid #d0d0d0;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            width: 600px;
+            margin: 0 auto;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .step-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #007acc;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        .title-bar {
+            background: linear-gradient(to bottom, #e8e8e8, #d8d8d8);
+            border-bottom: 1px solid #c0c0c0;
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: bold;
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-buttons {
+            display: flex;
+            gap: 2px;
+        }
+
+        .close-btn {
+            width: 16px;
+            height: 16px;
+            border-radius: 2px;
+            border: 1px solid #999;
+            background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .dialog-content {
+            padding: 20px;
+        }
+
+        .dialog-header {
+            margin-bottom: 20px;
+        }
+
+        .dialog-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .dialog-subtitle {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .wizard-section {
+            border: 1px solid #d0d0d0;
+            border-radius: 4px;
+            background-color: white;
+            margin-bottom: 20px;
+        }
+
+        .wizard-header {
+            background-color: #f8f8f8;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 8px 12px;
+            font-size: 12px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .wizard-content {
+            height: 300px;
+            overflow-y: auto;
+        }
+
+        .category-item {
+            padding: 4px 12px;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .category-item:hover {
+            background-color: #f0f8ff;
+        }
+
+        .category-item.expanded {
+            background-color: #e8f4fd;
+            font-weight: bold;
+        }
+
+        .category-item.selected {
+            background-color: #007acc;
+            color: white;
+        }
+
+        .category-icon {
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+        .folder-icon {
+            background-color: #ffc107;
+            border-radius: 2px;
+            position: relative;
+        }
+
+        .folder-icon::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: 2px;
+            width: 6px;
+            height: 3px;
+            background-color: #ffb300;
+            border-radius: 1px 1px 0 0;
+        }
+
+        .java-icon {
+            background-color: #ff6b35;
+            border-radius: 2px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .expand-icon {
+            width: 12px;
+            text-align: center;
+            font-size: 10px;
+            color: #666;
+        }
+
+        .subcategory {
+            margin-left: 30px;
+            background-color: #f9f9f9;
+        }
+
+        .button-section {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            border-top: 1px solid #e0e0e0;
+            padding-top: 15px;
+        }
+
+        .dialog-btn {
+            padding: 8px 20px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 13px;
+            cursor: pointer;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .btn-cancel {
+            background: linear-gradient(to bottom, #f8f8f8, #e8e8e8);
+            color: #333;
+        }
+
+        .btn-back {
+            background: linear-gradient(to bottom, #f8f8f8, #e8e8e8);
+            color: #333;
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-next {
+            background: linear-gradient(to bottom, #4a90e2, #357abd);
+            color: white;
+            font-weight: bold;
+        }
+
+        .btn-cancel:hover {
+            background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+        }
+
+        .btn-next:hover {
+            background: linear-gradient(to bottom, #5a9ff2, #4680cd);
+        }
+
+        .highlight-arrow {
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ff4444;
+            font-size: 24px;
+            font-weight: bold;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .explanation-box {
+            margin-top: 20px;
+            background-color: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .explanation-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .step-number {
+            background-color: #007acc;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .explanation-content {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .highlight-text {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 10px;
+            margin-top: 15px;
+            font-size: 13px;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="dialog-container">
+        <div class="step-indicator">ステップ 2/4</div>
+        
+        <div class="title-bar">
+            <span>新規プロジェクト</span>
+            <div class="close-buttons">
+                <div class="close-btn">_</div>
+                <div class="close-btn">□</div>
+                <div class="close-btn">×</div>
+            </div>
+        </div>
+        
+        <div class="dialog-content">
+            <div class="dialog-header">
+                <div class="dialog-title">新規プロジェクト</div>
+                <div class="dialog-subtitle">
+                    ウィザードを選択してください
+                </div>
+            </div>
+
+            <div class="wizard-section">
+                <div class="wizard-header">ウィザード:</div>
+                <div class="wizard-content">
+                    <div class="category-item">
+                        <div class="expand-icon">▷</div>
+                        <div class="category-icon folder-icon"></div>
+                        <span>一般</span>
+                    </div>
+                    
+                    <div class="category-item">
+                        <div class="expand-icon">▷</div>
+                        <div class="category-icon folder-icon"></div>
+                        <span>Git</span>
+                    </div>
+                    
+                    <div class="category-item expanded">
+                        <div class="expand-icon">▽</div>
+                        <div class="category-icon folder-icon"></div>
+                        <span>Java</span>
+                    </div>
+                    
+                    <div class="category-item subcategory selected" style="position: relative;">
+                        <div class="expand-icon"></div>
+                        <div class="category-icon java-icon">J</div>
+                        <span>Javaプロジェクト</span>
+                        <div class="highlight-arrow">←</div>
+                    </div>
+                    
+                    <div class="category-item subcategory">
+                        <div class="expand-icon"></div>
+                        <div class="category-icon java-icon">J</div>
+                        <span>Java作業セット</span>
+                    </div>
+                    
+                    <div class="category-item">
+                        <div class="expand-icon">▷</div>
+                        <div class="category-icon folder-icon"></div>
+                        <span>Maven</span>
+                    </div>
+                    
+                    <div class="category-item">
+                        <div class="expand-icon">▷</div>
+                        <div class="category-icon folder-icon"></div>
+                        <span>Plug-in Development</span>
+                    </div>
+                    
+                    <div class="category-item">
+                        <div class="expand-icon">▷</div>
+                        <div class="category-icon folder-icon"></div>
+                        <span>Server</span>
+                    </div>
+                    
+                    <div class="category-item">
+                        <div class="expand-icon">▷</div>
+                        <div class="category-icon folder-icon"></div>
+                        <span>Web</span>
+                    </div>
+                    
+                    <div class="category-item">
+                        <div class="expand-icon">▷</div>
+                        <div class="category-icon folder-icon"></div>
+                        <span>XML</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="button-section">
+                <button class="dialog-btn btn-cancel">キャンセル</button>
+                <button class="dialog-btn btn-back">< 戻る</button>
+                <button class="dialog-btn btn-next">次へ ></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 説明ボックス -->
+    <div class="explanation-box">
+        <div class="explanation-title">
+            <div class="step-number">2</div>
+            ステップ2: Javaプロジェクトを選択
+        </div>
+        <div class="explanation-content">
+            <p><strong>「Java」</strong> フォルダをクリックして展開します。</p>
+            <p>展開されたサブメニューの中から <strong>「Javaプロジェクト」</strong> を選択します。</p>
+            <p>選択すると項目が青色にハイライトされます。</p>
+            <p>選択できたら <strong>「次へ」</strong> ボタンをクリックして次のステップに進みます。</p>
+        </div>
+        <div class="highlight-text">
+            <strong>💡 ポイント:</strong> 「Java」以外にも「Maven」「Web」など様々なプロジェクトタイプがありますが、今回は基本的な「Javaプロジェクト」を選択します。
+        </div>
+    </div>
+</body>
+</html>
