@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>メソッドが解決する問題</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background-color: white;
+            line-height: 1.5;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 50px;
+        }
+        
+        .problem-section {
+            background-color: #fff5f5;
+            border: 4px solid #ff6b6b;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .section-header {
+            background-color: #ff6b6b;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .code-example {
+            background-color: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .duplicate-code {
+            background-color: #ffe0e0;
+            border-color: #ff9999;
+        }
+        
+        .highlight-problem {
+            background-color: #ffcccc;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .problem-list {
+            background-color: white;
+            border: 2px solid #ff6b6b;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .problem-item {
+            margin: 10px 0;
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .solution-section {
+            background-color: #f0fff0;
+            border: 4px solid #4caf50;
+            border-radius: 12px;
+            padding: 30px;
+        }
+        
+        .solution-header {
+            background-color: #4caf50;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .clean-code {
+            background-color: #e8f5e8;
+            border-color: #90c695;
+        }
+        
+        .method-definition {
+            background-color: #e3f2fd;
+            border: 2px solid #64b5f6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .benefits {
+            background-color: white;
+            border: 2px solid #4caf50;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .benefit-item {
+            margin: 15px 0;
+            font-size: 16px;
+            color: #333;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .benefit-icon {
+            background-color: #4caf50;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .arrow-down {
+            text-align: center;
+            font-size: 48px;
+            color: #4caf50;
+            margin: 30px 0;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">メソッドが解決する重要な問題</h1>
+        
+        <div class="problem-section">
+            <div class="section-header">😰 for文では解決できない問題</div>
+            
+            <div class="code-example duplicate-code">
+// 学生情報を表示するプログラム<br>
+public class StudentInfo {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public static void main(String[] args) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-problem">// 太郎さんの情報を表示</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("=== 学生情報 ===");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("名前: 太郎");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("年齢: 20");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("成績: 85点");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println();<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-problem">// 花子さんの情報を表示</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("=== 学生情報 ===");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("名前: 花子");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("年齢: 19");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("成績: 92点");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println();<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-problem">// 次郎さんの情報を表示</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("=== 学生情報 ===");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("名前: 次郎");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("年齢: 21");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("成績: 78点");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+            </div>
+            
+            <div class="problem-list">
+                <h3 style="color: #d32f2f; margin-top: 0;">❌ 何が問題なのか？</h3>
+                <div class="problem-item">• <strong>同じ処理が3回も書かれている</strong> → コードが長い</div>
+                <div class="problem-item">• <strong>データが違うのでfor文は使えない</strong> → 繰り返し処理では解決不可</div>
+                <div class="problem-item">• <strong>修正が大変</strong> → 表示形式を変更する場合、3箇所を直す必要</div>
+                <div class="problem-item">• <strong>バグが生まれやすい</strong> → 修正し忘れや間違いが発生しやすい</div>
+            </div>
+        </div>
+        
+        <div class="arrow-down">↓</div>
+        
+        <div class="solution-section">
+            <div class="section-header">😊 メソッドによる解決</div>
+            
+            <div class="code-example clean-code">
+// メソッドを使った改善版<br>
+public class StudentInfoImproved {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public static void main(String[] args) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// スッキリ！メソッドを呼び出すだけ<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;showStudentInfo("太郎", 20, 85);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;showStudentInfo("花子", 19, 92);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;showStudentInfo("次郎", 21, 78);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+            </div>
+            
+            <div class="method-definition">
+// 学生情報を表示するメソッド<br>
+public static void showStudentInfo(String name, int age, int score) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("=== 学生情報 ===");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("名前: " + name);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("年齢: " + age);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("成績: " + score + "点");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;System.out.println();<br>
+}
+            </div>
+            
+            <div class="benefits">
+                <h3 style="color: #2e7d32; margin-top: 0;">✅ メソッドのメリット</h3>
+                <div class="benefit-item">
+                    <div class="benefit-icon">1</div>
+                    <div><strong>コードの重複解消：</strong> 同じ処理を1箇所にまとめられる</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">2</div>
+                    <div><strong>保守性の向上：</strong> 修正は1箇所だけ。バグも減る</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">3</div>
+                    <div><strong>再利用性：</strong> 一度作ったメソッドを何度でも使える</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">4</div>
+                    <div><strong>可読性向上：</strong> 処理の意味が明確になり、理解しやすい</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
