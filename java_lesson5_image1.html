@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>繰り返し処理の効率比較</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: white;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+
+        .comparison {
+            display: flex;
+            gap: 40px;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .method {
+            flex: 1;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            position: relative;
+        }
+
+        .inefficient {
+            border-left: 5px solid #e74c3c;
+        }
+
+        .efficient {
+            border-left: 5px solid #27ae60;
+        }
+
+        .method-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .inefficient .method-title {
+            color: #e74c3c;
+        }
+
+        .efficient .method-title {
+            color: #27ae60;
+        }
+
+        .code-block {
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            overflow-x: auto;
+        }
+
+        .code-line {
+            margin: 3px 0;
+        }
+
+        .repetitive {
+            opacity: 0.7;
+        }
+
+        .metrics {
+            background: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            font-size: 14px;
+        }
+
+        .metric-label {
+            font-weight: bold;
+            color: #34495e;
+        }
+
+        .metric-value {
+            font-weight: bold;
+        }
+
+        .inefficient .metric-value {
+            color: #e74c3c;
+        }
+
+        .efficient .metric-value {
+            color: #27ae60;
+        }
+
+        .arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: #3498db;
+            margin: 0 20px;
+        }
+
+        .improvement-label {
+            background: #3498db;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .highlight {
+            background: rgba(52, 152, 219, 0.1);
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .comparison {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .arrow {
+                transform: rotate(90deg);
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">繰り返し処理の効率比較</div>
+        
+        <div class="comparison">
+            <div class="method inefficient">
+                <div class="method-title">❌ 非効率な方法</div>
+                
+                <div class="code-block">
+                    <div class="code-line">public class RepeatExample {</div>
+                    <div class="code-line">    public static void main(String[] args) {</div>
+                    <div class="code-line">        System.out.println("Hello Java");</div>
+                    <div class="code-line repetitive">        System.out.println("Hello Java");</div>
+                    <div class="code-line repetitive">        System.out.println("Hello Java");</div>
+                    <div class="code-line repetitive">        System.out.println("Hello Java");</div>
+                    <div class="code-line repetitive">        System.out.println("Hello Java");</div>
+                    <div class="code-line">    }</div>
+                    <div class="code-line">}</div>
+                </div>
+                
+                <div class="metrics">
+                    <div class="metric">
+                        <span class="metric-label">コード行数:</span>
+                        <span class="metric-value">8行</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">重複コード:</span>
+                        <span class="metric-value">5箇所</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">修正箇所:</span>
+                        <span class="metric-value">5箇所</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">保守性:</span>
+                        <span class="metric-value">❌ 悪い</span>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 15px; padding: 10px; background: rgba(231, 76, 60, 0.1); border-radius: 6px; font-size: 13px; color: #c0392b;">
+                    <strong>問題点:</strong><br>
+                    • 同じコードの繰り返し<br>
+                    • 100回にしたい場合は？<br>
+                    • メッセージ変更時は全修正
+                </div>
+            </div>
+
+            <div class="arrow">→</div>
+
+            <div class="method efficient">
+                <div class="method-title">✅ 効率的な方法</div>
+                
+                <div class="code-block">
+                    <div class="code-line">public class RepeatExample {</div>
+                    <div class="code-line">    public static void main(String[] args) {</div>
+                    <div class="code-line">        <span class="highlight">for (int i = 1; i <= 5; i++)</span> {</div>
+                    <div class="code-line">            System.out.println("Hello Java");</div>
+                    <div class="code-line">        }</div>
+                    <div class="code-line">    }</div>
+                    <div class="code-line">}</div>
+                </div>
+                
+                <div class="metrics">
+                    <div class="metric">
+                        <span class="metric-label">コード行数:</span>
+                        <span class="metric-value">6行</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">重複コード:</span>
+                        <span class="metric-value">0箇所</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">修正箇所:</span>
+                        <span class="metric-value">1箇所</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">保守性:</span>
+                        <span class="metric-value">✅ 良い</span>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 15px; padding: 10px; background: rgba(39, 174, 96, 0.1); border-radius: 6px; font-size: 13px; color: #27ae60;">
+                    <strong>メリット:</strong><br>
+                    • コードがスッキリ<br>
+                    • 回数変更は1箇所だけ<br>
+                    • 可読性・保守性が向上
+                </div>
+            </div>
+        </div>
+
+        <div class="improvement-label">
+            for文により大幅な効率化を実現！
+        </div>
+    </div>
+</body>
+</html>
