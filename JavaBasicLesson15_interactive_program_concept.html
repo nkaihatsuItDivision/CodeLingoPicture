@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>対話型プログラムの概念</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 900px;
+            width: 100%;
+        }
+        
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .program-type {
+            border: 3px solid #ddd;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .program-type:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .old-program {
+            border-color: #e74c3c;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe6e6 100%);
+        }
+        
+        .new-program {
+            border-color: #27ae60;
+            background: linear-gradient(135deg, #f0fff4 0%, #e6ffe6 100%);
+        }
+        
+        .program-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            color: white;
+        }
+        
+        .old-program .program-title {
+            background: #e74c3c;
+        }
+        
+        .new-program .program-title {
+            background: #27ae60;
+        }
+        
+        .flow-box {
+            background: white;
+            border: 2px solid #ecf0f1;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            position: relative;
+        }
+        
+        .flow-step {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            font-size: 14px;
+        }
+        
+        .step-number {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #3498db;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        
+        .arrow {
+            text-align: center;
+            font-size: 20px;
+            color: #95a5a6;
+            margin: 5px 0;
+        }
+        
+        .end-box {
+            background: #ecf0f1;
+            border: 2px dashed #95a5a6;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            color: #7f8c8d;
+            font-weight: bold;
+        }
+        
+        .loop-arrow {
+            position: absolute;
+            right: -50px;
+            bottom: 20px;
+            width: 100px;
+            height: 160px;
+            border: 4px solid #2ecc71;
+            border-left: none;
+            border-bottom: none;
+            border-radius: 0 30px 0 0;
+            opacity: 0.9;
+        }
+        
+        .loop-arrow::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: -8px;
+            width: 0;
+            height: 0;
+            border-right: 15px solid #2ecc71;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+        }
+        
+        .loop-arrow::after {
+            content: '🔄 継続';
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            color: #27ae60;
+            font-size: 13px;
+            font-weight: bold;
+            background: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            border: 2px solid #27ae60;
+            box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3);
+            transform: translateY(-50%);
+        }
+        
+        .benefits {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .benefits-title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .benefit-item {
+            background: white;
+            border-left: 4px solid #3498db;
+            padding: 12px 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .benefit-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .benefit-desc {
+            color: #7f8c8d;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">プログラムの実行方式比較</div>
+        
+        <div class="comparison">
+            <!-- 従来のプログラム -->
+            <div class="program-type old-program">
+                <div class="program-title">❌ 単発処理プログラム</div>
+                
+                <div class="flow-box">
+                    <div class="flow-step">
+                        <div class="step-number">1</div>
+                        <span>プログラム開始</span>
+                    </div>
+                    <div class="arrow">↓</div>
+                    <div class="flow-step">
+                        <div class="step-number">2</div>
+                        <span>処理実行</span>
+                    </div>
+                    <div class="arrow">↓</div>
+                    <div class="flow-step">
+                        <div class="step-number">3</div>
+                        <span>結果表示</span>
+                    </div>
+                    <div class="arrow">↓</div>
+                    <div class="end-box">
+                        プログラム終了
+                    </div>
+                </div>
+                
+                <div style="margin-top: 15px; color: #e74c3c; font-weight: bold;">
+                    ⚠️ 問題点
+                </div>
+                <div style="font-size: 13px; color: #c0392b; text-align: left; margin-top: 8px;">
+                    • 一度実行すると終了<br>
+                    • 別の処理をするには再起動が必要<br>
+                    • 実用的ではない
+                </div>
+            </div>
+            
+            <!-- 対話型プログラム -->
+            <div class="program-type new-program">
+                <div class="program-title">✅ 対話型プログラム</div>
+                
+                <div class="flow-box" style="position: relative;">
+                    <div class="flow-step">
+                        <div class="step-number">1</div>
+                        <span>プログラム開始</span>
+                    </div>
+                    <div class="arrow">↓</div>
+                    <div class="flow-step">
+                        <div class="step-number">2</div>
+                        <span>メニュー表示</span>
+                    </div>
+                    <div class="arrow">↓</div>
+                    <div class="flow-step">
+                        <div class="step-number">3</div>
+                        <span>ユーザー選択</span>
+                    </div>
+                    <div class="arrow">↓</div>
+                    <div class="flow-step">
+                        <div class="step-number">4</div>
+                        <span>選択された処理実行</span>
+                    </div>
+                    <div class="arrow">↓</div>
+                    <div class="flow-step">
+                        <div class="step-number">5</div>
+                        <span>継続確認</span>
+                    </div>
+                    
+                    <div class="loop-arrow"></div>
+                </div>
+                
+                <div style="margin-top: 15px; color: #27ae60; font-weight: bold;">
+                    ✨ メリット
+                </div>
+                <div style="font-size: 13px; color: #229954; text-align: left; margin-top: 8px;">
+                    • 継続的に使用可能<br>
+                    • 複数機能の使い分け<br>
+                    • 実用的なアプリケーション
+                </div>
+            </div>
+        </div>
+        
+        <div class="benefits">
+            <div class="benefits-title">🌟 対話型プログラムの実用例</div>
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="benefit-title">🏧 ATMシステム</div>
+                    <div class="benefit-desc">残高照会・出金・入金を繰り返し選択</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-title">🛒 レジシステム</div>
+                    <div class="benefit-desc">商品登録・会計・レシート印刷を継続</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-title">🗺️ カーナビ</div>
+                    <div class="benefit-desc">目的地設定・ルート検索・案内開始を選択</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-title">📱 スマホアプリ</div>
+                    <div class="benefit-desc">様々な機能をメニューから選択して使用</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

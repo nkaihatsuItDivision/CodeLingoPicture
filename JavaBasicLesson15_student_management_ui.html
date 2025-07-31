@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学生管理システム UI</title>
+    <style>
+        body {
+            font-family: 'Courier New', 'Monaco', monospace;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: #1a1a1a;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            max-width: 900px;
+            width: 100%;
+            color: #00ff00;
+            border: 2px solid #333;
+        }
+        
+        .title {
+            text-align: center;
+            color: #ff6b6b;
+            margin-bottom: 30px;
+            font-size: 24px;
+            font-weight: bold;
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #555;
+        }
+        
+        .terminal-window {
+            background: #000;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            color: #00ff00;
+            font-size: 14px;
+            line-height: 1.6;
+            min-height: 300px;
+            position: relative;
+            box-shadow: inset 0 0 10px rgba(0,255,0,0.1);
+        }
+        
+        .terminal-header {
+            background: #333;
+            color: #fff;
+            padding: 8px 15px;
+            border-radius: 8px 8px 0 0;
+            margin: -20px -20px 15px -20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .terminal-buttons {
+            display: flex;
+            gap: 8px;
+            margin-right: 15px;
+        }
+        
+        .terminal-button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .close { background: #ff5f56; }
+        .minimize { background: #ffbd2e; }
+        .maximize { background: #27ca3f; }
+        
+        .terminal-content {
+            white-space: pre-line;
+            animation: typing 1s steps(20, end);
+        }
+        
+        .prompt {
+            color: #ffff00;
+        }
+        
+        .input {
+            color: #ffffff;
+            background: #333;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        
+        .output {
+            color: #00ddff;
+        }
+        
+        .error {
+            color: #ff6b6b;
+        }
+        
+        .success {
+            color: #51cf66;
+        }
+        
+        .highlight {
+            background: #555;
+            padding: 2px 4px;
+            border-radius: 2px;
+        }
+        
+        .table-header {
+            color: #ffff00;
+            border-bottom: 1px solid #555;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .table-row {
+            margin: 3px 0;
+            padding: 2px 0;
+        }
+        
+        .table-row:nth-child(even) {
+            background: rgba(255,255,255,0.05);
+        }
+        
+        .cursor {
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        
+        .feature-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            background: #2c3e50;
+            border-radius: 10px;
+            padding: 5px;
+        }
+        
+        .tab {
+            background: #34495e;
+            color: #ecf0f1;
+            padding: 10px 20px;
+            border-radius: 6px;
+            margin: 0 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 12px;
+            border: 1px solid #555;
+        }
+        
+        .tab.active {
+            background: #3498db;
+            color: white;
+            box-shadow: 0 2px 5px rgba(52, 152, 219, 0.3);
+        }
+        
+        .tab:hover {
+            background: #4a6741;
+        }
+        
+        .screen-content {
+            display: none;
+        }
+        
+        .screen-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">🎓 学生管理システム - 完成版画面イメージ</div>
+        
+        <div class="feature-tabs">
+            <div class="tab active" onclick="showScreen('menu')">メニュー画面</div>
+            <div class="tab" onclick="showScreen('list')">学生一覧</div>
+            <div class="tab" onclick="showScreen('register')">学生登録</div>
+            <div class="tab" onclick="showScreen('stats')">統計情報</div>
+        </div>
+        
+        <!-- メニュー画面 -->
+        <div id="menu" class="screen-content active">
+            <div class="terminal-window">
+                <div class="terminal-header">
+                    <div class="terminal-buttons">
+                        <div class="terminal-button close"></div>
+                        <div class="terminal-button minimize"></div>
+                        <div class="terminal-button maximize"></div>
+                    </div>
+                    <span>学生管理システム - メインメニュー</span>
+                </div>
+                <div class="terminal-content">学生情報管理システムを開始します
+
+<span class="highlight">==============================</span>
+    <span class="success">学生情報管理システム</span>
+<span class="highlight">==============================</span>
+1. 学生一覧表示
+2. 学生情報登録
+3. 統計情報表示
+4. 成績評価表示
+0. 終了
+<span class="highlight">==============================</span>
+<span class="prompt">選択してください: </span><span class="input cursor">2</span>
+
+<span class="output">選択されました: 学生情報登録</span></div>
+            </div>
+        </div>
+        
+        <!-- 学生一覧画面 -->
+        <div id="list" class="screen-content">
+            <div class="terminal-window">
+                <div class="terminal-header">
+                    <div class="terminal-buttons">
+                        <div class="terminal-button close"></div>
+                        <div class="terminal-button minimize"></div>
+                        <div class="terminal-button maximize"></div>
+                    </div>
+                    <span>学生管理システム - 学生一覧表示</span>
+                </div>
+                <div class="terminal-content"><span class="output">=== 学生一覧 ===</span>
+
+<span class="table-header">No. | 名前          | 点数 | 評価</span>
+<span class="table-header">----|---------------|------|------</span>
+  1 | 田中太郎      |   85 | 良
+  2 | 佐藤花子      |   92 | 優
+  3 | 山田次郎      |   78 | 良
+  4 | 鈴木美咲      |   95 | 優
+  5 | 高橋健太      |   67 | 可
+
+<span class="success">総学生数: 5人</span>
+<span class="prompt">エンターキーで戻る...</span></div>
+            </div>
+        </div>
+        
+        <!-- 学生登録画面 -->
+        <div id="register" class="screen-content">
+            <div class="terminal-window">
+                <div class="terminal-header">
+                    <div class="terminal-buttons">
+                        <div class="terminal-button close"></div>
+                        <div class="terminal-button minimize"></div>
+                        <div class="terminal-button maximize"></div>
+                    </div>
+                    <span>学生管理システム - 学生情報登録</span>
+                </div>
+                <div class="terminal-content"><span class="output">=== 学生情報登録 ===</span>
+
+<span class="prompt">学生名を入力してください: </span><span class="input">田中太郎</span>
+<span class="prompt">点数を入力してください (0-100): </span><span class="input">85</span>
+
+<span class="success">学生情報を登録しました</span>
+<span class="success">登録内容: 田中太郎 さん (85点)</span>
+
+<span class="output">現在の登録学生数: 6人</span>
+
+<span class="prompt">続けて登録しますか？ (y/n): </span><span class="input">n</span>
+<span class="output">メニューに戻ります...</span></div>
+            </div>
+        </div>
+        
+        <!-- 統計情報画面 -->
+        <div id="stats" class="screen-content">
+            <div class="terminal-window">
+                <div class="terminal-header">
+                    <div class="terminal-buttons">
+                        <div class="terminal-button close"></div>
+                        <div class="terminal-button minimize"></div>
+                        <div class="terminal-button maximize"></div>
+                    </div>
+                    <span>学生管理システム - 統計情報表示</span>
+                </div>
+                <div class="terminal-content"><span class="output">=== 統計情報 ===</span>
+
+<span class="success">総学生数: 5人</span>
+<span class="success">平均点: 83.4点</span>
+<span class="success">最高点: 95点 (鈴木美咲 さん)</span>
+<span class="success">最低点: 67点 (高橋健太 さん)</span>
+<span class="success">合計点: 417点</span>
+
+<span class="output">=== 成績評価 ===</span>
+名前          | 点数 | 評価 | 判定
+--------------|------|------|--------
+田中太郎      |   85 |   良 | 合格
+佐藤花子      |   92 |   優 | 合格
+山田次郎      |   78 |   良 | 合格
+鈴木美咲      |   95 |   優 | 合格
+高橋健太      |   67 |   可 | 合格
+
+<span class="output">評価別人数:</span>
+<span class="success">優 (90点以上): 2人</span>
+<span class="success">良 (75-89点): 2人</span>
+<span class="success">可 (60-74点): 1人</span>
+<span class="success">不可 (60点未満): 0人</span></div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px; color: #74b9ff; font-size: 14px;">
+            🎯 このようなプロフェッショナルな画面を<br>
+            あなた自身の手で作成できるようになります！
+        </div>
+    </div>
+    
+    <script>
+        function showScreen(screenId) {
+            // すべてのタブとコンテンツを非アクティブに
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.screen-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // 選択されたタブとコンテンツをアクティブに
+            event.target.classList.add('active');
+            document.getElementById(screenId).classList.add('active');
+        }
+    </script>
+</body>
+</html>
