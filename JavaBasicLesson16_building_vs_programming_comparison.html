@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>建物の建設とプログラム開発の比較</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 25px;
+            border-left: 4px solid;
+        }
+        
+        .building {
+            border-left-color: #e74c3c;
+        }
+        
+        .programming {
+            border-left-color: #3498db;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            text-align: center;
+        }
+        
+        .building .section-title {
+            color: #e74c3c;
+        }
+        
+        .programming .section-title {
+            color: #3498db;
+        }
+        
+        .scenario {
+            margin-bottom: 25px;
+        }
+        
+        .scenario-type {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .without {
+            background-color: #ffe6e6;
+            color: #c0392b;
+        }
+        
+        .with {
+            background-color: #e6f3ff;
+            color: #2980b9;
+        }
+        
+        .points {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .points li {
+            margin: 8px 0;
+            padding: 8px 12px;
+            background: white;
+            border-radius: 4px;
+            border-left: 3px solid;
+            font-size: 14px;
+        }
+        
+        .without-design li {
+            border-left-color: #e74c3c;
+        }
+        
+        .with-design li {
+            border-left-color: #27ae60;
+        }
+        
+        .icon {
+            font-size: 24px;
+            margin-right: 8px;
+        }
+        
+        .conclusion {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .conclusion h3 {
+            margin: 0 0 15px 0;
+            font-size: 20px;
+        }
+        
+        .conclusion p {
+            margin: 0;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">🏗️ 建物の建設 vs 💻 プログラム開発</h1>
+        
+        <div class="comparison">
+            <!-- 建物の建設 -->
+            <div class="section building">
+                <h2 class="section-title">🏠 建物の建設</h2>
+                
+                <div class="scenario">
+                    <div class="scenario-type without">❌ 設計図なしで建設</div>
+                    <ul class="points without-design">
+                        <li><span class="icon">😵</span>部屋の大きさがバラバラ</li>
+                        <li><span class="icon">⚡</span>配線や配管の位置が適当</li>
+                        <li><span class="icon">🔧</span>後から変更が困難</li>
+                        <li><span class="icon">💸</span>材料費が予想できない</li>
+                        <li><span class="icon">⏰</span>完成まで時間がかかる</li>
+                    </ul>
+                </div>
+                
+                <div class="scenario">
+                    <div class="scenario-type with">✅ 設計図ありで建設</div>
+                    <ul class="points with-design">
+                        <li><span class="icon">👀</span>事前に全体像が見える</li>
+                        <li><span class="icon">📊</span>材料や工期が計算できる</li>
+                        <li><span class="icon">🔍</span>問題を事前に発見・解決</li>
+                        <li><span class="icon">👥</span>複数人での作業が可能</li>
+                        <li><span class="icon">⭐</span>品質が安定する</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- プログラム開発 -->
+            <div class="section programming">
+                <h2 class="section-title">💻 プログラム開発</h2>
+                
+                <div class="scenario">
+                    <div class="scenario-type without">❌ 設計なしで開発</div>
+                    <ul class="points without-design">
+                        <li><span class="icon">🎲</span>行き当たりばったりの実装</li>
+                        <li><span class="icon">🚫</span>後から機能追加が困難</li>
+                        <li><span class="icon">🐛</span>バグが発生しやすい</li>
+                        <li><span class="icon">😵‍💫</span>他の人には理解しにくい</li>
+                        <li><span class="icon">⏰</span>修正に時間がかかる</li>
+                    </ul>
+                </div>
+                
+                <div class="scenario">
+                    <div class="scenario-type with">✅ 設計ありで開発</div>
+                    <ul class="points with-design">
+                        <li><span class="icon">📋</span>全体の構造が明確</li>
+                        <li><span class="icon">🔄</span>段階的な実装が可能</li>
+                        <li><span class="icon">🛡️</span>バグを事前に防げる</li>
+                        <li><span class="icon">👥</span>チーム開発が可能</li>
+                        <li><span class="icon">🔧</span>保守・拡張が容易</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="conclusion">
+            <h3>🎯 結論</h3>
+            <p>
+                建物もプログラムも、<strong>「設計」があることで品質が格段に向上</strong>します。<br>
+                最初は時間がかかるように感じますが、<strong>結果的に開発時間の短縮と品質向上</strong>を実現できます。
+            </p>
+        </div>
+    </div>
+</body>
+</html>

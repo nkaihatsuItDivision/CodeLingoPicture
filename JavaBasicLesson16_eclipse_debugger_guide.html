@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eclipse デバッガーの基本使用法</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .intro {
+            background: #e8f4f8;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .intro-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .step-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-top: 4px solid;
+            transition: transform 0.3s ease;
+        }
+        
+        .step-card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .step-card:nth-child(1) { border-top-color: #e74c3c; }
+        .step-card:nth-child(2) { border-top-color: #f39c12; }
+        .step-card:nth-child(3) { border-top-color: #27ae60; }
+        .step-card:nth-child(4) { border-top-color: #9b59b6; }
+        
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .step-number {
+            background: #3498db;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        
+        .step-card:nth-child(1) .step-number { background: #e74c3c; }
+        .step-card:nth-child(2) .step-number { background: #f39c12; }
+        .step-card:nth-child(3) .step-number { background: #27ae60; }
+        .step-card:nth-child(4) .step-number { background: #9b59b6; }
+        
+        .step-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .step-description {
+            margin-bottom: 15px;
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        
+        .breakpoint {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .eclipse-interface {
+            background: #f4f4f4;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 2px solid #bdc3c7;
+        }
+        
+        .interface-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .interface-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .interface-section {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #3498db;
+        }
+        
+        .section-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .keyboard-shortcuts {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+        
+        .shortcuts-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .shortcuts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .shortcut-item {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .shortcut-key {
+            background: #34495e;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        
+        .practical-example {
+            background: #fff8e1;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .example-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .example-steps {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .example-steps li {
+            margin: 10px 0;
+            padding: 10px 15px;
+            background: white;
+            border-radius: 6px;
+            border-left: 3px solid #ffc107;
+            font-size: 14px;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .steps-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .interface-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .shortcuts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">🐛 Eclipse デバッガーの基本使用法</h1>
+        
+        <div class="intro">
+            <h2 class="intro-title">デバッガーとは？</h2>
+            <p>プログラムの実行を一時停止し、<strong>変数の値</strong>や<strong>実行の流れ</strong>を詳しく調べることができるツールです。バグの発見や、プログラムの動作理解に非常に有効です。</p>
+        </div>
+        
+        <div class="steps-container">
+            <!-- ステップ1: ブレークポイント設定 -->
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <div class="step-title">ブレークポイント設定</div>
+                </div>
+                <div class="step-description">
+                    プログラムを停止させたい行の<strong>行番号の左側</strong>をクリックします。青い丸（●）が表示されれば設定完了です。
+                </div>
+                <div class="code-example">
+public static void addStudent() {
+    System.out.print("学生の名前を入力してください: ");
+    String name = scanner.nextLine();  <span class="breakpoint">● ← ここをクリック</span>
+    // プログラムはここで停止します
+}</div>
+                <div style="margin-top: 10px; font-size: 13px; color: #555;">
+                    💡 複数の場所にブレークポイントを設定できます
+                </div>
+            </div>
+            
+            <!-- ステップ2: デバッグ実行 -->
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number">2</div>
+                    <div class="step-title">デバッグ実行</div>
+                </div>
+                <div class="step-description">
+                    通常の実行ボタン（▶）の横にある<strong>「虫」のアイコン</strong>をクリックしてデバッグモードで実行します。
+                </div>
+                <div style="background: #e8f4f8; padding: 15px; border-radius: 6px; margin: 10px 0;">
+                    <strong>🐛 デバッグボタンの場所：</strong><br>
+                    Eclipse上部のツールバー → 緑の虫アイコン<br>
+                    または右クリック → 「デバッグ」→「Javaアプリケーション」
+                </div>
+                <div style="margin-top: 10px; font-size: 13px; color: #555;">
+                    ✅ ブレークポイントで実行が自動停止します
+                </div>
+            </div>
+            
+            <!-- ステップ3: ステップ実行 -->
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number">3</div>
+                    <div class="step-title">ステップ実行</div>
+                </div>
+                <div class="step-description">
+                    プログラムが停止したら、以下のキーで<strong>一行ずつ実行</strong>できます。
+                </div>
+                <div style="background: #f0f0f0; padding: 15px; border-radius: 6px; margin: 10px 0;">
+                    <strong>F6</strong>: 次の行に進む（ステップオーバー）<br>
+                    <strong>F5</strong>: メソッドの中に入る（ステップイン）<br>
+                    <strong>F8</strong>: 次のブレークポイントまで実行（Resume）
+                </div>
+                <div style="margin-top: 10px; font-size: 13px; color: #555;">
+                    🎯 F6が最もよく使われます
+                </div>
+            </div>
+            
+            <!-- ステップ4: 変数確認 -->
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number">4</div>
+                    <div class="step-title">変数の確認</div>
+                </div>
+                <div class="step-description">
+                    デバッグ中は<strong>「Variables」ビュー</strong>で、現在の変数の値をリアルタイムで確認できます。
+                </div>
+                <div style="background: #e8f5e8; padding: 15px; border-radius: 6px; margin: 10px 0;">
+                    <strong>確認できる情報：</strong><br>
+                    • 各変数の現在の値<br>
+                    • 配列の中身（要素ごと）<br>
+                    • オブジェクトのフィールド<br>
+                    • 式の計算結果
+                </div>
+                <div style="margin-top: 10px; font-size: 13px; color: #555;">
+                    🔍 バグの原因特定に非常に有効です
+                </div>
+            </div>
+        </div>
+        
+        <!-- Eclipse インターフェース -->
+        <div class="eclipse-interface">
+            <h2 class="interface-title">📺 Eclipse デバッグ画面の構成</h2>
+            <div class="interface-grid">
+                <div class="interface-section">
+                    <h3 class="section-title">🖥️ エディター画面</h3>
+                    <ul style="margin: 0; padding-left: 15px; font-size: 14px;">
+                        <li>現在実行中の行が<span style="background: #ffeb3b; padding: 2px;">黄色</span>でハイライト</li>
+                        <li>ブレークポイントが<span style="color: #2196f3;">●</span>で表示</li>
+                        <li>コードの内容を確認しながらデバッグ</li>
+                    </ul>
+                </div>
+                
+                <div class="interface-section">
+                    <h3 class="section-title">📊 Variables ビュー</h3>
+                    <ul style="margin: 0; padding-left: 15px; font-size: 14px;">
+                        <li>現在の変数の値を表示</li>
+                        <li>変数をクリックして詳細確認</li>
+                        <li>配列やオブジェクトは展開可能</li>
+                    </ul>
+                </div>
+                
+                <div class="interface-section">
+                    <h3 class="section-title">🎮 Debug ビュー</h3>
+                    <ul style="margin: 0; padding-left: 15px; font-size: 14px;">
+                        <li>現在のスレッドとメソッド呼び出し履歴</li>
+                        <li>実行制御ボタン（Resume、Step等）</li>
+                        <li>デバッグセッションの管理</li>
+                    </ul>
+                </div>
+                
+                <div class="interface-section">
+                    <h3 class="section-title">📝 Console ビュー</h3>
+                    <ul style="margin: 0; padding-left: 15px; font-size: 14px;">
+                        <li>プログラムの出力結果を表示</li>
+                        <li>ユーザー入力（Scanner）も可能</li>
+                        <li>エラーメッセージの確認</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- キーボードショートカット -->
+        <div class="keyboard-shortcuts">
+            <h2 class="shortcuts-title">⌨️ よく使うキーボードショートカット</h2>
+            <div class="shortcuts-grid">
+                <div class="shortcut-item">
+                    <span>次の行に進む</span>
+                    <span class="shortcut-key">F6</span>
+                </div>
+                <div class="shortcut-item">
+                    <span>メソッドに入る</span>
+                    <span class="shortcut-key">F5</span>
+                </div>
+                <div class="shortcut-item">
+                    <span>実行継続</span>
+                    <span class="shortcut-key">F8</span>
+                </div>
+                <div class="shortcut-item">
+                    <span>デバッグ終了</span>
+                    <span class="shortcut-key">Ctrl+F2</span>
+                </div>
+                <div class="shortcut-item">
+                    <span>ブレークポイント切替</span>
+                    <span class="shortcut-key">Ctrl+Shift+B</span>
+                </div>
+                <div class="shortcut-item">
+                    <span>変数の値表示</span>
+                    <span class="shortcut-key">Ctrl+Shift+I</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 実践例 -->
+        <div class="practical-example">
+            <h2 class="example-title">🎯 実践例：addStudent() メソッドのデバッグ</h2>
+            <div class="code-example">
+public static void addStudent() {
+    if (count >= MAX_STUDENTS) {
+        System.out.println("これ以上登録できません。");
+        return;
+    }
+    
+    System.out.print("学生の名前を入力してください: ");
+    String name = scanner.nextLine();  // ← ここにブレークポイント設定
+    
+    System.out.print("点数を入力してください (0-100): ");
+    int score = getValidScore();
+    
+    names[count] = name;    // ← ここでもチェック
+    scores[count] = score;
+    count++;
+    
+    System.out.println("学生を追加しました: " + name + " (" + score + "点)");
+}</div>
+            
+            <ol class="example-steps">
+                <li><span class="highlight">String name = scanner.nextLine();</span> の行にブレークポイントを設定</li>
+                <li>デバッグモードでプログラムを実行</li>
+                <li>名前を入力後、プログラムがブレークポイントで停止</li>
+                <li><strong>Variables ビュー</strong>で <span class="highlight">name</span> 変数の値を確認</li>
+                <li><strong>F6</strong>を押して次の行に進む</li>
+                <li><span class="highlight">names[count] = name;</span> の行で再度確認</li>
+                <li><strong>Variables ビュー</strong>で <span class="highlight">names</span> 配列に正しく格納されているかチェック</li>
+                <li><strong>F8</strong>で実行を継続</li>
+            </ol>
+            
+            <div style="background: #e3f2fd; padding: 15px; border-radius: 6px; margin-top: 15px;">
+                <strong>💡 このデバッグで分かること：</strong><br>
+                • 入力された値が正しく変数に格納されているか<br>
+                • 配列への代入が正常に行われているか<br>
+                • count変数が適切に更新されているか<br>
+                • 各ステップでのプログラムの状態
+            </div>
+        </div>
+    </div>
+</body>
+</html>

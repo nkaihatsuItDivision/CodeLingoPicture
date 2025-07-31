@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>システム設計の全体像</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 50px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .design-overview {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .design-aspect {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            border-top: 4px solid;
+        }
+        
+        .design-aspect:hover {
+            transform: translateY(-5px);
+        }
+        
+        .data-design {
+            border-top-color: #e74c3c;
+        }
+        
+        .function-design {
+            border-top-color: #f39c12;
+        }
+        
+        .flow-design {
+            border-top-color: #27ae60;
+        }
+        
+        .aspect-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .aspect-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .aspect-subtitle {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+        
+        .aspect-example {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 3px solid;
+            text-align: left;
+        }
+        
+        .data-design .aspect-example {
+            border-left-color: #e74c3c;
+        }
+        
+        .function-design .aspect-example {
+            border-left-color: #f39c12;
+        }
+        
+        .flow-design .aspect-example {
+            border-left-color: #27ae60;
+        }
+        
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        
+        .example-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-size: 14px;
+        }
+        
+        .student-system-example {
+            background: #e8f4f8;
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 40px;
+            border: 2px solid #3498db;
+        }
+        
+        .system-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        
+        .system-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+        
+        .system-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .card-icon {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+        
+        .card-content {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .design-overview {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .system-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .aspect-icon {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">🏗️ システム設計の3つの視点</h1>
+        
+        <div class="design-overview">
+            <!-- データ設計 -->
+            <div class="design-aspect data-design">
+                <div class="aspect-icon">🗃️</div>
+                <h2 class="aspect-title">データ設計</h2>
+                <p class="aspect-subtitle">何を記録するか</p>
+                
+                <div class="aspect-example">
+                    <div class="example-title">学生管理システムの例：</div>
+                    <div class="code-example">
+String[] names = new String[MAX_STUDENTS];
+int[] scores = new int[MAX_STUDENTS];
+int count = 0;  // 現在の学生数</div>
+                    <div style="margin-top: 10px; font-size: 13px; color: #555;">
+                        ✓ どのような情報を保存するか<br>
+                        ✓ データの関係性を定義<br>
+                        ✓ 効率的な格納方法を検討
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 機能設計 -->
+            <div class="design-aspect function-design">
+                <div class="aspect-icon">⚙️</div>
+                <h2 class="aspect-title">機能設計</h2>
+                <p class="aspect-subtitle">どのような処理をするか</p>
+                
+                <div class="aspect-example">
+                    <div class="example-title">必要なメソッドの洗い出し：</div>
+                    <div class="code-example">
+- showMenu()      // メニュー表示
+- addStudent()    // 学生追加
+- showStudents()  // 学生一覧表示
+- deleteStudent() // 学生削除
+- showStatistics() // 統計表示</div>
+                    <div style="margin-top: 10px; font-size: 13px; color: #555;">
+                        ✓ 各機能の役割を明確化<br>
+                        ✓ メソッドの分割方法を決定<br>
+                        ✓ 引数と戻り値を設計
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 流れ設計 -->
+            <div class="design-aspect flow-design">
+                <div class="aspect-icon">🔄</div>
+                <h2 class="aspect-title">流れ設計</h2>
+                <p class="aspect-subtitle">どのような順序で処理するか</p>
+                
+                <div class="aspect-example">
+                    <div class="example-title">プログラム全体の流れ：</div>
+                    <div class="code-example">
+1. システム開始
+2. メニュー表示
+3. ユーザー選択
+4. 選択に応じた処理実行
+5. 結果表示
+6. メニューに戻る（または終了）</div>
+                    <div style="margin-top: 10px; font-size: 13px; color: #555;">
+                        ✓ 処理の実行順序を定義<br>
+                        ✓ 条件分岐の設計<br>
+                        ✓ ループ処理の構造化
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 学生管理システムの具体例 -->
+        <div class="student-system-example">
+            <h2 class="system-title">📚 レッスン15 学生管理システムの設計例</h2>
+            
+            <div class="system-grid">
+                <div class="system-card">
+                    <h3 class="card-header">
+                        <span class="card-icon">🗃️</span>
+                        データ構造設計
+                    </h3>
+                    <div class="card-content">
+                        <strong>学生情報の管理方法：</strong><br>
+                        • <span class="highlight">names[]</span> : 学生名を格納する配列<br>
+                        • <span class="highlight">scores[]</span> : 点数を格納する配列<br>
+                        • <span class="highlight">count</span> : 現在登録されている学生数<br>
+                        • <span class="highlight">MAX_STUDENTS</span> : 最大登録可能数（定数）<br><br>
+                        
+                        <strong>配列のインデックス対応：</strong><br>
+                        names[0] ↔ scores[0] ← 1番目の学生<br>
+                        names[1] ↔ scores[1] ← 2番目の学生
+                    </div>
+                </div>
+                
+                <div class="system-card">
+                    <h3 class="card-header">
+                        <span class="card-icon">⚙️</span>
+                        メソッド設計
+                    </h3>
+                    <div class="card-content">
+                        <strong>showMenu()</strong><br>
+                        • 目的: メニューを表示する<br>
+                        • 引数: なし / 戻り値: なし<br><br>
+                        
+                        <strong>addStudent()</strong><br>
+                        • 目的: 新しい学生を登録する<br>
+                        • 処理: 名前と点数を入力、配列に追加<br><br>
+                        
+                        <strong>showStudents()</strong><br>
+                        • 目的: 全学生の情報を表示する<br>
+                        • 処理: 配列をループして情報を出力
+                    </div>
+                </div>
+                
+                <div class="system-card">
+                    <h3 class="card-header">
+                        <span class="card-icon">🔄</span>
+                        処理フロー設計
+                    </h3>
+                    <div class="card-content">
+                        <strong>メインループ：</strong><br>
+                        1. <span class="highlight">while(true)</span> で無限ループ<br>
+                        2. <span class="highlight">showMenu()</span> でメニュー表示<br>
+                        3. <span class="highlight">scanner.nextInt()</span> で選択受付<br>
+                        4. <span class="highlight">switch文</span> で処理分岐<br>
+                        5. 各機能の実行<br>
+                        6. 結果表示後、ループ継続<br><br>
+                        
+                        <strong>エラーハンドリング：</strong><br>
+                        • try-catch で例外処理<br>
+                        • 不正入力時の再入力促進
+                    </div>
+                </div>
+                
+                <div class="system-card">
+                    <h3 class="card-header">
+                        <span class="card-icon">🏗️</span>
+                        クラス設計
+                    </h3>
+                    <div class="card-content">
+                        <div class="code-example" style="font-size: 11px;">
+public class StudentManager {
+    // データ（フィールド）
+    private static String[] names;
+    private static int[] scores;
+    private static int count;
+    private static Scanner scanner;
+    
+    // 機能（メソッド）
+    public static void main(String[] args)
+    public static void showMenu()
+    public static void addStudent()
+    public static void showStudents()
+    public static void deleteStudent()
+    public static void showStatistics()
+}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

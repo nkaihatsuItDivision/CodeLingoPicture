@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ソフトウェア開発ライフサイクル（SDLC）</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 50px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .sdlc-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .phase {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            min-width: 180px;
+            flex: 1;
+        }
+        
+        .phase:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .phase-number {
+            background: #3498db;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px auto;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .phase:nth-child(1) .phase-number { background: #e74c3c; }
+        .phase:nth-child(2) .phase-number { background: #f39c12; }
+        .phase:nth-child(3) .phase-number { background: #27ae60; }
+        .phase:nth-child(4) .phase-number { background: #9b59b6; }
+        .phase:nth-child(5) .phase-number { background: #34495e; }
+        
+        .phase-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .phase-subtitle {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+        
+        .phase-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .arrow {
+            font-size: 24px;
+            color: #3498db;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .detail-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            border-left: 5px solid;
+        }
+        
+        .detail-card:nth-child(1) { border-left-color: #e74c3c; }
+        .detail-card:nth-child(2) { border-left-color: #f39c12; }
+        .detail-card:nth-child(3) { border-left-color: #27ae60; }
+        .detail-card:nth-child(4) { border-left-color: #9b59b6; }
+        .detail-card:nth-child(5) { border-left-color: #34495e; }
+        
+        .detail-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .detail-icon {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .detail-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .detail-list li {
+            margin: 8px 0;
+            padding: 8px 12px;
+            background: white;
+            border-radius: 6px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .detail-list li::before {
+            content: "▶";
+            margin-right: 8px;
+            color: #3498db;
+            font-size: 12px;
+        }
+        
+        .question {
+            background: #e8f4f8;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-style: italic;
+            color: #2c3e50;
+            margin-top: 15px;
+            border-left: 3px solid #3498db;
+        }
+        
+        .question::before {
+            content: "💭 ";
+            font-style: normal;
+        }
+        
+        @media (max-width: 768px) {
+            .sdlc-flow {
+                flex-direction: column;
+            }
+            
+            .arrow {
+                transform: rotate(90deg);
+                margin: 10px 0;
+            }
+            
+            .details-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">📋 ソフトウェア開発ライフサイクル（SDLC）</h1>
+        
+        <div class="sdlc-flow">
+            <div class="phase">
+                <div class="phase-number">1</div>
+                <div class="phase-icon">📝</div>
+                <div class="phase-title">要件定義</div>
+                <div class="phase-subtitle">何を作るか</div>
+            </div>
+            
+            <div class="arrow">→</div>
+            
+            <div class="phase">
+                <div class="phase-number">2</div>
+                <div class="phase-icon">🏗️</div>
+                <div class="phase-title">設計</div>
+                <div class="phase-subtitle">どのように作るか</div>
+            </div>
+            
+            <div class="arrow">→</div>
+            
+            <div class="phase">
+                <div class="phase-number">3</div>
+                <div class="phase-icon">💻</div>
+                <div class="phase-title">実装</div>
+                <div class="phase-subtitle">実際に作る</div>
+            </div>
+            
+            <div class="arrow">→</div>
+            
+            <div class="phase">
+                <div class="phase-number">4</div>
+                <div class="phase-icon">🧪</div>
+                <div class="phase-title">テスト</div>
+                <div class="phase-subtitle">正しく動くか</div>
+            </div>
+            
+            <div class="arrow">→</div>
+            
+            <div class="phase">
+                <div class="phase-number">5</div>
+                <div class="phase-icon">🚀</div>
+                <div class="phase-title">運用・保守</div>
+                <div class="phase-subtitle">使い続ける</div>
+            </div>
+        </div>
+        
+        <div class="details-grid">
+            <div class="detail-card">
+                <h3 class="detail-title">
+                    <span class="detail-icon">📝</span>
+                    要件定義
+                </h3>
+                <ul class="detail-list">
+                    <li>作るシステムの機能を明確にする</li>
+                    <li>要件定義書、機能一覧を作成</li>
+                    <li>ユーザーのニーズを整理</li>
+                    <li>システムの目的を明確化</li>
+                </ul>
+                <div class="question">何ができれば良いのか？</div>
+            </div>
+            
+            <div class="detail-card">
+                <h3 class="detail-title">
+                    <span class="detail-icon">🏗️</span>
+                    設計
+                </h3>
+                <ul class="detail-list">
+                    <li>システムの構造を決める</li>
+                    <li>設計書、クラス図を作成</li>
+                    <li>データ構造を決定</li>
+                    <li>メソッド一覧を作成</li>
+                </ul>
+                <div class="question">どのような構造にするか？</div>
+            </div>
+            
+            <div class="detail-card">
+                <h3 class="detail-title">
+                    <span class="detail-icon">💻</span>
+                    実装
+                </h3>
+                <ul class="detail-list">
+                    <li>設計に基づいてコードを書く</li>
+                    <li>プログラムファイルを作成</li>
+                    <li>段階的に機能を実装</li>
+                    <li>コードレビューを実施</li>
+                </ul>
+                <div class="question">どのようにコードを書くか？</div>
+            </div>
+            
+            <div class="detail-card">
+                <h3 class="detail-title">
+                    <span class="detail-icon">🧪</span>
+                    テスト
+                </h3>
+                <ul class="detail-list">
+                    <li>バグを発見・修正する</li>
+                    <li>テスト結果、修正版を作成</li>
+                    <li>正常系・異常系をテスト</li>
+                    <li>品質を確保する</li>
+                </ul>
+                <div class="question">仕様通りに動作するか？</div>
+            </div>
+            
+            <div class="detail-card">
+                <h3 class="detail-title">
+                    <span class="detail-icon">🚀</span>
+                    運用・保守
+                </h3>
+                <ul class="detail-list">
+                    <li>システムを維持・改善する</li>
+                    <li>運用マニュアル、改善版を作成</li>
+                    <li>継続的な監視・保守</li>
+                    <li>新機能の追加・改善</li>
+                </ul>
+                <div class="question">問題なく使い続けられるか？</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
