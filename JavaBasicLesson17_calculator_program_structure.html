@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>電卓プログラムの構造設計</title>
+    <style>
+        body {
+            font-family: 'Yu Gothic', 'Hiragino Sans', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .structure-diagram {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .main-class {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .data-section, .method-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 5px solid #e74c3c;
+        }
+
+        .method-section {
+            border-left-color: #27ae60;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .data-icon {
+            background: #e74c3c;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .method-icon {
+            background: #27ae60;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .item-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .item-list li {
+            background: white;
+            margin: 8px 0;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .item-list li:hover {
+            transform: translateX(5px);
+        }
+
+        .code-snippet {
+            font-family: 'Courier New', monospace;
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .flow-diagram {
+            margin-top: 30px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px dashed #3498db;
+        }
+
+        .flow-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .flow-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .flow-step {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 25px;
+            text-align: center;
+            font-weight: bold;
+            min-width: 120px;
+            box-shadow: 0 3px 10px rgba(243, 156, 18, 0.3);
+            transition: transform 0.2s;
+        }
+
+        .flow-step:hover {
+            transform: scale(1.05);
+        }
+
+        .arrow {
+            font-size: 24px;
+            color: #3498db;
+            font-weight: bold;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #1abc9c, #16a085);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .sections {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .flow-steps {
+                flex-direction: column;
+            }
+            
+            .arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">📊 電卓プログラムの構造設計</div>
+        
+        <div class="structure-diagram">
+            <div class="main-class">
+                🖥️ Calculator.java クラス
+            </div>
+            
+            <div class="sections">
+                <div class="data-section">
+                    <div class="section-title">
+                        <div class="data-icon">📁</div>
+                        データ（フィールド）
+                    </div>
+                    <ul class="item-list">
+                        <li><span class="code-snippet">currentResult</span><br>現在の計算結果を保持</li>
+                        <li><span class="code-snippet">history[]</span><br>計算履歴配列（最大20件）</li>
+                        <li><span class="code-snippet">historyCount</span><br>履歴件数をカウント</li>
+                        <li><span class="code-snippet">scanner</span><br>ユーザー入力用Scanner</li>
+                    </ul>
+                </div>
+                
+                <div class="method-section">
+                    <div class="section-title">
+                        <div class="method-icon">⚙️</div>
+                        機能（メソッド）
+                    </div>
+                    <ul class="item-list">
+                        <li><span class="code-snippet">main()</span><br>プログラム開始点・メインループ</li>
+                        <li><span class="code-snippet">showMenu()</span><br>メニュー表示</li>
+                        <li><span class="code-snippet">performCalculation()</span><br>計算実行処理</li>
+                        <li><span class="code-snippet">showHistory()</span><br>履歴表示</li>
+                        <li><span class="code-snippet">clearHistory()</span><br>履歴クリア</li>
+                        <li><span class="code-snippet">getValidNumber()</span><br>数値入力と検証</li>
+                        <li><span class="code-snippet">getValidOperator()</span><br>演算子入力と検証</li>
+                        <li><span class="code-snippet">calculate()</span><br>四則演算実行</li>
+                        <li><span class="code-snippet">addToHistory()</span><br>履歴に追加</li>
+                        <li><span class="code-snippet">displayResult()</span><br>結果の美しい表示</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="flow-diagram">
+                <div class="flow-title">🔄 プログラムの実行フロー</div>
+                <div class="flow-steps">
+                    <div class="flow-step">起動<br>初期化</div>
+                    <div class="arrow">→</div>
+                    <div class="flow-step">メニュー<br>表示</div>
+                    <div class="arrow">→</div>
+                    <div class="flow-step">ユーザー<br>選択</div>
+                    <div class="arrow">→</div>
+                    <div class="flow-step">機能<br>実行</div>
+                    <div class="arrow">→</div>
+                    <div class="flow-step">結果<br>表示</div>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                💡 設計のポイント：機能を適切にメソッドに分割し、データと処理を明確に分離することで、
+                保守性と拡張性の高いプログラム構造を実現
+            </div>
+        </div>
+    </div>
+</body>
+</html>

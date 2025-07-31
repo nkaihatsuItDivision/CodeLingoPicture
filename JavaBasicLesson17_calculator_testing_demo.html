@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>電卓プログラムの動作とテストデモ</title>
+    <style>
+        body {
+            font-family: 'Yu Gothic', 'Hiragino Sans', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #e74c3c;
+            padding-bottom: 10px;
+        }
+
+        .demo-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .terminal {
+            background: #1e1e1e;
+            color: #00ff00;
+            font-family: 'Consolas', 'Monaco', 'Lucida Console', 'Liberation Mono', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Courier New', monospace;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            border: 2px solid #333;
+            overflow-x: auto;
+            white-space: pre;
+            line-height: 1.2;
+            letter-spacing: 0;
+            font-feature-settings: "kern" 0;
+            font-variant-numeric: tabular-nums;
+            tab-size: 4;
+        }
+
+        .terminal-header {
+            background: #333;
+            color: #fff;
+            padding: 8px 15px;
+            margin: -20px -20px 15px -20px;
+            border-radius: 8px 8px 0 0;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .terminal-dots {
+            display: flex;
+            gap: 5px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot.red { background: #ff5f57; }
+        .dot.yellow { background: #ffbd2e; }
+        .dot.green { background: #28ca42; }
+
+        .user-input {
+            color: #ffff00;
+        }
+
+        .output {
+            color: #00ffff;
+        }
+
+        .error {
+            color: #ff6b6b;
+        }
+
+        .success {
+            color: #51cf66;
+        }
+
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .test-case {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 5px solid #3498db;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .test-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .test-steps {
+            list-style: none;
+            padding: 0;
+        }
+
+        .test-steps li {
+            margin: 8px 0;
+            padding: 8px 12px;
+            background: white;
+            border-radius: 5px;
+            border-left: 3px solid #27ae60;
+            font-size: 14px;
+        }
+
+        .expected-result {
+            background: #e8f5e8;
+            border-left-color: #27ae60;
+            font-weight: bold;
+        }
+
+        .menu-demo {
+            background: #2c3e50;
+            color: #ecf0f1;
+            font-family: 'Consolas', 'Monaco', 'Lucida Console', 'Liberation Mono', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Courier New', monospace;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            white-space: pre;
+            line-height: 1.2;
+            letter-spacing: 0;
+            font-feature-settings: "kern" 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .calculation-demo {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .calc-input, .calc-output {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+        }
+
+        .calc-input {
+            border-left-color: #3498db;
+        }
+
+        .calc-output {
+            border-left-color: #27ae60;
+        }
+
+        .demo-badge {
+            display: inline-block;
+            background: #e74c3c;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .success-badge {
+            background: #27ae60;
+        }
+
+        .warning-badge {
+            background: #f39c12;
+        }
+
+        .flow-chart {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 2px dashed #3498db;
+        }
+
+        .flow-box {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            min-width: 100px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(52, 152, 219, 0.3);
+        }
+
+        .flow-arrow {
+            font-size: 20px;
+            color: #3498db;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .calculation-demo {
+                grid-template-columns: 1fr;
+            }
+            
+            .test-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .flow-chart {
+                flex-direction: column;
+            }
+            
+            .flow-arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">🧪 電卓プログラムの動作とテストデモ</div>
+        
+        <!-- メニュー表示デモ -->
+        <div class="demo-section">
+            <div class="section-title">
+                🖥️ メニュー画面の表示例
+            </div>
+            <div class="terminal">
+                <div class="terminal-header">
+                    <div class="terminal-dots">
+                        <div class="dot red"></div>
+                        <div class="dot yellow"></div>
+                        <div class="dot green"></div>
+                    </div>
+                    Eclipse Console - Calculator.java
+                </div>=== 電卓プログラム ===
+Week 2 実践課題1
+
+┌─────────────────────────────┐
+│          電卓メニュー        │
+├─────────────────────────────┤
+│ 1. 計算実行                　│
+│ 2. 計算履歴表示              │
+│ 3. 履歴クリア              　│
+│ 4. 現在の結果表示       　   │
+│ 5. 終了                     │
+└─────────────────────────────┘
+現在の結果: 0.00
+
+<span class="user-input">選択してください (1-5): 1</span></div>
+        </div>
+
+        <!-- 計算実行デモ -->
+        <div class="demo-section">
+            <div class="section-title">
+                ➕ 計算実行の流れ
+            </div>
+            
+            <div class="flow-chart">
+                <div class="flow-box">メニュー選択</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-box">数値入力</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-box">演算子選択</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-box">計算実行</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-box">結果表示</div>
+            </div>
+            
+            <div class="terminal">
+                <div class="terminal-header">
+                    <div class="terminal-dots">
+                        <div class="dot red"></div>
+                        <div class="dot yellow"></div>
+                        <div class="dot green"></div>
+                    </div>
+                    計算実行例
+                </div>=== 計算実行 ===
+<span class="user-input">連続計算しますか？ (y/n): n</span>
+<span class="user-input">最初の数値を入力してください: 15.5</span>
+<span class="user-input">演算子を入力してください (+, -, *, /): *</span>
+<span class="user-input">2番目の数値を入力してください: 4</span>
+
+┌─────────────────────────────┐
+│          計算結果            │
+├─────────────────────────────┤
+│ 15.50 * 4.00 = 62.00        │
+└─────────────────────────────┘
+💡 大きな数値ですね！</div>
+        </div>
+
+        <!-- エラーハンドリングデモ -->
+        <div class="demo-section">
+            <div class="section-title">
+                ⚠️ エラーハンドリングの例
+            </div>
+            
+            <div class="calculation-demo">
+                <div class="calc-input">
+                    <div class="test-title">🚫 ゼロ除算エラー</div>
+                    <div class="terminal" style="padding: 10px; font-size: 12px; line-height: 1.2; white-space: pre;"><span class="user-input">最初の数値: 100</span>
+<span class="user-input">演算子: /</span>
+<span class="user-input">2番目の数値: 0</span>
+<span class="error">❌ エラーが発生しました: ゼロで割ることはできません</span></div>
+                </div>
+                
+                <div class="calc-output">
+                    <div class="test-title">🔤 不正な入力エラー</div>
+                    <div class="terminal" style="padding: 10px; font-size: 12px; line-height: 1.2; white-space: pre;"><span class="user-input">最初の数値: abc</span>
+<span class="error">❌ 有効な数値を入力してください。</span>
+<span class="user-input">最初の数値: 25.5</span>
+<span class="success">✅ 正常に入力されました</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 履歴機能デモ -->
+        <div class="demo-section">
+            <div class="section-title">
+                📝 履歴機能の表示例
+            </div>
+            <div class="terminal">
+                <div class="terminal-header">
+                    <div class="terminal-dots">
+                        <div class="dot red"></div>
+                        <div class="dot yellow"></div>
+                        <div class="dot green"></div>
+                    </div>
+                    計算履歴表示
+                </div>=== 計算履歴 ===
+┌────┬─────────────────────────────┐
+│No. │          計算式              │
+├────┼─────────────────────────────┤
+│  1 │ 15.50 * 4.00 = 62.00        │
+│  2 │ 62.00 + 38.00 = 100.00      │
+│  3 │ 100.00 / 4.00 = 25.00       │
+│  4 │ 25.00 - 5.00 = 20.00        │
+└────┴─────────────────────────────┘
+履歴件数: 4 / 20</div>
+        </div>
+
+        <!-- テストケース一覧 -->
+        <div class="demo-section">
+            <div class="section-title">
+                🧪 総合テストケース
+            </div>
+            
+            <div class="test-grid">
+                <div class="test-case">
+                    <div class="test-title">
+                        <span class="demo-badge success-badge">基本</span> 四則演算テスト
+                    </div>
+                    <ul class="test-steps">
+                        <li>10 + 5 = 15</li>
+                        <li>20 - 8 = 12</li>
+                        <li>6 * 7 = 42</li>
+                        <li>100 / 4 = 25</li>
+                        <li class="expected-result">✅ 全て正確に計算される</li>
+                    </ul>
+                </div>
+                
+                <div class="test-case">
+                    <div class="test-title">
+                        <span class="demo-badge">連続</span> 連続計算テスト
+                    </div>
+                    <ul class="test-steps">
+                        <li>最初: 10 + 5 = 15</li>
+                        <li>連続: 15 * 2 = 30</li>
+                        <li>連続: 30 - 5 = 25</li>
+                        <li class="expected-result">✅ 前回結果が正しく使用される</li>
+                    </ul>
+                </div>
+                
+                <div class="test-case">
+                    <div class="test-title">
+                        <span class="demo-badge warning-badge">エラー</span> エラー処理テスト
+                    </div>
+                    <ul class="test-steps">
+                        <li>10 / 0 → エラーメッセージ</li>
+                        <li>abc + 5 → 再入力要求</li>
+                        <li>10 & 5 → 演算子再入力</li>
+                        <li class="expected-result">✅ 適切なエラー処理</li>
+                    </ul>
+                </div>
+                
+                <div class="test-case">
+                    <div class="test-title">
+                        <span class="demo-badge success-badge">履歴</span> 履歴機能テスト
+                    </div>
+                    <ul class="test-steps">
+                        <li>複数回計算実行</li>
+                        <li>履歴表示で確認</li>
+                        <li>20件超過で古い履歴削除</li>
+                        <li class="expected-result">✅ 履歴が正常に管理される</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 成功基準 -->
+        <div class="demo-section">
+            <div class="section-title">
+                ✅ プログラム完成の判定基準
+            </div>
+            
+            <div style="background: linear-gradient(135deg, #27ae60, #229954); color: white; padding: 20px; border-radius: 10px;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 24px; margin-bottom: 5px;">✅</div>
+                        <div style="font-weight: bold;">基本機能</div>
+                        <div style="font-size: 14px;">四則演算が正常動作</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 24px; margin-bottom: 5px;">🔄</div>
+                        <div style="font-weight: bold;">連続計算</div>
+                        <div style="font-size: 14px;">前回結果を活用</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 24px; margin-bottom: 5px;">📝</div>
+                        <div style="font-weight: bold;">履歴管理</div>
+                        <div style="font-size: 14px;">20件まで保存・表示</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 24px; margin-bottom: 5px;">🛡️</div>
+                        <div style="font-weight: bold;">エラー処理</div>
+                        <div style="font-size: 14px;">堅牢な例外処理</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
