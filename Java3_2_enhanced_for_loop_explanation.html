@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>拡張for文の動作説明図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .comparison-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .title {
+            text-align: center;
+            font-size: 2.2em;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 1.1em;
+            margin-bottom: 40px;
+        }
+
+        .for-loop-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .loop-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loop-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+        }
+
+        .traditional-section::before {
+            background: linear-gradient(90deg, #e74c3c, #c0392b);
+        }
+
+        .enhanced-section::before {
+            background: linear-gradient(90deg, #2ecc71, #27ae60);
+        }
+
+        .loop-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .loop-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            margin-right: 15px;
+        }
+
+        .traditional-icon {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .enhanced-icon {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+        }
+
+        .loop-title {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .loop-subtitle {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-top: 3px;
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .code-comment {
+            color: #95a5a6;
+        }
+
+        .code-keyword {
+            color: #3498db;
+        }
+
+        .code-string {
+            color: #2ecc71;
+        }
+
+        .code-variable {
+            color: #f39c12;
+        }
+
+        .flow-diagram {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .flow-step {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .flow-step:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .step-number {
+            background: #3498db;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .step-text {
+            color: #2c3e50;
+            font-weight: 500;
+            flex-grow: 1;
+        }
+
+        .step-code {
+            font-family: 'Courier New', monospace;
+            background: #ecf0f1;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8em;
+            color: #2c3e50;
+            margin-left: 10px;
+        }
+
+        .advantages {
+            list-style: none;
+            padding: 0;
+        }
+
+        .advantages li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .advantage-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7em;
+            color: white;
+            font-weight: bold;
+        }
+
+        .good { background: #2ecc71; }
+        .bad { background: #e74c3c; }
+        .neutral { background: #f39c12; }
+
+        .interactive-demo {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 40px 0;
+            color: white;
+            text-align: center;
+        }
+
+        .demo-title {
+            font-size: 1.6em;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .arraylist-display {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+            min-height: 60px;
+        }
+
+        .arraylist-item {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            padding: 10px 15px;
+            color: white;
+            font-weight: 600;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .arraylist-item.current {
+            background: rgba(255, 255, 255, 0.4);
+            border-color: rgba(255, 255, 255, 0.8);
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+        }
+
+        .item-index {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7em;
+            opacity: 0.8;
+        }
+
+        .demo-controls {
+            margin-top: 20px;
+        }
+
+        .demo-button {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+
+        .demo-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .loop-status {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .syntax-comparison {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+
+        .syntax-title {
+            text-align: center;
+            font-size: 1.6em;
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 25px;
+        }
+
+        .syntax-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .syntax-example {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .syntax-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .complexity-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .complex {
+            background: #fee;
+            color: #e74c3c;
+        }
+
+        .simple {
+            background: #efe;
+            color: #2ecc71;
+        }
+
+        @media (max-width: 768px) {
+            .for-loop-comparison,
+            .syntax-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .arraylist-display {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .demo-button {
+                margin: 5px;
+                padding: 10px 20px;
+            }
+        }
+
+        .arrow-down {
+            text-align: center;
+            font-size: 2em;
+            color: #4ecdc4;
+            margin: 20px 0;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="comparison-container">
+        <h1 class="title">拡張for文の動作フロー解説</h1>
+        <p class="subtitle">従来のfor文と拡張for文の処理の流れを比較して理解しましょう</p>
+
+        <div class="for-loop-comparison">
+            <!-- 従来のfor文 -->
+            <div class="loop-section traditional-section">
+                <div class="loop-header">
+                    <div class="loop-icon traditional-icon">🔄</div>
+                    <div>
+                        <div class="loop-title">従来のfor文</div>
+                        <div class="loop-subtitle">インデックス管理型</div>
+                    </div>
+                </div>
+
+                <div class="code-example">
+<span class="code-comment">// 従来のfor文でArrayListを走査</span>
+<span class="code-keyword">for</span> (<span class="code-keyword">int</span> <span class="code-variable">i</span> = 0; <span class="code-variable">i</span> &lt; colors.<span class="code-variable">size</span>(); <span class="code-variable">i</span>++) {
+    String <span class="code-variable">color</span> = colors.<span class="code-variable">get</span>(<span class="code-variable">i</span>);
+    System.out.println(<span class="code-variable">color</span>);
+}
+                </div>
+
+                <div class="flow-diagram">
+                    <div class="flow-step">
+                        <div class="step-number">1</div>
+                        <div class="step-text">初期化</div>
+                        <div class="step-code">int i = 0</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-number">2</div>
+                        <div class="step-text">条件チェック</div>
+                        <div class="step-code">i < colors.size()</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-number">3</div>
+                        <div class="step-text">要素取得</div>
+                        <div class="step-code">colors.get(i)</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-number">4</div>
+                        <div class="step-text">処理実行</div>
+                        <div class="step-code">System.out.println(color)</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-number">5</div>
+                        <div class="step-text">インクリメント</div>
+                        <div class="step-code">i++</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-number">6</div>
+                        <div class="step-text">ステップ2に戻る</div>
+                        <div class="step-code">loop</div>
+                    </div>
+                </div>
+
+                <ul class="advantages">
+                    <li>
+                        <span class="advantage-icon good">✓</span>
+                        インデックス値が使える
+                    </li>
+                    <li>
+                        <span class="advantage-icon good">✓</span>
+                        細かい制御が可能
+                    </li>
+                    <li>
+                        <span class="advantage-icon bad">✗</span>
+                        コードが複雑
+                    </li>
+                    <li>
+                        <span class="advantage-icon bad">✗</span>
+                        範囲外エラーのリスク
+                    </li>
+                    <li>
+                        <span class="advantage-icon bad">✗</span>
+                        インデックス管理が必要
+                    </li>
+                </ul>
+
+                <div class="complexity-badge complex">複雑度: 高</div>
+            </div>
+
+            <!-- 拡張for文 -->
+            <div class="loop-section enhanced-section">
+                <div class="loop-header">
+                    <div class="loop-icon enhanced-icon">✨</div>
+                    <div>
+                        <div class="loop-title">拡張for文</div>
+                        <div class="loop-subtitle">要素直接アクセス型</div>
+                    </div>
+                </div>
+
+                <div class="code-example">
+<span class="code-comment">// 拡張for文でArrayListを走査</span>
+<span class="code-keyword">for</span> (String <span class="code-variable">color</span> : colors) {
+    System.out.println(<span class="code-variable">color</span>);
+}
+                </div>
+
+                <div class="flow-diagram">
+                    <div class="flow-step">
+                        <div class="step-number">1</div>
+                        <div class="step-text">イテレータ取得</div>
+                        <div class="step-code">colors.iterator()</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-number">2</div>
+                        <div class="step-text">次要素チェック</div>
+                        <div class="step-code">hasNext()</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-number">3</div>
+                        <div class="step-text">要素取得</div>
+                        <div class="step-code">next()</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-number">4</div>
+                        <div class="step-text">変数に代入</div>
+                        <div class="step-code">String color = ...</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-number">5</div>
+                        <div class="step-text">処理実行</div>
+                        <div class="step-code">System.out.println(color)</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-number">6</div>
+                        <div class="step-text">ステップ2に戻る</div>
+                        <div class="step-code">loop</div>
+                    </div>
+                </div>
+
+                <ul class="advantages">
+                    <li>
+                        <span class="advantage-icon good">✓</span>
+                        コードが簡潔
+                    </li>
+                    <li>
+                        <span class="advantage-icon good">✓</span>
+                        エラーが起きにくい
+                    </li>
+                    <li>
+                        <span class="advantage-icon good">✓</span>
+                        読みやすい
+                    </li>
+                    <li>
+                        <span class="advantage-icon good">✓</span>
+                        自動的な安全性
+                    </li>
+                    <li>
+                        <span class="advantage-icon neutral">△</span>
+                        インデックス不要時に最適
+                    </li>
+                </ul>
+
+                <div class="complexity-badge simple">複雑度: 低</div>
+            </div>
+        </div>
+
+        <div class="interactive-demo">
+            <div class="demo-title">🎯 拡張for文の動作デモ</div>
+            <p>ボタンをクリックして拡張for文の動作を視覚的に確認しましょう</p>
+
+            <div class="arraylist-display" id="demoList">
+                <div class="arraylist-item">
+                    <div class="item-index">0</div>
+                    赤
+                </div>
+                <div class="arraylist-item">
+                    <div class="item-index">1</div>
+                    青
+                </div>
+                <div class="arraylist-item">
+                    <div class="item-index">2</div>
+                    緑
+                </div>
+                <div class="arraylist-item">
+                    <div class="item-index">3</div>
+                    黄
+                </div>
+                <div class="arraylist-item">
+                    <div class="item-index">4</div>
+                    紫
+                </div>
+            </div>
+
+            <div class="loop-status" id="loopStatus">
+                現在の状態: 待機中...
+            </div>
+
+            <div class="demo-controls">
+                <button class="demo-button" onclick="startDemo()">デモ開始</button>
+                <button class="demo-button" onclick="nextStep()">次のステップ</button>
+                <button class="demo-button" onclick="resetDemo()">リセット</button>
+            </div>
+        </div>
+
+        <div class="arrow-down">↓</div>
+
+        <div class="syntax-comparison">
+            <div class="syntax-title">🔧 構文比較：同じ処理を2つの方法で</div>
+            
+            <div class="syntax-grid">
+                <div class="syntax-example">
+                    <div class="syntax-label">❌ 従来のfor文（複雑）</div>
+                    <div class="code-example">
+<span class="code-comment">// 学生名の一覧表示</span>
+ArrayList&lt;String&gt; students = getStudents();
+
+<span class="code-keyword">for</span> (<span class="code-keyword">int</span> <span class="code-variable">i</span> = 0; <span class="code-variable">i</span> &lt; students.<span class="code-variable">size</span>(); <span class="code-variable">i</span>++) {
+    String <span class="code-variable">name</span> = students.<span class="code-variable">get</span>(<span class="code-variable">i</span>);
+    System.out.println((<span class="code-variable">i</span> + 1) + <span class="code-string">". "</span> + <span class="code-variable">name</span>);
+}
+
+<span class="code-comment">// 6行のコード、3つの変数管理</span>
+                    </div>
+                </div>
+
+                <div class="syntax-example">
+                    <div class="syntax-label">✅ 拡張for文（簡潔）</div>
+                    <div class="code-example">
+<span class="code-comment">// 学生名の一覧表示</span>
+ArrayList&lt;String&gt; students = getStudents();
+
+<span class="code-keyword">for</span> (String <span class="code-variable">name</span> : students) {
+    System.out.println(<span class="code-variable">name</span>);
+}
+
+<span class="code-comment">// 3行のコード、1つの変数のみ</span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+                <h3 style="color: #2c3e50; margin-bottom: 15px;">🌟 拡張for文を使う場面</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; text-align: left;">
+                    <div>
+                        <strong>✅ 適している場面:</strong><br>
+                        • 全要素の走査<br>
+                        • インデックス不要<br>
+                        • 読み取り専用処理<br>
+                        • シンプルな処理
+                    </div>
+                    <div>
+                        <strong>❌ 適していない場面:</strong><br>
+                        • インデックスが必要<br>
+                        • 途中でbreak/continue<br>
+                        • 要素の変更・削除<br>
+                        • 複雑な制御
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = -1;
+        let demoRunning = false;
+        
+        function startDemo() {
+            if (demoRunning) return;
+            
+            resetDemo();
+            demoRunning = true;
+            currentStep = 0;
+            
+            const status = document.getElementById('loopStatus');
+            status.textContent = 'for (String color : colors) { // 拡張for文開始';
+            
+            // 自動的に次のステップを開始
+            setTimeout(nextStep, 1000);
+        }
+        
+        function nextStep() {
+            if (!demoRunning) return;
+            
+            const items = document.querySelectorAll('#demoList .arraylist-item');
+            const status = document.getElementById('loopStatus');
+            
+            // 前のハイライトを削除
+            items.forEach(item => item.classList.remove('current'));
+            
+            if (currentStep < items.length) {
+                // 現在の要素をハイライト
+                items[currentStep].classList.add('current');
+                const colorText = items[currentStep].textContent.trim();
+                
+                status.innerHTML = `
+                    ステップ ${currentStep + 1}: String color = "${colorText}";<br>
+                    System.out.println(color); // "${colorText}" を出力
+                `;
+                
+                currentStep++;
+                
+                // 自動的に次のステップに進む
+                if (currentStep < items.length) {
+                    setTimeout(nextStep, 2000);
+                } else {
+                    setTimeout(() => {
+                        status.textContent = '} // 拡張for文終了 - 全ての要素を処理完了！';
+                        demoRunning = false;
+                    }, 2000);
+                }
+            }
+        }
+        
+        function resetDemo() {
+            demoRunning = false;
+            currentStep = -1;
+            
+            const items = document.querySelectorAll('#demoList .arraylist-item');
+            items.forEach(item => item.classList.remove('current'));
+            
+            const status = document.getElementById('loopStatus');
+            status.textContent = '現在の状態: 待機中...';
+        }
+        
+        // ページ読み込み時に初期状態を設定
+        document.addEventListener('DOMContentLoaded', resetDemo);
+    </script>
+</body>
+</html>
