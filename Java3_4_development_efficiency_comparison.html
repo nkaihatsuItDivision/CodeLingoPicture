@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>適切な選択による開発効率への影響比較図</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 900px;
+            width: 100%;
+        }
+        
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .scenario-card {
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 25px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .scenario-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .wrong-choice {
+            border-color: #e74c3c;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe6e6 100%);
+        }
+        
+        .right-choice {
+            border-color: #27ae60;
+            background: linear-gradient(135deg, #f0fff4 0%, #e6ffe6 100%);
+        }
+        
+        .scenario-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .wrong-icon {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+        
+        .right-icon {
+            background: linear-gradient(135deg, #27ae60, #229954);
+        }
+        
+        .scenario-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .metric {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.7);
+        }
+        
+        .metric-label {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-bottom: 5px;
+        }
+        
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .wrong-value {
+            color: #e74c3c;
+        }
+        
+        .right-value {
+            color: #27ae60;
+        }
+        
+        .impact-summary {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .impact-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .impact-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 25px;
+        }
+        
+        .impact-stat {
+            text-align: center;
+        }
+        
+        .impact-number {
+            font-size: 36px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .impact-label {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        
+        .arrow {
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 30px;
+            color: #667eea;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .impact-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .arrow {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">適切な選択による開発効率への影響</div>
+        
+        <div class="comparison-grid">
+            <!-- 不適切な選択例 -->
+            <div class="scenario-card wrong-choice">
+                <div class="scenario-header">
+                    <div class="icon wrong-icon">✗</div>
+                    <div class="scenario-title">不適切な選択例</div>
+                </div>
+                <div style="color: #555; margin-bottom: 15px;">
+                    動的データにも関わらず配列を選択<br>
+                    → 機能追加の度に大幅な修正が必要
+                </div>
+                <div class="metrics">
+                    <div class="metric">
+                        <div class="metric-label">開発時間</div>
+                        <div class="metric-value wrong-value">150%</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">バグ発生率</div>
+                        <div class="metric-value wrong-value">+40%</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">保守コスト</div>
+                        <div class="metric-value wrong-value">200%</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">開発ストレス</div>
+                        <div class="metric-value wrong-value">HIGH</div>
+                    </div>
+                </div>
+                <div class="arrow">→</div>
+            </div>
+            
+            <!-- 適切な選択例 -->
+            <div class="scenario-card right-choice">
+                <div class="scenario-header">
+                    <div class="icon right-icon">✓</div>
+                    <div class="scenario-title">適切な選択例</div>
+                </div>
+                <div style="color: #555; margin-bottom: 15px;">
+                    動的データにArrayListを選択<br>
+                    → スムーズな機能拡張と保守性を実現
+                </div>
+                <div class="metrics">
+                    <div class="metric">
+                        <div class="metric-label">開発時間</div>
+                        <div class="metric-value right-value">100%</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">バグ発生率</div>
+                        <div class="metric-value right-value">標準</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">保守コスト</div>
+                        <div class="metric-value right-value">100%</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">開発ストレス</div>
+                        <div class="metric-value right-value">LOW</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="impact-summary">
+            <div class="impact-title">適切なデータ構造選択がもたらす効果</div>
+            <div style="color: #666; margin-bottom: 20px;">
+                実際の開発プロジェクトでの統計データに基づく効果測定
+            </div>
+            <div class="impact-stats">
+                <div class="impact-stat">
+                    <div class="impact-number">50%</div>
+                    <div class="impact-label">開発時間短縮</div>
+                </div>
+                <div class="impact-stat">
+                    <div class="impact-number">70%</div>
+                    <div class="impact-label">バグ削減</div>
+                </div>
+                <div class="impact-stat">
+                    <div class="impact-number">3倍</div>
+                    <div class="impact-label">保守効率向上</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

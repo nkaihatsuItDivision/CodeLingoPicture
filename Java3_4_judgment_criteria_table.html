@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>判断基準表の視覚的表示</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #1e3c72, #2a5298);
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+        
+        .comparison-table {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .table-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .criteria-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .criteria-table th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px 15px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 16px;
+        }
+        
+        .criteria-table td {
+            padding: 18px 15px;
+            border-bottom: 1px solid #e9ecef;
+            text-align: center;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .criteria-table tr:hover td {
+            background: #f1f3f4;
+            transform: scale(1.01);
+        }
+        
+        .criteria-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .criterion-name {
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: left !important;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef) !important;
+            position: relative;
+        }
+        
+        .criterion-name::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, #667eea, #764ba2);
+            border-radius: 0 2px 2px 0;
+        }
+        
+        .array-advantage {
+            background: linear-gradient(135deg, #fff5f5, #ffe6e6) !important;
+            color: #c0392b !important;
+            font-weight: bold;
+            position: relative;
+        }
+        
+        .arraylist-advantage {
+            background: linear-gradient(135deg, #f0fff4, #e6ffe6) !important;
+            color: #229954 !important;
+            font-weight: bold;
+            position: relative;
+        }
+        
+        .advantage-icon {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: white;
+        }
+        
+        .array-icon {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+        
+        .arraylist-icon {
+            background: linear-gradient(135deg, #27ae60, #229954);
+        }
+        
+        .scoring-system {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .score-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-top: 5px solid;
+        }
+        
+        .score-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+        
+        .array-card {
+            border-top-color: #e74c3c;
+        }
+        
+        .arraylist-card {
+            border-top-color: #27ae60;
+        }
+        
+        .score-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .score-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+            margin-right: 15px;
+        }
+        
+        .array-score-icon {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+        
+        .arraylist-score-icon {
+            background: linear-gradient(135deg, #27ae60, #229954);
+        }
+        
+        .score-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .score-items {
+            space-y: 15px;
+        }
+        
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .score-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+        
+        .score-criterion {
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        
+        .score-value {
+            font-weight: bold;
+            padding: 4px 12px;
+            border-radius: 15px;
+            color: white;
+            font-size: 14px;
+        }
+        
+        .high-score {
+            background: linear-gradient(135deg, #27ae60, #229954);
+        }
+        
+        .medium-score {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+        
+        .low-score {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+        
+        .decision-guide {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 40px;
+            text-align: center;
+        }
+        
+        .guide-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+        
+        .guide-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+        
+        .guide-step {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: white;
+            color: #667eea;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .step-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            margin-top: 10px;
+        }
+        
+        .step-description {
+            font-size: 14px;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .criteria-table {
+                font-size: 12px;
+            }
+            
+            .criteria-table th,
+            .criteria-table td {
+                padding: 12px 8px;
+            }
+            
+            .scoring-system {
+                grid-template-columns: 1fr;
+            }
+            
+            .guide-steps {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">配列 vs ArrayList 判断基準表</div>
+        
+        <div class="comparison-table">
+            <div class="table-title">📋 項目別比較一覧</div>
+            <table class="criteria-table">
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">判断項目</th>
+                        <th style="width: 40%;">配列が有利</th>
+                        <th style="width: 40%;">ArrayListが有利</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="criterion-name">🔢 データサイズ</td>
+                        <td class="array-advantage">
+                            事前に確定している
+                            <div class="advantage-icon array-icon">配</div>
+                        </td>
+                        <td class="arraylist-advantage">
+                            動的に変化する
+                            <div class="advantage-icon arraylist-icon">A</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="criterion-name">⚙️ 主な処理</td>
+                        <td class="array-advantage">
+                            アクセス・計算中心
+                            <div class="advantage-icon array-icon">配</div>
+                        </td>
+                        <td class="arraylist-advantage">
+                            追加・削除・検索中心
+                            <div class="advantage-icon arraylist-icon">A</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="criterion-name">⚡ 性能要件</td>
+                        <td class="array-advantage">
+                            高速処理が必須
+                            <div class="advantage-icon array-icon">配</div>
+                        </td>
+                        <td class="arraylist-advantage">
+                            開発効率を重視
+                            <div class="advantage-icon arraylist-icon">A</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="criterion-name">💾 メモリ制限</td>
+                        <td class="array-advantage">
+                            制限が厳しい
+                            <div class="advantage-icon array-icon">配</div>
+                        </td>
+                        <td class="arraylist-advantage">
+                            余裕がある
+                            <div class="advantage-icon arraylist-icon">A</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="criterion-name">📅 開発期間</td>
+                        <td class="array-advantage">
+                            十分な時間がある
+                            <div class="advantage-icon array-icon">配</div>
+                        </td>
+                        <td class="arraylist-advantage">
+                            短期開発が必要
+                            <div class="advantage-icon arraylist-icon">A</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="criterion-name">🔧 保守性</td>
+                        <td class="array-advantage">
+                            シンプルな処理のみ
+                            <div class="advantage-icon array-icon">配</div>
+                        </td>
+                        <td class="arraylist-advantage">
+                            機能拡張が予想される
+                            <div class="advantage-icon arraylist-icon">A</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="criterion-name">👥 チーム構成</td>
+                        <td class="array-advantage">
+                            経験豊富な開発者
+                            <div class="advantage-icon array-icon">配</div>
+                        </td>
+                        <td class="arraylist-advantage">
+                            初心者中心のチーム
+                            <div class="advantage-icon arraylist-icon">A</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="scoring-system">
+            <!-- 配列のスコアカード -->
+            <div class="score-card array-card">
+                <div class="score-header">
+                    <div class="score-icon array-score-icon">🔧</div>
+                    <div class="score-title">配列 適用度スコア</div>
+                </div>
+                <div class="score-items">
+                    <div class="score-item">
+                        <span class="score-criterion">アクセス速度</span>
+                        <span class="score-value high-score">最高</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="score-criterion">メモリ効率</span>
+                        <span class="score-value high-score">最高</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="score-criterion">開発効率</span>
+                        <span class="score-value low-score">低</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="score-criterion">柔軟性</span>
+                        <span class="score-value low-score">低</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="score-criterion">学習コスト</span>
+                        <span class="score-value medium-score">中</span>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 20px; font-weight: bold; color: #e74c3c;">
+                    総合評価: 性能・効率重視
+                </div>
+            </div>
+            
+            <!-- ArrayListのスコアカード -->
+            <div class="score-card arraylist-card">
+                <div class="score-header">
+                    <div class="score-icon arraylist-score-icon">📦</div>
+                    <div class="score-title">ArrayList 適用度スコア</div>
+                </div>
+                <div class="score-items">
+                    <div class="score-item">
+                        <span class="score-criterion">アクセス速度</span>
+                        <span class="score-value medium-score">中</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="score-criterion">メモリ効率</span>
+                        <span class="score-value medium-score">中</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="score-criterion">開発効率</span>
+                        <span class="score-value high-score">最高</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="score-criterion">柔軟性</span>
+                        <span class="score-value high-score">最高</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="score-criterion">学習コスト</span>
+                        <span class="score-value high-score">低</span>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 20px; font-weight: bold; color: #27ae60;">
+                    総合評価: 開発・保守重視
+                </div>
+            </div>
+        </div>
+        
+        <div class="decision-guide">
+            <div class="guide-title">🎯 実践的判断ステップ</div>
+            <div style="margin-bottom: 20px;">以下の順序で判断することで、最適な選択ができます</div>
+            <div class="guide-steps">
+                <div class="guide-step">
+                    <div class="step-number">1</div>
+                    <div class="step-title">データサイズの確認</div>
+                    <div class="step-description">
+                        事前にサイズが分かっている？<br>
+                        → No なら ArrayList 確定
+                    </div>
+                </div>
+                <div class="guide-step">
+                    <div class="step-number">2</div>
+                    <div class="step-title">処理内容の分析</div>
+                    <div class="step-description">
+                        主な処理は何？<br>
+                        → 操作重視なら ArrayList
+                    </div>
+                </div>
+                <div class="guide-step">
+                    <div class="step-number">3</div>
+                    <div class="step-title">性能要件の評価</div>
+                    <div class="step-description">
+                        高速・省メモリが必須？<br>
+                        → Yes なら配列を検討
+                    </div>
+                </div>
+                <div class="guide-step">
+                    <div class="step-number">4</div>
+                    <div class="step-title">最終判断</div>
+                    <div class="step-description">
+                        迷ったら ArrayList<br>
+                        問題発生時に配列検討
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

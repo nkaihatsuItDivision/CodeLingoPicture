@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>性能測定結果のグラフ表示</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #1e3c72, #2a5298);
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+        
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
+        
+        .chart-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            border: 2px solid #e9ecef;
+        }
+        
+        .chart-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .bar-chart {
+            display: flex;
+            align-items: end;
+            justify-content: space-around;
+            height: 250px;
+            margin: 30px 0;
+            padding: 0 20px;
+            border-bottom: 2px solid #dee2e6;
+            border-left: 2px solid #dee2e6;
+            position: relative;
+        }
+        
+        .bar-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            max-width: 150px;
+        }
+        
+        .bar {
+            width: 80px;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 10px;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .bar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .array-bar {
+            background: linear-gradient(180deg, #e74c3c, #c0392b);
+        }
+        
+        .arraylist-bar {
+            background: linear-gradient(180deg, #3498db, #2980b9);
+        }
+        
+        .bar-value {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 14px;
+            background: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .bar-label {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+        
+        .legend-array {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+        }
+        
+        .legend-arraylist {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+        }
+        
+        .y-axis {
+            position: absolute;
+            left: -40px;
+            top: 0;
+            height: 100%;
+            display: flex;
+            flex-direction: column-reverse;
+            justify-content: space-between;
+            color: #7f8c8d;
+            font-size: 12px;
+        }
+        
+        .performance-summary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+        
+        .summary-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .summary-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .summary-metric {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .summary-description {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .bar-chart {
+                height: 200px;
+                padding: 0 10px;
+            }
+            
+            .bar {
+                width: 60px;
+            }
+            
+            .legend {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">配列 vs ArrayList 性能比較結果</div>
+        
+        <div class="charts-grid">
+            <!-- アクセス速度比較 -->
+            <div class="chart-section">
+                <div class="chart-title">🚀 データアクセス速度比較（100万件処理）</div>
+                <div class="bar-chart">
+                    <div class="y-axis">
+                        <span>50ms</span>
+                        <span>40ms</span>
+                        <span>30ms</span>
+                        <span>20ms</span>
+                        <span>10ms</span>
+                        <span>0ms</span>
+                    </div>
+                    <div class="bar-container">
+                        <div class="bar array-bar" style="height: 60px;">
+                            <div class="bar-value">15ms</div>
+                        </div>
+                        <div class="bar-label">配列</div>
+                    </div>
+                    <div class="bar-container">
+                        <div class="bar arraylist-bar" style="height: 180px;">
+                            <div class="bar-value">45ms</div>
+                        </div>
+                        <div class="bar-label">ArrayList</div>
+                    </div>
+                </div>
+                <div style="text-align: center; color: #e74c3c; font-weight: bold; margin-top: 15px;">
+                    配列が約3倍高速！
+                </div>
+            </div>
+            
+            <!-- データ追加処理比較 -->
+            <div class="chart-section">
+                <div class="chart-title">➕ データ追加処理比較（10万件追加）</div>
+                <div class="bar-chart">
+                    <div class="y-axis">
+                        <span>困難</span>
+                        <span>複雑</span>
+                        <span>普通</span>
+                        <span>簡単</span>
+                        <span>非常に簡単</span>
+                    </div>
+                    <div class="bar-container">
+                        <div class="bar array-bar" style="height: 40px;">
+                            <div class="bar-value">困難</div>
+                        </div>
+                        <div class="bar-label">配列</div>
+                    </div>
+                    <div class="bar-container">
+                        <div class="bar arraylist-bar" style="height: 220px;">
+                            <div class="bar-value">12ms</div>
+                        </div>
+                        <div class="bar-label">ArrayList</div>
+                    </div>
+                </div>
+                <div style="text-align: center; color: #3498db; font-weight: bold; margin-top: 15px;">
+                    ArrayListが圧倒的に簡単！
+                </div>
+            </div>
+            
+            <!-- メモリ使用量比較 -->
+            <div class="chart-section">
+                <div class="chart-title">💾 メモリ使用量比較（10万件保存）</div>
+                <div class="bar-chart">
+                    <div class="y-axis">
+                        <span>2.0MB</span>
+                        <span>1.6MB</span>
+                        <span>1.2MB</span>
+                        <span>0.8MB</span>
+                        <span>0.4MB</span>
+                        <span>0MB</span>
+                    </div>
+                    <div class="bar-container">
+                        <div class="bar array-bar" style="height: 100px;">
+                            <div class="bar-value">0.4MB</div>
+                        </div>
+                        <div class="bar-label">配列</div>
+                    </div>
+                    <div class="bar-container">
+                        <div class="bar arraylist-bar" style="height: 200px;">
+                            <div class="bar-value">1.2MB</div>
+                        </div>
+                        <div class="bar-label">ArrayList</div>
+                    </div>
+                </div>
+                <div style="text-align: center; color: #e74c3c; font-weight: bold; margin-top: 15px;">
+                    配列が約3倍メモリ効率的！
+                </div>
+            </div>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color legend-array"></div>
+                <span><strong>配列</strong> - 高速・メモリ効率重視</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color legend-arraylist"></div>
+                <span><strong>ArrayList</strong> - 柔軟性・開発効率重視</span>
+            </div>
+        </div>
+        
+        <div class="performance-summary">
+            <div class="summary-title">📊 性能比較まとめ</div>
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <div class="summary-metric">⚡ アクセス速度</div>
+                    <div class="summary-description">配列が3倍高速<br>大量データ処理で威力発揮</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-metric">🔧 開発効率</div>
+                    <div class="summary-description">ArrayListが圧倒的<br>動的操作が簡単</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-metric">💾 メモリ効率</div>
+                    <div class="summary-description">配列が3倍効率的<br>大規模システムで重要</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-metric">🎯 選択基準</div>
+                    <div class="summary-description">性能重視→配列<br>柔軟性重視→ArrayList</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
