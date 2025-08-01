@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ソート前後の比較表示</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 1400px;
+            width: 100%;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 32px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 18px;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+        }
+
+        .sort-section {
+            margin-bottom: 50px;
+        }
+
+        .sort-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            padding: 15px;
+            border-radius: 15px;
+            color: white;
+        }
+
+        .name-sort { background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%); }
+        .score-sort { background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%); }
+        .length-sort { background: linear-gradient(135deg, #00b894 0%, #00a085 100%); }
+
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .data-panel {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .panel-header {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding: 12px;
+            border-radius: 10px;
+            color: white;
+        }
+
+        .before-header { background: #ff6b6b; }
+        .after-header { background: #00b894; }
+
+        .data-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .data-item {
+            background: white;
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: transform 0.3s ease;
+            border-left: 4px solid #74b9ff;
+        }
+
+        .data-item:hover {
+            transform: translateX(5px);
+        }
+
+        .item-index {
+            background: #74b9ff;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .item-name {
+            flex: 1;
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .item-score {
+            background: #fd79a8;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .item-length {
+            background: #00b894;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .sort-animation {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sort-icon {
+            font-size: 40px;
+            color: #74b9ff;
+            margin-bottom: 15px;
+            animation: rotate 2s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .sort-method {
+            background: #74b9ff;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 14px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(116, 185, 255, 0.3);
+        }
+
+        .code-snippet {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 13px;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .highlight {
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .performance-info {
+            background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .performance-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .performance-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .complexity-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .sort-animation {
+                order: 2;
+            }
+            
+            .sort-icon {
+                transform: rotate(90deg);
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+            
+            .performance-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">📊 ソート機能の威力</h1>
+        <p class="subtitle">並び替え前後の劇的な変化を体感しよう</p>
+
+        <!-- 名前順ソート -->
+        <div class="sort-section">
+            <div class="sort-title name-sort">
+                🔤 名前順ソート（あいうえお順）
+            </div>
+            <div class="comparison-container">
+                <div class="data-panel">
+                    <div class="panel-header before-header">
+                        ソート前（登録順）
+                    </div>
+                    <ul class="data-list">
+                        <li class="data-item">
+                            <div class="item-index">1</div>
+                            <div class="item-name">田中太郎</div>
+                            <div class="item-length">4文字</div>
+                        </li>
+                        <li class="data-item">
+                            <div class="item-index">2</div>
+                            <div class="item-name">佐藤花子</div>
+                            <div class="item-length">4文字</div>
+                        </li>
+                        <li class="data-item">
+                            <div class="item-index">3</div>
+                            <div class="item-name">山田一郎</div>
+                            <div class="item-length">4文字</div>
+                        </li>
+                        <li class="data-item">
+                            <div class="item-index">4</div>
+                            <div class="item-name">鈴木美咲</div>
+                            <div class="item-length">4文字</div>
+                        </li>
+                        <li class="data-item">
+                            <div class="item-index">5</div>
+                            <div class="item-name">高橋洋子</div>
+                            <div class="item-length">4文字</div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="sort-animation">
+                    <div class="sort-icon">🔄</div>
+                    <div class="sort-method">
+                        Collections.sort()
+                    </div>
+                    <div class="code-snippet">
+Collections.<span class="highlight">sort</span>(students);
+                    </div>
+                </div>
+
+                <div class="data-panel">
+                    <div class="panel-header after-header">
+                        ソート後（あいうえお順）
+                    </div>
+                    <ul class="data-list">
+                        <li class="data-item">
+                            <div class="item-index">1</div>
+                            <div class="item-name">佐藤花子</div>
+                            <div class="item-length">4文字</div>
+                        </li>
+                        <li class="data-item">
+                            <div class="item-index">2</div>
+                            <div class="item-name">鈴木美咲</div>
+                            <div class="item-length">4文字</div>
+                        </li>
+                        <li class="data-item">
+                            <div class="item-index">3</div>
+                            <div class="item-name">高橋洋子</div>
+                            <div class="item-length">4文字</div>
+                        </li>
+                        <li class="data-item">
+                            <div class="item-index">4</div>
+                            <div class="item-name">田中太郎</div>
+                            <div class="item-length">4文字</div>
+                        </li>
+                        <li class="data-item">
+                            <div class="item-index">5</div>
+                            <div class="item-name">山田一郎</div>
+                            <div class="item-length">4文字</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 成績順ソート -->
+        <div class="sort-section">
+            <div class="sort-title score-sort">
+                🏆 成績順ソート（高い順）
+            </div>
+            <div class="comparison-container">
+                <div class="data-panel">
+                    <div class="panel-header before-header">
+                        ソート前（登録順）
+                    </div>
+                    <ul class="data-list">
+                        <li class="data-item">
+                            <div class="item-index">1</div>
+                            <div class="item-name">田中太郎</div>
+                            <div class="item-score">85点</div>
+                        </li>
+                        <li class="data-item">
+                            <div class="item-index">2</div>
+                            <div class="item-name">佐藤花子</div>
+                            <div class="item-score">92点</div>
+                        </li>
+                        <li class="data-item">
+                            <div class="item-index">3</div>
+                            <div class="item-name">山田一郎</div>
+                            <div class="item-score">78点</div>
+                        </li>
+                        <li class="data-item">
+                            <div class="item-index">4</div>
+                            <div class="item-name">鈴木美咲</div>
+                            <div class="item-score">96点</div>
+                        </li>
+                        <li class="data-item">
+                            <div class="item-index">5</div>
+                            <div class="item-name">高橋洋子</div>
+                            <div class="item-score">81点</div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="sort-animation">
+                    <div class="sort-icon">📈</div>
+                    <div class="sort-method">
+                        Comparator使用
+                    </div>
+                    <div class="code-snippet">
+Collections.sort(data, <br><span class="highlight">Collections.reverseOrder()</span>);
+                    </div>
+                </div>
+
+                <div class="data-panel">
+                    <div class="panel-header after-header">
+                        ソート後（成績順）
+                    </div>
+                    <ul class="data-list">
+                        <li class="data-item">
+                            <div class="item-index">1</div>
+                            <div class="item-name">鈴木美咲</div>
+                            <div class="item-score">96点</div>
+                        </li>
+                        <li class="data-item">
+                            <div class="item-index">2</div>
+                            <div class="item-name">佐藤花子</div>
+                            <div class="item-score">92点</div>
+                        </li>
+                        <li class="data-item">
+                            <div class="item-index">3</div>
+                            <div class="item-name">田中太郎</div>
+                            <div class="item-score">85点</div>
+                        </li>
+                        <li class="data-item">
+                            <div class="item-index">4</div>
+                            <div class="item-name">高橋洋子</div>
+                            <div class="item-score">81点</div>
+                        </li>
+                        <li class="data-item">
+                            <div class="item-index">5</div>
+                            <div class="item-name">山田一郎</div>
+                            <div class="item-score">78点</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 文字数順ソート -->
+        <div class="sort-section">
+            <div class="sort-title length-sort">
+                📏 文字数順ソート（短い順）
+            </div>
+            <div class="comparison-container">
+                <div class="data-panel">
+                    <div class="panel-header before-header">
+                        ソート前（登録順）
+                    </div>
+                    <ul class="data-list">
+                        <li class="data-item">
+                            <div class="item-index">1</div>
+                            <div class="item-name">田中太郎</div>
+                            <div class="item-length">4文字</div>
+                        </li>
+                        <li class="data-item">
+                            <div class="item-index">2</div>
+                            <div class="item-name">佐藤花子</div>
+                            <div class="item-length">4文字</div>
+                        </li>
+                        <li class="data-item">
+                            <div class="item-index">3</div>
+                            <div class="item-name">山田一郎三</div>
+                            <div class="item-length">5文字</div>
+                        </li>
+                        <li class="data-item">
+                            <div class="item-index">4</div>
+                            <div class="item-name">鈴木</div>
+                            <div class="item-length">2文字</div>
+                        </li>
+                        <li class="data-item">
+                            <div class="item-index">5</div>
+                            <div class="item-name">高橋洋子郎太</div>
+                            <div class="item-length">6文字</div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="sort-animation">
+                    <div class="sort-icon">📐</div>
+                    <div class="sort-method">
+                        カスタムComparator
+                    </div>
+                    <div class="code-snippet">
+<span class="highlight">name1.length()</span><br>
+vs <span class="highlight">name2.length()</span>
+                    </div>
+                </div>
+
+                <div class="data-panel">
+                    <div class="panel-header after-header">
+                        ソート後（文字数順）
+                    </div>
+                    <ul class="data-list">
+                        <li class="data-item">
+                            <div class="item-index">1</div>
+                            <div class="item-name">鈴木</div>
+                            <div class="item-length">2文字</div>
+                        </li>
+                        <li class="data-item">
+                            <div class="item-index">2</div>
+                            <div class="item-name">田中太郎</div>
+                            <div class="item-length">4文字</div>
+                        </li>
+                        <li class="data-item">
+                            <div class="item-index">3</div>
+                            <div class="item-name">佐藤花子</div>
+                            <div class="item-length">4文字</div>
+                        </li>
+                        <li class="data-item">
+                            <div class="item-index">4</div>
+                            <div class="item-name">山田一郎三</div>
+                            <div class="item-length">5文字</div>
+                        </li>
+                        <li class="data-item">
+                            <div class="item-index">5</div>
+                            <div class="item-name">高橋洋子郎太</div>
+                            <div class="item-length">6文字</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="performance-info">
+            <h3 class="performance-title">⚡ ソート機能のパフォーマンス</h3>
+            <div class="performance-stats">
+                <div class="stat-card">
+                    <div class="stat-number">O(n log n)</div>
+                    <div class="stat-label">時間計算量</div>
+                    <div class="complexity-badge">高効率アルゴリズム</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">1行</div>
+                    <div class="stat-label">実装コード</div>
+                    <div class="complexity-badge">シンプル実装</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">無制限</div>
+                    <div class="stat-label">データ量</div>
+                    <div class="complexity-badge">スケーラブル</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">自在</div>
+                    <div class="stat-label">並び替え条件</div>
+                    <div class="complexity-badge">カスタマイズ可能</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

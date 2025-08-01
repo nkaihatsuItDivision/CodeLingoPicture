@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>データ変換の流れ図</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 1500px;
+            width: 100%;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 32px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 18px;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+        }
+
+        .conversion-network {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .conversion-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .conversion-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .data-format {
+            background: #f8f9fa;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            flex: 1;
+            max-width: 280px;
+        }
+
+        .data-format:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .arraylist-format {
+            border: 4px solid #74b9ff;
+        }
+
+        .array-format {
+            border: 4px solid #fd79a8;
+        }
+
+        .csv-format {
+            border: 4px solid #00b894;
+        }
+
+        .json-format {
+            border: 4px solid #a29bfe;
+        }
+
+        .format-icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+        }
+
+        .format-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .format-description {
+            font-size: 14px;
+            color: #636e72;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .format-example {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 13px;
+            text-align: left;
+            margin-bottom: 15px;
+        }
+
+        .highlight {
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .method-badge {
+            background: #74b9ff;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            margin: 3px;
+            display: inline-block;
+        }
+
+        .arraylist-badge { background: #74b9ff; }
+        .array-badge { background: #fd79a8; }
+        .csv-badge { background: #00b894; }
+        .json-badge { background: #a29bfe; }
+
+        .simple-arrow {
+            font-size: 24px;
+            color: #74b9ff;
+            animation: pulse 2s infinite;
+            margin: 0 15px;
+        }
+
+        .vertical-arrow {
+            font-size: 30px;
+            color: #74b9ff;
+            animation: bounce 2s infinite;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .conversion-methods {
+            background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+        }
+
+        .methods-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+
+        .methods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .method-card {
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .method-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .method-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        .method-code {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .method-description {
+            font-size: 14px;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        .practical-examples {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 20px;
+            border: 2px dashed #74b9ff;
+        }
+
+        .examples-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 25px;
+        }
+
+        .example-scenario {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .scenario-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .scenario-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .flow-step {
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .step-box {
+            background: #74b9ff;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .step-code {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 11px;
+        }
+
+        .flow-arrow {
+            font-size: 20px;
+            color: #74b9ff;
+            margin: 0 10px;
+        }
+
+        @media (max-width: 768px) {
+            .conversion-row {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .simple-arrow {
+                transform: rotate(90deg);
+                margin: 15px 0;
+            }
+            
+            .methods-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .scenario-flow {
+                flex-direction: column;
+            }
+            
+            .flow-arrow {
+                transform: rotate(90deg);
+                margin: 10px 0;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">🔄 データ変換マスター</h1>
+        <p class="subtitle">ArrayList・配列・CSV・文字列の自在な相互変換</p>
+
+        <div class="conversion-network">
+            <!-- 上段：ArrayList ↔ 配列 -->
+            <div class="conversion-row">
+                <div class="data-format arraylist-format">
+                    <div class="format-icon">📋</div>
+                    <div class="format-title">ArrayList</div>
+                    <div class="format-description">
+                        動的サイズの高機能リスト<br>
+                        検索・ソート・挿入削除が自在
+                    </div>
+                    <div class="format-example">
+ArrayList&lt;String&gt; list = new ArrayList&lt;&gt;();<br>
+list.<span class="highlight">add</span>("田中");<br>
+list.<span class="highlight">add</span>("佐藤");
+                    </div>
+                    <div class="method-badge arraylist-badge">add()</div>
+                    <div class="method-badge arraylist-badge">get()</div>
+                    <div class="method-badge arraylist-badge">contains()</div>
+                </div>
+
+                <div class="simple-arrow">⇄</div>
+
+                <div class="data-format array-format">
+                    <div class="format-icon">🗃️</div>
+                    <div class="format-title">配列 (Array)</div>
+                    <div class="format-description">
+                        固定サイズの高速アクセス<br>
+                        メモリ効率が良い基本構造
+                    </div>
+                    <div class="format-example">
+String[] array = new String[3];<br>
+array[0] = <span class="highlight">"田中"</span>;<br>
+array[1] = <span class="highlight">"佐藤"</span>;
+                    </div>
+                    <div class="method-badge array-badge">array[i]</div>
+                    <div class="method-badge array-badge">length</div>
+                    <div class="method-badge array-badge">Arrays.asList()</div>
+                </div>
+            </div>
+
+            <div class="vertical-arrow">⇅</div>
+
+            <!-- 下段：CSV ↔ 文字列 -->
+            <div class="conversion-row">
+                <div class="data-format csv-format">
+                    <div class="format-icon">📄</div>
+                    <div class="format-title">CSV形式</div>
+                    <div class="format-description">
+                        カンマ区切りのテキスト形式<br>
+                        Excel等での読み込み可能
+                    </div>
+                    <div class="format-example">
+String csv = <span class="highlight">"田中,佐藤,山田"</span>;<br>
+// または<br>
+<span class="highlight">"田中,85,佐藤,92"</span>
+                    </div>
+                    <div class="method-badge csv-badge">String.join()</div>
+                    <div class="method-badge csv-badge">split()</div>
+                    <div class="method-badge csv-badge">trim()</div>
+                </div>
+
+                <div class="simple-arrow">⇄</div>
+
+                <div class="data-format json-format">
+                    <div class="format-icon">🔤</div>
+                    <div class="format-title">文字列/JSON</div>
+                    <div class="format-description">
+                        構造化されたテキストデータ<br>
+                        API連携・データ交換に最適
+                    </div>
+                    <div class="format-example">
+String text = <span class="highlight">"田中 佐藤 山田"</span>;<br>
+// または<br>
+<span class="highlight">"{users: ['田中', '佐藤']}"</span>
+                    </div>
+                    <div class="method-badge json-badge">toString()</div>
+                    <div class="method-badge json-badge">split()</div>
+                    <div class="method-badge json-badge">substring()</div>
+                </div>
+            </div>
+
+            <!-- 変換説明 -->
+            <div class="conversion-center">
+                <div style="background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%); color: white; padding: 20px; border-radius: 15px; text-align: center; font-weight: bold; font-size: 16px;">
+                    🔄 全ての形式間で自由に相互変換可能<br>
+                    <small style="opacity: 0.9; font-size: 14px;">toArray() • Arrays.asList() • String.join() • split()</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="conversion-methods">
+            <h3 class="methods-title">⚙️ 変換メソッド一覧</h3>
+            <div class="methods-grid">
+                <div class="method-card">
+                    <div class="method-title">
+                        <div class="method-icon">📋→🗃️</div>
+                        ArrayList → 配列
+                    </div>
+                    <div class="method-code">
+String[] array = list.<span class="highlight">toArray</span>(new String[0]);
+                    </div>
+                    <div class="method-description">
+                        toArray()メソッドで型安全な配列に変換。
+                        サイズ指定不要で自動調整される。
+                    </div>
+                </div>
+
+                <div class="method-card">
+                    <div class="method-title">
+                        <div class="method-icon">🗃️→📋</div>
+                        配列 → ArrayList
+                    </div>
+                    <div class="method-code">
+ArrayList&lt;String&gt; list = new ArrayList&lt;&gt;(<br>
+&nbsp;&nbsp;<span class="highlight">Arrays.asList</span>(array));
+                    </div>
+                    <div class="method-description">
+                        Arrays.asList()で変換後、新しいArrayListを作成。
+                        これで追加・削除が可能になる。
+                    </div>
+                </div>
+
+                <div class="method-card">
+                    <div class="method-title">
+                        <div class="method-icon">📋→📄</div>
+                        ArrayList → CSV
+                    </div>
+                    <div class="method-code">
+String csv = <span class="highlight">String.join</span>(", ", list);
+                    </div>
+                    <div class="method-description">
+                        String.join()で任意の区切り文字での
+                        連結が可能。カンマ、タブ、パイプ等。
+                    </div>
+                </div>
+
+                <div class="method-card">
+                    <div class="method-title">
+                        <div class="method-icon">📄→📋</div>
+                        CSV → ArrayList
+                    </div>
+                    <div class="method-code">
+String[] parts = csv.<span class="highlight">split</span>(",");<br>
+ArrayList&lt;String&gt; list = <br>
+&nbsp;&nbsp;new ArrayList&lt;&gt;(Arrays.asList(parts));
+                    </div>
+                    <div class="method-description">
+                        split()で分割後、ArrayListに変換。
+                        trim()で空白除去も併用推奨。
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="practical-examples">
+            <h3 class="examples-title">💡 実践的な変換シナリオ</h3>
+            
+            <div class="example-scenario">
+                <div class="scenario-title">
+                    🎯 シナリオ1: ファイル出力のための変換
+                </div>
+                <div class="scenario-flow">
+                    <div class="flow-step">
+                        <div class="step-box">ArrayList で作業</div>
+                        <div class="step-code">
+学生データの検索・ソート<br>
+動的な追加・削除処理
+                        </div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="step-box">CSV に変換</div>
+                        <div class="step-code">
+String.join(",", students)
+                        </div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="step-box">ファイル保存</div>
+                        <div class="step-code">
+Excel で開ける形式<br>
+データ共有・バックアップ
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="example-scenario">
+                <div class="scenario-title">
+                    🔄 シナリオ2: 外部データの取り込み
+                </div>
+                <div class="scenario-flow">
+                    <div class="flow-step">
+                        <div class="step-box">CSV データ受信</div>
+                        <div class="step-code">
+"田中,85,佐藤,92,山田,78"
+                        </div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="step-box">ArrayList に変換</div>
+                        <div class="step-code">
+split(",") + Arrays.asList()
+                        </div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="step-box">高度な処理実行</div>
+                        <div class="step-code">
+検索・ソート・統計処理<br>
+動的なデータ操作
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="example-scenario">
+                <div class="scenario-title">
+                    ⚡ シナリオ3: 高速処理のための最適化
+                </div>
+                <div class="scenario-flow">
+                    <div class="flow-step">
+                        <div class="step-box">ArrayList で開発</div>
+                        <div class="step-code">
+柔軟な機能実装<br>
+プロトタイプ作成
+                        </div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="step-box">配列に変換</div>
+                        <div class="step-code">
+toArray(new String[0])
+                        </div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="step-box">高速アクセス実現</div>
+                        <div class="step-code">
+大量データの高速処理<br>
+メモリ効率の最適化
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

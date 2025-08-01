@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>検索・ソート・変換の処理流れ図</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 1400px;
+            width: 100%;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 32px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 18px;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+        }
+
+        .process-section {
+            margin-bottom: 50px;
+        }
+
+        .process-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            padding: 15px;
+            border-radius: 15px;
+            color: white;
+        }
+
+        .search-title {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+        }
+
+        .sort-title {
+            background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);
+        }
+
+        .convert-title {
+            background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+        }
+
+        .flow-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .flow-step {
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+            position: relative;
+        }
+
+        .step-box {
+            background: #f8f9fa;
+            border: 3px solid #74b9ff;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .step-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .search-box {
+            border-color: #74b9ff;
+        }
+
+        .sort-box {
+            border-color: #fd79a8;
+        }
+
+        .convert-box {
+            border-color: #00b894;
+        }
+
+        .step-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .step-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .step-content {
+            font-size: 14px;
+            color: #636e72;
+            line-height: 1.6;
+        }
+
+        .code-snippet {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 12px;
+            margin-top: 10px;
+            text-align: left;
+        }
+
+        .highlight {
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .arrow {
+            font-size: 24px;
+            color: #74b9ff;
+            margin: 0 10px;
+            animation: moveRight 2s infinite;
+        }
+
+        @keyframes moveRight {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(10px); }
+        }
+
+        .example-section {
+            background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-top: 40px;
+        }
+
+        .example-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .example-card {
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .example-card h4 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .method-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin: 2px;
+            font-weight: bold;
+        }
+
+        .performance-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .speed-bar {
+            width: 60px;
+            height: 6px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 3px;
+            margin: 0 10px;
+            overflow: hidden;
+        }
+
+        .speed-fill {
+            height: 100%;
+            background: #00b894;
+            border-radius: 3px;
+        }
+
+        .speed-fast { width: 90%; }
+        .speed-medium { width: 70%; }
+        .speed-slow { width: 50%; }
+
+        @media (max-width: 768px) {
+            .flow-container {
+                flex-direction: column;
+            }
+            
+            .arrow {
+                transform: rotate(90deg);
+                margin: 20px 0;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+            
+            .example-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">⚡ 高度操作の処理フロー</h1>
+        <p class="subtitle">入力→処理→出力の流れを理解して効率的な処理を実現</p>
+
+        <!-- 検索処理 -->
+        <div class="process-section">
+            <div class="process-title search-title">
+                🔍 検索処理フロー
+            </div>
+            <div class="flow-container">
+                <div class="flow-step">
+                    <div class="step-box search-box">
+                        <div class="step-icon">📥</div>
+                        <div class="step-title">データ入力</div>
+                        <div class="step-content">
+                            検索対象の<br>
+                            ArrayList
+                            <div class="code-snippet">
+ArrayList&lt;String&gt; students<br>
+= new ArrayList&lt;&gt;();
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="arrow">→</div>
+
+                <div class="flow-step">
+                    <div class="step-box search-box">
+                        <div class="step-icon">🔍</div>
+                        <div class="step-title">検索実行</div>
+                        <div class="step-content">
+                            高速検索メソッド<br>
+                            の呼び出し
+                            <div class="code-snippet">
+int index = students<br>
+.<span class="highlight">indexOf</span>("田中");
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="arrow">→</div>
+
+                <div class="flow-step">
+                    <div class="step-box search-box">
+                        <div class="step-icon">📊</div>
+                        <div class="step-title">結果出力</div>
+                        <div class="step-content">
+                            インデックスまたは<br>
+                            boolean値
+                            <div class="code-snippet">
+// 見つかった位置<br>
+// または -1
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ソート処理 -->
+        <div class="process-section">
+            <div class="process-title sort-title">
+                📊 ソート処理フロー
+            </div>
+            <div class="flow-container">
+                <div class="flow-step">
+                    <div class="step-box sort-box">
+                        <div class="step-icon">📥</div>
+                        <div class="step-title">データ入力</div>
+                        <div class="step-content">
+                            未ソートの<br>
+                            ArrayList
+                            <div class="code-snippet">
+["山田", "佐藤", "田中"]
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="arrow">→</div>
+
+                <div class="flow-step">
+                    <div class="step-box sort-box">
+                        <div class="step-icon">🔄</div>
+                        <div class="step-title">ソート実行</div>
+                        <div class="step-content">
+                            Collections.sort<br>
+                            による並び替え
+                            <div class="code-snippet">
+Collections.<span class="highlight">sort</span>(students);
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="arrow">→</div>
+
+                <div class="flow-step">
+                    <div class="step-box sort-box">
+                        <div class="step-icon">✨</div>
+                        <div class="step-title">結果出力</div>
+                        <div class="step-content">
+                            ソート済み<br>
+                            ArrayList
+                            <div class="code-snippet">
+["佐藤", "田中", "山田"]
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 変換処理 -->
+        <div class="process-section">
+            <div class="process-title convert-title">
+                🔄 変換処理フロー
+            </div>
+            <div class="flow-container">
+                <div class="flow-step">
+                    <div class="step-box convert-box">
+                        <div class="step-icon">📥</div>
+                        <div class="step-title">データ入力</div>
+                        <div class="step-content">
+                            変換元データ<br>
+                            (ArrayList)
+                            <div class="code-snippet">
+ArrayList&lt;String&gt; list<br>
+= Arrays.asList(data);
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="arrow">→</div>
+
+                <div class="flow-step">
+                    <div class="step-box convert-box">
+                        <div class="step-icon">⚙️</div>
+                        <div class="step-title">変換実行</div>
+                        <div class="step-content">
+                            形式変換メソッド<br>
+                            の呼び出し
+                            <div class="code-snippet">
+String[] array = list<br>
+.<span class="highlight">toArray</span>(new String[0]);
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="arrow">→</div>
+
+                <div class="flow-step">
+                    <div class="step-box convert-box">
+                        <div class="step-icon">📤</div>
+                        <div class="step-title">結果出力</div>
+                        <div class="step-content">
+                            変換後データ<br>
+                            (配列/CSV等)
+                            <div class="code-snippet">
+String csv = String<br>
+.<span class="highlight">join</span>(",", list);
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="example-section">
+            <h3 class="example-title">💡 実践例：各操作の具体的メソッド</h3>
+            <div class="example-grid">
+                <div class="example-card">
+                    <h4>🔍 検索メソッド</h4>
+                    <div class="method-badge">indexOf()</div>
+                    <div class="method-badge">lastIndexOf()</div>
+                    <div class="method-badge">contains()</div>
+                    <div class="method-badge">startsWith()</div>
+                    <div class="performance-indicator">
+                        速度: <div class="speed-bar"><div class="speed-fill speed-fast"></div></div> 高速
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <h4>📊 ソートメソッド</h4>
+                    <div class="method-badge">Collections.sort()</div>
+                    <div class="method-badge">reverseOrder()</div>
+                    <div class="method-badge">Comparator</div>
+                    <div class="method-badge">カスタムソート</div>
+                    <div class="performance-indicator">
+                        速度: <div class="speed-bar"><div class="speed-fill speed-medium"></div></div> 中速
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <h4>🔄 変換メソッド</h4>
+                    <div class="method-badge">toArray()</div>
+                    <div class="method-badge">Arrays.asList()</div>
+                    <div class="method-badge">String.join()</div>
+                    <div class="method-badge">split()</div>
+                    <div class="performance-indicator">
+                        速度: <div class="speed-bar"><div class="speed-fill speed-fast"></div></div> 高速
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学生検索システムの画面遷移図</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 1300px;
+            width: 100%;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 32px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 18px;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+        }
+
+        .flow-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .screen-card {
+            background: #f8f9fa;
+            border: 3px solid #74b9ff;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .screen-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .screen-header {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .screen-content {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            min-height: 180px;
+        }
+
+        .menu-option {
+            color: #81ecec;
+            margin: 5px 0;
+        }
+
+        .user-input {
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .search-result {
+            color: #00b894;
+            font-weight: bold;
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: #ff6b6b;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 5px 10px rgba(255, 107, 107, 0.3);
+        }
+
+        .arrow-connection {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .arrow {
+            width: 0;
+            height: 0;
+            border-left: 15px solid #74b9ff;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            margin: 0 10px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .flow-description {
+            background: #74b9ff;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .features-section {
+            background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-top: 30px;
+        }
+
+        .features-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-item {
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+
+        .feature-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .feature-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .feature-description {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .code-highlight {
+            background: rgba(255,255,255,0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .flow-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+            
+            .screen-content {
+                font-size: 12px;
+                min-height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">🔍 学生検索システム</h1>
+        <p class="subtitle">メニュー選択から結果表示までの完全な画面遷移フロー</p>
+
+        <div class="flow-container">
+            <!-- ステップ1: メニュー表示 -->
+            <div class="screen-card">
+                <div class="step-number">1</div>
+                <div class="screen-header">メインメニュー</div>
+                <div class="screen-content">
+=== 学生検索システム ===<br>
+<span class="menu-option">1. 全学生表示</span><br>
+<span class="menu-option">2. 完全一致検索</span><br>
+<span class="menu-option">3. 部分一致検索</span><br>
+<span class="menu-option">4. 文字数検索</span><br>
+<span class="menu-option">5. 条件フィルタリング</span><br>
+<span class="menu-option">6. 学生追加</span><br>
+<span class="menu-option">0. 終了</span><br>
+選択してください: <span class="user-input">2</span>
+                </div>
+            </div>
+
+            <!-- ステップ2: 検索条件入力 -->
+            <div class="screen-card">
+                <div class="step-number">2</div>
+                <div class="screen-header">検索条件入力</div>
+                <div class="screen-content">
+検索する学生名を入力してください:<br>
+<span class="user-input">田中太郎</span><br><br>
+// システム内部処理<br>
+<span class="code-highlight">if (students.contains(searchName))</span><br>
+<span class="code-highlight">int index = students.indexOf(searchName)</span><br><br>
+検索実行中...
+                </div>
+            </div>
+
+            <!-- ステップ3: 検索結果表示 -->
+            <div class="screen-card">
+                <div class="step-number">3</div>
+                <div class="screen-header">検索結果表示</div>
+                <div class="screen-content">
+<span class="search-result">✅ 発見！</span><br>
+「田中太郎」は 2番目に登録されています。<br><br>
+📝 注意：同名の学生が複数います<br>
+（最後: 5番目）<br><br>
+Enterキーを押して続行...
+                </div>
+            </div>
+
+            <!-- ステップ4: エラーハンドリング例 -->
+            <div class="screen-card">
+                <div class="step-number">4</div>
+                <div class="screen-header">エラーハンドリング</div>
+                <div class="screen-content">
+検索する学生名を入力してください:<br>
+<span class="user-input">山田花子</span><br><br>
+<span class="error-message">❌ 「山田花子」は見つかりませんでした。</span><br><br>
+// 堅牢な処理<br>
+<span class="code-highlight">try { ... } catch (Exception e)</span><br>
+適切なエラーメッセージ表示
+                </div>
+            </div>
+
+            <!-- ステップ5: 部分一致検索例 -->
+            <div class="screen-card">
+                <div class="step-number">5</div>
+                <div class="screen-header">部分一致検索</div>
+                <div class="screen-content">
+検索キーワードを入力してください:<br>
+<span class="user-input">田</span><br><br>
+<span class="search-result">✅ 「田」を含む学生（3名）:</span><br>
+  1. 田中太郎<br>
+  2. 田中次郎<br>
+  3. 山田一郎<br><br>
+// 高度な検索ロジック<br>
+<span class="code-highlight">if (student.contains(keyword))</span>
+                </div>
+            </div>
+
+            <!-- ステップ6: 統計情報表示 -->
+            <div class="screen-card">
+                <div class="step-number">6</div>
+                <div class="screen-header">統計・分析結果</div>
+                <div class="screen-content">
+<span class="search-result">検索統計情報:</span><br>
+総学生数: 8名<br>
+検索実行時間: 0.002秒<br>
+マッチ率: 37.5%<br><br>
+// パフォーマンス分析<br>
+<span class="code-highlight">ArrayList.indexOf() = O(n)</span><br>
+高速検索が実現されています
+                </div>
+            </div>
+        </div>
+
+        <div class="arrow-connection">
+            <div class="flow-description">ユーザー操作</div>
+            <div class="arrow"></div>
+            <div class="flow-description">システム処理</div>
+            <div class="arrow"></div>
+            <div class="flow-description">結果表示</div>
+        </div>
+
+        <div class="features-section">
+            <h3 class="features-title">🌟 システムの高度な機能</h3>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-title">高速検索</div>
+                    <div class="feature-description">
+                        indexOf(), contains()による<br>
+                        O(n)の効率的な検索処理
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">🛡️</div>
+                    <div class="feature-title">堅牢なエラー処理</div>
+                    <div class="feature-description">
+                        try-catch文による<br>
+                        完全なエラーハンドリング
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">🔍</div>
+                    <div class="feature-title">多様な検索条件</div>
+                    <div class="feature-description">
+                        完全一致・部分一致・文字数<br>
+                        複数の検索パターンに対応
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-title">統計・分析機能</div>
+                    <div class="feature-description">
+                        検索結果の統計情報<br>
+                        パフォーマンス分析
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-title">ユーザビリティ</div>
+                    <div class="feature-description">
+                        直感的なメニュー設計<br>
+                        わかりやすい結果表示
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">🔄</div>
+                    <div class="feature-title">連続操作対応</div>
+                    <div class="feature-description">
+                        継続的な検索処理<br>
+                        スムーズな操作フロー
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

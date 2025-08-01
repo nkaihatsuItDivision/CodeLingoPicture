@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArrayListの高度操作概念図</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+        }
+
+        .operations-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .operation-card {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(116, 185, 255, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .operation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(116, 185, 255, 0.4);
+        }
+
+        .operation-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .operation-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .operation-methods {
+            font-size: 14px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .arraylist-demo {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+            border: 2px dashed #74b9ff;
+        }
+
+        .demo-title {
+            text-align: center;
+            font-size: 20px;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+
+        .code-example {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+
+        .code-highlight {
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .arrow-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .arrow {
+            width: 0;
+            height: 0;
+            border-left: 15px solid #74b9ff;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            margin: 0 20px;
+        }
+
+        .flow-text {
+            background: #74b9ff;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .benefit-section {
+            background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .benefit-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .benefits-list {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .benefit-item {
+            flex: 1;
+            min-width: 200px;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .benefit-emoji {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .operations-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .benefits-list {
+                flex-direction: column;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">🚀 ArrayListの高度操作</h1>
+        <p class="subtitle">実務レベルの検索・並び替え・変換技術をマスター</p>
+
+        <div class="operations-grid">
+            <div class="operation-card">
+                <div class="operation-icon">🔍</div>
+                <div class="operation-title">高速検索</div>
+                <div class="operation-methods">
+                    indexOf()<br>
+                    contains()<br>
+                    カスタム検索
+                </div>
+            </div>
+
+            <div class="operation-card">
+                <div class="operation-icon">📊</div>
+                <div class="operation-title">並び替え</div>
+                <div class="operation-methods">
+                    Collections.sort()<br>
+                    Comparator<br>
+                    カスタムソート
+                </div>
+            </div>
+
+            <div class="operation-card">
+                <div class="operation-icon">🔄</div>
+                <div class="operation-title">データ変換</div>
+                <div class="operation-methods">
+                    toArray()<br>
+                    Arrays.asList()<br>
+                    String.join()
+                </div>
+            </div>
+        </div>
+
+        <div class="arraylist-demo">
+            <h3 class="demo-title">💡 実践例：学生データの高度処理</h3>
+            
+            <div class="code-example">
+<span class="code-highlight">// 1. 高速検索</span><br>
+ArrayList&lt;String&gt; students = new ArrayList&lt;&gt;();<br>
+int index = students.<span class="code-highlight">indexOf</span>("田中太郎");<br>
+boolean exists = students.<span class="code-highlight">contains</span>("佐藤花子");<br>
+<br>
+<span class="code-highlight">// 2. 並び替え</span><br>
+Collections.<span class="code-highlight">sort</span>(students);<br>
+Collections.sort(students, <span class="code-highlight">Collections.reverseOrder()</span>);<br>
+<br>
+<span class="code-highlight">// 3. データ変換</span><br>
+String[] array = students.<span class="code-highlight">toArray</span>(new String[0]);<br>
+String csv = String.<span class="code-highlight">join</span>(", ", students);
+            </div>
+
+            <div class="arrow-flow">
+                <div class="flow-text">データ入力</div>
+                <div class="arrow"></div>
+                <div class="flow-text">高度処理</div>
+                <div class="arrow"></div>
+                <div class="flow-text">結果出力</div>
+            </div>
+        </div>
+
+        <div class="benefit-section">
+            <h3 class="benefit-title">🌟 高度操作で得られる力</h3>
+            <div class="benefits-list">
+                <div class="benefit-item">
+                    <div class="benefit-emoji">⚡</div>
+                    <strong>高速処理</strong><br>
+                    効率的な検索・ソート
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-emoji">🎯</div>
+                    <strong>柔軟な検索</strong><br>
+                    複数条件での絞り込み
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-emoji">🔧</div>
+                    <strong>データ連携</strong><br>
+                    様々な形式間の変換
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-emoji">💼</div>
+                    <strong>実務対応</strong><br>
+                    現場で使える技術力
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
