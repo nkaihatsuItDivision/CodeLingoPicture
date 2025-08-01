@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>レッスン3プレビュー: ArrayListの高度な操作</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .preview-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 900px;
+            width: 100%;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .preview-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header .lesson-number {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 0.9em;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .operations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .operation-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .operation-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .operation-card.search::before {
+            background: linear-gradient(90deg, #ff6b6b, #ee5a6f);
+        }
+
+        .operation-card.sort::before {
+            background: linear-gradient(90deg, #4ecdc4, #44a08d);
+        }
+
+        .operation-card.convert::before {
+            background: linear-gradient(90deg, #fed330, #f39c12);
+        }
+
+        .operation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .operation-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .search .operation-icon {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+        }
+
+        .sort .operation-icon {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+        }
+
+        .convert .operation-icon {
+            background: linear-gradient(135deg, #fed330, #f39c12);
+        }
+
+        .operation-card h3 {
+            color: #2c3e50;
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .operation-card p {
+            color: #7f8c8d;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .operation-examples {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            color: #495057;
+        }
+
+        .visual-demo {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            color: white;
+            text-align: center;
+        }
+
+        .visual-demo h2 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .arraylist-visualization {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .array-element {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 12px 18px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .array-element:nth-child(odd) {
+            animation-delay: 0.5s;
+        }
+
+        .array-element:nth-child(even) {
+            animation-delay: 1s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .arrow {
+            font-size: 1.5em;
+            color: rgba(255, 255, 255, 0.8);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .next-lesson-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 0 auto;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .next-lesson-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .excitement-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-8px); }
+            60% { transform: translateY(-4px); }
+        }
+
+        @media (max-width: 768px) {
+            .preview-container {
+                padding: 25px;
+                margin: 10px;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .operations-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .arraylist-visualization {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="preview-container">
+        <div class="excitement-badge">Coming Next! 🚀</div>
+        
+        <div class="header">
+            <div class="lesson-number">Week 3 レッスン3</div>
+            <h1>ArrayListの高度な操作</h1>
+            <p>検索・並び替え・変換をマスターして、データ処理のプロフェッショナルへ</p>
+        </div>
+
+        <div class="visual-demo">
+            <h2>🎯 次に習得する強力な技術</h2>
+            <div class="arraylist-visualization">
+                <div class="array-element">田中</div>
+                <div class="array-element">佐藤</div>
+                <div class="array-element">鈴木</div>
+                <div class="array-element">高橋</div>
+                <div class="arrow">→</div>
+                <div class="array-element">検索</div>
+                <div class="array-element">並び替え</div>
+                <div class="array-element">変換</div>
+            </div>
+        </div>
+
+        <div class="operations-grid">
+            <div class="operation-card search">
+                <div class="operation-icon">🔍</div>
+                <h3>高速検索・フィルタリング</h3>
+                <p>条件に合うデータを瞬時に見つける技術。大量のデータから必要な情報だけを効率的に抽出します。</p>
+                <div class="operation-examples">
+                    indexOf(), contains()<br>
+                    カスタム検索条件
+                </div>
+            </div>
+
+            <div class="operation-card sort">
+                <div class="operation-icon">📊</div>
+                <h3>データ並び替え・ソート</h3>
+                <p>データを昇順・降順で整理する技術。複雑な並び替え条件も自在に操れるようになります。</p>
+                <div class="operation-examples">
+                    Collections.sort()<br>
+                    カスタムソート条件
+                </div>
+            </div>
+
+            <div class="operation-card convert">
+                <div class="operation-icon">🔄</div>
+                <h3>データ変換・連携</h3>
+                <p>ArrayListと配列の相互変換、データ形式の変更など、様々なデータ構造との連携技術を習得します。</p>
+                <div class="operation-examples">
+                    toArray(), Arrays.asList()<br>
+                    データ型変換
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; color: #7f8c8d; margin-bottom: 25px;">
+            <p style="font-size: 1.1em; line-height: 1.6;">
+                <strong>レッスン2で習得した基本操作</strong>を土台に、<br>
+                より実践的で強力なArrayList操作技術をマスターします！
+            </p>
+        </div>
+
+        <button class="next-lesson-btn" onclick="showExcitement()">
+            レッスン3で待ってます！ ✨
+        </button>
+    </div>
+
+    <script>
+        function showExcitement() {
+            const btn = document.querySelector('.next-lesson-btn');
+            const originalText = btn.textContent;
+            
+            btn.textContent = '準備完了！頑張りましょう！🎉';
+            btn.style.background = 'linear-gradient(135deg, #4ecdc4, #44a08d)';
+            
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+            }, 2000);
+        }
+
+        // 要素のアニメーション開始
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.operation-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        });
+    </script>
+</body>
+</html>
