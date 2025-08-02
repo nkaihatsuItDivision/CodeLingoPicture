@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文字列インデックスの概念図</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            max-width: 800px;
+            width: 100%;
+        }
+        
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+        
+        .string-demo {
+            margin: 30px 0;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .string-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .string-chars {
+            display: flex;
+            gap: 3px;
+            justify-content: center;
+        }
+        
+        .char-box {
+            width: 50px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .char-box:hover {
+            transform: translateY(-5px);
+        }
+        
+        .index-row {
+            display: flex;
+            gap: 3px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        
+        .index-box {
+            width: 50px;
+            height: 40px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+        
+        .explanation {
+            background: #fff3cd;
+            border: 2px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+        
+        .explanation h3 {
+            color: #e17055;
+            margin-top: 0;
+            font-size: 18px;
+        }
+        
+        .code-example {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+        
+        .highlight {
+            background: #ffeaa7;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #2d3748;
+            font-weight: bold;
+        }
+        
+        .important-note {
+            background: #ff7675;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(255, 118, 117, 0.3);
+        }
+        
+        .example-section {
+            margin: 30px 0;
+        }
+        
+        .example-title {
+            color: #2c3e50;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">📝 文字列インデックスの概念図</h1>
+        
+        <div class="string-demo">
+            <div class="example-title">例: "iPhone15"</div>
+            <div class="string-container">
+                <div class="string-chars">
+                    <div class="char-box">i</div>
+                    <div class="char-box">P</div>
+                    <div class="char-box">h</div>
+                    <div class="char-box">o</div>
+                    <div class="char-box">n</div>
+                    <div class="char-box">e</div>
+                    <div class="char-box">1</div>
+                    <div class="char-box">5</div>
+                </div>
+                
+                <div class="index-row">
+                    <div class="index-box">0</div>
+                    <div class="index-box">1</div>
+                    <div class="index-box">2</div>
+                    <div class="index-box">3</div>
+                    <div class="index-box">4</div>
+                    <div class="index-box">5</div>
+                    <div class="index-box">6</div>
+                    <div class="index-box">7</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="important-note">
+            ⚠️ 重要：インデックスは0から始まります！
+        </div>
+        
+        <div class="explanation">
+            <h3>🔍 charAt() メソッドの使い方</h3>
+            <div class="code-example">
+String product = "iPhone15";<br>
+<span class="highlight">product.charAt(0)</span> → 'i' (最初の文字)<br>
+<span class="highlight">product.charAt(6)</span> → '1'<br>
+<span class="highlight">product.charAt(7)</span> → '5' (最後の文字)<br>
+<span class="highlight">product.charAt(product.length() - 1)</span> → '5' (最後の文字を取得する安全な方法)
+            </div>
+        </div>
+        
+        <div class="example-section">
+            <div class="example-title">📱 もう一つの例: "田中太郎"</div>
+            <div class="string-container">
+                <div class="string-chars">
+                    <div class="char-box">田</div>
+                    <div class="char-box">中</div>
+                    <div class="char-box">太</div>
+                    <div class="char-box">郎</div>
+                </div>
+                
+                <div class="index-row">
+                    <div class="index-box">0</div>
+                    <div class="index-box">1</div>
+                    <div class="index-box">2</div>
+                    <div class="index-box">3</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="explanation">
+            <h3>💡 実践的な使い方</h3>
+            <div class="code-example">
+String name = "田中太郎";<br>
+char firstName = <span class="highlight">name.charAt(0)</span>;  // '田'<br>
+char lastName = <span class="highlight">name.charAt(name.length() - 1)</span>;  // '郎'<br><br>
+// 一文字ずつ表示<br>
+for (int i = 0; i < name.length(); i++) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(i + "番目: " + <span class="highlight">name.charAt(i)</span>);<br>
+}
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 40px; color: #74b9ff; font-size: 16px;">
+            🎯 この概念を理解すれば、文字列の任意の位置にアクセスできるようになります！
+        </div>
+    </div>
+</body>
+</html>
