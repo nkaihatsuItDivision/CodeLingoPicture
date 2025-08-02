@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文字列置換手法の比較表 - Java Week3 Lesson7</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .header p {
+            margin: 10px 0 0 0;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0;
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+            color: white;
+            padding: 18px 12px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 14px;
+            border-bottom: 3px solid #3498db;
+        }
+
+        .comparison-table td {
+            padding: 15px 12px;
+            border-bottom: 1px solid #ecf0f1;
+            vertical-align: top;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .method-column {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            font-weight: bold;
+            font-size: 14px;
+            width: 20%;
+            text-align: center;
+        }
+
+        .basic-replace {
+            border-left: 4px solid #28a745;
+        }
+
+        .multiple-replace {
+            border-left: 4px solid #ffc107;
+        }
+
+        .stringbuilder-replace {
+            border-left: 4px solid #dc3545;
+        }
+
+        .regex-replace {
+            border-left: 4px solid #6f42c1;
+        }
+
+        .comparison-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+        }
+
+        .star {
+            color: #ffc107;
+            font-size: 16px;
+        }
+
+        .star.empty {
+            color: #dee2e6;
+        }
+
+        .code-snippet {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            color: #495057;
+            overflow-x: auto;
+        }
+
+        .pros {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .cons {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .use-case {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 8px;
+            border-radius: 4px;
+            font-style: italic;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .footer p {
+            margin: 5px 0;
+            color: #6c757d;
+            font-size: 14px;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 10px;
+            }
+            
+            .comparison-table th,
+            .comparison-table td {
+                padding: 10px 6px;
+                font-size: 12px;
+            }
+            
+            .code-snippet {
+                font-size: 10px;
+                padding: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 文字列置換手法の比較表</h1>
+            <p>Java Week 3 Lesson 7 - 効率的な置換技術の選択指針</p>
+        </div>
+
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>手法</th>
+                    <th>実装の簡単さ</th>
+                    <th>実行速度</th>
+                    <th>メモリ効率</th>
+                    <th>適用場面</th>
+                    <th>コード例</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="basic-replace">
+                    <td class="method-column">
+                        <strong>基本のreplace()</strong><br>
+                        <small>String.replace()</small>
+                    </td>
+                    <td>
+                        <div class="rating">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                        </div>
+                        <div class="pros">✓ 最も簡単</div>
+                        <div class="pros">✓ 1行で完了</div>
+                    </td>
+                    <td>
+                        <div class="rating">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star empty">★</span>
+                            <span class="star empty">★</span>
+                        </div>
+                        <div class="cons">△ 単一置換のみ</div>
+                    </td>
+                    <td>
+                        <div class="rating">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star empty">★</span>
+                            <span class="star empty">★</span>
+                        </div>
+                        <div class="cons">△ 新しいStringを作成</div>
+                    </td>
+                    <td>
+                        <div class="use-case">
+                            <strong>単一パターンの置換</strong><br>
+                            • 単純な文字列変更<br>
+                            • 一回限りの処理<br>
+                            • 小〜中規模のテキスト
+                        </div>
+                    </td>
+                    <td>
+                        <div class="code-snippet">
+String text = "Hello World";<br>
+String result = text.replace(<br>
+&nbsp;&nbsp;"World", "Java");<br>
+// "Hello Java"
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="multiple-replace">
+                    <td class="method-column">
+                        <strong>複数replace()</strong><br>
+                        <small>連続実行</small>
+                    </td>
+                    <td>
+                        <div class="rating">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star empty">★</span>
+                        </div>
+                        <div class="pros">✓ 理解しやすい</div>
+                        <div class="cons">△ 置換数分コード増加</div>
+                    </td>
+                    <td>
+                        <div class="rating">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star empty">★</span>
+                            <span class="star empty">★</span>
+                            <span class="star empty">★</span>
+                        </div>
+                        <div class="cons">× 毎回全文字列をスキャン</div>
+                        <div class="cons">× 置換数に比例して遅くなる</div>
+                    </td>
+                    <td>
+                        <div class="rating">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star empty">★</span>
+                            <span class="star empty">★</span>
+                            <span class="star empty">★</span>
+                        </div>
+                        <div class="cons">× 置換数分のString作成</div>
+                        <div class="cons">× メモリ使用量大</div>
+                    </td>
+                    <td>
+                        <div class="use-case">
+                            <strong>複数パターンの順次置換</strong><br>
+                            • 数個程度の置換パターン<br>
+                            • 置換順序が重要<br>
+                            • 中規模のテキスト処理
+                        </div>
+                    </td>
+                    <td>
+                        <div class="code-snippet">
+String result = text<br>
+&nbsp;&nbsp;.replace("！！！", "！")<br>
+&nbsp;&nbsp;.replace("？？？", "？")<br>
+&nbsp;&nbsp;.replace("～～", "～");<br>
+// 3回の置換処理
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="stringbuilder-replace">
+                    <td class="method-column">
+                        <strong>StringBuilder</strong><br>
+                        <small>効率的な構築</small>
+                    </td>
+                    <td>
+                        <div class="rating">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star empty">★</span>
+                            <span class="star empty">★</span>
+                            <span class="star empty">★</span>
+                        </div>
+                        <div class="cons">× 実装が複雑</div>
+                        <div class="cons">× ループ処理必要</div>
+                    </td>
+                    <td>
+                        <div class="rating">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                        </div>
+                        <div class="pros">✓ 1回のスキャンで完了</div>
+                        <div class="pros">✓ 大量データで威力発揮</div>
+                    </td>
+                    <td>
+                        <div class="rating">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                        </div>
+                        <div class="pros">✓ 最小限のメモリ使用</div>
+                        <div class="pros">✓ 可変バッファで効率的</div>
+                    </td>
+                    <td>
+                        <div class="use-case">
+                            <strong>大量の文字列処理</strong><br>
+                            • 100回以上の置換<br>
+                            • ループ内での文字列構築<br>
+                            • 大規模テキスト処理<br>
+                            • <span class="highlight">性能が重要な場面</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="code-snippet">
+StringBuilder sb = new StringBuilder();<br>
+for (int i = 0; i &lt; text.length(); i++) {<br>
+&nbsp;&nbsp;char c = text.charAt(i);<br>
+&nbsp;&nbsp;if (c == '！' && ...) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 複雑な置換ロジック<br>
+&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;sb.append(c);<br>
+}
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="regex-replace">
+                    <td class="method-column">
+                        <strong>正規表現</strong><br>
+                        <small>replaceAll()</small>
+                    </td>
+                    <td>
+                        <div class="rating">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star empty">★</span>
+                            <span class="star empty">★</span>
+                        </div>
+                        <div class="pros">✓ パターンで一括処理</div>
+                        <div class="cons">△ 正規表現の学習必要</div>
+                    </td>
+                    <td>
+                        <div class="rating">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star empty">★</span>
+                        </div>
+                        <div class="pros">✓ パターンマッチで効率的</div>
+                        <div class="cons">△ 複雑なパターンは遅い</div>
+                    </td>
+                    <td>
+                        <div class="rating">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star empty">★</span>
+                        </div>
+                        <div class="pros">✓ パターンに応じて最適化</div>
+                        <div class="cons">△ 内部処理は複雑</div>
+                    </td>
+                    <td>
+                        <div class="use-case">
+                            <strong>パターンベースの置換</strong><br>
+                            • 複雑な置換パターン<br>
+                            • 文字クラスベースの処理<br>
+                            • <span class="highlight">スマートな一括処理</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="code-snippet">
+// 2つ以上連続する感嘆符を1つに<br>
+String result = text.replaceAll(<br>
+&nbsp;&nbsp;"[！]{2,}", "！");<br>
+<br>
+// 複数種類を一度に<br>
+result = result.replaceAll(<br>
+&nbsp;&nbsp;"[！？～]{2,}", "$1");
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="footer">
+            <p><strong>💡 選択指針</strong></p>
+            <p><span class="highlight">単純置換</span> → replace() | <span class="highlight">複数置換（少数）</span> → 連続replace() | <span class="highlight">大量処理</span> → StringBuilder | <span class="highlight">パターン処理</span> → 正規表現</p>
+            <p>性能が重要な場面では StringBuilder、可読性重視なら replace()、パターン処理なら正規表現を選択</p>
+        </div>
+    </div>
+</body>
+</html>
