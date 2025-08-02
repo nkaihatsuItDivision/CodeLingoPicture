@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDoシステム実行画面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #1e293b;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #4f46e5;
+            padding-bottom: 15px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #6b7280;
+            margin-bottom: 40px;
+        }
+
+        .screen-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .terminal {
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            color: #e2e8f0;
+            font-size: 14px;
+            line-height: 1.4;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            border: 2px solid #1e293b;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #334155;
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot-red { background: #ef4444; }
+        .dot-yellow { background: #f59e0b; }
+        .dot-green { background: #10b981; }
+
+        .terminal-title {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-left: auto;
+        }
+
+        .menu-output {
+            color: #60a5fa;
+            margin: 10px 0;
+        }
+
+        .user-input {
+            color: #fbbf24;
+        }
+
+        .success-output {
+            color: #34d399;
+        }
+
+        .warning-output {
+            color: #f59e0b;
+        }
+
+        .error-output {
+            color: #ef4444;
+        }
+
+        .todo-item {
+            color: #e2e8f0;
+            margin: 5px 0;
+            padding: 5px 0;
+        }
+
+        .completed {
+            color: #10b981;
+        }
+
+        .overdue {
+            color: #ef4444;
+        }
+
+        .high-priority {
+            color: #f87171;
+        }
+
+        .medium-priority {
+            color: #fbbf24;
+        }
+
+        .low-priority {
+            color: #60a5fa;
+        }
+
+        .feature-demo {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .demo-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1e293b;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .demo-content {
+            font-size: 14px;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin: 15px 0;
+        }
+
+        .feature-list li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-left: 3px solid #e5e7eb;
+            padding-left: 15px;
+            margin: 5px 0;
+        }
+
+        .feature-list li::before {
+            content: "✓";
+            background: #10b981;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .highlight-section {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            border-left: 5px solid #3b82f6;
+        }
+
+        .highlight-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1e40af;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border: 2px solid #e5e7eb;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #3b82f6;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 5px;
+        }
+
+        .demo-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .flow-step {
+            background: white;
+            border-radius: 8px;
+            padding: 10px 15px;
+            border: 2px solid #e5e7eb;
+            font-size: 12px;
+            font-weight: bold;
+            color: #374151;
+            position: relative;
+        }
+
+        .flow-step::after {
+            content: "→";
+            position: absolute;
+            right: -15px;
+            color: #6b7280;
+            font-size: 16px;
+        }
+
+        .flow-step:last-child::after {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .screen-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .terminal {
+                font-size: 12px;
+                max-height: 400px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .demo-flow {
+                flex-direction: column;
+            }
+            
+            .flow-step::after {
+                content: "↓";
+                right: 50%;
+                top: -15px;
+                transform: translateX(50%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">💻 ToDoシステム実行画面</h1>
+        <p class="subtitle">実際のシステム動作と機能デモンストレーション</p>
+
+        <div class="screen-grid">
+            <div class="terminal" id="main-screen">
+                <div class="terminal-header">
+                    <div class="terminal-dot dot-red"></div>
+                    <div class="terminal-dot dot-yellow"></div>
+                    <div class="terminal-dot dot-green"></div>
+                    <div class="terminal-title">TodoManager.java - Running</div>
+                </div>
+                <div class="menu-output">=== ToDoリスト管理システム ===</div>
+                <div class="menu-output">Week 3 レッスン1-4の技術を統合した実用システム</div>
+                <br>
+                <div class="menu-output">==================================================</div>
+                <div class="menu-output">       📋 ToDoリスト管理システム</div>
+                <div class="menu-output">==================================================</div>
+                <div class="menu-output">1. 📝 新しいToDoを追加</div>
+                <div class="menu-output">2. 📋 全てのToDoを表示</div>
+                <div class="menu-output">3. ✅ ToDo完了状態の切り替え</div>
+                <div class="menu-output">4. 🗑️  ToDoを削除</div>
+                <div class="menu-output">5. 🔍 ToDoを検索</div>
+                <div class="menu-output">6. 📊 ToDoを並び替え</div>
+                <div class="menu-output">7. 📈 統計情報を表示</div>
+                <div class="menu-output">8. ❓ ヘルプ</div>
+                <div class="menu-output">9. 🚪 終了</div>
+                <div class="menu-output">==================================================</div>
+                <div class="menu-output">選択してください (1-9): <span class="user-input">2</span></div>
+                <br>
+                <div class="success-output">=== 📋 全てのToDo一覧 ===</div>
+                <div class="success-output">📊 総件数: 3件</div>
+                <div class="menu-output">----------------------------------------</div>
+                <div class="todo-item">1. [✓] Java復習 (中) - 期限: 2025/08/04</div>
+                <div class="todo-item completed">   💬 配列とArrayListの違いを再確認</div>
+                <div class="todo-item high-priority">2. [ ] Week 3 レッスン5完了 (高) - 期限: 2025/08/02</div>
+                <div class="todo-item high-priority">   💬 ToDoリスト管理システムを完成させる</div>
+                <div class="todo-item overdue">3. [ ] 食材買い出し (低) - 期限: 2025/07/31 ⚠️</div>
+                <div class="todo-item overdue">   💬 牛乳、パン、卵を購入</div>
+                <div class="menu-output">----------------------------------------</div>
+            </div>
+
+            <div class="feature-demo">
+                <h3 class="demo-title">
+                    <span>🎯</span>
+                    実装機能デモ
+                </h3>
+                <div class="demo-content">
+                    <p><strong>表示された画面の解説：</strong></p>
+                    <ul class="feature-list">
+                        <li>美しいメニューシステムとナビゲーション</li>
+                        <li>ToDo一覧の見やすい表示フォーマット</li>
+                        <li>完了済みToDo（✓マーク）の視覚的表示</li>
+                        <li>期限切れToDo（⚠️マーク）の警告表示</li>
+                        <li>優先度別の色分け表示</li>
+                        <li>詳細説明の適切な表示</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="screen-grid">
+            <div class="terminal" id="search-screen">
+                <div class="terminal-header">
+                    <div class="terminal-dot dot-red"></div>
+                    <div class="terminal-dot dot-yellow"></div>
+                    <div class="terminal-dot dot-green"></div>
+                    <div class="terminal-title">検索機能デモ</div>
+                </div>
+                <div class="menu-output">選択してください (1-9): <span class="user-input">5</span></div>
+                <br>
+                <div class="success-output">=== 🔍 ToDo検索 ===</div>
+                <div class="menu-output">1. タイトルで検索</div>
+                <div class="menu-output">2. 完了状態で検索</div>
+                <div class="menu-output">3. 優先度で検索</div>
+                <div class="menu-output">4. 期限切れで検索</div>
+                <div class="menu-output">検索方法を選択 (1-4): <span class="user-input">4</span></div>
+                <br>
+                <div class="success-output">=== 🔍 検索結果 ===</div>
+                <div class="success-output">📊 見つかった件数: 1件</div>
+                <div class="menu-output">----------------------------------------</div>
+                <div class="todo-item overdue">1. [ ] 食材買い出し (低) - 期限: 2025/07/31 [期限切れ]</div>
+                <div class="todo-item overdue">   💬 牛乳、パン、卵を購入</div>
+                <div class="menu-output">----------------------------------------</div>
+            </div>
+
+            <div class="terminal" id="stats-screen">
+                <div class="terminal-header">
+                    <div class="terminal-dot dot-red"></div>
+                    <div class="terminal-dot dot-yellow"></div>
+                    <div class="terminal-dot dot-green"></div>
+                    <div class="terminal-title">統計機能デモ</div>
+                </div>
+                <div class="menu-output">選択してください (1-9): <span class="user-input">7</span></div>
+                <br>
+                <div class="success-output">=== 📈 統計情報 ===</div>
+                <br>
+                <div class="menu-output">📊 全体統計</div>
+                <div class="todo-item">   総ToDo数: 3件</div>
+                <div class="todo-item completed">   完了済み: 1件</div>
+                <div class="todo-item">   未完了  : 2件</div>
+                <div class="todo-item">   完了率  : 33.3%</div>
+                <div class="todo-item warning-output">   期限切れ: 1件</div>
+                <br>
+                <div class="menu-output">📊 優先度別統計</div>
+                <div class="todo-item high-priority">   高優先度: 1件</div>
+                <div class="todo-item medium-priority">   中優先度: 1件</div>
+                <div class="todo-item low-priority">   低優先度: 1件</div>
+                <br>
+                <div class="warning-output">⚠️ 期限切れのToDoがあります！</div>
+            </div>
+        </div>
+
+        <div class="highlight-section">
+            <h3 class="highlight-title">
+                <span>🚀</span>
+                システム動作の流れ
+            </h3>
+            <div class="demo-flow">
+                <div class="flow-step">起動</div>
+                <div class="flow-step">メニュー表示</div>
+                <div class="flow-step">機能選択</div>
+                <div class="flow-step">処理実行</div>
+                <div class="flow-step">結果表示</div>
+                <div class="flow-step">継続/終了</div>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">9</div>
+                    <div class="stat-label">主要機能</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">検索方法</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">ソート方法</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">実用レベル</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="feature-demo">
+            <h3 class="demo-title">
+                <span>💡</span>
+                実装のポイント
+            </h3>
+            <div class="demo-content">
+                <ul class="feature-list">
+                    <li><strong>レッスン2技術</strong>：ArrayList基本操作でデータ管理</li>
+                    <li><strong>レッスン3技術</strong>：検索・ソート機能で高度操作</li>
+                    <li><strong>レッスン4技術</strong>：判断基準でArrayList選択</li>
+                    <li><strong>エラーハンドリング</strong>：入力検証と例外処理</li>
+                    <li><strong>ユーザビリティ</strong>：直感的な操作性</li>
+                    <li><strong>視覚的表示</strong>：絵文字と色分けによる見やすさ</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

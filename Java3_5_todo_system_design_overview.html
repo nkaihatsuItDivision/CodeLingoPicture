@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDoシステム設計概要図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #4f46e5;
+            padding-bottom: 15px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #6b7280;
+            margin-bottom: 40px;
+        }
+
+        .design-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .analysis-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fbbf24 100%);
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 5px solid #f59e0b;
+        }
+
+        .decision-box {
+            background: linear-gradient(135deg, #dcfce7 0%, #22c55e 100%);
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 5px solid #16a34a;
+        }
+
+        .box-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .box-content {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin: 10px 0;
+        }
+
+        .feature-list li {
+            padding: 5px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .feature-list li::before {
+            content: "✅";
+            font-size: 16px;
+        }
+
+        .reason-list {
+            list-style: none;
+            margin: 10px 0;
+        }
+
+        .reason-list li {
+            padding: 5px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .reason-list li::before {
+            content: "💡";
+            font-size: 16px;
+        }
+
+        .flow-diagram {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 2px dashed #cbd5e1;
+        }
+
+        .flow-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #1e293b;
+        }
+
+        .flow-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .flow-step {
+            background: white;
+            border-radius: 10px;
+            padding: 15px 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            flex: 1;
+            min-width: 120px;
+            border: 2px solid #e2e8f0;
+            position: relative;
+        }
+
+        .flow-step::after {
+            content: "→";
+            position: absolute;
+            right: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            color: #6b7280;
+            font-weight: bold;
+        }
+
+        .flow-step:last-child::after {
+            display: none;
+        }
+
+        .step-number {
+            background: #4f46e5;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            margin: 0 auto 8px;
+        }
+
+        .step-text {
+            font-size: 12px;
+            font-weight: bold;
+            color: #374151;
+        }
+
+        .code-example {
+            background: #1e293b;
+            color: #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .code-comment {
+            color: #22c55e;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #4f46e5;
+        }
+
+        .highlight-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #3730a3;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .highlight-content {
+            font-size: 14px;
+            color: #1e1b4b;
+            line-height: 1.6;
+        }
+
+        .emoji {
+            font-size: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .design-section {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .flow-steps {
+                flex-direction: column;
+            }
+            
+            .flow-step::after {
+                content: "↓";
+                right: 50%;
+                top: -15px;
+                transform: translateX(50%);
+            }
+            
+            .flow-step:last-child::after {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">📋 ToDoシステム設計概要図</h1>
+        <p class="subtitle">レッスン4の判断基準を活用した実践的システム設計</p>
+
+        <div class="design-section">
+            <div class="analysis-box">
+                <h3 class="box-title">
+                    <span class="emoji">🔍</span>
+                    システム分析
+                </h3>
+                <div class="box-content">
+                    <p><strong>ToDoリストの特性分析</strong></p>
+                    <ul class="feature-list">
+                        <li>データサイズ: 動的（0件〜数百件）</li>
+                        <li>操作パターン: 追加・削除が頻繁</li>
+                        <li>検索需要: 状態・優先度・期限による検索</li>
+                        <li>ソート需要: 優先度・期限・作成日順</li>
+                        <li>拡張性: 将来的な機能追加予定</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="decision-box">
+                <h3 class="box-title">
+                    <span class="emoji">✅</span>
+                    判断結果
+                </h3>
+                <div class="box-content">
+                    <p><strong>選択: ArrayList&lt;Todo&gt;</strong></p>
+                    <ul class="reason-list">
+                        <li>データサイズが動的に変化 → ArrayList適合</li>
+                        <li>頻繁な追加・削除が必要 → ArrayList適合</li>
+                        <li>豊富なメソッド活用 → ArrayList適合</li>
+                        <li>検索・ソート機能必要 → ArrayList適合</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-diagram">
+            <h3 class="flow-title">🚀 システム開発フロー</h3>
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-text">要件定義</div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-text">データ構造選択</div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-text">クラス設計</div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-text">機能実装</div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">5</div>
+                    <div class="step-text">テスト・改良</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="code-example">
+<span class="code-comment">// レッスン4の判断基準に基づく選択</span><br>
+ArrayList&lt;Todo&gt; todoList = new ArrayList&lt;&gt;();  <span class="code-comment"><br>// メインデータ</span><br>
+<span class="code-comment">// 【選択理由】</span><br>
+<span class="code-comment">// ✅ データサイズが動的に変化 → ArrayList適合</span><br>
+<span class="code-comment">// ✅ 頻繁な追加・削除が必要 → ArrayList適合</span><br>
+<span class="code-comment">// ✅ 豊富なメソッド活用 → ArrayList適合</span><br>
+<span class="code-comment">// ✅ 検索・ソート機能必要 → ArrayList適合</span><br>
+        </div>
+
+        <div class="highlight-box">
+            <h3 class="highlight-title">
+                <span class="emoji">🎯</span>
+                レッスン4判断基準の実践活用
+            </h3>
+            <div class="highlight-content">
+                <p>レッスン4で学んだ「データ構造選択の判断基準」を実際のシステム設計で活用することで、理論から実践への確実な成長を実現しています。この判断プロセスこそが、実務で求められる技術者の思考力です。</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

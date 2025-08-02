@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>技術統合マップ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 1400px;
+            width: 100%;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #1e293b;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #7c3aed;
+            padding-bottom: 15px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #6b7280;
+            margin-bottom: 40px;
+        }
+
+        .lesson-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .lesson-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lesson-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--lesson-color);
+        }
+
+        .lesson-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+        }
+
+        .lesson1 { --lesson-color: #ef4444; }
+        .lesson2 { --lesson-color: #f59e0b; }
+        .lesson3 { --lesson-color: #10b981; }
+        .lesson4 { --lesson-color: #3b82f6; }
+
+        .lesson-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .lesson-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .lesson1 .lesson-icon { background: #ef4444; }
+        .lesson2 .lesson-icon { background: #f59e0b; }
+        .lesson3 .lesson-icon { background: #10b981; }
+        .lesson4 .lesson-icon { background: #3b82f6; }
+
+        .lesson-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #1e293b;
+        }
+
+        .lesson-subtitle {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .tech-list {
+            list-style: none;
+            margin: 15px 0;
+        }
+
+        .tech-list li {
+            padding: 8px 0;
+            font-size: 13px;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-left: 3px solid #e5e7eb;
+            padding-left: 12px;
+            margin: 5px 0;
+        }
+
+        .tech-list li::before {
+            content: "⚡";
+            font-size: 14px;
+        }
+
+        .integration-section {
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .integration-title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: #1e293b;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .integration-diagram {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .integration-node {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border: 3px solid var(--node-color);
+            min-width: 150px;
+            position: relative;
+        }
+
+        .node1 { --node-color: #ef4444; }
+        .node2 { --node-color: #f59e0b; }
+        .node3 { --node-color: #10b981; }
+        .node4 { --node-color: #3b82f6; }
+
+        .node-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--node-color);
+            margin-bottom: 8px;
+        }
+
+        .node-content {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .arrow-down {
+            font-size: 30px;
+            color: #7c3aed;
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .result-system {
+            background: linear-gradient(135deg, #7c3aed 0%, #c026d3 100%);
+            border-radius: 20px;
+            padding: 30px;
+            color: white;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .result-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .result-subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .result-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .result-feature {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .feature-text {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .code-integration {
+            background: #1e293b;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            color: #e2e8f0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .code-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #60a5fa;
+            margin-bottom: 20px;
+        }
+
+        .code-section {
+            margin: 15px 0;
+            padding: 15px;
+            border-left: 4px solid #374151;
+        }
+
+        .code-comment {
+            color: #22c55e;
+            font-size: 14px;
+        }
+
+        .code-line {
+            color: #e2e8f0;
+            font-size: 14px;
+            margin: 5px 0;
+        }
+
+        .highlight {
+            background: rgba(96, 165, 250, 0.2);
+            padding: 2px 4px;
+            border-radius: 4px;
+            color: #60a5fa;
+        }
+
+        .stats-summary {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            border-left: 5px solid #3b82f6;
+        }
+
+        .stats-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1e40af;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+        }
+
+        .stat-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #3b82f6;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .lesson-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .integration-diagram {
+                flex-direction: column;
+            }
+            
+            .result-features {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">🧩 技術統合マップ</h1>
+        <p class="subtitle">Week 3レッスン1-4の技術が1つのシステムに統合される様子</p>
+
+        <div class="lesson-grid">
+            <div class="lesson-card lesson1">
+                <div class="lesson-header">
+                    <div class="lesson-icon">1</div>
+                    <div>
+                        <div class="lesson-title">レッスン1</div>
+                        <div class="lesson-subtitle">配列の制限理解</div>
+                    </div>
+                </div>
+                <ul class="tech-list">
+                    <li>配列の固定サイズ制約</li>
+                    <li>追加・削除の困難さ</li>
+                    <li>ArrayList必要性の理解</li>
+                    <li>データ構造選択の重要性</li>
+                </ul>
+            </div>
+
+            <div class="lesson-card lesson2">
+                <div class="lesson-header">
+                    <div class="lesson-icon">2</div>
+                    <div>
+                        <div class="lesson-title">レッスン2</div>
+                        <div class="lesson-subtitle">ArrayList基本操作</div>
+                    </div>
+                </div>
+                <ul class="tech-list">
+                    <li>add(), get(), remove()</li>
+                    <li>size(), isEmpty()</li>
+                    <li>拡張for文</li>
+                    <li>ジェネリクス&lt;T&gt;</li>
+                </ul>
+            </div>
+
+            <div class="lesson-card lesson3">
+                <div class="lesson-header">
+                    <div class="lesson-icon">3</div>
+                    <div>
+                        <div class="lesson-title">レッスン3</div>
+                        <div class="lesson-subtitle">ArrayList高度操作</div>
+                    </div>
+                </div>
+                <ul class="tech-list">
+                    <li>contains(), indexOf()</li>
+                    <li>Collections.sort()</li>
+                    <li>Comparator活用</li>
+                    <li>データ変換・連携</li>
+                </ul>
+            </div>
+
+            <div class="lesson-card lesson4">
+                <div class="lesson-header">
+                    <div class="lesson-icon">4</div>
+                    <div>
+                        <div class="lesson-title">レッスン4</div>
+                        <div class="lesson-subtitle">適切な使い分け判断</div>
+                    </div>
+                </div>
+                <ul class="tech-list">
+                    <li>性能測定・分析</li>
+                    <li>判断基準の確立</li>
+                    <li>シナリオ分析</li>
+                    <li>最適化思考</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="integration-section">
+            <h2 class="integration-title">
+                <span>🔄</span>
+                技術統合プロセス
+            </h2>
+            
+            <div class="integration-diagram">
+                <div class="integration-node node1">
+                    <div class="node-title">制限理解</div>
+                    <div class="node-content">配列の限界を体験<br>ArrayList選択理由</div>
+                </div>
+                
+                <div class="integration-node node2">
+                    <div class="node-title">基本習得</div>
+                    <div class="node-content">CRUD操作<br>基本メソッド</div>
+                </div>
+                
+                <div class="integration-node node3">
+                    <div class="node-title">高度活用</div>
+                    <div class="node-content">検索・ソート<br>複合操作</div>
+                </div>
+                
+                <div class="integration-node node4">
+                    <div class="node-title">判断力</div>
+                    <div class="node-content">適切な選択<br>最適化思考</div>
+                </div>
+            </div>
+
+            <div class="arrow-down">⬇️</div>
+
+            <div class="result-system">
+                <div class="result-title">🎯 統合結果：実用ToDoシステム</div>
+                <div class="result-subtitle">全技術が1つのシステムに統合完成</div>
+                
+                <div class="result-features">
+                    <div class="result-feature">
+                        <div class="feature-icon">📝</div>
+                        <div class="feature-text">レッスン2技術<br>基本CRUD操作</div>
+                    </div>
+                    <div class="result-feature">
+                        <div class="feature-icon">🔍</div>
+                        <div class="feature-text">レッスン3技術<br>検索・ソート</div>
+                    </div>
+                    <div class="result-feature">
+                        <div class="feature-icon">⚡</div>
+                        <div class="feature-text">レッスン4技術<br>最適化設計</div>
+                    </div>
+                    <div class="result-feature">
+                        <div class="feature-icon">🎨</div>
+                        <div class="feature-text">統合技術<br>実用システム</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="code-integration">
+            <div class="code-title">💻 技術統合の実例コード</div>
+            
+            <div class="code-section">
+                <div class="code-comment">// レッスン1: 配列の制限を理解 → ArrayList選択</div>
+                <div class="code-line">ArrayList&lt;Todo&gt; <span class="highlight">todoList</span> = new ArrayList&lt;&gt;();</div>
+            </div>
+            
+            <div class="code-section">
+                <div class="code-comment">// レッスン2: 基本操作でデータ管理</div>
+                <div class="code-line">todoList.<span class="highlight">add</span>(newTodo);           // 追加</div>
+                <div class="code-line">Todo todo = todoList.<span class="highlight">get</span>(index);  // 取得</div>
+                <div class="code-line">todoList.<span class="highlight">remove</span>(index);         // 削除</div>
+            </div>
+            
+            <div class="code-section">
+                <div class="code-comment">// レッスン3: 高度操作で機能強化</div>
+                <div class="code-line">for (Todo todo : todoList) {       // 拡張for文</div>
+                <div class="code-line">    if (todo.getTitle().<span class="highlight">contains</span>(keyword)) {</div>
+                <div class="code-line">        results.add(todo);         // 検索</div>
+                <div class="code-line">    }</div>
+                <div class="code-line">}</div>
+                <div class="code-line">Collections.<span class="highlight">sort</span>(todoList, comparator); // ソート</div>
+            </div>
+            
+            <div class="code-section">
+                <div class="code-comment">// レッスン4: 判断基準に基づく最適化設計</div>
+                <div class="code-line">// ✅ 動的サイズ変更 → ArrayList選択</div>
+                <div class="code-line">// ✅ 頻繁な検索・ソート → ArrayList最適</div>
+                <div class="code-line">// ✅ 開発効率重視 → ArrayList採用</div>
+            </div>
+        </div>
+
+        <div class="stats-summary">
+            <h3 class="stats-title">
+                <span>📊</span>
+                技術統合の成果
+            </h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">レッスン技術</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">15+</div>
+                    <div class="stat-label">統合メソッド</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">300+</div>
+                    <div class="stat-label">コード行数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">9</div>
+                    <div class="stat-label">主要機能</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">実用レベル</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">∞</div>
+                    <div class="stat-label">拡張可能性</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
