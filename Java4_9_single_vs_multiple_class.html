@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>単一クラス vs 複数クラス協調の比較図</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: white;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            max-width: 1200px;
+            width: 100%;
+        }
+        
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .comparison {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .approach {
+            flex: 1;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+        }
+        
+        .bad-approach {
+            background-color: #fff5f5;
+            border: 2px solid #e53e3e;
+            border-left: 6px solid #e53e3e;
+        }
+        
+        .good-approach {
+            background-color: #f0fff4;
+            border: 2px solid #38a169;
+            border-left: 6px solid #38a169;
+        }
+        
+        .approach-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .icon {
+            font-size: 24px;
+        }
+        
+        .approach-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .bad-title {
+            color: #e53e3e;
+        }
+        
+        .good-title {
+            color: #38a169;
+        }
+        
+        .class-structure {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .class-name {
+            background-color: #2c3e50;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 6px 6px 0 0;
+            font-weight: bold;
+            font-size: 16px;
+            margin: -20px -20px 15px -20px;
+        }
+        
+        .fields {
+            margin-bottom: 15px;
+        }
+        
+        .methods {
+            margin-bottom: 15px;
+        }
+        
+        .section-title {
+            color: #7f8c8d;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #ecf0f1;
+            padding-bottom: 3px;
+        }
+        
+        .code-line {
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 12px;
+            color: #2c3e50;
+            margin: 3px 0;
+            padding: 2px 8px;
+            background-color: #f8f9fa;
+            border-radius: 3px;
+        }
+        
+        .field-line {
+            border-left: 3px solid #e74c3c;
+        }
+        
+        .method-line {
+            border-left: 3px solid #3498db;
+        }
+        
+        .multiple-classes {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .small-class {
+            flex: 1;
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .small-class-name {
+            background-color: #27ae60;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px 4px 0 0;
+            font-weight: bold;
+            font-size: 14px;
+            margin: -15px -15px 10px -15px;
+        }
+        
+        .collaboration-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px 0;
+            color: #3498db;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .problems {
+            background-color: #fff5f5;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #e53e3e;
+        }
+        
+        .benefits {
+            background-color: #f0fff4;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #38a169;
+        }
+        
+        .problem-title {
+            color: #e53e3e;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .benefit-title {
+            color: #38a169;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .issue-list {
+            font-size: 13px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+        
+        .issue-item {
+            margin: 5px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 5px;
+        }
+        
+        .issue-icon {
+            color: #e53e3e;
+            margin-top: 2px;
+            font-size: 12px;
+        }
+        
+        .benefit-icon {
+            color: #38a169;
+            margin-top: 2px;
+            font-size: 12px;
+        }
+        
+        .summary {
+            background-color: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+        }
+        
+        .summary-title {
+            color: #2c3e50;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .summary-text {
+            color: #495057;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">単一クラス vs 複数クラス協調の比較</div>
+        
+        <div class="comparison">
+            <!-- 悪い例：単一クラス -->
+            <div class="approach bad-approach">
+                <div class="approach-header">
+                    <div class="icon">❌</div>
+                    <div class="approach-title bad-title">悪い例：単一クラスですべてを管理</div>
+                </div>
+                
+                <div class="class-structure">
+                    <div class="class-name">Student クラス</div>
+                    
+                    <div class="fields">
+                        <div class="section-title">フィールド（複雑で管理困難）</div>
+                        <div class="code-line field-line">private String name;</div>
+                        <div class="code-line field-line">private String mathSubject;</div>
+                        <div class="code-line field-line">private int mathScore;</div>
+                        <div class="code-line field-line">private String mathSemester;</div>
+                        <div class="code-line field-line">private String englishSubject;</div>
+                        <div class="code-line field-line">private int englishScore;</div>
+                        <div class="code-line field-line">private String englishSemester;</div>
+                        <div class="code-line field-line">// ... 科目が増えるたびに増加</div>
+                    </div>
+                    
+                    <div class="methods">
+                        <div class="section-title">メソッド（責任が混在）</div>
+                        <div class="code-line method-line">public double calculateMathGrade()</div>
+                        <div class="code-line method-line">public double calculateEnglishGrade()</div>
+                        <div class="code-line method-line">public void showMathInfo()</div>
+                        <div class="code-line method-line">public void showEnglishInfo()</div>
+                        <div class="code-line method-line">// ... 科目ごとの処理が増加</div>
+                    </div>
+                </div>
+                
+                <div class="problems">
+                    <div class="problem-title">🚨 問題点</div>
+                    <div class="issue-list">
+                        <div class="issue-item">
+                            <div class="issue-icon">×</div>
+                            <div>科目追加時にクラス全体を修正</div>
+                        </div>
+                        <div class="issue-item">
+                            <div class="issue-icon">×</div>
+                            <div>責任が混在し理解困難</div>
+                        </div>
+                        <div class="issue-item">
+                            <div class="issue-icon">×</div>
+                            <div>コードの重複が多発</div>
+                        </div>
+                        <div class="issue-item">
+                            <div class="issue-icon">×</div>
+                            <div>テストが複雑化</div>
+                        </div>
+                        <div class="issue-item">
+                            <div class="issue-icon">×</div>
+                            <div>バグの影響範囲が広い</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 良い例：複数クラス協調 -->
+            <div class="approach good-approach">
+                <div class="approach-header">
+                    <div class="icon">✅</div>
+                    <div class="approach-title good-title">良い例：複数クラスで責任分散</div>
+                </div>
+                
+                <div class="multiple-classes">
+                    <div class="small-class">
+                        <div class="small-class-name">Student クラス</div>
+                        <div class="section-title">学生の責任に集中</div>
+                        <div class="code-line field-line">private String name;</div>
+                        <div class="code-line field-line">private List&lt;Grade&gt; grades;</div>
+                        <div style="margin-top: 8px;">
+                            <div class="code-line method-line">addGrade()</div>
+                            <div class="code-line method-line">calculateGPA()</div>
+                            <div class="code-line method-line">showStudentInfo()</div>
+                        </div>
+                    </div>
+                    
+                    <div class="small-class">
+                        <div class="small-class-name">Grade クラス</div>
+                        <div class="section-title">成績の責任に集中</div>
+                        <div class="code-line field-line">private String subject;</div>
+                        <div class="code-line field-line">private int score;</div>
+                        <div class="code-line field-line">private String semester;</div>
+                        <div style="margin-top: 8px;">
+                            <div class="code-line method-line">getLetterGrade()</div>
+                            <div class="code-line method-line">isPassing()</div>
+                            <div class="code-line method-line">getGradePoint()</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="collaboration-arrow">
+                    ⟷ クラス間で協調・連携 ⟷
+                </div>
+                
+                <div class="benefits">
+                    <div class="benefit-title">🌟 メリット</div>
+                    <div class="issue-list">
+                        <div class="issue-item">
+                            <div class="benefit-icon">✓</div>
+                            <div>責任が明確に分散</div>
+                        </div>
+                        <div class="issue-item">
+                            <div class="benefit-icon">✓</div>
+                            <div>新機能追加が容易</div>
+                        </div>
+                        <div class="issue-item">
+                            <div class="benefit-icon">✓</div>
+                            <div>保守・修正が簡単</div>
+                        </div>
+                        <div class="issue-item">
+                            <div class="benefit-icon">✓</div>
+                            <div>独立してテスト可能</div>
+                        </div>
+                        <div class="issue-item">
+                            <div class="benefit-icon">✓</div>
+                            <div>再利用性が高い</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="summary">
+            <div class="summary-title">📋 設計原則</div>
+            <div class="summary-text">
+                <strong>単一責任の原則</strong>：各クラスは一つの責任のみを持つ<br>
+                <strong>疎結合</strong>：クラス間の依存関係を最小限に抑える<br>
+                <strong>高凝集</strong>：クラス内の要素は密接に関連している
+            </div>
+        </div>
+    </div>
+</body>
+</html>

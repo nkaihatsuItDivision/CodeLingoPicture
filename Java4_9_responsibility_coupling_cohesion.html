@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>責任分散と結合度・凝集度の関係図</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: white;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            max-width: 1100px;
+            width: 100%;
+        }
+        
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .responsibility-section {
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            color: #2c3e50;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .classes-container {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .class-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 25px;
+            min-width: 280px;
+            border-top: 5px solid #3498db;
+        }
+        
+        .grade-card {
+            border-top-color: #e67e22;
+        }
+        
+        .class-header {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            margin: -25px -25px 20px -25px;
+            text-align: center;
+        }
+        
+        .grade-header {
+            background-color: #e67e22;
+        }
+        
+        .responsibility-list {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .responsibility-title {
+            color: #34495e;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #dee2e6;
+            padding-bottom: 5px;
+        }
+        
+        .responsibility-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 6px 0;
+            font-size: 13px;
+            color: #495057;
+            padding: 4px 8px;
+            background-color: white;
+            border-radius: 4px;
+            border-left: 3px solid #3498db;
+        }
+        
+        .grade-responsibility-item {
+            border-left-color: #e67e22;
+        }
+        
+        .responsibility-icon {
+            color: #27ae60;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        
+        .collaboration-arrow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .arrow-line {
+            width: 100px;
+            height: 2px;
+            background-color: #7f8c8d;
+            position: relative;
+        }
+        
+        .arrow-head {
+            position: absolute;
+            right: -5px;
+            top: -4px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid #7f8c8d;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+        }
+        
+        .arrow-head-left {
+            left: -5px;
+            right: auto;
+            border-left: none;
+            border-right: 8px solid #7f8c8d;
+        }
+        
+        .arrow-label {
+            position: absolute;
+            top: -25px;
+            background-color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            color: #7f8c8d;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .coupling-cohesion-section {
+            display: flex;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .concept-card {
+            flex: 1;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+        }
+        
+        .coupling-card {
+            background-color: #fff9f0;
+            border-top: 5px solid #f39c12;
+        }
+        
+        .cohesion-card {
+            background-color: #f0fff4;
+            border-top: 5px solid #27ae60;
+        }
+        
+        .concept-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .coupling-title {
+            color: #f39c12;
+        }
+        
+        .cohesion-title {
+            color: #27ae60;
+        }
+        
+        .concept-description {
+            font-size: 14px;
+            color: #495057;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .example-section {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+        }
+        
+        .example-title {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #34495e;
+        }
+        
+        .code-example {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 12px;
+            color: #2c3e50;
+            border-left: 4px solid #3498db;
+            margin: 5px 0;
+        }
+        
+        .good-example {
+            border-left-color: #27ae60;
+        }
+        
+        .bad-example {
+            border-left-color: #e74c3c;
+        }
+        
+        .example-label {
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .good-label {
+            color: #27ae60;
+        }
+        
+        .bad-label {
+            color: #e74c3c;
+        }
+        
+        .design-principles {
+            background-color: #eef7ff;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+            border-left: 5px solid #2196f3;
+        }
+        
+        .principles-title {
+            color: #1976d2;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .principle-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .principle-item {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .principle-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .principle-name {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .principle-desc {
+            font-size: 12px;
+            color: #7f8c8d;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">責任分散と結合度・凝集度の関係</div>
+        
+        <div class="responsibility-section">
+            <div class="section-title">
+                <span>🎯</span>
+                <span>各クラスの責任分散</span>
+            </div>
+            
+            <div class="classes-container">
+                <!-- Student クラス -->
+                <div class="class-card">
+                    <div class="class-header">Student クラス</div>
+                    
+                    <div class="responsibility-list">
+                        <div class="responsibility-title">📋 学生に関する責任</div>
+                        <div class="responsibility-item">
+                            <div class="responsibility-icon">✓</div>
+                            <div>学生の基本情報管理</div>
+                        </div>
+                        <div class="responsibility-item">
+                            <div class="responsibility-icon">✓</div>
+                            <div>成績リストの管理</div>
+                        </div>
+                        <div class="responsibility-item">
+                            <div class="responsibility-icon">✓</div>
+                            <div>GPA計算（全体統計）</div>
+                        </div>
+                        <div class="responsibility-item">
+                            <div class="responsibility-icon">✓</div>
+                            <div>学生情報の表示</div>
+                        </div>
+                        <div class="responsibility-item">
+                            <div class="responsibility-icon">✓</div>
+                            <div>成績の追加・削除</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Grade クラス -->
+                <div class="class-card grade-card">
+                    <div class="class-header grade-header">Grade クラス</div>
+                    
+                    <div class="responsibility-list">
+                        <div class="responsibility-title">📊 成績に関する責任</div>
+                        <div class="responsibility-item grade-responsibility-item">
+                            <div class="responsibility-icon">✓</div>
+                            <div>成績データの管理</div>
+                        </div>
+                        <div class="responsibility-item grade-responsibility-item">
+                            <div class="responsibility-icon">✓</div>
+                            <div>成績評価の計算</div>
+                        </div>
+                        <div class="responsibility-item grade-responsibility-item">
+                            <div class="responsibility-icon">✓</div>
+                            <div>合格判定の処理</div>
+                        </div>
+                        <div class="responsibility-item grade-responsibility-item">
+                            <div class="responsibility-icon">✓</div>
+                            <div>GPA値の計算</div>
+                        </div>
+                        <div class="responsibility-item grade-responsibility-item">
+                            <div class="responsibility-icon">✓</div>
+                            <div>成績情報の表示</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="collaboration-arrow">
+                <div class="arrow-line">
+                    <div class="arrow-head"></div>
+                    <div class="arrow-head-left"></div>
+                </div>
+                <div class="arrow-label">getter/setterで協調</div>
+            </div>
+        </div>
+        
+        <div class="coupling-cohesion-section">
+            <!-- 結合度 -->
+            <div class="concept-card coupling-card">
+                <div class="concept-title coupling-title">
+                    <span>🔗</span>
+                    <span>結合度（Coupling）</span>
+                </div>
+                <div class="concept-description">
+                    クラス間の依存関係の強さ。<br>
+                    <strong>疎結合（低結合度）</strong>が理想的
+                </div>
+                
+                <div class="example-section">
+                    <div class="example-title">実装例</div>
+                    
+                    <div class="example-label good-label">✅ 良い例：疎結合</div>
+                    <div class="code-example good-example">
+// StudentがGradeのpublicメソッドのみ使用<br>
+double totalPoints = 0.0;<br>
+for (Grade grade : grades) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;totalPoints += grade.getGradePoint();<br>
+}
+                    </div>
+                    
+                    <div class="example-label bad-label">❌ 悪い例：密結合</div>
+                    <div class="code-example bad-example">
+// Gradeの内部実装に直接依存<br>
+int score = grade.score; // privateアクセス<br>
+if (score >= 90) totalPoints += 4.0;<br>
+// 計算ロジックが分散
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 凝集度 -->
+            <div class="concept-card cohesion-card">
+                <div class="concept-title cohesion-title">
+                    <span>🎯</span>
+                    <span>凝集度（Cohesion）</span>
+                </div>
+                <div class="concept-description">
+                    クラス内の要素がどれだけ関連しているか。<br>
+                    <strong>高凝集度</strong>が理想的
+                </div>
+                
+                <div class="example-section">
+                    <div class="example-title">実装例</div>
+                    
+                    <div class="example-label good-label">✅ 良い例：高凝集度</div>
+                    <div class="code-example good-example">
+// すべてのメソッドが「成績」に関連<br>
+public String getLetterGrade() { ... }<br>
+public boolean isPassing() { ... }<br>
+public double getGradePoint() { ... }
+                    </div>
+                    
+                    <div class="example-label bad-label">❌ 悪い例：低凝集度</div>
+                    <div class="code-example bad-example">
+// 関連しない処理が混在<br>
+public void sendEmail() { ... }<br>
+public void printReport() { ... }<br>
+public void calculateTax() { ... }
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="design-principles">
+            <div class="principles-title">
+                <span>📐</span>
+                <span>設計原則</span>
+            </div>
+            
+            <div class="principle-grid">
+                <div class="principle-item">
+                    <div class="principle-icon">🎯</div>
+                    <div class="principle-name">単一責任の原則</div>
+                    <div class="principle-desc">
+                        各クラスは一つの責任のみを持つ
+                    </div>
+                </div>
+                
+                <div class="principle-item">
+                    <div class="principle-icon">🔗</div>
+                    <div class="principle-name">疎結合の維持</div>
+                    <div class="principle-desc">
+                        クラス間の依存関係を最小限に抑える
+                    </div>
+                </div>
+                
+                <div class="principle-item">
+                    <div class="principle-icon">🎪</div>
+                    <div class="principle-name">高凝集度の実現</div>
+                    <div class="principle-desc">
+                        クラス内の要素は密接に関連している
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
