@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>クラスとインスタンス：設計図と実体の関係</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+        }
+        
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+        
+        .comparison {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+            margin-bottom: 40px;
+        }
+        
+        .blueprint-section {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .instances-section {
+            flex: 2;
+            text-align: center;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            color: white;
+        }
+        
+        .blueprint-title {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+        }
+        
+        .instances-title {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+        }
+        
+        .blueprint {
+            background: #fff;
+            border: 3px dashed #e74c3c;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 20px rgba(231, 76, 60, 0.1);
+        }
+        
+        .blueprint-icon {
+            font-size: 60px;
+            color: #e74c3c;
+            margin-bottom: 15px;
+        }
+        
+        .blueprint-text {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+        
+        .instances {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .instance {
+            background: #fff;
+            border: 3px solid #3498db;
+            border-radius: 15px;
+            padding: 20px;
+            min-width: 150px;
+            box-shadow: 0 10px 20px rgba(52, 152, 219, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .instance:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(52, 152, 219, 0.2);
+        }
+        
+        .house-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        
+        .tanaka { color: #e67e22; }
+        .sato { color: #27ae60; }
+        .yamada { color: #9b59b6; }
+        
+        .instance-name {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .instance-detail {
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+        
+        .arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: #95a5a6;
+            margin: 0 20px;
+        }
+        
+        .code-section {
+            background: #2c3e50;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 40px;
+        }
+        
+        .code-title {
+            color: #ecf0f1;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .code-comparison {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .code-block {
+            flex: 1;
+            background: #34495e;
+            border-radius: 10px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .code-block-title {
+            color: #f39c12;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        
+        .code-comment {
+            color: #95a5a6;
+        }
+        
+        .code-keyword {
+            color: #e74c3c;
+        }
+        
+        .code-string {
+            color: #2ecc71;
+        }
+        
+        .code-number {
+            color: #f39c12;
+        }
+        
+        .key-points {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 40px;
+            color: white;
+        }
+        
+        .key-points h3 {
+            margin-top: 0;
+            font-size: 20px;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .points-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .point {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .point-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .point-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .point-text {
+            font-size: 14px;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">
+            🏗️ クラスとインスタンス：設計図と実体の関係
+        </div>
+        
+        <div class="comparison">
+            <div class="blueprint-section">
+                <div class="section-title blueprint-title">設計図（1つ）</div>
+                <div class="blueprint">
+                    <div class="blueprint-icon">📋</div>
+                    <div class="blueprint-text">
+                        <strong>家の設計図</strong><br>
+                        • 間取り: 3LDK<br>
+                        • 構造: 木造<br>
+                        • 機能: 住居<br>
+                        • 設備: キッチン、風呂
+                    </div>
+                </div>
+            </div>
+            
+            <div class="arrow">➡️</div>
+            
+            <div class="instances-section">
+                <div class="section-title instances-title">実際の家（複数可能）</div>
+                <div class="instances">
+                    <div class="instance">
+                        <div class="house-icon tanaka">🏠</div>
+                        <div class="instance-name">田中家の家</div>
+                        <div class="instance-detail">赤い屋根<br>庭付き</div>
+                    </div>
+                    <div class="instance">
+                        <div class="house-icon sato">🏡</div>
+                        <div class="instance-name">佐藤家の家</div>
+                        <div class="instance-detail">青い外壁<br>ガレージ付き</div>
+                    </div>
+                    <div class="instance">
+                        <div class="house-icon yamada">🏘️</div>
+                        <div class="instance-name">山田家の家</div>
+                        <div class="instance-detail">白い外壁<br>バルコニー付き</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="code-section">
+            <div class="code-title">💻 プログラムでの対応関係</div>
+            <div class="code-comparison">
+                <div class="code-block">
+                    <div class="code-block-title">🎯 設計図 = クラス（1つ）</div>
+                    <div class="code-comment">// 学生の設計図を定義</div>
+                    <div><span class="code-keyword">public class</span> Student {</div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;String name;&nbsp;&nbsp;&nbsp;<span class="code-comment">// 名前のフィールド</span></div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">int</span> score;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// 得点のフィールド</span></div>
+                    <div></div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// 機能も定義</span></div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;String getGrade() { ... }</div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">void</span> introduce() { ... }</div>
+                    <div>}</div>
+                </div>
+                
+                <div class="code-block">
+                    <div class="code-block-title">🏠 実体 = インスタンス（複数作成可能）</div>
+                    <div class="code-comment">// 設計図から実際の学生オブジェクトを作成</div>
+                    <div>Student student1 = <span class="code-keyword">new</span> Student();</div>
+                    <div>student1.name = <span class="code-string">"田中太郎"</span>;</div>
+                    <div>student1.score = <span class="code-number">85</span>;</div>
+                    <div></div>
+                    <div>Student student2 = <span class="code-keyword">new</span> Student();</div>
+                    <div>student2.name = <span class="code-string">"佐藤花子"</span>;</div>
+                    <div>student2.score = <span class="code-number">92</span>;</div>
+                    <div></div>
+                    <div>Student student3 = <span class="code-keyword">new</span> Student();</div>
+                    <div>student3.name = <span class="code-string">"山田一郎"</span>;</div>
+                    <div>student3.score = <span class="code-number">76</span>;</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="key-points">
+            <h3>🔑 重要な理解ポイント</h3>
+            <div class="points-grid">
+                <div class="point">
+                    <div class="point-icon">📐</div>
+                    <div class="point-title">1つのクラス → 複数のインスタンス</div>
+                    <div class="point-text">
+                        設計図は1つだけ作れば、そこから何個でも実体を作ることができます。
+                    </div>
+                </div>
+                <div class="point">
+                    <div class="point-icon">🔒</div>
+                    <div class="point-title">各インスタンスは独立したデータ</div>
+                    <div class="point-text">
+                        田中さんの得点を変更しても、佐藤さんの得点は変わりません。完全に独立しています。
+                    </div>
+                </div>
+                <div class="point">
+                    <div class="point-icon">⚙️</div>
+                    <div class="point-title">同じ機能を使える</div>
+                    <div class="point-text">
+                        全ての学生インスタンスが getGrade() や introduce() メソッドを使用できます。
+                    </div>
+                </div>
+                <div class="point">
+                    <div class="point-icon">🔧</div>
+                    <div class="point-title">newキーワードで作成</div>
+                    <div class="point-text">
+                        「new Student()」で新しいインスタンスが作成され、独立したメモリ領域が確保されます。
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
