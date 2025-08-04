@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>オーバーライド実行結果比較図</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 1000px;
+            height: 700px;
+            position: relative;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        
+        .comparison-section {
+            display: flex;
+            justify-content: space-between;
+            height: 600px;
+            gap: 30px;
+        }
+        
+        .before-section, .after-section {
+            width: 47%;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            position: relative;
+            box-sizing: border-box;
+        }
+        
+        .before-section {
+            border: 3px solid #e74c3c;
+        }
+        
+        .after-section {
+            border: 3px solid #27ae60;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding: 8px;
+            border-radius: 5px;
+        }
+        
+        .before-title {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .after-title {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            margin-bottom: 15px;
+            overflow-x: auto;
+            line-height: 1.4;
+        }
+        
+        .output-block {
+            background: #34495e;
+            color: #ecf0f1;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3498db;
+            line-height: 1.4;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .problem-label {
+            background: #e74c3c;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            right: 15px;
+            text-align: center;
+        }
+        
+        .solution-label {
+            background: #27ae60;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            right: 15px;
+            text-align: center;
+        }
+        
+        .highlight {
+            background: #f39c12;
+            color: white;
+            padding: 1px 3px;
+            border-radius: 3px;
+            font-size: 10px;
+        }
+        
+        .vs-symbol {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #3498db;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 10;
+            border: 3px solid white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">オーバーライドの威力：実行結果の比較</div>
+        
+        <div class="comparison-section">
+            <!-- Before Section -->
+            <div class="before-section">
+                <div class="section-title before-title">❌ レッスン5.1（オーバーライドなし）</div>
+                
+                <div class="code-block">
+// 両方とも親クラスのメソッドを実行
+undergraduate.displayInfo();
+graduate.displayInfo();
+                </div>
+                
+                <div class="output-block">
+<strong>実行結果：</strong><br>
+=== 学生情報 ===<br>
+学生ID: S001<br>
+氏名: 田中太郎<br>
+年齢: 20歳<br>
+専攻: 情報工学<br>
+<br>
+=== 学生情報 ===<br>
+学生ID: G001<br>
+氏名: 佐藤花子<br>
+年齢: 24歳<br>
+専攻: 人工知能
+                </div>
+                
+                <div style="background: #fff3cd; padding: 15px; border-radius: 8px; border-left: 4px solid #ffc107; margin-bottom: 15px;">
+                    <h4 style="margin: 0 0 10px 0; color: #856404;">🚨 問題点</h4>
+                    <ul style="margin: 0; color: #856404; font-size: 14px;">
+                        <li>学部生と大学院生で<span class="highlight">同じ表示形式</span></li>
+                        <li>学部生の必要単位数情報が<span class="highlight">表示されない</span></li>
+                        <li>大学院生の研究情報が<span class="highlight">表示されない</span></li>
+                        <li>学生種別の識別が<span class="highlight">困難</span></li>
+                    </ul>
+                </div>
+                
+                <div class="problem-label">🔴 カスタマイズ不可能</div>
+            </div>
+            
+            <!-- After Section -->
+            <div class="after-section">
+                <div class="section-title after-title">✅ レッスン5.2（オーバーライドあり）</div>
+                
+                <div class="code-block">
+// 各クラスのオーバーライドメソッドを実行
+undergraduate.displayInfo(); // @Override
+graduate.displayInfo();      // @Override
+                </div>
+                
+                <div class="output-block">
+<strong>実行結果：</strong><br>
+=== 学部生情報 ===<br>
+学生ID: S001<br>
+氏名: 田中太郎<br>
+年齢: 20歳<br>
+専攻: 情報工学<br>
+<span style="color: #f39c12;">必要単位数: 124単位<br>
+学生種別: 学部生</span><br>
+<br>
+=== 大学院生情報 ===<br>
+学生ID: G001<br>
+氏名: 佐藤花子<br>
+年齢: 24歳<br>
+専攻: 人工知能<br>
+<span style="color: #f39c12;">研究テーマ: 機械学習の最適化<br>
+指導教員: 山田教授<br>
+論文ページ数: 45ページ<br>
+学生種別: 大学院生</span>
+                </div>
+                
+                <div style="background: #d1edcc; padding: 15px; border-radius: 8px; border-left: 4px solid #27ae60; margin-bottom: 15px;">
+                    <h4 style="margin: 0 0 10px 0; color: #155724;">🎯 改善効果</h4>
+                    <ul style="margin: 0; color: #155724; font-size: 14px;">
+                        <li>学生種別に応じた<span class="highlight">専用表示</span></li>
+                        <li>学部生固有情報の<span class="highlight">完全表示</span></li>
+                        <li>大学院生固有情報の<span class="highlight">詳細表示</span></li>
+                        <li>学生種別の<span class="highlight">明確な識別</span></li>
+                    </ul>
+                </div>
+                
+                <div class="solution-label">🟢 完全カスタマイズ可能</div>
+            </div>
+        </div>
+        
+        <!-- VS Symbol -->
+        <div class="vs-symbol">VS</div>
+    </div>
+</body>
+</html>

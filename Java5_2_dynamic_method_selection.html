@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>動的メソッド選択の仕組み図</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 1000px;
+            height: 800px;
+            position: relative;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        
+        .code-section {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .array-visualization {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+            gap: 20px;
+        }
+        
+        .array-item {
+            width: 200px;
+            height: 100px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        
+        .undergraduate {
+            background: linear-gradient(135deg, #27ae60, #229954);
+        }
+        
+        .graduate {
+            background: linear-gradient(135deg, #8e44ad, #7d3c98);
+        }
+        
+        .array-index {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #34495e;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+        }
+        
+        .execution-flow {
+            position: relative;
+            height: 380px;
+            margin-bottom: 40px;
+        }
+        
+        .step {
+            position: absolute;
+            width: 200px;
+            height: 90px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 5;
+            padding: 10px;
+            box-sizing: border-box;
+            line-height: 1.3;
+        }
+        
+        .step1 {
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #3498db;
+        }
+        
+        .step2 {
+            top: 130px;
+            left: 120px;
+            background: #f39c12;
+        }
+        
+        .step3 {
+            top: 130px;
+            right: 120px;
+            background: #f39c12;
+        }
+        
+        .step4 {
+            top: 270px;
+            left: 120px;
+            background: #27ae60;
+        }
+        
+        .step5 {
+            top: 270px;
+            right: 120px;
+            background: #8e44ad;
+        }
+        
+        .arrow {
+            position: absolute;
+            font-size: 24px;
+            color: #34495e;
+            z-index: 3;
+        }
+        
+        .arrow1 {
+            top: 100px;
+            left: 380px;
+        }
+        
+        .arrow2 {
+            top: 100px;
+            right: 380px;
+        }
+        
+        .arrow3 {
+            top: 240px;
+            left: 380px;
+        }
+        
+        .arrow4 {
+            top: 240px;
+            right: 380px;
+        }
+        
+        .magic-box {
+            position: absolute;
+            top: 135px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 80px;
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            animation: pulse 2s infinite;
+            z-index: 4;
+            font-size: 14px;
+        }
+        
+        @keyframes pulse {
+            0% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.05); }
+            100% { transform: translateX(-50%) scale(1); }
+        }
+        
+        .result-section {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #3498db;
+        }
+        
+        .result-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .result-list {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        
+        .result-item {
+            flex: 1;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #bdc3c7;
+        }
+        
+        .result-undergraduate {
+            border-color: #27ae60;
+        }
+        
+        .result-graduate {
+            border-color: #8e44ad;
+        }
+        
+        .highlight-text {
+            background: #f39c12;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">動的メソッド選択（Dynamic Method Selection）の仕組み</div>
+        
+        <!-- コード例 -->
+        <div class="code-section">
+<strong>同じメソッド呼び出しでも、オブジェクトの実際の型に応じて適切なメソッドが自動選択される！</strong><br>
+<br>
+Student[] students = {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;new UndergraduateStudent("S001", "田中太郎", ...),&nbsp;&nbsp;// 実際の型：UndergraduateStudent<br>
+&nbsp;&nbsp;&nbsp;&nbsp;new GraduateStudent("G001", "佐藤花子", ...)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 実際の型：GraduateStudent<br>
+};<br>
+<br>
+for (Student student : students) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;student.displayInfo();&nbsp;&nbsp;// 同じ呼び出しでも異なるメソッドが実行される！<br>
+}
+        </div>
+        
+        <!-- 配列の視覚化 -->
+        <div class="array-visualization">
+            <div class="array-item undergraduate">
+                <div class="array-index">students[0]</div>
+                <div>UndergraduateStudent</div>
+                <div style="font-size: 12px;">（学部生オブジェクト）</div>
+            </div>
+            <div class="array-item graduate">
+                <div class="array-index">students[1]</div>
+                <div>GraduateStudent</div>
+                <div style="font-size: 12px;">（大学院生オブジェクト）</div>
+            </div>
+        </div>
+        
+        <!-- 実行フロー -->
+        <div class="execution-flow">
+            <div class="step step1">student.displayInfo()<br>メソッド呼び出し</div>
+            
+            <div class="arrow arrow1">↙</div>
+            <div class="arrow arrow2">↘</div>
+            
+            <div class="step step2">実際の型を確認<br>UndergraduateStudent?</div>
+            <div class="step step3">実際の型を確認<br>GraduateStudent?</div>
+            
+            <div class="magic-box">🎯<br>動的選択</div>
+            
+            <div class="arrow arrow3">↓</div>
+            <div class="arrow arrow4">↓</div>
+            
+            <div class="step step4">UndergraduateStudent<br>のdisplayInfo()実行</div>
+            <div class="step step5">GraduateStudent<br>のdisplayInfo()実行</div>
+        </div>
+        
+        <!-- 実行結果 -->
+        <div class="result-section">
+            <div class="result-title">🎯 動的メソッド選択の結果</div>
+            <div class="result-list">
+                <div class="result-item result-undergraduate">
+                    <h4 style="margin: 0 0 10px 0; color: #27ae60;">学部生専用の表示</h4>
+                    <div style="font-size: 12px; font-family: 'Courier New', monospace;">
+                        === 学部生情報 ===<br>
+                        学生ID: S001<br>
+                        氏名: 田中太郎<br>
+                        年齢: 20歳<br>
+                        専攻: 情報工学<br>
+                        <span class="highlight-text">必要単位数: 124単位</span><br>
+                        <span class="highlight-text">学生種別: 学部生</span>
+                    </div>
+                </div>
+                <div class="result-item result-graduate">
+                    <h4 style="margin: 0 0 10px 0; color: #8e44ad;">大学院生専用の表示</h4>
+                    <div style="font-size: 12px; font-family: 'Courier New', monospace;">
+                        === 大学院生情報 ===<br>
+                        学生ID: G001<br>
+                        氏名: 佐藤花子<br>
+                        年齢: 24歳<br>
+                        専攻: 人工知能<br>
+                        <span class="highlight-text">研究テーマ: 機械学習の最適化</span><br>
+                        <span class="highlight-text">指導教員: 山田教授</span><br>
+                        <span class="highlight-text">学生種別: 大学院生</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 20px; padding: 15px; background: #fff3cd; border-radius: 8px; border-left: 4px solid #ffc107;">
+                <h4 style="margin: 0 0 10px 0; color: #856404;">⚡ 動的メソッド選択の威力</h4>
+                <p style="margin: 0; color: #856404; font-size: 14px;">
+                    <strong>統一インターフェース</strong>：Student型として統一的に扱える<br>
+                    <strong>多様な動作</strong>：実際の型に応じて適切な動作が自動選択<br>
+                    <strong>拡張性</strong>：新しい学生種別を追加しても既存コードの変更不要<br>
+                    <strong>ポリモーフィズムの基盤</strong>：次回学習するポリモーフィズムの基盤技術
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>メソッドオーバーライドの概念図</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 800px;
+            height: 650px;
+            position: relative;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            box-sizing: border-box;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 26px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        /* 親クラス */
+        .parent {
+            position: absolute;
+            top: 80px;
+            left: 275px;
+            width: 250px;
+            height: 150px;
+            background: linear-gradient(135deg, #4A90E2, #357ABD);
+            border-radius: 12px;
+            color: white;
+            text-align: center;
+            padding: 25px;
+            box-sizing: border-box;
+            box-shadow: 0 8px 20px rgba(74, 144, 226, 0.3);
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+        
+        .parent-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        
+        .parent-methods {
+            font-size: 16px;
+            line-height: 2.0;
+            background: rgba(255,255,255,0.15);
+            padding: 15px;
+            border-radius: 6px;
+        }
+        
+        /* 子クラス */
+        .child {
+            position: absolute;
+            width: 250px;
+            height: 170px;
+            background: linear-gradient(135deg, #7ED321, #5BA718);
+            border-radius: 12px;
+            color: white;
+            text-align: center;
+            padding: 25px;
+            box-sizing: border-box;
+            box-shadow: 0 8px 20px rgba(126, 211, 33, 0.3);
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+        
+        .child1 {
+            top: 320px;
+            left: 125px;
+        }
+        
+        .child2 {
+            top: 320px;
+            left: 425px;
+        }
+        
+        .child-title {
+            font-size: 17px;
+            font-weight: bold;
+            margin-bottom: 18px;
+            line-height: 1.2;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        
+        .child-methods {
+            font-size: 14px;
+            line-height: 1.8;
+            background: rgba(255,255,255,0.15);
+            padding: 12px;
+            border-radius: 6px;
+        }
+        
+        .override {
+            background: linear-gradient(135deg, #FF9500, #E8890B);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin: 3px 0;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(255, 149, 0, 0.3);
+            font-size: 11px;
+        }
+        
+        /* 矢印 */
+        .arrow {
+            position: absolute;
+            background: #2c3e50;
+            border-radius: 1px;
+        }
+        
+        .line1 {
+            top: 230px;
+            left: 399px;
+            width: 3px;
+            height: 70px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .line2 {
+            top: 300px;
+            left: 250px;
+            width: 300px;
+            height: 3px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .line3 {
+            top: 300px;
+            left: 249px;
+            width: 3px;
+            height: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .line4 {
+            top: 300px;
+            left: 549px;
+            width: 3px;
+            height: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .arrow-head1 {
+            position: absolute;
+            top: 310px;
+            left: 244px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 12px solid #2c3e50;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+        
+        .arrow-head2 {
+            position: absolute;
+            top: 310px;
+            left: 544px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 12px solid #2c3e50;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+        
+        /* 継承ラベル */
+        .inheritance-label {
+            position: absolute;
+            top: 280px;
+            left: 355px;
+            background: #34495e;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(52, 73, 94, 0.3);
+        }
+        
+        /* オーバーライドラベル */
+        .override-label {
+            position: absolute;
+            background: #e74c3c;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3);
+        }
+        
+        .label1 {
+            top: 510px;
+            left: 135px;
+        }
+        
+        .label2 {
+            top: 510px;
+            left: 435px;
+        }
+        
+        /* 説明 */
+        .explanation {
+            position: absolute;
+            bottom: 10px;
+            left: 50px;
+            right: 50px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-left: 4px solid #3498db;
+            border: 1px solid #e9ecef;
+        }
+        
+        .explanation-title {
+            font-size: 15px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 6px;
+        }
+        
+        .explanation-text {
+            font-size: 13px;
+            color: #495057;
+            line-height: 1.4;
+        }
+        
+        .highlight {
+            background: #f39c12;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">メソッドオーバーライドとは</div>
+        
+        <!-- 親クラス -->
+        <div class="parent">
+            <div class="parent-title">Student</div>
+            <div class="parent-methods">
+                displayInfo()<br>
+                study()
+            </div>
+        </div>
+        
+        <!-- 継承の線 -->
+        <div class="arrow line1"></div>
+        <div class="arrow line2"></div>
+        <div class="arrow line3"></div>
+        <div class="arrow line4"></div>
+        <div class="arrow-head1"></div>
+        <div class="arrow-head2"></div>
+        
+        <!-- 継承ラベル -->
+        <div class="inheritance-label">extends</div>
+        
+        <!-- 子クラス1 -->
+        <div class="child child1">
+            <div class="child-title">UndergraduateStudent</div>
+            <div class="child-methods">
+                <span class="override">@Override</span><br>
+                displayInfo()<br>
+                <span class="override">@Override</span><br>
+                study()
+            </div>
+        </div>
+        
+        <!-- 子クラス2 -->
+        <div class="child child2">
+            <div class="child-title">GraduateStudent</div>
+            <div class="child-methods">
+                <span class="override">@Override</span><br>
+                displayInfo()<br>
+                <span class="override">@Override</span><br>
+                study()
+            </div>
+        </div>
+        
+        <!-- オーバーライドラベル -->
+        <div class="override-label label1">メソッドオーバーライド</div>
+        <div class="override-label label2">メソッドオーバーライド</div>
+        
+        <!-- 説明 -->
+        <div class="explanation">
+            <div class="explanation-title">🔧 メソッドオーバーライドの仕組み</div>
+            <div class="explanation-text">
+                親クラスのメソッドを子クラスで<span class="highlight">再定義（上書き）</span>することで、<br>
+                同じメソッド名でも子クラス独自の動作を実現できる
+            </div>
+        </div>
+    </div>
+</body>
+</html>
