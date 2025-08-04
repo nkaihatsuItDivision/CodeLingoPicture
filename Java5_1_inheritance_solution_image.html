@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>継承による解決</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+
+        .inheritance-diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .parent-class {
+            background: linear-gradient(135deg, #4caf50, #66bb6a);
+            color: white;
+            border-radius: 12px;
+            padding: 25px;
+            width: 350px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .parent-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .parent-fields {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .field-item {
+            background: rgba(255, 255, 255, 0.9);
+            color: #2e7d32;
+            border-radius: 4px;
+            padding: 6px 12px;
+            margin-bottom: 4px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .children-container {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            position: relative;
+        }
+
+        .child-class {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 12px;
+            padding: 20px;
+            width: 280px;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .child-title {
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+            padding: 8px;
+            border-radius: 6px;
+        }
+
+        .undergraduate-title {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .graduate-title {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .inherited-section {
+            background: #e8f5e8;
+            border: 1px solid #4caf50;
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+
+        .inherited-header {
+            font-size: 12px;
+            font-weight: bold;
+            color: #2e7d32;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .inherited-list {
+            font-size: 11px;
+            color: #4caf50;
+            line-height: 1.4;
+        }
+
+        .unique-section {
+            background: #fff3e0;
+            border: 1px solid #ff9800;
+            border-radius: 6px;
+            padding: 10px;
+        }
+
+        .unique-header {
+            font-size: 12px;
+            font-weight: bold;
+            color: #f57c00;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .unique-item {
+            background: white;
+            border: 1px solid #ff9800;
+            border-radius: 4px;
+            padding: 6px 10px;
+            margin-bottom: 4px;
+            font-size: 13px;
+            color: #e65100;
+        }
+
+        /* 継承の矢印 */
+        .inheritance-arrow {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-bottom: 20px solid #4caf50;
+        }
+
+        .inheritance-line {
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            width: 2px;
+            height: 30px;
+            background: #4caf50;
+            transform: translateX(-50%);
+        }
+
+        /* 中央の縦線 */
+        .center-line {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            width: 3px;
+            height: 40px;
+            background: #4caf50;
+            transform: translateX(-50%);
+        }
+
+        /* 横線 */
+        .horizontal-line {
+            position: absolute;
+            top: -40px;
+            left: 20%;
+            width: 60%;
+            height: 3px;
+            background: #4caf50;
+        }
+
+        /* 左右の縦線 */
+        .left-line, .right-line {
+            position: absolute;
+            top: -37px;
+            width: 3px;
+            height: 37px;
+            background: #4caf50;
+        }
+
+        .left-line {
+            left: 20%;
+        }
+
+        .right-line {
+            right: 20%;
+        }
+
+        .benefits-section {
+            background: #e8f5e8;
+            border: 2px solid #4caf50;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .benefits-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2e7d32;
+            text-align: center;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .benefit-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .benefit-item {
+            background: white;
+            border: 1px solid #4caf50;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .benefit-icon {
+            background: #4caf50;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .extends-badge {
+            background: #4caf50;
+            color: white;
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+            position: absolute;
+            top: -8px;
+            right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">継承による解決</div>
+        
+        <div class="inheritance-diagram">
+            <!-- 親クラス -->
+            <div class="parent-class">
+                <div class="parent-title">
+                    👨‍💼 Student（親クラス）
+                </div>
+                <div class="parent-fields">
+                    <div style="color: white; font-size: 14px; margin-bottom: 10px; font-weight: bold;">共通部分を集約</div>
+                    <div class="field-item">protected String studentId</div>
+                    <div class="field-item">protected String name</div>
+                    <div class="field-item">protected int age</div>
+                    <div class="field-item">protected String major</div>
+                    <div class="field-item">public void displayInfo()</div>
+                    <div class="field-item">public void study()</div>
+                </div>
+            </div>
+
+            <!-- 継承の線 -->
+            <div class="children-container">
+                <div class="center-line"></div>
+                <div class="horizontal-line"></div>
+                <div class="left-line"></div>
+                <div class="right-line"></div>
+
+                <!-- 学部生クラス -->
+                <div class="child-class">
+                    <div class="extends-badge">extends</div>
+                    <div class="child-title undergraduate-title">UndergraduateStudent</div>
+                    
+                    <div class="inherited-section">
+                        <div class="inherited-header">
+                            ✅ 継承した機能
+                        </div>
+                        <div class="inherited-list">
+                            • 全てのフィールド<br>
+                            • displayInfo()メソッド<br>
+                            • study()メソッド
+                        </div>
+                    </div>
+
+                    <div class="unique-section">
+                        <div class="unique-header">
+                            ⭐ 固有の機能
+                        </div>
+                        <div class="unique-item">int requiredCredits</div>
+                        <div class="unique-item">displayRequiredCredits()</div>
+                        <div class="unique-item">attendLecture()</div>
+                    </div>
+                </div>
+
+                <!-- 大学院生クラス -->
+                <div class="child-class">
+                    <div class="extends-badge">extends</div>
+                    <div class="child-title graduate-title">GraduateStudent</div>
+                    
+                    <div class="inherited-section">
+                        <div class="inherited-header">
+                            ✅ 継承した機能
+                        </div>
+                        <div class="inherited-list">
+                            • 全てのフィールド<br>
+                            • displayInfo()メソッド<br>
+                            • study()メソッド
+                        </div>
+                    </div>
+
+                    <div class="unique-section">
+                        <div class="unique-header">
+                            ⭐ 固有の機能
+                        </div>
+                        <div class="unique-item">String researchTopic</div>
+                        <div class="unique-item">String supervisor</div>
+                        <div class="unique-item">displayResearchInfo()</div>
+                        <div class="unique-item">writeThesis()</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 継承の効果 -->
+        <div class="benefits-section">
+            <div class="benefits-title">
+                ✨ 継承の効果
+            </div>
+            <ul class="benefit-list">
+                <li class="benefit-item">
+                    <div class="benefit-icon">1</div>
+                    <div><strong>コードの重複解消</strong>：共通部分は親クラスに一度だけ定義</div>
+                </li>
+                <li class="benefit-item">
+                    <div class="benefit-icon">2</div>
+                    <div><strong>保守性向上</strong>：共通部分の修正が一箇所で完了、全子クラスに自動適用</div>
+                </li>
+                <li class="benefit-item">
+                    <div class="benefit-icon">3</div>
+                    <div><strong>拡張性向上</strong>：新しい学生タイプの追加が簡単（Teacher、Staff等）</div>
+                </li>
+                <li class="benefit-item">
+                    <div class="benefit-icon">4</div>
+                    <div><strong>設計の明確化</strong>：Is-A関係による論理的で理解しやすい構造</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

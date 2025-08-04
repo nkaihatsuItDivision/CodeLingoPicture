@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>継承を使わない場合の問題点</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+
+        .classes-container {
+            display: flex;
+            justify-content: space-around;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .class-box {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 12px;
+            padding: 20px;
+            width: 280px;
+            position: relative;
+        }
+
+        .class-title {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+            padding: 8px;
+            border-radius: 6px;
+        }
+
+        .undergraduate-title {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .graduate-title {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .field-section {
+            margin-bottom: 15px;
+        }
+
+        .section-header {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #495057;
+        }
+
+        .field-item {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 6px 10px;
+            margin-bottom: 4px;
+            font-size: 13px;
+            position: relative;
+        }
+
+        .duplicate-field {
+            background: #ffebee;
+            border: 1px solid #f44336;
+            color: #c62828;
+        }
+
+        .unique-field {
+            background: #e8f5e8;
+            border: 1px solid #4caf50;
+            color: #2e7d32;
+        }
+
+        .duplicate-badge {
+            position: absolute;
+            right: -10px;
+            top: -8px;
+            background: #f44336;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .problems-section {
+            background: #ffebee;
+            border: 2px solid #f44336;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .problems-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #c62828;
+            text-align: center;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .problem-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .problem-item {
+            background: white;
+            border: 1px solid #f44336;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .problem-icon {
+            background: #f44336;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .connecting-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .duplicate-line {
+            stroke: #f44336;
+            stroke-width: 2;
+            stroke-dasharray: 5,5;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">継承を使わない場合の問題点</div>
+        
+        <div class="classes-container">
+            <!-- 学部生クラス -->
+            <div class="class-box">
+                <div class="class-title undergraduate-title">UndergraduateStudent</div>
+                
+                <div class="field-section">
+                    <div class="section-header">共通フィールド</div>
+                    <div class="field-item duplicate-field">
+                        String studentId
+                        <div class="duplicate-badge">!</div>
+                    </div>
+                    <div class="field-item duplicate-field">
+                        String name
+                        <div class="duplicate-badge">!</div>
+                    </div>
+                    <div class="field-item duplicate-field">
+                        int age
+                        <div class="duplicate-badge">!</div>
+                    </div>
+                    <div class="field-item duplicate-field">
+                        String major
+                        <div class="duplicate-badge">!</div>
+                    </div>
+                </div>
+
+                <div class="field-section">
+                    <div class="section-header">固有フィールド</div>
+                    <div class="field-item unique-field">int requiredCredits</div>
+                </div>
+
+                <div class="field-section">
+                    <div class="section-header">メソッド</div>
+                    <div class="field-item duplicate-field">
+                        displayInfo()
+                        <div class="duplicate-badge">!</div>
+                    </div>
+                    <div class="field-item unique-field">displayRequiredCredits()</div>
+                </div>
+            </div>
+
+            <!-- 大学院生クラス -->
+            <div class="class-box">
+                <div class="class-title graduate-title">GraduateStudent</div>
+                
+                <div class="field-section">
+                    <div class="section-header">共通フィールド</div>
+                    <div class="field-item duplicate-field">
+                        String studentId
+                        <div class="duplicate-badge">!</div>
+                    </div>
+                    <div class="field-item duplicate-field">
+                        String name
+                        <div class="duplicate-badge">!</div>
+                    </div>
+                    <div class="field-item duplicate-field">
+                        int age
+                        <div class="duplicate-badge">!</div>
+                    </div>
+                    <div class="field-item duplicate-field">
+                        String major
+                        <div class="duplicate-badge">!</div>
+                    </div>
+                </div>
+
+                <div class="field-section">
+                    <div class="section-header">固有フィールド</div>
+                    <div class="field-item unique-field">String researchTopic</div>
+                    <div class="field-item unique-field">String supervisor</div>
+                </div>
+
+                <div class="field-section">
+                    <div class="section-header">メソッド</div>
+                    <div class="field-item duplicate-field">
+                        displayInfo()
+                        <div class="duplicate-badge">!</div>
+                    </div>
+                    <div class="field-item unique-field">displayResearchInfo()</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 問題点の説明 -->
+        <div class="problems-section">
+            <div class="problems-title">
+                ⚠️ 発生する問題
+            </div>
+            <ul class="problem-list">
+                <li class="problem-item">
+                    <div class="problem-icon">1</div>
+                    <div><strong>コードの重複</strong>：同じフィールドとメソッドを複数のクラスで定義</div>
+                </li>
+                <li class="problem-item">
+                    <div class="problem-icon">2</div>
+                    <div><strong>修正が困難</strong>：共通部分を変更する際、全てのクラスを修正する必要</div>
+                </li>
+                <li class="problem-item">
+                    <div class="problem-icon">3</div>
+                    <div><strong>設計が複雑</strong>：類似した機能が分散し、システム全体の理解が困難</div>
+                </li>
+                <li class="problem-item">
+                    <div class="problem-icon">4</div>
+                    <div><strong>保守性が低下</strong>：バグ修正や機能追加時のコストが増大</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
