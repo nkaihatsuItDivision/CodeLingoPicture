@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多クラス協調システム設計図</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: white;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+        }
+
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+
+        .system-diagram {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .class-card {
+            background: white;
+            border: 3px solid;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            min-height: 200px;
+        }
+
+        .main-system {
+            border-color: #e74c3c;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
+        }
+
+        .data-classes {
+            border-color: #3498db;
+            background: linear-gradient(135deg, #f0f8ff 0%, #e8f4fd 100%);
+        }
+
+        .service-classes {
+            border-color: #27ae60;
+            background: linear-gradient(135deg, #f0fff4 0%, #e8f8ed 100%);
+        }
+
+        .class-header {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+            padding: 8px;
+            border-radius: 6px;
+        }
+
+        .main-system .class-header {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .data-classes .class-header {
+            background: #3498db;
+            color: white;
+        }
+
+        .service-classes .class-header {
+            background: #27ae60;
+            color: white;
+        }
+
+        .responsibilities {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .responsibilities li {
+            background: rgba(255,255,255,0.7);
+            margin-bottom: 8px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border-left: 4px solid;
+            font-size: 14px;
+        }
+
+        .main-system .responsibilities li {
+            border-left-color: #e74c3c;
+        }
+
+        .data-classes .responsibilities li {
+            border-left-color: #3498db;
+        }
+
+        .service-classes .responsibilities li {
+            border-left-color: #27ae60;
+        }
+
+        .connections {
+            margin-top: 40px;
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 12px;
+            border: 2px solid #dee2e6;
+        }
+
+        .connections h3 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .flow-diagram {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .flow-step {
+            background: white;
+            border: 2px solid #6c757d;
+            border-radius: 8px;
+            padding: 15px 20px;
+            min-width: 180px;
+            text-align: center;
+            position: relative;
+        }
+
+        .flow-step:not(:last-child)::after {
+            content: '→';
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            color: #6c757d;
+            font-weight: bold;
+        }
+
+        .technical-integration {
+            margin-top: 40px;
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .technical-integration h3 {
+            color: #856404;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .tech-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .tech-item strong {
+            color: #856404;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .system-diagram {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .flow-step:not(:last-child)::after {
+                content: '↓';
+                right: 50%;
+                top: 100%;
+                transform: translateX(50%);
+                bottom: -30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">多クラス協調システム設計図</h1>
+        
+        <div class="system-diagram">
+            <!-- システム統制クラス -->
+            <div class="class-card main-system">
+                <div class="class-header">システム統制</div>
+                <ul class="responsibilities">
+                    <li><strong>StudentManagementSystem</strong></li>
+                    <li>システム全体の統制</li>
+                    <li>学生データの管理</li>
+                    <li>機能間の協調</li>
+                    <li>メイン処理の制御</li>
+                </ul>
+            </div>
+
+            <!-- データ管理クラス -->
+            <div class="class-card data-classes">
+                <div class="class-header">データ管理</div>
+                <ul class="responsibilities">
+                    <li><strong>Student</strong></li>
+                    <li>学生情報の保持</li>
+                    <li>GPA計算</li>
+                    <li>成績レベル判定</li>
+                    <li><strong>Grade</strong></li>
+                    <li>成績データの管理</li>
+                    <li>評価判定</li>
+                </ul>
+            </div>
+
+            <!-- サービス機能クラス -->
+            <div class="class-card service-classes">
+                <div class="class-header">サービス機能</div>
+                <ul class="responsibilities">
+                    <li><strong>ReportGenerator</strong></li>
+                    <li>レポート生成</li>
+                    <li>出力フォーマット</li>
+                    <li><strong>DataAnalyzer</strong></li>
+                    <li>統計分析</li>
+                    <li>データ集計</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- クラス間の連携フロー -->
+        <div class="connections">
+            <h3>クラス間連携フロー</h3>
+            <div class="flow-diagram">
+                <div class="flow-step">
+                    <strong>メイン処理</strong><br>
+                    学生データ作成<br>
+                    システム初期化
+                </div>
+                <div class="flow-step">
+                    <strong>データ管理</strong><br>
+                    Student ↔ Grade<br>
+                    データ保持・計算
+                </div>
+                <div class="flow-step">
+                    <strong>システム統制</strong><br>
+                    全体制御<br>
+                    機能呼び出し
+                </div>
+                <div class="flow-step">
+                    <strong>サービス実行</strong><br>
+                    レポート生成<br>
+                    データ分析
+                </div>
+            </div>
+        </div>
+
+        <!-- Week 4技術統合 -->
+        <div class="technical-integration">
+            <h3>Week 4技術の統合活用</h3>
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <strong>レッスン4.1-4.3 (OOP基礎)</strong>
+                    全クラスの設計思想・インスタンス生成に活用
+                </div>
+                <div class="tech-item">
+                    <strong>レッスン4.4-4.6 (クラス内設計)</strong>
+                    各クラスのフィールド・コンストラクタ・メソッド設計
+                </div>
+                <div class="tech-item">
+                    <strong>レッスン4.7-4.8 (カプセル化)</strong>
+                    データ保護・getter/setterによる安全なアクセス
+                </div>
+                <div class="tech-item">
+                    <strong>レッスン4.9 (複数クラス協調)</strong>
+                    2クラス協調から5クラス協調への発展実装
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

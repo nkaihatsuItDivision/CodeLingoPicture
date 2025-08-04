@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 4技術統合マップ</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: white;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+        }
+
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #9b59b6;
+            padding-bottom: 15px;
+        }
+
+        .lesson-progression {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .lesson-group {
+            background: white;
+            border: 3px solid;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+
+        .basics {
+            border-color: #e67e22;
+            background: linear-gradient(135deg, #fef9e7 0%, #fcf3cf 100%);
+        }
+
+        .implementation {
+            border-color: #3498db;
+            background: linear-gradient(135deg, #ebf3fd 0%, #d6eaf8 100%);
+        }
+
+        .advanced {
+            border-color: #8e44ad;
+            background: linear-gradient(135deg, #f4ecf7 0%, #e8daef 100%);
+        }
+
+        .lesson-group h3 {
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin: -10px -10px 20px -10px;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .basics h3 {
+            background: #e67e22;
+        }
+
+        .implementation h3 {
+            background: #3498db;
+        }
+
+        .advanced h3 {
+            background: #8e44ad;
+        }
+
+        .lesson-item {
+            background: rgba(255,255,255,0.8);
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 5px solid;
+        }
+
+        .basics .lesson-item {
+            border-left-color: #e67e22;
+        }
+
+        .implementation .lesson-item {
+            border-left-color: #3498db;
+        }
+
+        .advanced .lesson-item {
+            border-left-color: #8e44ad;
+        }
+
+        .lesson-number {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .lesson-desc {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .application {
+            background: #e8f5e8;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 13px;
+            color: #27ae60;
+            font-weight: 500;
+        }
+
+        .integration-map {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .integration-title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 22px;
+            margin-bottom: 30px;
+        }
+
+        .system-components {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .component {
+            background: white;
+            border: 2px solid #6c757d;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+
+        .component h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 18px;
+            text-align: center;
+            background: #6c757d;
+            color: white;
+            padding: 8px;
+            border-radius: 6px;
+            margin: -10px -10px 15px -10px;
+        }
+
+        .tech-usage {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .tech-usage li {
+            background: #f8f9fa;
+            margin-bottom: 8px;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid;
+            font-size: 14px;
+        }
+
+        .tech-usage li strong {
+            color: #2c3e50;
+        }
+
+        .student-usage {
+            border-left-color: #e74c3c;
+        }
+
+        .grade-usage {
+            border-left-color: #3498db;
+        }
+
+        .system-usage {
+            border-left-color: #f39c12;
+        }
+
+        .report-usage {
+            border-left-color: #27ae60;
+        }
+
+        .analyzer-usage {
+            border-left-color: #9b59b6;
+        }
+
+        .achievement-summary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .achievement-summary h3 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .achievements {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .achievement-item {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .achievement-item strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .lesson-progression {
+                grid-template-columns: 1fr;
+            }
+            
+            .system-components {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Week 4技術統合マップ</h1>
+        
+        <!-- レッスン段階的進行 -->
+        <div class="lesson-progression">
+            <div class="lesson-group basics">
+                <h3>OOP基礎 (レッスン4.1-4.3)</h3>
+                
+                <div class="lesson-item">
+                    <div class="lesson-number">レッスン4.1</div>
+                    <div class="lesson-desc">手続き型からOOPへの思考転換</div>
+                    <div class="application">→ 全クラス設計の基盤思想</div>
+                </div>
+
+                <div class="lesson-item">
+                    <div class="lesson-number">レッスン4.2</div>
+                    <div class="lesson-desc">クラスとインスタンスの関係理解</div>
+                    <div class="application">→ オブジェクト生成・管理の概念</div>
+                </div>
+
+                <div class="lesson-item">
+                    <div class="lesson-number">レッスン4.3</div>
+                    <div class="lesson-desc">初めてのクラス作成実践</div>
+                    <div class="application">→ Student, Grade の設計基盤</div>
+                </div>
+            </div>
+
+            <div class="lesson-group implementation">
+                <h3>クラス内設計 (レッスン4.4-4.6)</h3>
+                
+                <div class="lesson-item">
+                    <div class="lesson-number">レッスン4.4</div>
+                    <div class="lesson-desc">フィールド：データの定義</div>
+                    <div class="application">→ 各クラスのデータ構造設計</div>
+                </div>
+
+                <div class="lesson-item">
+                    <div class="lesson-number">レッスン4.5</div>
+                    <div class="lesson-desc">コンストラクタ：初期化処理</div>
+                    <div class="application">→ オブジェクト生成時の設定</div>
+                </div>
+
+                <div class="lesson-item">
+                    <div class="lesson-number">レッスン4.6</div>
+                    <div class="lesson-desc">インスタンスメソッド：動作定義</div>
+                    <div class="application">→ 各機能の実装・メソッドチェーン</div>
+                </div>
+            </div>
+
+            <div class="lesson-group advanced">
+                <h3>高度設計 (レッスン4.7-4.9)</h3>
+                
+                <div class="lesson-item">
+                    <div class="lesson-number">レッスン4.7</div>
+                    <div class="lesson-desc">カプセル化：データ保護</div>
+                    <div class="application">→ private修飾子による安全性</div>
+                </div>
+
+                <div class="lesson-item">
+                    <div class="lesson-number">レッスン4.8</div>
+                    <div class="lesson-desc">getter/setter：安全なアクセス</div>
+                    <div class="application">→ 制御されたデータ操作</div>
+                </div>
+
+                <div class="lesson-item">
+                    <div class="lesson-number">レッスン4.9</div>
+                    <div class="lesson-desc">複数クラス協調設計</div>
+                    <div class="application">→ 多クラス協調システムの基盤</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 技術統合マップ -->
+        <div class="integration-map">
+            <h3 class="integration-title">各クラスでの技術活用状況</h3>
+            
+            <div class="system-components">
+                <div class="component">
+                    <h4>Student クラス</h4>
+                    <ul class="tech-usage">
+                        <li class="student-usage"><strong>4.4:</strong> private フィールド設計</li>
+                        <li class="student-usage"><strong>4.5:</strong> コンストラクタによる初期化</li>
+                        <li class="student-usage"><strong>4.6:</strong> GPA計算・レベル判定メソッド</li>
+                        <li class="student-usage"><strong>4.7-4.8:</strong> カプセル化・getter/setter</li>
+                        <li class="student-usage"><strong>4.9:</strong> Grade との連携</li>
+                    </ul>
+                </div>
+
+                <div class="component">
+                    <h4>Grade クラス</h4>
+                    <ul class="tech-usage">
+                        <li class="grade-usage"><strong>4.4:</strong> 成績データフィールド</li>
+                        <li class="grade-usage"><strong>4.5:</strong> 成績情報の初期化</li>
+                        <li class="grade-usage"><strong>4.6:</strong> 評価判定メソッド</li>
+                        <li class="grade-usage"><strong>4.7-4.8:</strong> データ保護・アクセス制御</li>
+                        <li class="grade-usage"><strong>4.9:</strong> Student との協調</li>
+                    </ul>
+                </div>
+
+                <div class="component">
+                    <h4>StudentManagementSystem</h4>
+                    <ul class="tech-usage">
+                        <li class="system-usage"><strong>4.4:</strong> システム制御用フィールド</li>
+                        <li class="system-usage"><strong>4.5:</strong> システム初期化</li>
+                        <li class="system-usage"><strong>4.6:</strong> 管理・検索メソッド</li>
+                        <li class="system-usage"><strong>4.7-4.8:</strong> 安全なデータ管理</li>
+                        <li class="system-usage"><strong>4.9:</strong> 全クラスとの協調統制</li>
+                    </ul>
+                </div>
+
+                <div class="component">
+                    <h4>ReportGenerator</h4>
+                    <ul class="tech-usage">
+                        <li class="report-usage"><strong>4.4:</strong> レポート生成用設定</li>
+                        <li class="report-usage"><strong>4.5:</strong> ジェネレータ初期化</li>
+                        <li class="report-usage"><strong>4.6:</strong> 各種レポート生成メソッド</li>
+                        <li class="report-usage"><strong>4.7-4.8:</strong> 生成プロセスの制御</li>
+                        <li class="report-usage"><strong>4.9:</strong> データクラスとの連携</li>
+                    </ul>
+                </div>
+
+                <div class="component">
+                    <h4>DataAnalyzer</h4>
+                    <ul class="tech-usage">
+                        <li class="analyzer-usage"><strong>4.4:</strong> 分析用設定フィールド</li>
+                        <li class="analyzer-usage"><strong>4.5:</strong> アナライザー初期化</li>
+                        <li class="analyzer-usage"><strong>4.6:</strong> 統計・分析メソッド</li>
+                        <li class="analyzer-usage"><strong>4.7-4.8:</strong> 分析ロジックの保護</li>
+                        <li class="analyzer-usage"><strong>4.9:</strong> データ取得・処理の協調</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 達成成果 -->
+        <div class="achievement-summary">
+            <h3>Week 4技術統合の成果</h3>
+            <p>9つのレッスンで段階的に習得した技術が、実用的な5クラス協調システムで完全統合</p>
+            
+            <div class="achievements">
+                <div class="achievement-item">
+                    <strong>技術基盤の確立</strong>
+                    OOP思考・クラス設計・インスタンス操作の完全理解
+                </div>
+                <div class="achievement-item">
+                    <strong>実装技術の習得</strong>
+                    フィールド・コンストラクタ・メソッド設計の実践
+                </div>
+                <div class="achievement-item">
+                    <strong>品質技術の適用</strong>
+                    カプセル化・データ保護・安全なアクセス制御
+                </div>
+                <div class="achievement-item">
+                    <strong>協調設計の実現</strong>
+                    多クラス間の効果的な連携・責任分散
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>システム動作フローと出力結果の視覚的説明</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: white;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+        }
+
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #16a085;
+            padding-bottom: 15px;
+        }
+
+        .execution-flow {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .flow-step {
+            background: white;
+            border: 3px solid;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .step-1 {
+            border-color: #e74c3c;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
+        }
+
+        .step-2 {
+            border-color: #f39c12;
+            background: linear-gradient(135deg, #fef9e7 0%, #fcf3cf 100%);
+        }
+
+        .step-3 {
+            border-color: #3498db;
+            background: linear-gradient(135deg, #ebf3fd 0%, #d6eaf8 100%);
+        }
+
+        .step-4 {
+            border-color: #27ae60;
+            background: linear-gradient(135deg, #e8f8f5 0%, #d5f4e6 100%);
+        }
+
+        .step-5 {
+            border-color: #8e44ad;
+            background: linear-gradient(135deg, #f4ecf7 0%, #e8daef 100%);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+        }
+
+        .step-1 .step-number {
+            background: #e74c3c;
+        }
+
+        .step-2 .step-number {
+            background: #f39c12;
+        }
+
+        .step-3 .step-number {
+            background: #3498db;
+        }
+
+        .step-4 .step-number {
+            background: #27ae60;
+        }
+
+        .step-5 .step-number {
+            background: #8e44ad;
+        }
+
+        .step-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .step-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .code-section {
+            background: rgba(255,255,255,0.8);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid;
+        }
+
+        .step-1 .code-section {
+            border-left-color: #e74c3c;
+        }
+
+        .step-2 .code-section {
+            border-left-color: #f39c12;
+        }
+
+        .step-3 .code-section {
+            border-left-color: #3498db;
+        }
+
+        .step-4 .code-section {
+            border-left-color: #27ae60;
+        }
+
+        .step-5 .code-section {
+            border-left-color: #8e44ad;
+        }
+
+        .code-section h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.4;
+            overflow-x: auto;
+        }
+
+        .output-section {
+            background: rgba(255,255,255,0.9);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid;
+        }
+
+        .step-1 .output-section {
+            border-left-color: #e74c3c;
+        }
+
+        .step-2 .output-section {
+            border-left-color: #f39c12;
+        }
+
+        .step-3 .output-section {
+            border-left-color: #3498db;
+        }
+
+        .step-4 .output-section {
+            border-left-color: #27ae60;
+        }
+
+        .step-5 .output-section {
+            border-left-color: #8e44ad;
+        }
+
+        .output-block {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.4;
+            overflow-x: auto;
+        }
+
+        .data-flow {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .data-flow h3 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 22px;
+        }
+
+        .flow-diagram {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .data-step {
+            background: white;
+            border: 2px solid #6c757d;
+            border-radius: 10px;
+            padding: 15px 20px;
+            min-width: 150px;
+            text-align: center;
+            position: relative;
+            flex: 1;
+        }
+
+        .data-step:not(:last-child)::after {
+            content: '→';
+            position: absolute;
+            right: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            color: #6c757d;
+            font-weight: bold;
+        }
+
+        .data-step strong {
+            display: block;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .features-summary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .features-summary h3 {
+            margin-bottom: 25px;
+            font-size: 24px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .feature-item {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-item strong {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .highlight {
+            color: #f1c40f;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .step-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .flow-diagram {
+                flex-direction: column;
+            }
+            
+            .data-step:not(:last-child)::after {
+                content: '↓';
+                right: 50%;
+                top: 100%;
+                transform: translateX(50%);
+                bottom: -25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">システム動作フローと出力結果の視覚的説明</h1>
+        
+        <!-- システム実行フロー -->
+        <div class="execution-flow">
+            <!-- ステップ1: システム初期化 -->
+            <div class="flow-step step-1">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <div class="step-title">システム初期化・学生データ作成</div>
+                </div>
+                <div class="step-content">
+                    <div class="code-section">
+                        <h4>実行コード</h4>
+                        <div class="code-block">StudentManagementSystem system = 
+    new StudentManagementSystem();
+
+Student tanaka = new Student(
+    "S001", "田中太郎", 20, "コンピュータ科学");
+
+tanaka.addGrade(new Grade(
+    "プログラミング", 85, "前期", 
+    LocalDate.of(2024, 7, 15)));</div>
+                    </div>
+                    <div class="output-section">
+                        <h4>出力結果</h4>
+                        <div class="output-block">=================================
+  OOP版学生管理システム v1.0
+    Week 4 集大成システム
+=================================
+
+✅ 学生を登録しました：田中太郎
+✅ 学生を登録しました：佐藤花子
+✅ 学生を登録しました：山田次郎
+✅ 学生を登録しました：鈴木美咲</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ステップ2: システム統計表示 -->
+            <div class="flow-step step-2">
+                <div class="step-header">
+                    <div class="step-number">2</div>
+                    <div class="step-title">システム統計サマリー生成</div>
+                </div>
+                <div class="step-content">
+                    <div class="code-section">
+                        <h4>実行コード</h4>
+                        <div class="code-block">system.showSystemSummary();
+
+// DataAnalyzer で集計処理
+Map&lt;String, Long&gt; majorCount = 
+    students.stream()
+    .collect(Collectors.groupingBy(
+        Student::getMajor, 
+        Collectors.counting()));</div>
+                    </div>
+                    <div class="output-section">
+                        <h4>出力結果</h4>
+                        <div class="output-block">=== システム統計サマリー ===
+総学生数: 4名
+総成績数: 16件
+専攻数: 3種類
+
+--- 専攻別学生数 ---
+コンピュータ科学: 2名
+数学: 1名
+物理学: 1名
+==========================</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ステップ3: 個人レポート生成 -->
+            <div class="flow-step step-3">
+                <div class="step-header">
+                    <div class="step-number">3</div>
+                    <div class="step-title">個人成績レポート生成</div>
+                </div>
+                <div class="step-content">
+                    <div class="code-section">
+                        <h4>実行コード</h4>
+                        <div class="code-block">system.generateStudentReport("S002");
+
+// ReportGenerator で処理
+public void generateIndividualReport(
+    Student student) {
+    
+    System.out.println("=== 個人成績レポート ===");
+    System.out.println("GPA: " + 
+        String.format("%.2f", 
+        student.calculateGPA()));
+}</div>
+                    </div>
+                    <div class="output-section">
+                        <h4>出力結果</h4>
+                        <div class="output-block">=== 個人成績レポート ===
+学生ID: S002
+氏名: 佐藤花子
+年齢: 19歳
+専攻: 数学
+GPA: 4.53
+レベル: 優秀
+
+--- 科目別成績 ---
+微積分: 95.0点 (A) 前期
+線形代数: 88.0点 (B) 前期
+統計学: 91.0点 (A) 後期
+数値解析: 87.0点 (B) 後期
+========================</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ステップ4: クラス分析実行 -->
+            <div class="flow-step step-4">
+                <div class="step-header">
+                    <div class="step-number">4</div>
+                    <div class="step-title">クラス全体分析・統計処理</div>
+                </div>
+                <div class="step-content">
+                    <div class="code-section">
+                        <h4>実行コード</h4>
+                        <div class="code-block">system.analyzeClassPerformance();
+
+// DataAnalyzer での統計計算
+double avgGPA = students.stream()
+    .mapToDouble(Student::calculateGPA)
+    .average().orElse(0.0);
+
+Student topStudent = students.stream()
+    .max((s1, s2) -> Double.compare(
+        s1.calculateGPA(), 
+        s2.calculateGPA()))</div>
+                    </div>
+                    <div class="output-section">
+                        <h4>出力結果</h4>
+                        <div class="output-block">=== クラス分析結果 ===
+平均GPA: 4.27
+最高GPA: 4.53
+最低GPA: 4.00
+最優秀学生: 佐藤花子
+
+--- 成績分布 ---
+優秀: 4名
+==================</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ステップ5: 検索機能実行 -->
+            <div class="flow-step step-5">
+                <div class="step-header">
+                    <div class="step-number">5</div>
+                    <div class="step-title">高度検索・フィルタリング機能</div>
+                </div>
+                <div class="step-content">
+                    <div class="code-section">
+                        <h4>実行コード</h4>
+                        <div class="code-block">// 専攻別検索
+List&lt;Student&gt; csStudents = 
+    system.searchStudentsByMajor(
+        "コンピュータ科学");
+
+// GPA 条件検索
+List&lt;Student&gt; highPerformers = 
+    system.findHighPerformers(3.5);
+
+csStudents.forEach(s -> 
+    System.out.println("  • " + s.getName()));</div>
+                    </div>
+                    <div class="output-section">
+                        <h4>出力結果</h4>
+                        <div class="output-block">🔍 コンピュータ科学専攻の学生:
+  • 田中太郎 (GPA: 4.30)
+  • 鈴木美咲 (GPA: 4.48)
+
+🏆 優秀学生 (GPA 3.5以上):
+  • 佐藤花子 (GPA: 4.53)
+  • 鈴木美咲 (GPA: 4.48)
+  • 田中太郎 (GPA: 4.30)
+  • 山田次郎 (GPA: 4.00)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- データフロー図 -->
+        <div class="data-flow">
+            <h3>システム内データフロー</h3>
+            <div class="flow-diagram">
+                <div class="data-step">
+                    <strong>データ作成</strong>
+                    Student・Grade<br>オブジェクト生成
+                </div>
+                <div class="data-step">
+                    <strong>システム登録</strong>
+                    ManagementSystem<br>への追加・管理
+                </div>
+                <div class="data-step">
+                    <strong>処理実行</strong>
+                    各種機能の<br>実行・制御
+                </div>
+                <div class="data-step">
+                    <strong>分析処理</strong>
+                    DataAnalyzer<br>統計計算
+                </div>
+                <div class="data-step">
+                    <strong>結果出力</strong>
+                    ReportGenerator<br>レポート生成
+                </div>
+            </div>
+        </div>
+
+        <!-- 機能総括 -->
+        <div class="features-summary">
+            <h3>実現された機能の総括</h3>
+            <p>Week 4で習得した全技術が統合され、<span class="highlight">実用レベルの学生管理システム</span>として完成</p>
+            
+            <div class="features-grid">
+                <div class="feature-item">
+                    <strong>データ管理機能</strong>
+                    学生情報・成績データの安全な管理<br>
+                    カプセル化による堅牢な設計
+                </div>
+                <div class="feature-item">
+                    <strong>分析・統計機能</strong>
+                    GPA計算・順位付け・分布分析<br>
+                    クラス全体の包括的な統計処理
+                </div>
+                <div class="feature-item">
+                    <strong>レポート生成機能</strong>
+                    個人成績表・クラス統計レポート<br>
+                    見やすい形式での出力表示
+                </div>
+                <div class="feature-item">
+                    <strong>検索・フィルタ機能</strong>
+                    条件指定検索・ソート機能<br>
+                    柔軟な情報検索・抽出
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
