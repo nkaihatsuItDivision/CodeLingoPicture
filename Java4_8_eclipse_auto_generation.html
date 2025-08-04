@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eclipse自動生成機能とその利点</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: white;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+        .process-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        .step {
+            flex: 1;
+            text-align: center;
+            padding: 0 10px;
+        }
+        .step-box {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        .step-number {
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: #007bff;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .step-title {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+        .step-desc {
+            font-size: 14px;
+            color: #6c757d;
+        }
+        .arrow {
+            font-size: 24px;
+            color: #007bff;
+            margin: 0 10px;
+        }
+        .comparison-section {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        .method-comparison {
+            flex: 1;
+        }
+        .method-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .manual {
+            background: #fff3e0;
+            color: #f57c00;
+            border: 2px solid #ffb74d;
+        }
+        .auto {
+            background: #e8f5e8;
+            color: #2e7d32;
+            border: 2px solid #66bb6a;
+        }
+        .code-before {
+            background: #f5f5f5;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin: 10px 0;
+            line-height: 1.4;
+        }
+        .code-after {
+            background: #e3f2fd;
+            border: 1px solid #42a5f5;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin: 10px 0;
+            line-height: 1.4;
+        }
+        .menu-simulation {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .menu-title {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 15px;
+        }
+        .menu-item {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 8px 12px;
+            margin: 5px 0;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .menu-item:hover {
+            background: #e3f2fd;
+            border-color: #42a5f5;
+        }
+        .benefits-table {
+            background: #f8f9fa;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        .table-header {
+            background: #007bff;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .table-row {
+            display: flex;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .table-cell {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+        }
+        .manual-cell {
+            background: #fff3e0;
+        }
+        .auto-cell {
+            background: #e8f5e8;
+        }
+        .highlight {
+            background: #fff8e1;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .highlight-title {
+            font-weight: bold;
+            color: #f57c00;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Eclipse自動生成機能とその利点</div>
+        
+        <div class="process-flow">
+            <div class="step">
+                <div class="step-box">
+                    <div class="step-number">1</div>
+                    <div class="step-title">右クリック</div>
+                    <div class="step-desc">クラス内で右クリック</div>
+                </div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="step">
+                <div class="step-box">
+                    <div class="step-number">2</div>
+                    <div class="step-title">メニュー選択</div>
+                    <div class="step-desc">「ソース」→「getter及びsetterの生成...」</div>
+                </div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="step">
+                <div class="step-box">
+                    <div class="step-number">3</div>
+                    <div class="step-title">フィールド選択</div>
+                    <div class="step-desc">対象フィールドを選択</div>
+                </div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="step">
+                <div class="step-box">
+                    <div class="step-number">4</div>
+                    <div class="step-title">自動生成</div>
+                    <div class="step-desc">完璧なコードが瞬時に生成</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="menu-simulation">
+            <div class="menu-title">🖱️ Eclipse コンテキストメニュー（右クリックメニュー）</div>
+            <div class="menu-item">コピー</div>
+            <div class="menu-item">貼り付け</div>
+            <div class="menu-item">削除</div>
+            <div class="menu-item" style="background: #e3f2fd; border-color: #42a5f5; font-weight: bold;">📁 ソース</div>
+            <div style="margin-left: 20px;">
+                <div class="menu-item">🔧 フィールドからコンストラクター生成...</div>
+                <div class="menu-item" style="background: #e8f5e8; border-color: #66bb6a; font-weight: bold;">⚙️ getter及びsetterの生成...</div>
+                <div class="menu-item">📝 toString()の生成...</div>
+                <div class="menu-item">🔍 hashCode()とequals()の生成...</div>
+            </div>
+        </div>
+        
+        <div class="comparison-section">
+            <div class="method-comparison">
+                <div class="method-title manual">🖐️ 手動作成</div>
+                <div class="code-before">
+public class Student {
+    private String name;
+    private int age;
+    private double gpa;
+    
+    // ここから20行手動で作成...
+    // タイプミスの可能性
+    // 時間がかかる
+}</div>
+                <div style="text-align: center; color: #f57c00; font-weight: bold; margin: 10px 0;">
+                    ⏱️ 約5-10分<br>❌ エラーの可能性あり
+                </div>
+            </div>
+            
+            <div class="method-comparison">
+                <div class="method-title auto">⚡ Eclipse自動生成</div>
+                <div class="code-after">
+public class Student {
+    private String name;
+    private int age;
+    private double gpa;
+    
+    // 3秒で完璧に生成される
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    // 他のメソッドも同様...
+}</div>
+                <div style="text-align: center; color: #2e7d32; font-weight: bold; margin: 10px 0;">
+                    ⚡ 3秒で完了<br>✅ 100%正確
+                </div>
+            </div>
+        </div>
+        
+        <div class="benefits-table">
+            <div class="table-header">手動作成 vs Eclipse自動生成 比較表</div>
+            <div class="table-row">
+                <div class="table-cell" style="background: #dee2e6; font-weight: bold;">項目</div>
+                <div class="table-cell manual-cell" style="font-weight: bold;">手動作成</div>
+                <div class="table-cell auto-cell" style="font-weight: bold;">Eclipse自動生成</div>
+            </div>
+            <div class="table-row">
+                <div class="table-cell" style="background: #f8f9fa; font-weight: bold;">作成時間</div>
+                <div class="table-cell manual-cell">5-10分</div>
+                <div class="table-cell auto-cell">3-5秒</div>
+            </div>
+            <div class="table-row">
+                <div class="table-cell" style="background: #f8f9fa; font-weight: bold;">正確性</div>
+                <div class="table-cell manual-cell">タイプミスの可能性</div>
+                <div class="table-cell auto-cell">100%正確</div>
+            </div>
+            <div class="table-row">
+                <div class="table-cell" style="background: #f8f9fa; font-weight: bold;">命名規則</div>
+                <div class="table-cell manual-cell">手動で確認必要</div>
+                <div class="table-cell auto-cell">Java標準に準拠</div>
+            </div>
+            <div class="table-row">
+                <div class="table-cell" style="background: #f8f9fa; font-weight: bold;">保守性</div>
+                <div class="table-cell manual-cell">フィールド追加時に手動追加</div>
+                <div class="table-cell auto-cell">再生成で瞬時に更新</div>
+            </div>
+        </div>
+        
+        <div class="highlight">
+            <div class="highlight-title">💡 実務でのベストプラクティス</div>
+            <div>
+                <strong>基本パターン</strong>：Eclipse自動生成で効率化<br>
+                <strong>検証が必要</strong>：自動生成後にsetterをカスタマイズ<br>
+                <strong>特殊ロジック</strong>：getterに計算処理を追加<br>
+                <strong>フィールド追加時</strong>：再生成で瞬時にメソッド追加
+            </div>
+        </div>
+    </div>
+</body>
+</html>
