@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ステップ実行ボタン詳細ガイド</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.2rem;
+            font-weight: 600;
+        }
+        
+        .header p {
+            margin: 10px 0 0 0;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .debug-toolbar {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .debug-button {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+            position: relative;
+        }
+        
+        .debug-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+        }
+        
+        .debug-button.step-into {
+            background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+            box-shadow: 0 4px 15px rgba(23, 162, 184, 0.3);
+        }
+        
+        .debug-button.step-over {
+            background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+            color: #212529;
+            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+        }
+        
+        .debug-button.step-return {
+            background: linear-gradient(135deg, #6f42c1 0%, #59359a 100%);
+            box-shadow: 0 4px 15px rgba(111, 66, 193, 0.3);
+        }
+        
+        .debug-button.resume {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+        
+        .shortcut {
+            background: rgba(255,255,255,0.2);
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .button-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            border-left: 5px solid #3498db;
+        }
+        
+        .button-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .button-card.step-into { border-left-color: #17a2b8; }
+        .button-card.step-over { border-left-color: #ffc107; }
+        .button-card.step-return { border-left-color: #6f42c1; }
+        .button-card.resume { border-left-color: #28a745; }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .card-icon {
+            font-size: 2.5rem;
+        }
+        
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .card-shortcut {
+            background: #3498db;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        
+        .card-description {
+            color: #5a6c7d;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .usage-example {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 15px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        
+        .code-line {
+            padding: 3px 0;
+            line-height: 1.5;
+        }
+        
+        .current-line {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding-left: 8px;
+            position: relative;
+        }
+        
+        .current-line::before {
+            content: '▶';
+            color: #2196f3;
+            position: absolute;
+            left: -20px;
+            font-size: 1rem;
+        }
+        
+        .next-line {
+            background: #f1f8e9;
+            border-left: 4px solid #4caf50;
+            padding-left: 8px;
+            position: relative;
+        }
+        
+        .next-line::before {
+            content: '→';
+            color: #4caf50;
+            position: absolute;
+            left: -20px;
+            font-size: 1rem;
+        }
+        
+        .method-highlight {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding-left: 8px;
+        }
+        
+        .when-to-use {
+            background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        
+        .when-to-use h4 {
+            color: #155724;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        
+        .when-to-use ul {
+            margin: 0;
+            padding-left: 20px;
+            color: #155724;
+        }
+        
+        .scenario-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 40px;
+        }
+        
+        .scenario-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .scenario {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .scenario-header {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .step-sequence {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        
+        .step-arrow {
+            color: #3498db;
+            font-size: 1.5rem;
+        }
+        
+        .step-action {
+            background: #3498db;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .tips-section {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+        
+        .tips-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1976d2;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .tip-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .tip-icon {
+            font-size: 1.5rem;
+            color: #1976d2;
+        }
+        
+        .tip-text {
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 ステップ実行ボタン詳細ガイド</h1>
+            <p>デバッグ中のプログラム制御方法を完全マスター</p>
+        </div>
+        
+        <div class="content">
+            <div class="debug-toolbar">
+                <button class="debug-button resume">
+                    ▶ Resume
+                    <span class="shortcut">F8</span>
+                </button>
+                <button class="debug-button step-into">
+                    ⬇ Step Into
+                    <span class="shortcut">F5</span>
+                </button>
+                <button class="debug-button step-over">
+                    ➡ Step Over
+                    <span class="shortcut">F6</span>
+                </button>
+                <button class="debug-button step-return">
+                    ⬆ Step Return
+                    <span class="shortcut">F7</span>
+                </button>
+            </div>
+            
+            <div class="buttons-grid">
+                <div class="button-card resume">
+                    <div class="card-header">
+                        <span class="card-icon">▶</span>
+                        <div>
+                            <div class="card-title">Resume</div>
+                            <span class="card-shortcut">F8</span>
+                        </div>
+                    </div>
+                    <div class="card-description">
+                        次のブレークポイントまで実行を継続します。ブレークポイントがない場合はプログラム終了まで実行されます。
+                    </div>
+                    
+                    <div class="usage-example">
+                        <div class="code-line current-line">processGrades(students); // 現在地</div>
+                        <div class="code-line">saveToFile(students);</div>
+                        <div class="code-line">cleanup();</div>
+                        <div class="code-line next-line">System.out.println("完了"); // 次のブレークポイント</div>
+                    </div>
+                    
+                    <div class="when-to-use">
+                        <h4>🎯 いつ使う？</h4>
+                        <ul>
+                            <li>問題ない部分をスキップしたい時</li>
+                            <li>次の重要なポイントまで一気に進みたい時</li>
+                            <li>ループ処理を最後まで実行したい時</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="button-card step-into">
+                    <div class="card-header">
+                        <span class="card-icon">⬇</span>
+                        <div>
+                            <div class="card-title">Step Into</div>
+                            <span class="card-shortcut" style="background: #17a2b8;">F5</span>
+                        </div>
+                    </div>
+                    <div class="card-description">
+                        メソッド呼び出しがある場合、そのメソッドの内部に入ります。メソッドの詳細な動作を追跡したい時に使用します。
+                    </div>
+                    
+                    <div class="usage-example">
+                        <div class="code-line current-line">processGrades(students); // 現在地</div>
+                        <div class="code-line">↓ Step Into で移動</div>
+                        <div class="code-line method-highlight">public static void processGrades(...) { // メソッド内部</div>
+                        <div class="code-line method-highlight">    System.out.println("処理開始");</div>
+                    </div>
+                    
+                    <div class="when-to-use">
+                        <h4>🎯 いつ使う？</h4>
+                        <ul>
+                            <li>メソッドの内部動作を詳しく確認したい時</li>
+                            <li>自作メソッドにバグがありそうな時</li>
+                            <li>複雑な処理の流れを理解したい時</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="button-card step-over">
+                    <div class="card-header">
+                        <span class="card-icon">➡</span>
+                        <div>
+                            <div class="card-title">Step Over</div>
+                            <span class="card-shortcut" style="background: #ffc107; color: #212529;">F6</span>
+                        </div>
+                    </div>
+                    <div class="card-description">
+                        現在の行を実行して次の行に移動します。メソッド呼び出しがあっても内部には入らず、結果のみを受け取ります。
+                    </div>
+                    
+                    <div class="usage-example">
+                        <div class="code-line current-line">processGrades(students); // 現在地</div>
+                        <div class="code-line">↓ Step Over で移動（メソッド内部には入らない）</div>
+                        <div class="code-line next-line">saveToFile(students); // 次の行</div>
+                        <div class="code-line">cleanup();</div>
+                    </div>
+                    
+                    <div class="when-to-use">
+                        <h4>🎯 いつ使う？</h4>
+                        <ul>
+                            <li>メソッドの結果だけ知りたい時</li>
+                            <li>1行ずつ順番に実行を確認したい時</li>
+                            <li>標準ライブラリメソッドは飛ばしたい時</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="button-card step-return">
+                    <div class="card-header">
+                        <span class="card-icon">⬆</span>
+                        <div>
+                            <div class="card-title">Step Return</div>
+                            <span class="card-shortcut" style="background: #6f42c1;">F7</span>
+                    </div>
+                    </div>
+                    <div class="card-description">
+                        現在のメソッドの実行を最後まで行い、呼び出し元に戻ります。メソッド内部から抜け出したい時に使用します。
+                    </div>
+                    
+                    <div class="usage-example">
+                        <div class="code-line method-highlight">public static void processGrades(...) {</div>
+                        <div class="code-line method-highlight current-line">    // 現在地（メソッド内部）</div>
+                        <div class="code-line method-highlight">    System.out.println("処理中...");</div>
+                        <div class="code-line method-highlight">} // メソッド終了</div>
+                        <div class="code-line">↓ Step Return で戻る</div>
+                        <div class="code-line next-line">saveToFile(students); // 呼び出し元の次の行</div>
+                    </div>
+                    
+                    <div class="when-to-use">
+                        <h4>🎯 いつ使う？</h4>
+                        <ul>
+                            <li>メソッド内部から素早く抜け出したい時</li>
+                            <li>間違ってStep Intoしてしまった時</li>
+                            <li>メソッドの戻り値だけ確認したい時</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="scenario-section">
+                <div class="scenario-title">🎯 実践シナリオ：効果的な使い分け</div>
+                
+                <div class="scenario">
+                    <div class="scenario-header">
+                        <span>🔍</span>
+                        <span>シナリオ1: メソッド内のバグを調査</span>
+                    </div>
+                    <div>processGrades()メソッドで計算結果がおかしい場合</div>
+                    <div class="step-sequence">
+                        <span class="step-action">Step Into (F5)</span>
+                        <span class="step-arrow">→</span>
+                        <span class="step-action">Step Over (F6) × 数回</span>
+                        <span class="step-arrow">→</span>
+                        <span class="step-action">変数確認</span>
+                        <span class="step-arrow">→</span>
+                        <span class="step-action">バグ発見</span>
+                    </div>
+                </div>
+                
+                <div class="scenario">
+                    <div class="scenario-header">
+                        <span>⚡</span>
+                        <span>シナリオ2: 大きなループをスキップ</span>
+                    </div>
+                    <div>1000回のループ処理で、最後の結果だけ確認したい場合</div>
+                    <div class="step-sequence">
+                        <span class="step-action">ループ後にブレークポイント設定</span>
+                        <span class="step-arrow">→</span>
+                        <span class="step-action">Resume (F8)</span>
+                        <span class="step-arrow">→</span>
+                        <span class="step-action">結果確認</span>
+                    </div>
+                </div>
+                
+                <div class="scenario">
+                    <div class="scenario-header">
+                        <span>🔄</span>
+                        <span>シナリオ3: 間違ってメソッドに入った場合</span>
+                    </div>
+                    <div>標準ライブラリのメソッドに誤ってStep Intoしてしまった場合</div>
+                    <div class="step-sequence">
+                        <span class="step-action">Step Return (F7)</span>
+                        <span class="step-arrow">→</span>
+                        <span class="step-action">呼び出し元に復帰</span>
+                        <span class="step-arrow">→</span>
+                        <span class="step-action">Step Over (F6)で続行</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tips-section">
+                <div class="tips-title">💡 デバッグ効率化のコツ</div>
+                
+                <div class="tip-item">
+                    <span class="tip-icon">⌨️</span>
+                    <div class="tip-text"><strong>ショートカット活用:</strong> マウスより F5, F6, F7, F8 キーの方が高速</div>
+                </div>
+                
+                <div class="tip-item">
+                    <span class="tip-icon">🎯</span>
+                    <div class="tip-text"><strong>戦略的ブレークポイント:</strong> 問題のありそうな箇所の前後に設定</div>
+                </div>
+                
+                <div class="tip-item">
+                    <span class="tip-icon">👀</span>
+                    <div class="tip-text"><strong>変数監視:</strong> Step実行の度に Variables パネルで値の変化を確認</div>
+                </div>
+                
+                <div class="tip-item">
+                    <span class="tip-icon">🚀</span>
+                    <div class="tip-text"><strong>効率的な流れ:</strong> Step Into → 問題発見 → Step Return → Resume で次へ</div>
+                </div>
+                
+                <div class="tip-item">
+                    <span class="tip-icon">🛑</span>
+                    <div class="tip-text"><strong>無限ループ対策:</strong> Terminate ボタンでいつでも実行停止可能</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

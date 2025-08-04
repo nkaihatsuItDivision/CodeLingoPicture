@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>変数監視ウィンドウ詳細ガイド</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.2rem;
+            font-weight: 600;
+        }
+        
+        .header p {
+            margin: 10px 0 0 0;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .variables-demo {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .variables-header {
+            background: linear-gradient(135deg, #495057 0%, #6c757d 100%);
+            color: white;
+            padding: 12px 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .variables-content {
+            background: white;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .variable-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            border-bottom: 1px solid #f1f3f4;
+            transition: background 0.2s ease;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .variable-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .variable-item.expandable {
+            cursor: pointer;
+        }
+        
+        .expand-icon {
+            width: 16px;
+            color: #6c757d;
+            font-size: 0.8rem;
+            margin-right: 5px;
+        }
+        
+        .variable-icon {
+            width: 20px;
+            margin-right: 8px;
+            text-align: center;
+        }
+        
+        .variable-name {
+            font-weight: 500;
+            color: #2c3e50;
+            min-width: 120px;
+        }
+        
+        .variable-value {
+            color: #e74c3c;
+            margin-left: auto;
+            margin-right: 15px;
+        }
+        
+        .variable-type {
+            color: #7f8c8d;
+            font-size: 0.8rem;
+            font-style: italic;
+        }
+        
+        .indent-1 { padding-left: 40px; }
+        .indent-2 { padding-left: 60px; }
+        .indent-3 { padding-left: 80px; }
+        
+        .variable-highlight {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%) !important;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .feature-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            border-left: 5px solid #3498db;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .feature-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .feature-description {
+            color: #5a6c7d;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .feature-example {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 12px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.85rem;
+        }
+        
+        .expressions-demo {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .expressions-header {
+            background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+            color: white;
+            padding: 12px 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .expressions-content {
+            background: white;
+            padding: 15px 20px;
+        }
+        
+        .expression-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px dotted #dee2e6;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .expression-formula {
+            color: #2c3e50;
+            font-weight: 500;
+        }
+        
+        .expression-result {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+        
+        .add-expression {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .add-expression:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+        
+        .tips-section {
+            background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+        
+        .tips-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #155724;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .tip-category {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        
+        .tip-category-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .tip-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .tip-item {
+            padding: 8px 0;
+            border-bottom: 1px dotted #dee2e6;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .tip-item:last-child {
+            border-bottom: none;
+        }
+        
+        .tip-icon {
+            color: #28a745;
+            font-size: 1.1rem;
+            margin-top: 2px;
+        }
+        
+        .scenario-demo {
+            background: white;
+            border: 2px solid #3498db;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .scenario-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .debug-step {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .debug-step-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        .debug-step-content {
+            color: #5a6c7d;
+            line-height: 1.5;
+        }
+        
+        .code-highlight {
+            background: #fff3e0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            color: #e65100;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 変数監視ウィンドウ詳細ガイド</h1>
+            <p>プログラムの状態をリアルタイムで把握する最強ツール</p>
+        </div>
+        
+        <div class="content">
+            <div class="variables-demo">
+                <div class="variables-header">
+                    <span>📋</span>
+                    Variables (変数監視)
+                </div>
+                <div class="variables-content">
+                    <div class="variable-item expandable">
+                        <span class="expand-icon">▼</span>
+                        <span class="variable-icon">📦</span>
+                        <span class="variable-name">students</span>
+                        <span class="variable-value">ArrayList&lt;E&gt; (id=25)</span>
+                        <span class="variable-type">java.util.ArrayList</span>
+                    </div>
+                    <div class="variable-item indent-1">
+                        <span class="expand-icon">▼</span>
+                        <span class="variable-icon">🔢</span>
+                        <span class="variable-name">elementData</span>
+                        <span class="variable-value">Object[10] (id=26)</span>
+                        <span class="variable-type">java.lang.Object[]</span>
+                    </div>
+                    <div class="variable-item indent-2">
+                        <span class="expand-icon"></span>
+                        <span class="variable-icon">📝</span>
+                        <span class="variable-name">[0]</span>
+                        <span class="variable-value">"田中太郎,85,92,78"</span>
+                        <span class="variable-type">java.lang.String</span>
+                    </div>
+                    <div class="variable-item indent-2">
+                        <span class="expand-icon"></span>
+                        <span class="variable-icon">📝</span>
+                        <span class="variable-name">[1]</span>
+                        <span class="variable-value">"佐藤花子,90,88,95"</span>
+                        <span class="variable-type">java.lang.String</span>
+                    </div>
+                    <div class="variable-item indent-2">
+                        <span class="expand-icon"></span>
+                        <span class="variable-icon">📝</span>
+                        <span class="variable-name">[2]</span>
+                        <span class="variable-value">"山田次郎,75,80,82"</span>
+                        <span class="variable-type">java.lang.String</span>
+                    </div>
+                    <div class="variable-item indent-1">
+                        <span class="expand-icon"></span>
+                        <span class="variable-icon">🔢</span>
+                        <span class="variable-name">size</span>
+                        <span class="variable-value">5</span>
+                        <span class="variable-type">int</span>
+                    </div>
+                    <div class="variable-item variable-highlight">
+                        <span class="expand-icon"></span>
+                        <span class="variable-icon">📝</span>
+                        <span class="variable-name">student</span>
+                        <span class="variable-value">"田中太郎,85,92,78"</span>
+                        <span class="variable-type">java.lang.String</span>
+                    </div>
+                    <div class="variable-item expandable">
+                        <span class="expand-icon">▼</span>
+                        <span class="variable-icon">🔧</span>
+                        <span class="variable-name">parts</span>
+                        <span class="variable-value">String[4] (id=28)</span>
+                        <span class="variable-type">java.lang.String[]</span>
+                    </div>
+                    <div class="variable-item indent-1">
+                        <span class="expand-icon"></span>
+                        <span class="variable-icon">📝</span>
+                        <span class="variable-name">[0]</span>
+                        <span class="variable-value">"田中太郎"</span>
+                        <span class="variable-type">java.lang.String</span>
+                    </div>
+                    <div class="variable-item indent-1">
+                        <span class="expand-icon"></span>
+                        <span class="variable-icon">🔢</span>
+                        <span class="variable-name">[1]</span>
+                        <span class="variable-value">"85"</span>
+                        <span class="variable-type">java.lang.String</span>
+                    </div>
+                    <div class="variable-item indent-1">
+                        <span class="expand-icon"></span>
+                        <span class="variable-icon">🔢</span>
+                        <span class="variable-name">[2]</span>
+                        <span class="variable-value">"92"</span>
+                        <span class="variable-type">java.lang.String</span>
+                    </div>
+                    <div class="variable-item indent-1">
+                        <span class="expand-icon"></span>
+                        <span class="variable-icon">🔢</span>
+                        <span class="variable-name">[3]</span>
+                        <span class="variable-value">"78"</span>
+                        <span class="variable-type">java.lang.String</span>
+                    </div>
+                    <div class="variable-item">
+                        <span class="expand-icon"></span>
+                        <span class="variable-icon">🔢</span>
+                        <span class="variable-name">math</span>
+                        <span class="variable-value">85</span>
+                        <span class="variable-type">int</span>
+                    </div>
+                    <div class="variable-item">
+                        <span class="expand-icon"></span>
+                        <span class="variable-icon">🔢</span>
+                        <span class="variable-name">english</span>
+                        <span class="variable-value">92</span>
+                        <span class="variable-type">int</span>
+                    </div>
+                    <div class="variable-item">
+                        <span class="expand-icon"></span>
+                        <span class="variable-icon">🔢</span>
+                        <span class="variable-name">japanese</span>
+                        <span class="variable-value">78</span>
+                        <span class="variable-type">int</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">🔍</span>
+                    <div class="feature-title">階層表示</div>
+                    <div class="feature-description">
+                        ArrayListや配列などの複雑なデータ構造は展開して詳細を確認できます。▼をクリックして内部データを表示。
+                    </div>
+                    <div class="feature-example">
+                        students ▼<br>
+                        ├─ elementData ▼<br>
+                        │  ├─ [0] "田中太郎,85,92,78"<br>
+                        │  └─ [1] "佐藤花子,90,88,95"<br>
+                        └─ size: 5
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">📊</span>
+                    <div class="feature-title">リアルタイム更新</div>
+                    <div class="feature-description">
+                        ステップ実行するたびに変数の値が自動更新されます。値が変更された変数はハイライト表示されます。
+                    </div>
+                    <div class="feature-example">
+                        Step実行前: average = 0.0<br>
+                        Step実行後: <span style="background: #fff3cd;">average = 85.0</span> (ハイライト)
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">🎯</span>
+                    <div class="feature-title">型情報表示</div>
+                    <div class="feature-description">
+                        各変数の型（int, String, ArrayList等）が表示されるため、データの種類を正確に把握できます。
+                    </div>
+                    <div class="feature-example">
+                        math: 85 (int)<br>
+                        name: "田中太郎" (String)<br>
+                        students: ArrayList&lt;E&gt; (ArrayList)
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">✏️</span>
+                    <div class="feature-title">値の編集</div>
+                    <div class="feature-description">
+                        デバッグ中に変数の値を直接編集して、その後の動作を確認できます。（学習目的のみ推奨）
+                    </div>
+                    <div class="feature-example">
+                        math をダブルクリック<br>
+                        85 → 100 に変更<br>
+                        Enter で確定
+                    </div>
+                </div>
+            </div>
+            
+            <div class="expressions-demo">
+                <div class="expressions-header">
+                    <span>🧮</span>
+                    Expressions (式の評価)
+                </div>
+                <div class="expressions-content">
+                    <div class="expression-item">
+                        <span class="expression-formula">math + english + japanese</span>
+                        <span class="expression-result">255</span>
+                    </div>
+                    <div class="expression-item">
+                        <span class="expression-formula">(math + english + japanese) / 3.0</span>
+                        <span class="expression-result">85.0</span>
+                    </div>
+                    <div class="expression-item">
+                        <span class="expression-formula">student.length()</span>
+                        <span class="expression-result">15</span>
+                    </div>
+                    <div class="expression-item">
+                        <span class="expression-formula">parts.length</span>
+                        <span class="expression-result">4</span>
+                    </div>
+                    <div class="expression-item">
+                        <span class="expression-formula">students.size() > 3</span>
+                        <span class="expression-result">true</span>
+                    </div>
+                    <button class="add-expression">+ Add Watch Expression</button>
+                </div>
+            </div>
+            
+            <div class="scenario-demo">
+                <div class="scenario-title">
+                    <span>🎯</span>
+                    実践シナリオ：平均点計算のバグ発見
+                </div>
+                
+                <div class="debug-step">
+                    <div class="debug-step-title">ステップ1: 変数の初期状態確認</div>
+                    <div class="debug-step-content">
+                        <code class="code-highlight">math = 85, english = 92, japanese = 78</code><br>
+                        3つの変数が正しく設定されていることを確認
+                    </div>
+                </div>
+                
+                <div class="debug-step">
+                    <div class="debug-step-title">ステップ2: 計算式の確認</div>
+                    <div class="debug-step-content">
+                        Expressions で <code class="code-highlight">(math + english) / 3</code> を評価<br>
+                        結果: <strong>59.0</strong> → 明らかに間違い！
+                    </div>
+                </div>
+                
+                <div class="debug-step">
+                    <div class="debug-step-title">ステップ3: 正しい計算式の確認</div>
+                    <div class="debug-step-content">
+                        Expressions で <code class="code-highlight">(math + english + japanese) / 3.0</code> を評価<br>
+                        結果: <strong>85.0</strong> → これが正解！
+                    </div>
+                </div>
+                
+                <div class="debug-step">
+                    <div class="debug-step-title">ステップ4: バグの特定</div>
+                    <div class="debug-step-content">
+                        計算式に <code class="code-highlight">japanese</code> が含まれていないことが判明<br>
+                        コードを修正して再テスト
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tips-section">
+                <div class="tips-title">💡 Variables ウィンドウ活用テクニック</div>
+                
+                <div class="tip-category">
+                    <div class="tip-category-title">
+                        <span>🔍</span>
+                        効率的な確認方法
+                    </div>
+                    <ul class="tip-list">
+                        <li class="tip-item">
+                            <span class="tip-icon">✓</span>
+                            <div>変更された変数は自動的にハイライト表示される</div>
+                        </li>
+                        <li class="tip-item">
+                            <span class="tip-icon">✓</span>
+                            <div>複雑なオブジェクトは▼をクリックして展開表示</div>
+                        </li>
+                        <li class="tip-item">
+                            <span class="tip-icon">✓</span>
+                            <div>配列やArrayListは要素数とインデックスが確認可能</div>
+                        </li>
+                        <li class="tip-item">
+                            <span class="tip-icon">✓</span>
+                            <div>型情報で期待するデータ型かどうか判断</div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="tip-category">
+                    <div class="tip-category-title">
+                        <span>📊</span>
+                        Expressions の活用
+                    </div>
+                    <ul class="tip-list">
+                        <li class="tip-item">
+                            <span class="tip-icon">✓</span>
+                            <div>計算式の結果を事前に確認して正誤判定</div>
+                        </li>
+                        <li class="tip-item">
+                            <span class="tip-icon">✓</span>
+                            <div>メソッド呼び出しの結果も評価可能</div>
+                        </li>
+                        <li class="tip-item">
+                            <span class="tip-icon">✓</span>
+                            <div>条件式（true/false）の評価でバグ発見</div>
+                        </li>
+                        <li class="tip-item">
+                            <span class="tip-icon">✓</span>
+                            <div>よく使う式は保存して繰り返し利用</div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="tip-category">
+                    <div class="tip-category-title">
+                        <span>⚠️</span>
+                        注意点とベストプラクティス
+                    </div>
+                    <ul class="tip-list">
+                        <li class="tip-item">
+                            <span class="tip-icon">⚠</span>
+                            <div>値の編集は学習目的のみ。本番コードでは使用禁止</div>
+                        </li>
+                        <li class="tip-item">
+                            <span class="tip-icon">⚠</span>
+                            <div>null値の変数は内容を展開できない</div>
+                        </li>
+                        <li class="tip-item">
+                            <span class="tip-icon">⚠</span>
+                            <div>大きなデータ構造は展開に時間がかかる場合がある</div>
+                        </li>
+                        <li class="tip-item">
+                            <span class="tip-icon">💡</span>
+                            <div>変数名を分かりやすくつけると監視が楽になる</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 3学習成果体系図</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255,255,255,0.05) 10px,
+                rgba(255,255,255,0.05) 20px
+            );
+            animation: shimmer 20s linear infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header p {
+            margin: 15px 0 0 0;
+            font-size: 1.2rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .achievement-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 20px;
+            position: relative;
+            z-index: 1;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            text-align: center;
+            background: rgba(255,255,255,0.1);
+            padding: 15px 25px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #3498db;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .progress-timeline {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 40px 0;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .timeline-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+        
+        .timeline-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .timeline-circle.week1 {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+        
+        .timeline-circle.week2 {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+        }
+        
+        .timeline-circle.week3 {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 8px 25px rgba(0,0,0,0.2); }
+            50% { transform: scale(1.1); box-shadow: 0 12px 35px rgba(46, 204, 113, 0.4); }
+        }
+        
+        .timeline-label {
+            margin-top: 15px;
+            font-weight: 600;
+            color: #2c3e50;
+            text-align: center;
+        }
+        
+        .timeline-arrow {
+            font-size: 2rem;
+            color: #3498db;
+            margin: 0 10px;
+        }
+        
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+        
+        .skill-category {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            border-left: 6px solid #3498db;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .skill-category:hover {
+            transform: translateY(-10px);
+        }
+        
+        .skill-category.arraylist { border-left-color: #e74c3c; }
+        .skill-category.string { border-left-color: #f39c12; }
+        .skill-category.file-io { border-left-color: #9b59b6; }
+        .skill-category.debug { border-left-color: #27ae60; }
+        
+        .skill-category::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(52, 152, 219, 0.1) 0%, transparent 70%);
+            transform: translate(30px, -30px);
+        }
+        
+        .skill-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+        
+        .skill-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .skill-items {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .skill-item {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #5a6c7d;
+            line-height: 1.5;
+        }
+        
+        .skill-check {
+            color: #27ae60;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        
+        .projects-section {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .projects-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.03)"/><circle cx="10" cy="60" r="0.5" fill="rgba(255,255,255,0.03)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        }
+        
+        .projects-title {
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .project-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .project-card:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-5px);
+        }
+        
+        .project-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #3498db;
+        }
+        
+        .project-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+        
+        .project-description {
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        
+        .level-comparison {
+            background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            position: relative;
+        }
+        
+        .level-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #155724;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .level-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .level-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        
+        .level-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .level-card.current {
+            border: 3px solid #27ae60;
+            background: linear-gradient(135deg, #f8fff8 0%, #e8f5e8 100%);
+        }
+        
+        .level-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .level-badge.beginner {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .level-badge.intermediate {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .level-badge.advanced {
+            background: #cce5ff;
+            color: #004085;
+        }
+        
+        .level-description {
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+        
+        .next-steps {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .next-steps::before {
+            content: '🚀';
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            font-size: 6rem;
+            opacity: 0.1;
+            transform: rotate(15deg);
+        }
+        
+        .next-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .next-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .week4-preview {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 25px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .week4-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #3498db;
+        }
+        
+        .week4-topics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .week4-topic {
+            background: rgba(255,255,255,0.1);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎉 Week 3 完走おめでとうございます！</h1>
+            <p>中級プログラマーレベル到達 - あなたの圧倒的な成長</p>
+            
+            <div class="achievement-stats">
+                <div class="stat-item">
+                    <div class="stat-number">10</div>
+                    <div class="stat-label">レッスン完了</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">1,150+</div>
+                    <div class="stat-label">総実装行数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">習得技術</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">実用プロジェクト</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="progress-timeline">
+                <div class="timeline-item">
+                    <div class="timeline-circle week1">W1</div>
+                    <div class="timeline-label">Web基礎<br>HTML/CSS</div>
+                </div>
+                <div class="timeline-arrow">→</div>
+                <div class="timeline-item">
+                    <div class="timeline-circle week2">W2</div>
+                    <div class="timeline-label">Java入門<br>基本構文</div>
+                </div>
+                <div class="timeline-arrow">→</div>
+                <div class="timeline-item">
+                    <div class="timeline-circle week3">W3</div>
+                    <div class="timeline-label">Java基礎固め<br>実用技術統合</div>
+                </div>
+            </div>
+            
+            <div class="skills-grid">
+                <div class="skill-category arraylist">
+                    <span class="skill-icon">📋</span>
+                    <div class="skill-title">ArrayList & データ構造</div>
+                    <ul class="skill-items">
+                        <li class="skill-item">
+                            <span class="skill-check">✓</span>
+                            <span>動的配列による柔軟なデータ管理</span>
+                        </li>
+                        <li class="skill-item">
+                            <span class="skill-check">✓</span>
+                            <span>CRUD操作（追加・読み取り・更新・削除）</span>
+                        </li>
+                        <li class="skill-item">
+                            <span class="skill-check">✓</span>
+                            <span>検索・並び替え・変換アルゴリズム</span>
+                        </li>
+                        <li class="skill-item">
+                            <span class="skill-check">✓</span>
+                            <span>拡張for文による効率的な反復処理</span>
+                        </li>
+                        <li class="skill-item">
+                            <span class="skill-check">✓</span>
+                            <span>配列とArrayListの使い分け判断</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="skill-category string">
+                    <span class="skill-icon">📝</span>
+                    <div class="skill-title">String操作 & 文字列処理</div>
+                    <ul class="skill-items">
+                        <li class="skill-item">
+                            <span class="skill-check">✓</span>
+                            <span>12種類のStringメソッド完全習得</span>
+                        </li>
+                        <li class="skill-item">
+                            <span class="skill-check">✓</span>
+                            <span>split・substring・replace・trim活用</span>
+                        </li>
+                        <li class="skill-item">
+                            <span class="skill-check">✓</span>
+                            <span>正規表現による高度なパターンマッチング</span>
+                        </li>
+                        <li class="skill-item">
+                            <span class="skill-check">✓</span>
+                            <span>文字列検索・置換・分割の実践活用</span>
+                        </li>
+                        <li class="skill-item">
+                            <span class="skill-check">✓</span>
+                            <span>StringUtilsクラス設計によるAPI設計思考</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="skill-category file-io">
+                    <span class="skill-icon">💾</span>
+                    <div class="skill-title">ファイル入出力 & 永続化</div>
+                    <ul class="skill-items">
+                        <li class="skill-item">
+                            <span class="skill-check">✓</span>
+                            <span>BufferedReader/BufferedWriter活用</span>
+                        </li>
+                        <li class="skill-item">
+                            <span class="skill-check">✓</span>
+                            <span>CSV・テキストファイル処理</span>
+                        </li>
+                        <li class="skill-item">
+                            <span class="skill-check">✓</span>
+                            <span>IOException・FileNotFoundException対応</span>
+                        </li>
+                        <li class="skill-item">
+                            <span class="skill-check">✓</span>
+                            <span>try-with-resources文による安全な操作</span>
+                        </li>
+                        <li class="skill-item">
+                            <span class="skill-check">✓</span>
+                            <span>データ永続化システムの実装</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="skill-category debug">
+                    <span class="skill-icon">🐛</span>
+                    <div class="skill-title">デバッグ & 問題解決</div>
+                    <ul class="skill-items">
+                        <li class="skill-item">
+                            <span class="skill-check">✓</span>
+                            <span>Eclipse デバッグ機能の完全習得</span>
+                        </li>
+                        <li class="skill-item">
+                            <span class="skill-check">✓</span>
+                            <span>ブレークポイント・ステップ実行技術</span>
+                        </li>
+                        <li class="skill-item">
+                            <span class="skill-check">✓</span>
+                            <span>変数監視による状態確認</span>
+                        </li>
+                        <li class="skill-item">
+                            <span class="skill-check">✓</span>
+                            <span>効率的なバグ発見・修正思考法</span>
+                        </li>
+                        <li class="skill-item">
+                            <span class="skill-check">✓</span>
+                            <span>体系的なトラブルシューティング能力</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="projects-section">
+                <div class="projects-title">🚀 完成プロジェクト一覧</div>
+                <div class="projects-grid">
+                    <div class="project-card">
+                        <div class="project-title">📋 ToDoリスト管理システム</div>
+                        <div class="project-stats">
+                            <span>📊 約300行</span>
+                            <span>🔧 ArrayList活用</span>
+                        </div>
+                        <div class="project-description">
+                            動的データ管理、CRUD操作、検索・並び替え機能を統合した実用的なタスク管理システム。ArrayListの威力を体感。
+                        </div>
+                    </div>
+                    
+                    <div class="project-card">
+                        <div class="project-title">🔧 文字列処理ツール</div>
+                        <div class="project-stats">
+                            <span>📊 約400行</span>
+                            <span>💾 ファイル入出力</span>
+                        </div>
+                        <div class="project-description">
+                            12種類のString操作、ファイル読み込み・書き出し、CSV処理を統合した業務レベルの実用ツール。
+                        </div>
+                    </div>
+                    
+                    <div class="project-card">
+                        <div class="project-title">⚙️ StringUtilsクラス</div>
+                        <div class="project-stats">
+                            <span>🎯 12メソッド</span>
+                            <span>🔄 オーバーロード</span>
+                        </div>
+                        <div class="project-description">
+                            メソッドオーバーロードによる使いやすいAPI設計。再利用可能なライブラリ作成でAPI設計思考を習得。
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="level-comparison">
+                <div class="level-title">📊 あなたの現在のスキルレベル</div>
+                <div class="level-grid">
+                    <div class="level-card">
+                        <div class="level-badge beginner">初心者レベル</div>
+                        <div class="level-description">
+                            <strong>Week 2完了時</strong><br>
+                            基本構文の理解<br>
+                            数百行のプログラム作成<br>
+                            Hello World → 計算プログラム
+                        </div>
+                    </div>
+                    
+                    <div class="level-card current">
+                        <div class="level-badge intermediate">中級レベル ← 現在地！</div>
+                        <div class="level-description">
+                            <strong>Week 3完了時</strong><br>
+                            1,000行超の実用ツール開発<br>
+                            技術統合・API設計思考<br>
+                            業務レベルのシステム構築
+                        </div>
+                    </div>
+                    
+                    <div class="level-card">
+                        <div class="level-badge advanced">上級レベル</div>
+                        <div class="level-description">
+                            <strong>Week 4以降の目標</strong><br>
+                            オブジェクト指向設計<br>
+                            大規模システム開発<br>
+                            チーム開発・実務対応
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="next-steps">
+                <div class="next-title">🚀 Week 4への飛躍</div>
+                <div class="next-content">
+                    <strong>おめでとうございます！</strong> あなたは確実に <strong>「中級プログラマー」</strong> のレベルに到達しました。<br>
+                    Week 4では <strong>「オブジェクト指向プログラミング」</strong> という、さらに強力で現代的な技術を学習します。
+                </div>
+                
+                <div class="week4-preview">
+                    <div class="week4-title">📚 Week 4 で学ぶ技術</div>
+                    <div class="week4-topics">
+                        <div class="week4-topic">🏗️ クラス設計</div>
+                        <div class="week4-topic">🎯 オブジェクト指向</div>
+                        <div class="week4-topic">🔒 カプセル化</div>
+                        <div class="week4-topic">⚙️ コンストラクタ</div>
+                    </div>
+                    <div style="margin-top: 20px; font-size: 1rem; line-height: 1.6;">
+                        Week 3で習得したStringUtilsクラス設計経験が、<br>
+                        本格的なオブジェクト指向学習の強力な基盤となります！
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
