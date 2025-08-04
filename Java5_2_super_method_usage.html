@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>super.メソッド名()の活用パターン図</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 1200px;
+            height: 950px;
+            position: relative;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            box-sizing: border-box;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 26px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        
+        .comparison-section {
+            display: flex;
+            justify-content: space-between;
+            height: 480px;
+            gap: 80px;
+            margin-bottom: 30px;
+        }
+        
+        .pattern-section {
+            width: 45%;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            position: relative;
+            box-sizing: border-box;
+            height: 100%;
+        }
+        
+        .replace-section {
+            border: 3px solid #e74c3c;
+        }
+        
+        .extend-section {
+            border: 3px solid #27ae60;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 8px;
+            color: white;
+        }
+        
+        .replace-title {
+            background: #e74c3c;
+        }
+        
+        .extend-title {
+            background: #27ae60;
+        }
+        
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        
+        .flow-steps {
+            margin-bottom: 15px;
+        }
+        
+        .step {
+            background: white;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-left: 4px solid #3498db;
+        }
+        
+        .step-number {
+            background: #3498db;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 11px;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        
+        .step-content {
+            display: inline-block;
+            font-size: 12px;
+            color: #2c3e50;
+        }
+        
+        .super-highlight {
+            background: #f39c12;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        
+        /* 下部の結果セクション */
+        .results-section {
+            display: flex;
+            justify-content: space-between;
+            gap: 80px;
+            margin-top: 20px;
+        }
+        
+        .result-box {
+            width: 45%;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 3px solid;
+        }
+        
+        .result-box.problem {
+            background: #fdf2f2;
+            border-color: #e74c3c;
+        }
+        
+        .result-box.benefit {
+            background: #f0f9f4;
+            border-color: #27ae60;
+        }
+        
+        .result-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            text-align: center;
+            padding: 8px;
+            border-radius: 8px;
+            color: white;
+        }
+        
+        .result-title.problem {
+            background: #e74c3c;
+        }
+        
+        .result-title.benefit {
+            background: #27ae60;
+        }
+        
+        .result-list {
+            font-size: 14px;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+        
+        .result-list li {
+            margin-bottom: 6px;
+        }
+        
+        .vs-symbol {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #3498db;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 10;
+            border: 3px solid white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">super.メソッド名()の2つの活用パターン</div>
+        
+        <div class="comparison-section">
+            <!-- 置換型パターン -->
+            <div class="pattern-section replace-section">
+                <div class="section-title replace-title">❌ 置換型（推奨しない）</div>
+                
+                <div class="code-example">
+@Override<br>
+public void displayInfo() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 親クラスの機能を使わずに完全に再実装<br>
+&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("学生ID: " + studentId);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("氏名: " + name);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("年齢: " + age + "歳");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("専攻: " + major);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("必要単位数: " + requiredCredits);<br>
+}
+                </div>
+                
+                <div class="flow-steps">
+                    <div class="step">
+                        <span class="step-number">1</span>
+                        <span class="step-content">親クラスのメソッドを呼び出さない</span>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">2</span>
+                        <span class="step-content">すべてのコードを子クラスで再実装</span>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">3</span>
+                        <span class="step-content">重複コードが発生</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 拡張型パターン -->
+            <div class="pattern-section extend-section">
+                <div class="section-title extend-title">✅ 拡張型（推奨）</div>
+                
+                <div class="code-example">
+@Override<br>
+public void displayInfo() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 1. 親クラスの基本機能を活用<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #f39c12;">super.displayInfo();</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 2. 子クラス固有の情報を追加<br>
+&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("必要単位数: " + requiredCredits);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("学生種別: 学部生");<br>
+}
+                </div>
+                
+                <div class="flow-steps">
+                    <div class="step">
+                        <span class="step-number">1</span>
+                        <span class="step-content"><span class="super-highlight">super.displayInfo()</span>で親の機能を実行</span>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">2</span>
+                        <span class="step-content">子クラス固有の処理を追加</span>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">3</span>
+                        <span class="step-content">親＋子の統合された機能を実現</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- VS Symbol -->
+        <div class="vs-symbol">VS</div>
+        
+        <!-- 下部の結果セクション -->
+        <div class="results-section">
+            <div class="result-box problem">
+                <div class="result-title problem">❌ 問題点</div>
+                <ul class="result-list">
+                    <li>コードの重複が発生</li>
+                    <li>親クラス変更時の影響が大きい</li>
+                    <li>保守性が低下</li>
+                    <li>継承の利点を活かせない</li>
+                </ul>
+            </div>
+            
+            <div class="result-box benefit">
+                <div class="result-title benefit">✅ 利点</div>
+                <ul class="result-list">
+                    <li>コードの重複を完全に回避</li>
+                    <li>親クラスの変更が自動反映</li>
+                    <li>保守性が大幅に向上</li>
+                    <li>継承の利点を最大活用</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
