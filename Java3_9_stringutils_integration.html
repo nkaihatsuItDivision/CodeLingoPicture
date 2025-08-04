@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StringUtilsクラス統合活用図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1400px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 1.2em;
+            margin-bottom: 40px;
+        }
+
+        .class-overview {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .class-definition {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            animation: slideInLeft 1s ease-out;
+        }
+
+        .class-title {
+            font-size: 1.6em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .class-stats {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .stat-value {
+            font-weight: bold;
+            color: #f39c12;
+        }
+
+        .design-principles {
+            font-size: 1em;
+            line-height: 1.6;
+        }
+
+        .methods-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            animation: slideInRight 1s ease-out;
+        }
+
+        .method-group {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .method-group:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .method-header {
+            padding: 20px;
+            color: white;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .search-group .method-header {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+
+        .format-group .method-header {
+            background: linear-gradient(135deg, #27ae60, #229954);
+        }
+
+        .csv-group .method-header {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .method-list {
+            padding: 20px;
+        }
+
+        .method-item {
+            background: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+        }
+
+        .search-group .method-item {
+            border-left-color: #3498db;
+        }
+
+        .format-group .method-item {
+            border-left-color: #27ae60;
+        }
+
+        .csv-group .method-item {
+            border-left-color: #e74c3c;
+        }
+
+        .method-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .method-signature {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .method-description {
+            font-size: 0.85em;
+            color: #7f8c8d;
+            line-height: 1.4;
+        }
+
+        .usage-examples {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .usage-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: fadeInUp 0.8s ease-out forwards;
+            opacity: 0;
+        }
+
+        .usage-card:nth-child(1) { animation-delay: 0.2s; }
+        .usage-card:nth-child(2) { animation-delay: 0.4s; }
+        .usage-card:nth-child(3) { animation-delay: 0.6s; }
+
+        .usage-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .usage-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .usage-code {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            overflow-x: auto;
+        }
+
+        .usage-result {
+            background: #d5f4e6;
+            color: #00b894;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            border-left: 4px solid #00b894;
+        }
+
+        .api-design-box {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .api-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .api-text {
+            font-size: 1.1em;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .class-overview {
+                grid-template-columns: 1fr;
+            }
+            
+            .methods-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .title {
+                font-size: 2em;
+            }
+            
+            .methods-grid {
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">StringUtilsクラス統合活用図</h1>
+        <p class="subtitle">レッスン3.8で作成したAPIクラスの実用化</p>
+        
+        <div class="class-overview">
+            <div class="class-definition">
+                <div class="class-title">📚 StringUtilsクラス</div>
+                
+                <div class="class-stats">
+                    <div class="stat-item">
+                        <span>総メソッド数:</span>
+                        <span class="stat-value">12個</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>オーバーロード群:</span>
+                        <span class="stat-value">3グループ</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>実装行数:</span>
+                        <span class="stat-value">約200行</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>活用ツール:</span>
+                        <span class="stat-value">文字列処理ツール</span>
+                    </div>
+                </div>
+                
+                <div class="design-principles">
+                    <strong>🎯 設計思考:</strong><br>
+                    • 直感的なメソッド名<br>
+                    • 柔軟なオーバーロード<br>
+                    • 実用性重視の機能<br>
+                    • 保守性を考慮した構造
+                </div>
+            </div>
+
+            <div class="methods-grid">
+                <div class="method-group search-group">
+                    <div class="method-header">🔍 検索機能群</div>
+                    <div class="method-list">
+                        <div class="method-item">
+                            <div class="method-signature">search(String text, String keyword)</div>
+                            <div class="method-description">基本的な文字列検索</div>
+                        </div>
+                        <div class="method-item">
+                            <div class="method-signature">search(String text, String keyword, boolean ignoreCase)</div>
+                            <div class="method-description">大文字小文字を考慮した検索</div>
+                        </div>
+                        <div class="method-item">
+                            <div class="method-signature">search(List&lt;String&gt; lines, String keyword)</div>
+                            <div class="method-description">複数行からの検索</div>
+                        </div>
+                        <div class="method-item">
+                            <div class="method-signature">search(String text, String keyword, int startIndex)</div>
+                            <div class="method-description">開始位置指定検索</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="method-group format-group">
+                    <div class="method-header">✨ 整形機能群</div>
+                    <div class="method-list">
+                        <div class="method-item">
+                            <div class="method-signature">format(String text)</div>
+                            <div class="method-description">基本的な文字列整形</div>
+                        </div>
+                        <div class="method-item">
+                            <div class="method-signature">format(String text, int width)</div>
+                            <div class="method-description">幅指定での整形</div>
+                        </div>
+                        <div class="method-item">
+                            <div class="method-signature">format(String text, String prefix)</div>
+                            <div class="method-description">プレフィックス付き整形</div>
+                        </div>
+                        <div class="method-item">
+                            <div class="method-signature">format(List&lt;String&gt; lines, String indent)</div>
+                            <div class="method-description">インデント付き複数行整形</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="method-group csv-group">
+                    <div class="method-header">📊 CSV処理群</div>
+                    <div class="method-list">
+                        <div class="method-item">
+                            <div class="method-signature">parseCSV(String csvLine)</div>
+                            <div class="method-description">基本的なCSV解析</div>
+                        </div>
+                        <div class="method-item">
+                            <div class="method-signature">parseCSV(String csvLine, String delimiter)</div>
+                            <div class="method-description">区切り文字指定解析</div>
+                        </div>
+                        <div class="method-item">
+                            <div class="method-signature">parseCSV(List&lt;String&gt; csvLines)</div>
+                            <div class="method-description">複数行CSVの一括解析</div>
+                        </div>
+                        <div class="method-item">
+                            <div class="method-signature">parseCSV(String csvLine, boolean removeQuotes)</div>
+                            <div class="method-description">引用符除去オプション付き</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="usage-examples">
+            <div class="usage-card">
+                <div class="usage-title">🔍 ファイル検索での活用</div>
+                <div class="usage-code">// StringUtilsクラスを活用したファイル検索
+List&lt;String&gt; fileLines = readFileLines("sample.txt");
+List&lt;Integer&gt; results = StringUtils.search(fileLines, "Java");
+
+System.out.println("検索結果: " + results.size() + "件");</div>
+                <div class="usage-result">✅ 柔軟な検索機能をワンライン実装</div>
+            </div>
+
+            <div class="usage-card">
+                <div class="usage-title">✨ テキスト整形での活用</div>
+                <div class="usage-code">// StringUtilsクラスを活用したテキスト整形
+List&lt;String&gt; rawLines = Arrays.asList("行1", "行2", "行3");
+List&lt;String&gt; formatted = StringUtils.format(rawLines, "  ");
+
+// インデント付きで美しく整形</div>
+                <div class="usage-result">✅ 複雑な整形処理を簡単に実現</div>
+            </div>
+
+            <div class="usage-card">
+                <div class="usage-title">📊 CSVデータ処理での活用</div>
+                <div class="usage-code">// StringUtilsクラスを活用したCSV処理
+String csvData = "名前,年齢,職業";
+List&lt;String&gt; columns = StringUtils.parseCSV(csvData);
+
+// CSVの各列を簡単に取得</div>
+                <div class="usage-result">✅ CSVパース処理をシンプルに実装</div>
+            </div>
+        </div>
+
+        <div class="api-design-box">
+            <div class="api-title">🏆 API設計思考の成功</div>
+            <div class="api-text">
+                レッスン3.8で設計した<strong>StringUtilsクラス</strong>が、レッスン3.9で<strong>実用ツール</strong>として活用される<br>
+                オーバーロードによる<strong>柔軟性</strong> + 直感的なメソッド名による<strong>使いやすさ</strong> = <strong>成功するAPI設計</strong>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

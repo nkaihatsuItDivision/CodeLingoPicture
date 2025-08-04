@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>完成ツールの動作例画面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+            background: linear-gradient(135deg, #2d3436 0%, #636e72 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 1.2em;
+            margin-bottom: 40px;
+        }
+
+        .demo-screens {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .terminal-window {
+            background: #1e1e1e;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.8s ease-out forwards;
+            opacity: 0;
+        }
+
+        .terminal-window:nth-child(1) { animation-delay: 0.2s; }
+        .terminal-window:nth-child(2) { animation-delay: 0.4s; }
+
+        .terminal-header {
+            background: #333;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .terminal-button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .close { background: #ff5f57; }
+        .minimize { background: #ffbd2e; }
+        .maximize { background: #28ca42; }
+
+        .terminal-title {
+            color: #fff;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+
+        .terminal-content {
+            padding: 20px;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+            height: 400px;
+            overflow-y: auto;
+        }
+
+        .prompt {
+            color: #00ff00;
+        }
+
+        .input {
+            color: #00bfff;
+        }
+
+        .output {
+            color: #ffff00;
+        }
+
+        .success {
+            color: #00ff00;
+        }
+
+        .error {
+            color: #ff6b6b;
+        }
+
+        .highlight {
+            color: #ff9f43;
+            font-weight: bold;
+        }
+
+        .features-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: fadeInUp 0.8s ease-out forwards;
+            opacity: 0;
+        }
+
+        .feature-card:nth-child(1) {
+            border-left-color: #74b9ff;
+            animation-delay: 0.6s;
+        }
+
+        .feature-card:nth-child(2) {
+            border-left-color: #00b894;
+            animation-delay: 0.7s;
+        }
+
+        .feature-card:nth-child(3) {
+            border-left-color: #fdcb6e;
+            animation-delay: 0.8s;
+        }
+
+        .feature-card:nth-child(4) {
+            border-left-color: #fd79a8;
+            animation-delay: 0.9s;
+        }
+
+        .feature-card:nth-child(5) {
+            border-left-color: #a29bfe;
+            animation-delay: 1.0s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .feature-description {
+            color: #7f8c8d;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        .achievement-box {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .achievement-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .achievement-text {
+            font-size: 1.1em;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .demo-screens {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            .title {
+                font-size: 2em;
+            }
+            
+            .terminal-content {
+                font-size: 0.8em;
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">文字列処理ツール 動作例</h1>
+        <p class="subtitle">StringUtilsクラスを活用した実用ツールの完成形</p>
+        
+        <div class="demo-screens">
+            <!-- メニュー選択画面 -->
+            <div class="terminal-window">
+                <div class="terminal-header">
+                    <div class="terminal-button close"></div>
+                    <div class="terminal-button minimize"></div>
+                    <div class="terminal-button maximize"></div>
+                    <div class="terminal-title">文字列処理ツール - メニュー</div>
+                </div>
+                <div class="terminal-content">
+                    <div class="prompt">$ java StringProcessingTool</div><br>
+                    <div class="highlight">==========================================</div>
+                    <div class="highlight">     文字列処理ツール v1.0</div>
+                    <div class="highlight">==========================================</div><br>
+                    
+                    <div class="output">📁 使用可能な機能：</div><br>
+                    <div class="output">1. テキストファイル検索</div>
+                    <div class="output">   └ StringUtils.search() 活用</div><br>
+                    
+                    <div class="output">2. テキスト整形処理</div>
+                    <div class="output">   └ StringUtils.format() 活用</div><br>
+                    
+                    <div class="output">3. CSVデータ処理</div>
+                    <div class="output">   └ StringUtils.parseCSV() 活用</div><br>
+                    
+                    <div class="output">4. 処理履歴表示</div>
+                    <div class="output">   └ ArrayList 履歴管理</div><br>
+                    
+                    <div class="output">5. サンプルファイル作成</div>
+                    <div class="output">   └ BufferedWriter 活用</div><br>
+                    
+                    <div class="prompt">機能を選択してください (1-5): </div><span class="input">1</span>
+                </div>
+            </div>
+
+            <!-- 機能実行画面 -->
+            <div class="terminal-window">
+                <div class="terminal-header">
+                    <div class="terminal-button close"></div>
+                    <div class="terminal-button minimize"></div>
+                    <div class="terminal-button maximize"></div>
+                    <div class="terminal-title">ファイル検索実行中</div>
+                </div>
+                <div class="terminal-content">
+                    <div class="highlight">📖 テキストファイル検索機能</div><br>
+                    
+                    <div class="prompt">検索するファイル名: </div><span class="input">sample.txt</span><br>
+                    <div class="success">✅ ファイルが見つかりました</div><br>
+                    
+                    <div class="prompt">検索キーワード: </div><span class="input">Java</span><br>
+                    
+                    <div class="output">🔍 StringUtils.search() で検索中...</div><br>
+                    
+                    <div class="highlight">📋 検索結果：</div>
+                    <div class="success">━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
+                    <div class="output">行 3: Javaプログラミングの基礎</div>
+                    <div class="output">行 7: Java SE 17の新機能について</div>
+                    <div class="output">行 12: JavaでのString操作</div>
+                    <div class="success">━━━━━━━━━━━━━━━━━━━━━━━━━━</div><br>
+                    
+                    <div class="success">✨ 検索完了: 3件のマッチが見つかりました</div><br>
+                    
+                    <div class="output">💾 処理履歴に保存しました</div>
+                    <div class="output">[2025-08-02 14:30] ファイル検索: sample.txt, キーワード: Java</div><br>
+                    
+                    <div class="prompt">続けて処理しますか？ (y/n): </div><span class="input">y</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="features-overview">
+            <div class="feature-card">
+                <div class="feature-title">🔍 高度な検索機能</div>
+                <div class="feature-description">
+                    StringUtils.search()の4つのオーバーロードを活用。単純検索から正規表現まで対応した柔軟な検索ツール。
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-title">✨ 自動整形処理</div>
+                <div class="feature-description">
+                    StringUtils.format()による文字列整形。インデント調整、改行統一、文字コード変換等の自動処理。
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-title">📊 CSV操作機能</div>
+                <div class="feature-description">
+                    StringUtils.parseCSV()でCSVデータの解析・加工。列抽出、データ変換、集計処理等の高度なデータ操作。
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-title">📁 ファイル入出力</div>
+                <div class="feature-description">
+                    BufferedReader/Writerによる効率的なファイル処理。大容量ファイルも安全に高速処理が可能。
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-title">📝 履歴管理システム</div>
+                <div class="feature-description">
+                    ArrayListを活用した処理履歴の管理。実行した操作の記録・検索・エクスポート機能を提供。
+                </div>
+            </div>
+        </div>
+
+        <div class="achievement-box">
+            <div class="achievement-title">🏆 Week 3技術統合の成果</div>
+            <div class="achievement-text">
+                <strong>ArrayList</strong> + <strong>String高度操作</strong> + <strong>StringUtilsクラス</strong> + <strong>ファイル入出力</strong><br>
+                = <strong>実用レベルのプロフェッショナルツール完成</strong><br><br>
+                初心者レベル完全卒業！ 中級プログラマーとしての実力を証明
+            </div>
+        </div>
+    </div>
+</body>
+</html>

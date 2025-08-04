@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ファイル入出力の概念図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1400px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 1.2em;
+            margin-bottom: 40px;
+        }
+
+        .flow-diagram {
+            display: grid;
+            grid-template-columns: 1fr 150px 1fr 150px 1fr;
+            grid-template-rows: auto auto auto;
+            gap: 30px;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .memory-section {
+            grid-column: 1;
+            grid-row: 1 / 4;
+            background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            position: relative;
+            animation: slideInLeft 1s ease-out;
+        }
+
+        .file-section {
+            grid-column: 5;
+            grid-row: 1 / 4;
+            background: linear-gradient(135deg, #fd79a8, #e84393);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            position: relative;
+            animation: slideInRight 1s ease-out;
+        }
+
+        .arrow-write {
+            grid-column: 2;
+            grid-row: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: slideIn 1.2s ease-out;
+        }
+
+        .process-write {
+            grid-column: 3;
+            grid-row: 1;
+            background: linear-gradient(135deg, #00b894, #00a085);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            animation: slideIn 1.4s ease-out;
+        }
+
+        .arrow-read {
+            grid-column: 4;
+            grid-row: 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: slideIn 1.6s ease-out;
+        }
+
+        .process-read {
+            grid-column: 3;
+            grid-row: 3;
+            background: linear-gradient(135deg, #fdcb6e, #e17055);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            animation: slideIn 1.8s ease-out;
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .section-content {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .code-example {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            margin-top: 15px;
+        }
+
+        .arrow {
+            width: 100px;
+            height: 6px;
+            background: linear-gradient(90deg, #2d3436, #636e72);
+            position: relative;
+            border-radius: 3px;
+        }
+
+        .arrow::after {
+            content: '';
+            position: absolute;
+            right: -10px;
+            top: -8px;
+            width: 0;
+            height: 0;
+            border-left: 20px solid #636e72;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+        }
+
+        .arrow-reverse {
+            transform: rotate(180deg);
+        }
+
+        .arrow-label {
+            font-size: 0.9em;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: fadeInUp 0.8s ease-out forwards;
+            opacity: 0;
+        }
+
+        .feature-card:nth-child(1) {
+            border-left-color: #74b9ff;
+            animation-delay: 0.2s;
+        }
+
+        .feature-card:nth-child(2) {
+            border-left-color: #00b894;
+            animation-delay: 0.4s;
+        }
+
+        .feature-card:nth-child(3) {
+            border-left-color: #fdcb6e;
+            animation-delay: 0.6s;
+        }
+
+        .feature-card:nth-child(4) {
+            border-left-color: #fd79a8;
+            animation-delay: 0.8s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .feature-description {
+            color: #7f8c8d;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #2d3436, #636e72);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .highlight-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .highlight-text {
+            font-size: 1.1em;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .flow-diagram {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+                text-align: center;
+            }
+            
+            .memory-section, .file-section {
+                grid-column: 1;
+                grid-row: auto;
+            }
+            
+            .arrow {
+                transform: rotate(90deg);
+                margin: 20px auto;
+            }
+            
+            .arrow-reverse {
+                transform: rotate(-90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">ファイル入出力の概念図</h1>
+        <p class="subtitle">効率的で安全なファイル処理の仕組み</p>
+        
+        <div class="flow-diagram">
+            <!-- メモリ（プログラム）セクション -->
+            <div class="memory-section">
+                <div class="section-title">🖥️ メモリ（プログラム）</div>
+                <div class="section-content">
+                    ArrayList、String等のデータがメモリ上に格納されている状態
+                </div>
+                <div class="code-example">
+                    ArrayList&lt;String&gt; data;<br>
+                    String processedText;
+                </div>
+            </div>
+
+            <!-- 書き込み矢印 -->
+            <div class="arrow-write">
+                <div>
+                    <div class="arrow"></div>
+                    <div class="arrow-label">書き込み</div>
+                </div>
+            </div>
+
+            <!-- 書き込み処理 -->
+            <div class="process-write">
+                <div class="section-title">📝 BufferedWriter</div>
+                <div class="section-content">
+                    メモリ上のデータを効率的にファイルに書き込み
+                </div>
+                <div class="code-example">
+                    try (BufferedWriter writer = ...) {<br>
+                    &nbsp;&nbsp;writer.write(data);<br>
+                    }
+                </div>
+            </div>
+
+            <!-- 読み込み矢印 -->
+            <div class="arrow-read">
+                <div>
+                    <div class="arrow arrow-reverse"></div>
+                    <div class="arrow-label">読み込み</div>
+                </div>
+            </div>
+
+            <!-- 読み込み処理 -->
+            <div class="process-read">
+                <div class="section-title">📖 BufferedReader</div>
+                <div class="section-content">
+                    ファイルからデータを効率的に読み込みメモリに格納
+                </div>
+                <div class="code-example">
+                    try (BufferedReader reader = ...) {<br>
+                    &nbsp;&nbsp;String line = reader.readLine();<br>
+                    }
+                </div>
+            </div>
+
+            <!-- ファイルセクション -->
+            <div class="file-section">
+                <div class="section-title">📁 ファイル（ストレージ）</div>
+                <div class="section-content">
+                    データが永続的に保存される。プログラム終了後も残る
+                </div>
+                <div class="code-example">
+                    sample.txt<br>
+                    data.csv<br>
+                    output.log
+                </div>
+            </div>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-title">🛡️ try-with-resources文</div>
+                <div class="feature-description">
+                    ファイルのオープン・クローズを自動管理。メモリリークやファイルハンドルリークを防止し、安全な処理を実現。
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-title">⚡ バッファリング機能</div>
+                <div class="feature-description">
+                    BufferedReader/BufferedWriterにより、データをまとめて読み書きし、ディスクアクセス回数を減らして高速化。
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-title">🔧 例外処理（IOException）</div>
+                <div class="feature-description">
+                    ファイルが存在しない、権限がない等のエラーを適切にキャッチし、プログラムの安定動作を保証。
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-title">💾 データの永続化</div>
+                <div class="feature-description">
+                    プログラム終了後もデータが保持される。設定ファイル、ログファイル、CSVデータ等の保存に活用。
+                </div>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <div class="highlight-title">🎯 レッスン3.9での新体験</div>
+            <div class="highlight-text">
+                StringUtilsクラスと組み合わせることで、<strong>実用的なファイル処理ツール</strong>を開発<br>
+                既習技術（ArrayList、String操作）+ 新技術（ファイル入出力）= <strong>相乗効果</strong>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

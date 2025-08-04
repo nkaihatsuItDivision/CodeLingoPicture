@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>技術統合の概念図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1400px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 1.2em;
+            margin-bottom: 40px;
+        }
+
+        .integration-diagram {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: auto auto auto;
+            gap: 30px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .tech-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            animation: slideInUp 0.8s ease-out forwards;
+            opacity: 0;
+        }
+
+        .tech-card:nth-child(1) { animation-delay: 0.2s; }
+        .tech-card:nth-child(2) { animation-delay: 0.4s; }
+        .tech-card:nth-child(3) { animation-delay: 0.6s; }
+        .tech-card:nth-child(4) { animation-delay: 0.8s; }
+
+        .tech-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .tech-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            margin: 0 auto 20px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .arraylist-icon { background: linear-gradient(135deg, #3498db, #2980b9); }
+        .string-icon { background: linear-gradient(135deg, #27ae60, #229954); }
+        .overload-icon { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .fileio-icon { background: linear-gradient(135deg, #f39c12, #e67e22); }
+
+        .tech-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .tech-description {
+            color: #7f8c8d;
+            line-height: 1.6;
+            font-size: 0.95em;
+            margin-bottom: 15px;
+        }
+
+        .tech-role {
+            background: linear-gradient(135deg, #ddd6fe, #c4b5fd);
+            color: #5b21b6;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+
+        .integration-center {
+            grid-column: 1 / 5;
+            grid-row: 2;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            position: relative;
+            animation: scaleIn 1.2s ease-out 1s forwards;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        .integration-title {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .integration-description {
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            opacity: 0.95;
+        }
+
+        .integration-formula {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border: 2px dashed rgba(255, 255, 255, 0.5);
+        }
+
+        .synergy-effects {
+            grid-column: 1 / 5;
+            grid-row: 3;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .effect-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: fadeInUp 0.8s ease-out forwards;
+            opacity: 0;
+        }
+
+        .effect-card:nth-child(1) {
+            border-left-color: #74b9ff;
+            animation-delay: 1.4s;
+        }
+
+        .effect-card:nth-child(2) {
+            border-left-color: #00b894;
+            animation-delay: 1.6s;
+        }
+
+        .effect-card:nth-child(3) {
+            border-left-color: #fdcb6e;
+            animation-delay: 1.8s;
+        }
+
+        .effect-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .effect-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .effect-description {
+            color: #7f8c8d;
+            line-height: 1.6;
+        }
+
+        .connection-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .connection-line {
+            position: absolute;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            opacity: 0.6;
+            animation: drawLine 2s ease-out 0.5s forwards;
+            transform-origin: left center;
+            transform: scaleX(0);
+        }
+
+        .line1 {
+            top: 50%;
+            left: 25%;
+            width: 50%;
+            height: 3px;
+            transform: rotate(-15deg);
+        }
+
+        .line2 {
+            top: 50%;
+            left: 25%;
+            width: 50%;
+            height: 3px;
+            transform: rotate(15deg);
+        }
+
+        .line3 {
+            top: 30%;
+            left: 50%;
+            width: 3px;
+            height: 40%;
+            transform: rotate(90deg);
+        }
+
+        .line4 {
+            top: 50%;
+            right: 25%;
+            width: 50%;
+            height: 3px;
+            transform: rotate(-165deg);
+        }
+
+        .achievement-summary {
+            background: linear-gradient(135deg, #2d3436, #636e72);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .achievement-title {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .achievement-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #f39c12;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .achievement-text {
+            font-size: 1.2em;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes drawLine {
+            from {
+                transform: scaleX(0);
+            }
+            to {
+                transform: scaleX(1);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .integration-diagram {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .integration-center {
+                grid-column: 1 / 3;
+            }
+            
+            .synergy-effects {
+                grid-column: 1 / 3;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .integration-diagram {
+                grid-template-columns: 1fr;
+            }
+            
+            .integration-center,
+            .synergy-effects {
+                grid-column: 1;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            .title {
+                font-size: 2em;
+            }
+            
+            .achievement-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">技術統合の概念図</h1>
+        <p class="subtitle">複数技術の組み合わせによる相乗効果</p>
+        
+        <div class="integration-diagram">
+            <div class="connection-lines">
+                <div class="connection-line line1"></div>
+                <div class="connection-line line2"></div>
+                <div class="connection-line line3"></div>
+                <div class="connection-line line4"></div>
+            </div>
+            
+            <div class="tech-card">
+                <div class="tech-icon arraylist-icon">📋</div>
+                <div class="tech-title">ArrayList</div>
+                <div class="tech-description">
+                    動的配列による柔軟なデータ管理。CRUD操作、検索、並び替え等の基盤技術
+                </div>
+                <div class="tech-role">データ管理基盤</div>
+            </div>
+
+            <div class="tech-card">
+                <div class="tech-icon string-icon">🔤</div>
+                <div class="tech-title">String高度操作</div>
+                <div class="tech-description">
+                    split、replace、trim等の12種類メソッド。文字列の検索・加工・変換処理
+                </div>
+                <div class="tech-role">文字列処理エンジン</div>
+            </div>
+
+            <div class="tech-card">
+                <div class="tech-icon overload-icon">⚙️</div>
+                <div class="tech-title">メソッドオーバーロード</div>
+                <div class="tech-description">
+                    同名メソッドの使い分け。StringUtilsクラスによるAPI設計思考の実践
+                </div>
+                <div class="tech-role">設計力・API化</div>
+            </div>
+
+            <div class="tech-card">
+                <div class="tech-icon fileio-icon">📁</div>
+                <div class="tech-title">ファイル入出力</div>
+                <div class="tech-description">
+                    BufferedReader/Writer。try-with-resources文による安全で効率的な処理
+                </div>
+                <div class="tech-role">永続化・実用性</div>
+            </div>
+
+            <div class="integration-center">
+                <div class="integration-title">🎯 技術統合による価値創造</div>
+                <div class="integration-description">
+                    個別に習得した技術を組み合わせることで、実用性・保守性・拡張性を持った高品質なツールを開発
+                </div>
+                <div class="integration-formula">
+                    ArrayList + String操作 + オーバーロード + ファイル入出力<br>
+                    = <strong>業務レベルの実用ツール</strong>
+                </div>
+            </div>
+
+            <div class="synergy-effects">
+                <div class="effect-card">
+                    <div class="effect-title">🚀 相乗効果1: 機能の多様性</div>
+                    <div class="effect-description">
+                        各技術の組み合わせにより、単純な文字列処理から高度なファイル操作まで幅広い機能を実現。1つのツールで複数の用途に対応。
+                    </div>
+                </div>
+
+                <div class="effect-card">
+                    <div class="effect-title">💡 相乗効果2: 設計品質の向上</div>
+                    <div class="effect-description">
+                        StringUtilsクラスの設計により、コードの再利用性・保守性が向上。オーバーロードによる使いやすさと柔軟性を両立。
+                    </div>
+                </div>
+
+                <div class="effect-card">
+                    <div class="effect-title">⚡ 相乗効果3: 実用性の飛躍</div>
+                    <div class="effect-description">
+                        ファイル入出力の追加により、プログラム終了後もデータが残る実用ツールに。メモリ上の処理からシステムレベルの処理へ発展。
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="achievement-summary">
+            <div class="achievement-title">🏆 Week 3技術統合の成果</div>
+            
+            <div class="achievement-stats">
+                <div class="stat-box">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">統合技術数</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">400+</div>
+                    <div class="stat-label">実装行数</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">オーバーロード数</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">実用性</div>
+                </div>
+            </div>
+
+            <div class="achievement-text">
+                個別技術の習得から始まり、最終的に<strong>技術統合力</strong>を身につけることで<br>
+                <strong>初心者完全卒業 → 中級プログラマーレベル到達</strong><br>
+                単なる機能実装ではなく、<strong>設計思考</strong>と<strong>品質意識</strong>を持った開発者へ成長
+            </div>
+        </div>
+    </div>
+</body>
+</html>
