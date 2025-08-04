@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StringUtilsクラス構造図</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2.3em;
+            font-weight: 700;
+        }
+
+        .header p {
+            margin: 15px 0 0 0;
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .class-diagram {
+            padding: 40px;
+        }
+
+        .class-box {
+            background: #f8f9fa;
+            border: 3px solid #6f42c1;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(111, 66, 193, 0.1);
+        }
+
+        .class-header {
+            background: linear-gradient(135deg, #6f42c1, #6610f2);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .class-name {
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .class-type {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+
+        .method-groups {
+            padding: 30px;
+        }
+
+        .method-group {
+            margin-bottom: 35px;
+            background: white;
+            border-radius: 12px;
+            border: 2px solid #e9ecef;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .method-group:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-color: #6f42c1;
+        }
+
+        .group-header {
+            padding: 20px;
+            font-size: 1.3em;
+            font-weight: 600;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-group .group-header {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+        }
+
+        .format-group .group-header {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+        }
+
+        .csv-group .group-header {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+        }
+
+        .method-list {
+            padding: 0;
+        }
+
+        .method-item {
+            border-bottom: 1px solid #e9ecef;
+            padding: 18px 25px;
+            transition: background-color 0.2s ease;
+        }
+
+        .method-item:last-child {
+            border-bottom: none;
+        }
+
+        .method-item:hover {
+            background: #f8f9fa;
+        }
+
+        .method-signature {
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 0.95em;
+            margin-bottom: 8px;
+        }
+
+        .method-description {
+            color: #6c757d;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+        }
+
+        .parameter-info {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 8px 12px;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.85em;
+            color: #1565c0;
+        }
+
+        .overload-count {
+            background: #6f42c1;
+            color: white;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .stats-section {
+            background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+            margin: 30px 0;
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px dashed #6f42c1;
+        }
+
+        .stats-title {
+            text-align: center;
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #6f42c1;
+            margin-bottom: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #6f42c1;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+
+        .benefits-section {
+            background: linear-gradient(145deg, #e8f5e8, #f0fff0);
+            border-radius: 12px;
+            padding: 25px;
+            border: 2px solid #28a745;
+            margin-top: 30px;
+        }
+
+        .benefits-title {
+            color: #155724;
+            font-size: 1.4em;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .benefit-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #28a745;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .benefit-item h4 {
+            color: #155724;
+            margin: 0 0 8px 0;
+            font-size: 1em;
+        }
+
+        .benefit-item p {
+            color: #6c757d;
+            margin: 0;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .method-groups {
+                padding: 20px;
+            }
+            
+            .stats-grid, .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 StringUtils クラス構造図</h1>
+            <p>オーバーロードされたメソッド群の全体像</p>
+        </div>
+
+        <div class="class-diagram">
+            <div class="class-box">
+                <div class="class-header">
+                    <div class="class-name">StringUtils</div>
+                    <div class="class-type">実用的な文字列処理ライブラリクラス</div>
+                </div>
+
+                <div class="method-groups">
+                    <div class="method-group search-group">
+                        <div class="group-header">
+                            🔍 検索機能群 <span class="overload-count">4つのオーバーロード</span>
+                        </div>
+                        <div class="method-list">
+                            <div class="method-item">
+                                <div class="method-signature">search(String text, String keyword)</div>
+                                <div class="method-description">基本的な文字列検索機能</div>
+                                <div class="parameter-info">引数2個: テキスト, キーワード</div>
+                            </div>
+                            <div class="method-item">
+                                <div class="method-signature">search(String text, String keyword, boolean ignoreCase)</div>
+                                <div class="method-description">大文字小文字の制御が可能な検索</div>
+                                <div class="parameter-info">引数3個: テキスト, キーワード, 大文字小文字無視フラグ</div>
+                            </div>
+                            <div class="method-item">
+                                <div class="method-signature">search(String text, String keyword, int startIndex)</div>
+                                <div class="method-description">指定位置から開始する検索</div>
+                                <div class="parameter-info">引数3個: テキスト, キーワード, 開始位置</div>
+                            </div>
+                            <div class="method-item">
+                                <div class="method-signature">search(String text, String... keywords)</div>
+                                <div class="method-description">複数キーワードによるAND検索</div>
+                                <div class="parameter-info">可変長引数: テキスト, 複数のキーワード</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="method-group format-group">
+                        <div class="group-header">
+                            ✨ 整形機能群 <span class="overload-count">4つのオーバーロード</span>
+                        </div>
+                        <div class="method-list">
+                            <div class="method-item">
+                                <div class="method-signature">format(String text)</div>
+                                <div class="method-description">基本的な文字列整形（空白削除）</div>
+                                <div class="parameter-info">引数1個: テキスト</div>
+                            </div>
+                            <div class="method-item">
+                                <div class="method-signature">format(String text, int maxLength)</div>
+                                <div class="method-description">最大長による文字数制限</div>
+                                <div class="parameter-info">引数2個: テキスト, 最大文字数</div>
+                            </div>
+                            <div class="method-item">
+                                <div class="method-signature">format(String text, int width, char paddingChar)</div>
+                                <div class="method-description">指定文字によるパディング</div>
+                                <div class="parameter-info">引数3個: テキスト, 幅, 埋め文字</div>
+                            </div>
+                            <div class="method-item">
+                                <div class="method-signature">format(String text, boolean upperCase, boolean removeSpaces, int maxLength)</div>
+                                <div class="method-description">複合的な整形オプション</div>
+                                <div class="parameter-info">引数4個: テキスト, 大文字化, 空白削除, 最大長</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="method-group csv-group">
+                        <div class="group-header">
+                            📊 CSV処理機能群 <span class="overload-count">4つのオーバーロード</span>
+                        </div>
+                        <div class="method-list">
+                            <div class="method-item">
+                                <div class="method-signature">parseCSV(String csvLine)</div>
+                                <div class="method-description">基本的なCSV分割（カンマ区切り）</div>
+                                <div class="parameter-info">引数1個: CSVライン</div>
+                            </div>
+                            <div class="method-item">
+                                <div class="method-signature">parseCSV(String csvLine, String delimiter)</div>
+                                <div class="method-description">カスタム区切り文字での分割</div>
+                                <div class="parameter-info">引数2個: CSVライン, 区切り文字</div>
+                            </div>
+                            <div class="method-item">
+                                <div class="method-signature">parseCSV(String csvLine, String delimiter, boolean handleQuotes)</div>
+                                <div class="method-description">引用符を考慮した安全な分割</div>
+                                <div class="parameter-info">引数3個: CSVライン, 区切り文字, 引用符処理フラグ</div>
+                            </div>
+                            <div class="method-item">
+                                <div class="method-signature">parseCSV(String csvLine, String delimiter, boolean handleQuotes, String emptyValue)</div>
+                                <div class="method-description">空値処理を含む完全版</div>
+                                <div class="parameter-info">引数4個: CSVライン, 区切り文字, 引用符処理, 空値置換</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-section">
+                <div class="stats-title">📈 StringUtils クラス統計</div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">12</div>
+                        <div class="stat-label">総メソッド数</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">3</div>
+                        <div class="stat-label">機能グループ</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">オーバーロード活用</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">実用</div>
+                        <div class="stat-label">レベル</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="benefits-section">
+                <div class="benefits-title">🎯 オーバーロード設計の利点</div>
+                <div class="benefits-grid">
+                    <div class="benefit-item">
+                        <h4>統一されたインターフェース</h4>
+                        <p>3つの名前だけ覚えれば全機能を使用可能</p>
+                    </div>
+                    <div class="benefit-item">
+                        <h4>段階的な学習</h4>
+                        <p>基本版から高度版まで順次習得可能</p>
+                    </div>
+                    <div class="benefit-item">
+                        <h4>直感的な操作</h4>
+                        <p>引数を見れば機能が推測できる設計</p>
+                    </div>
+                    <div class="benefit-item">
+                        <h4>保守性の向上</h4>
+                        <p>関連機能がグループ化され管理しやすい</p>
+                    </div>
+                    <div class="benefit-item">
+                        <h4>拡張性の確保</h4>
+                        <p>新機能を同一名で追加可能</p>
+                    </div>
+                    <div class="benefit-item">
+                        <h4>プロ品質</h4>
+                        <p>実際のJavaライブラリと同レベルの設計</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

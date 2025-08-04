@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>オーバーロード解決の仕組み</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2.2em;
+            font-weight: 700;
+        }
+
+        .header p {
+            margin: 15px 0 0 0;
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .step-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .step {
+            flex: 1;
+            min-width: 300px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            position: relative;
+            border: 3px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .step:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            border-color: #6c5ce7;
+        }
+
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2em;
+        }
+
+        .step-title {
+            margin: 20px 0 15px 0;
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .method-call {
+            background: #fff;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            color: #2d3748;
+            position: relative;
+        }
+
+        .method-call.highlight {
+            border-color: #10b981;
+            background: #ecfdf5;
+            animation: glow 2s infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 5px rgba(16, 185, 129, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.6); }
+        }
+
+        .argument-info {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 10px 15px;
+            margin: 10px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9em;
+        }
+
+        .decision-tree {
+            background: linear-gradient(145deg, #f0f9ff, #e0f2fe);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 2px solid #0ea5e9;
+        }
+
+        .decision-title {
+            text-align: center;
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #0369a1;
+            margin-bottom: 25px;
+        }
+
+        .method-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .method-option {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .method-option:hover {
+            transform: scale(1.02);
+        }
+
+        .method-option.selected {
+            border: 3px solid #10b981;
+            background: #ecfdf5;
+        }
+
+        .method-signature {
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            color: #1e40af;
+            margin-bottom: 10px;
+            font-size: 0.95em;
+        }
+
+        .method-description {
+            color: #6b7280;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+
+        .match-info {
+            background: #dbeafe;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 0.85em;
+            color: #1e40af;
+        }
+
+        .selected .match-info {
+            background: #10b981;
+            color: white;
+            font-weight: 600;
+        }
+
+        .flow-arrow {
+            text-align: center;
+            font-size: 2em;
+            color: #6c5ce7;
+            margin: 20px 0;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .result-section {
+            background: linear-gradient(145deg, #ecfdf5, #d1fae5);
+            border-radius: 15px;
+            padding: 30px;
+            border: 2px solid #10b981;
+            text-align: center;
+        }
+
+        .result-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #065f46;
+            margin-bottom: 15px;
+        }
+
+        .result-description {
+            font-size: 1.1em;
+            color: #047857;
+            margin-bottom: 20px;
+        }
+
+        .final-call {
+            background: white;
+            border: 3px solid #10b981;
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            font-weight: 700;
+            color: #065f46;
+            display: inline-block;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .step-container {
+                flex-direction: column;
+            }
+            
+            .step {
+                min-width: auto;
+            }
+            
+            .method-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 オーバーロード解決の仕組み</h1>
+            <p>Javaコンパイラが適切なメソッドを自動選択する過程を見てみよう</p>
+        </div>
+
+        <div class="main-content">
+            <div class="step-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-title">メソッド呼び出し</div>
+                    <div class="method-call highlight">
+                        search("Hello World", "world", true)
+                    </div>
+                    <div class="argument-info">
+                        <strong>引数の分析:</strong><br>
+                        • 第1引数: String ("Hello World")<br>
+                        • 第2引数: String ("world")<br>
+                        • 第3引数: boolean (true)
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-title">候補メソッド検索</div>
+                    <p>コンパイラが「search」という名前のメソッドを全て検索します</p>
+                    <div class="argument-info">
+                        <strong>検索条件:</strong><br>
+                        • メソッド名: "search"<br>
+                        • 引数の数: 3個<br>
+                        • 引数の型: String, String, boolean
+                    </div>
+                </div>
+            </div>
+
+            <div class="decision-tree">
+                <div class="decision-title">📋 利用可能なメソッド一覧</div>
+                <div class="method-options">
+                    <div class="method-option">
+                        <div class="method-signature">search(String, String)</div>
+                        <div class="method-description">基本的な文字列検索</div>
+                        <div class="match-info">❌ 引数の数が一致しない (2個 ≠ 3個)</div>
+                    </div>
+
+                    <div class="method-option selected">
+                        <div class="method-signature">search(String, String, boolean)</div>
+                        <div class="method-description">大文字小文字を制御する検索</div>
+                        <div class="match-info">✅ 完全一致！</div>
+                    </div>
+
+                    <div class="method-option">
+                        <div class="method-signature">search(String, String, int)</div>
+                        <div class="method-description">開始位置を指定する検索</div>
+                        <div class="match-info">❌ 第3引数の型が一致しない (int ≠ boolean)</div>
+                    </div>
+
+                    <div class="method-option">
+                        <div class="method-signature">search(String, String...)</div>
+                        <div class="method-description">複数キーワード検索</div>
+                        <div class="match-info">❌ 第3引数がboolean型に適用できない</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-arrow">⬇️</div>
+
+            <div class="result-section">
+                <div class="result-title">🎯 解決完了！</div>
+                <div class="result-description">
+                    コンパイラが最適なメソッドを自動選択しました
+                </div>
+                <div class="final-call">
+                    search(String text, String keyword, boolean ignoreCase)
+                </div>
+                <p style="margin-top: 20px; color: #047857; font-weight: 600;">
+                    このメソッドが実行され、大文字小文字を無視した検索が行われます
+                </p>
+            </div>
+
+            <div style="background: #f0f9ff; border-radius: 15px; padding: 25px; margin-top: 30px; border-left: 5px solid #3b82f6;">
+                <h3 style="color: #1e40af; margin-top: 0;">💡 重要なポイント</h3>
+                <ul style="color: #1e40af; line-height: 1.6;">
+                    <li><strong>完全自動</strong>：プログラマーが意識する必要なし</li>
+                    <li><strong>型安全</strong>：コンパイル時にエラーをチェック</li>
+                    <li><strong>最適選択</strong>：最も適合するメソッドを選択</li>
+                    <li><strong>直感的</strong>：引数を見れば動作が予想できる</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

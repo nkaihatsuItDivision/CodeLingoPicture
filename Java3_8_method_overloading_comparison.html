@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>メソッドオーバーロードの利点</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2.2em;
+            font-weight: 700;
+        }
+
+        .header p {
+            margin: 10px 0 0 0;
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .comparison {
+            display: flex;
+            min-height: 600px;
+        }
+
+        .before, .after {
+            flex: 1;
+            padding: 40px;
+            position: relative;
+        }
+
+        .before {
+            background: linear-gradient(145deg, #ff9a9e, #fecfef);
+        }
+
+        .after {
+            background: linear-gradient(145deg, #a8edea, #fed6e3);
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 25px;
+            text-align: center;
+            position: relative;
+        }
+
+        .before .section-title {
+            color: #d63384;
+        }
+
+        .after .section-title {
+            color: #20c997;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            border-radius: 2px;
+        }
+
+        .before .section-title::after {
+            background: #d63384;
+        }
+
+        .after .section-title::after {
+            background: #20c997;
+        }
+
+        .method-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .method-item {
+            background: rgba(255,255,255,0.9);
+            margin: 15px 0;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .method-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+        }
+
+        .before .method-item::before {
+            background: #dc3545;
+        }
+
+        .after .method-item::before {
+            background: #198754;
+        }
+
+        .method-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .method-code {
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+
+        .method-desc {
+            font-size: 0.9em;
+            color: #666;
+            font-style: italic;
+        }
+
+        .problems, .benefits {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.95);
+        }
+
+        .problems {
+            border-left: 5px solid #dc3545;
+        }
+
+        .benefits {
+            border-left: 5px solid #198754;
+        }
+
+        .problems h3, .benefits h3 {
+            margin: 0 0 15px 0;
+            font-size: 1.2em;
+        }
+
+        .problems h3 {
+            color: #dc3545;
+        }
+
+        .benefits h3 {
+            color: #198754;
+        }
+
+        .problems ul, .benefits ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .problems li, .benefits li {
+            margin: 8px 0;
+            font-size: 0.95em;
+        }
+
+        .arrow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3em;
+            color: #6c757d;
+            z-index: 10;
+            background: white;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .comparison {
+                flex-direction: column;
+            }
+            
+            .before, .after {
+                padding: 30px 20px;
+            }
+            
+            .arrow {
+                position: static;
+                transform: rotate(90deg);
+                margin: 20px auto;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔄 メソッドオーバーロードの威力</h1>
+            <p>従来の方法 vs オーバーロード：どちらが使いやすい？</p>
+        </div>
+        
+        <div class="comparison">
+            <div class="before">
+                <div class="section-title">❌ 従来の方法</div>
+                
+                <ul class="method-list">
+                    <li class="method-item">
+                        <div class="method-code">searchBasic(text, keyword)</div>
+                        <div class="method-desc">基本的な検索</div>
+                    </li>
+                    <li class="method-item">
+                        <div class="method-code">searchIgnoreCase(text, keyword)</div>
+                        <div class="method-desc">大文字小文字を無視した検索</div>
+                    </li>
+                    <li class="method-item">
+                        <div class="method-code">searchFromIndex(text, keyword, index)</div>
+                        <div class="method-desc">指定位置からの検索</div>
+                    </li>
+                    <li class="method-item">
+                        <div class="method-code">searchMultiple(text, keywords...)</div>
+                        <div class="method-desc">複数キーワード検索</div>
+                    </li>
+                </ul>
+
+                <div class="problems">
+                    <h3>🚫 問題点</h3>
+                    <ul>
+                        <li><span class="highlight">4つの異なる名前</span>を覚える必要</li>
+                        <li>どのメソッドを使えばいいか<span class="highlight">迷う</span></li>
+                        <li>メソッド名が<span class="highlight">長くて読みにくい</span></li>
+                        <li>API全体の<span class="highlight">一貫性がない</span></li>
+                        <li>新機能追加時にさらに<span class="highlight">名前が複雑化</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="arrow">→</div>
+
+            <div class="after">
+                <div class="section-title">✅ オーバーロード</div>
+                
+                <ul class="method-list">
+                    <li class="method-item">
+                        <div class="method-code">search(text, keyword)</div>
+                        <div class="method-desc">基本的な検索</div>
+                    </li>
+                    <li class="method-item">
+                        <div class="method-code">search(text, keyword, ignoreCase)</div>
+                        <div class="method-desc">大文字小文字制御</div>
+                    </li>
+                    <li class="method-item">
+                        <div class="method-code">search(text, keyword, startIndex)</div>
+                        <div class="method-desc">開始位置指定</div>
+                    </li>
+                    <li class="method-item">
+                        <div class="method-code">search(text, keywords...)</div>
+                        <div class="method-desc">複数キーワード検索</div>
+                    </li>
+                </ul>
+
+                <div class="benefits">
+                    <h3>🎉 利点</h3>
+                    <ul>
+                        <li><span class="highlight">1つの名前</span>だけ覚えればOK</li>
+                        <li>引数を見れば<span class="highlight">機能が分かる</span></li>
+                        <li>コードが<span class="highlight">美しく読みやすい</span></li>
+                        <li>API全体に<span class="highlight">統一感</span>がある</li>
+                        <li><span class="highlight">直感的</span>で使いやすい</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
