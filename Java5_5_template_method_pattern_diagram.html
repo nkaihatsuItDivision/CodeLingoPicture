@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>テンプレートメソッドパターンの図解</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .pattern-overview {
+            background-color: #3498db;
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .pattern-overview h3 {
+            margin-top: 0;
+            font-size: 20px;
+        }
+        
+        .template-structure {
+            display: flex;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .abstract-class-box {
+            flex: 1;
+            border: 3px solid #e74c3c;
+            border-radius: 10px;
+            background-color: #fadbd8;
+            padding: 20px;
+        }
+        
+        .class-header {
+            background-color: #c0392b;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .template-method {
+            background-color: #8e44ad;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 5px solid #9b59b6;
+        }
+        
+        .template-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .template-code {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            white-space: pre-line;
+            line-height: 1.4;
+        }
+        
+        .method-types {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .common-method {
+            background-color: #27ae60;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            white-space: pre-line;
+            line-height: 1.4;
+        }
+        
+        .abstract-method {
+            background-color: #f39c12;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            font-style: italic;
+            position: relative;
+        }
+        
+        .abstract-method::after {
+            content: '実装必須';
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #e74c3c;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 10px;
+            font-style: normal;
+        }
+        
+        .execution-flow {
+            margin: 40px 0;
+        }
+        
+        .flow-title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            color: #2c3e50;
+            margin-bottom: 25px;
+        }
+        
+        .flow-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .flow-step {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 5px solid #3498db;
+        }
+        
+        .common-step {
+            background-color: #d5f4e6;
+            border-left-color: #27ae60;
+        }
+        
+        .individual-step {
+            background-color: #fdeaa7;
+            border-left-color: #f39c12;
+        }
+        
+        .step-number {
+            background-color: #3498db;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .common-number {
+            background-color: #27ae60;
+        }
+        
+        .individual-number {
+            background-color: #f39c12;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .step-description {
+            font-size: 14px;
+            color: #555;
+        }
+        
+        .implementation-example {
+            display: flex;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .student-type {
+            flex: 1;
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            padding: 20px;
+            background-color: #ecf0f1;
+        }
+        
+        .student-header {
+            background-color: #3498db;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .execution-result {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            white-space: pre-line;
+            line-height: 1.4;
+        }
+        
+        .benefits-section {
+            background-color: #34495e;
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+        
+        .benefits-title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .benefit-item {
+            background-color: #3498db;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .benefit-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .benefit-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .benefit-description {
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .template-structure {
+                flex-direction: column;
+            }
+            
+            .implementation-example {
+                flex-direction: column;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            .template-code, .execution-result {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">テンプレートメソッドパターンの図解</h1>
+        
+        <div class="pattern-overview">
+            <h3>テンプレートメソッドパターンとは？</h3>
+            <p>処理の骨組み（テンプレート）を親クラスで定義し、具体的な実装を子クラスに委ねる設計パターン</p>
+            <p><strong>共通処理の統一 + 個別処理の柔軟性 = 保守性と拡張性の両立</strong></p>
+        </div>
+        
+        <div class="template-structure">
+            <div class="abstract-class-box">
+                <div class="class-header">抽象クラス (Student)</div>
+                
+                <div class="template-method">
+                    <div class="template-title">🎯 テンプレートメソッド (final)</div>
+                    <div class="template-code">public final void performDailyLearning() {
+    prepareLearning();    // 共通処理
+    study();             // 個別処理
+    takeBrake();         // 共通処理
+    reviewLearning();    // 個別処理
+    recordLearning();    // 共通処理
+}</div>
+                </div>
+                
+                <div class="method-types">
+                    <div class="common-method">// 共通処理（具体実装）
+private void prepareLearning() {
+    System.out.println("学習環境を整備");
+}</div>
+                    
+                    <div class="abstract-method">// 個別処理（抽象メソッド）
+public abstract void study();</div>
+                    
+                    <div class="abstract-method">public abstract void reviewLearning();</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="execution-flow">
+            <div class="flow-title">📋 処理フローの詳細</div>
+            <div class="flow-steps">
+                <div class="flow-step common-step">
+                    <div class="step-number common-number">1</div>
+                    <div class="step-content">
+                        <div class="step-title">学習準備 (共通処理)</div>
+                        <div class="step-description">全学生共通の準備作業：環境整備、資料準備</div>
+                    </div>
+                </div>
+                
+                <div class="flow-step individual-step">
+                    <div class="step-number individual-number">2</div>
+                    <div class="step-content">
+                        <div class="step-title">学習実行 (個別処理)</div>
+                        <div class="step-description">学生タイプ別の具体的学習：学部生→講義復習、大学院生→研究活動</div>
+                    </div>
+                </div>
+                
+                <div class="flow-step common-step">
+                    <div class="step-number common-number">3</div>
+                    <div class="step-content">
+                        <div class="step-title">休憩 (共通処理)</div>
+                        <div class="step-description">全学生共通の休憩時間</div>
+                    </div>
+                </div>
+                
+                <div class="flow-step individual-step">
+                    <div class="step-number individual-number">4</div>
+                    <div class="step-content">
+                        <div class="step-title">学習振り返り (個別処理)</div>
+                        <div class="step-description">学生タイプ別の振り返り：学部生→復習、大学院生→研究分析</div>
+                    </div>
+                </div>
+                
+                <div class="flow-step common-step">
+                    <div class="step-number common-number">5</div>
+                    <div class="step-content">
+                        <div class="step-title">学習記録 (共通処理)</div>
+                        <div class="step-description">全学生共通の記録保存処理</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="implementation-example">
+            <div class="student-type">
+                <div class="student-header">学部生の実行結果</div>
+                <div class="execution-result">=== 田中太郎の1日の学習活動 ===
+・学習環境を整備しています
+・必要な資料を準備しています
+田中太郎(2年生)が学部レベルの学習をしています。
+- 講義資料の復習
+- 課題レポートの作成
+- グループディスカッション
+・15分間の休憩を取ります
+今日学んだ内容を学部生レベルで復習します
+・学習記録をシステムに保存しました
+=== 学習活動完了 ===</div>
+            </div>
+            
+            <div class="student-type">
+                <div class="student-header">大学院生の実行結果</div>
+                <div class="execution-result">=== 佐藤花子の1日の学習活動 ===
+・学習環境を整備しています
+・必要な資料を準備しています
+佐藤花子が大学院レベルの研究活動をしています。
+- 最新論文の調査
+- 実験・データ分析
+- 研究論文の執筆
+- 学会発表の準備
+・15分間の休憩を取ります
+今日の研究成果を分析し、明日の計画を立てます
+・学習記録をシステムに保存しました
+=== 学習活動完了 ===</div>
+            </div>
+        </div>
+        
+        <div class="benefits-section">
+            <div class="benefits-title">テンプレートメソッドパターンの価値</div>
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="benefit-icon">📋</div>
+                    <div class="benefit-title">処理の標準化</div>
+                    <div class="benefit-description">全ての学生が同じ手順で学習活動を行う</div>
+                </div>
+                
+                <div class="benefit-item">
+                    <div class="benefit-icon">🎯</div>
+                    <div class="benefit-title">個別対応</div>
+                    <div class="benefit-description">学習内容は各学生タイプに最適化</div>
+                </div>
+                
+                <div class="benefit-item">
+                    <div class="benefit-icon">🔧</div>
+                    <div class="benefit-title">保守性向上</div>
+                    <div class="benefit-description">共通処理の変更は一箇所で済む</div>
+                </div>
+                
+                <div class="benefit-item">
+                    <div class="benefit-icon">🚀</div>
+                    <div class="benefit-title">拡張性確保</div>
+                    <div class="benefit-description">新しい学生タイプの追加が容易</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

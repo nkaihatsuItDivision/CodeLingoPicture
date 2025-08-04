@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>抽象クラスの概念図</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .comparison {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .class-box {
+            flex: 1;
+            border: 3px solid #3498db;
+            border-radius: 10px;
+            padding: 20px;
+            background-color: #ecf0f1;
+        }
+        
+        .abstract-class {
+            border-color: #e74c3c;
+            background-color: #fadbd8;
+        }
+        
+        .class-header {
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #34495e;
+            color: white;
+        }
+        
+        .abstract-header {
+            background-color: #c0392b;
+        }
+        
+        .method-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .method-item {
+            background-color: #2ecc71;
+            color: white;
+            padding: 8px 12px;
+            margin: 5px 0;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            white-space: pre-line;
+            line-height: 1.4;
+        }
+        
+        .abstract-method {
+            background-color: #f39c12;
+            font-style: italic;
+            position: relative;
+        }
+        
+        .abstract-method::after {
+            content: '※実装必須';
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 10px;
+            background-color: #e74c3c;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-style: normal;
+        }
+        
+        .instantiation-demo {
+            display: flex;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .demo-box {
+            flex: 1;
+            border: 2px solid #95a5a6;
+            border-radius: 8px;
+            padding: 15px;
+            background-color: #ecf0f1;
+        }
+        
+        .valid {
+            border-color: #27ae60;
+            background-color: #d5f4e6;
+        }
+        
+        .invalid {
+            border-color: #e74c3c;
+            background-color: #fadbd8;
+        }
+        
+        .demo-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .code-block {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            white-space: pre-line;
+            line-height: 1.4;
+            margin: 5px 0;
+        }
+        
+        .error-message {
+            background-color: #e74c3c;
+            color: white;
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+        
+        .success-message {
+            background-color: #27ae60;
+            color: white;
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+        
+        .key-points {
+            background-color: #3498db;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+        
+        .key-points h3 {
+            margin-top: 0;
+            text-align: center;
+        }
+        
+        .points-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .points-list li {
+            margin: 10px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .points-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #f1c40f;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison {
+                flex-direction: column;
+            }
+            
+            .instantiation-demo {
+                flex-direction: column;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            .method-item {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">抽象クラスの概念図</h1>
+        
+        <div class="comparison">
+            <div class="class-box">
+                <div class="class-header">通常のクラス</div>
+                <ul class="method-list">
+                    <li class="method-item">public void displayInfo() {
+    // 具体的な実装あり
+    System.out.println("情報表示");
+}</li>
+                    <li class="method-item">public void study() {
+    // 具体的な実装あり
+    System.out.println("学習中");
+}</li>
+                    <li class="method-item">public String getType() {
+    // 具体的な実装あり
+    return "一般学生";
+}</li>
+                </ul>
+            </div>
+            
+            <div class="class-box abstract-class">
+                <div class="class-header abstract-header">抽象クラス (abstract)</div>
+                <ul class="method-list">
+                    <li class="method-item">public void displayInfo() {
+    // 具体的な実装あり（共通処理）
+    System.out.println("情報表示");
+}</li>
+                    <li class="method-item abstract-method">public abstract void study();</li>
+                    <li class="method-item abstract-method">public abstract String getType();</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="instantiation-demo">
+            <div class="demo-box valid">
+                <div class="demo-title">✅ 通常のクラス - インスタンス化可能</div>
+                <div class="code-block">// 直接インスタンス化できる
+Student student = new Student();
+student.study(); // "学習中" が出力</div>
+                <div class="success-message">コンパイル成功 - 実行可能</div>
+            </div>
+            
+            <div class="demo-box invalid">
+                <div class="demo-title">❌ 抽象クラス - インスタンス化不可</div>
+                <div class="code-block">// 直接インスタンス化はできない
+Student student = new Student();</div>
+                <div class="error-message">コンパイルエラー: 
+Student is abstract; cannot be instantiated</div>
+            </div>
+        </div>
+        
+        <div class="demo-box valid">
+            <div class="demo-title">✅ 抽象クラスの正しい使用方法</div>
+            <div class="code-block">// 継承したクラスからインスタンス化
+Student student = new UndergraduateStudent();
+student.study(); // UndergraduateStudentの実装が実行される</div>
+            <div class="success-message">コンパイル成功 - 子クラスで抽象メソッドを実装済み</div>
+        </div>
+        
+        <div class="key-points">
+            <h3>抽象クラスの重要なポイント</h3>
+            <ul class="points-list">
+                <li><strong>インスタンス化不可:</strong> 直接 new でオブジェクト作成できない</li>
+                <li><strong>抽象メソッド:</strong> 実装を持たず、子クラスでの実装を強制</li>
+                <li><strong>具体メソッド:</strong> 通常のメソッドも定義可能（共通処理）</li>
+                <li><strong>継承の強制:</strong> 抽象メソッドがある限り、子クラスでの実装が必須</li>
+                <li><strong>設計の安全性:</strong> コンパイル時に実装漏れを検出</li>
+                <li><strong>概念の表現:</strong> 直接使用しない概念（学生、動物、図形など）の表現に最適</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
