@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>継承を活用したシステム統合設計</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: white;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #dee2e6;
+        }
+        
+        .comparison {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .before, .after {
+            flex: 1;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #dee2e6;
+        }
+        
+        .before {
+            background: linear-gradient(135deg, #fff5f5, #fed7d7);
+        }
+        
+        .after {
+            background: linear-gradient(135deg, #f0fff4, #c6f6d5);
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+            padding: 8px;
+            border-radius: 8px;
+        }
+        
+        .before .section-title {
+            background: #e53e3e;
+            color: white;
+        }
+        
+        .after .section-title {
+            background: #38a169;
+            color: white;
+        }
+        
+        .system-box {
+            background: white;
+            border: 2px solid #cbd5e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .class-hierarchy {
+            background: #f7fafc;
+            border: 2px solid #4299e1;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .inheritance-tree {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .parent-class {
+            background: #4299e1;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin: 10px auto;
+            width: fit-content;
+            font-weight: bold;
+        }
+        
+        .inheritance-line {
+            width: 2px;
+            height: 20px;
+            background: #4299e1;
+            margin: 5px auto;
+        }
+        
+        .child-classes {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 5px;
+            position: relative;
+        }
+        
+        .child-classes::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 2px;
+            background: #4299e1;
+        }
+        
+        .child-class {
+            background: #48bb78;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            min-width: 120px;
+        }
+        
+        .integration-flow {
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #ebf8ff, #bee3f8);
+            border: 2px solid #4299e1;
+            border-radius: 10px;
+        }
+        
+        .flow-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #2b6cb0;
+            margin-bottom: 20px;
+        }
+        
+        .flow-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .flow-step {
+            background: white;
+            border: 2px solid #4299e1;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            flex: 1;
+            min-width: 200px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .flow-arrow {
+            font-size: 24px;
+            color: #4299e1;
+            font-weight: bold;
+        }
+        
+        .code-example {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin: 8px 0;
+            color: #2d3748;
+            white-space: pre-line;
+            line-height: 1.4;
+        }
+        
+        .benefit-list {
+            margin: 15px 0;
+        }
+        
+        .benefit-item {
+            background: #f0fff4;
+            border-left: 4px solid #38a169;
+            padding: 8px 12px;
+            margin: 8px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        
+        .problem-item {
+            background: #fff5f5;
+            border-left: 4px solid #e53e3e;
+            padding: 8px 12px;
+            margin: 8px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison {
+                flex-direction: column;
+            }
+            
+            .child-classes {
+                flex-direction: column;
+                gap: 15px;
+                align-items: center;
+            }
+            
+            .child-classes::before {
+                display: none;
+            }
+            
+            .flow-steps {
+                flex-direction: column;
+            }
+            
+            .flow-arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">
+            継承を活用したシステム統合設計<br>
+            <span style="font-size: 16px; color: #666;">Week 4システム + 継承技術 = 高度な大規模システム</span>
+        </div>
+        
+        <div class="comparison">
+            <div class="before">
+                <div class="section-title">❌ Week 4までの限界</div>
+                
+                <div class="system-box">
+                    <strong>Studentクラス（単一クラス）</strong>
+                    <div class="code-example">public class Student {
+    private String studentType; // 文字列で管理
+    
+    public void displayInfo() {
+        if ("学部生".equals(studentType)) {
+            // 学部生用処理
+        } else if ("大学院生".equals(studentType)) {
+            // 大学院生用処理
+        }
+        // 新種別追加でif文増加
+    }
+}</div>
+                </div>
+                
+                <div class="problem-item">🚫 if文による分岐処理（保守困難）</div>
+                <div class="problem-item">🚫 新種別追加時の大量修正</div>
+                <div class="problem-item">🚫 学生種別固有の機能実装困難</div>
+                <div class="problem-item">🚫 コードの重複と複雑化</div>
+            </div>
+            
+            <div class="after">
+                <div class="section-title">✅ 継承技術による改善</div>
+                
+                <div class="class-hierarchy">
+                    <div class="inheritance-tree">
+                        <div class="parent-class">Student（抽象親クラス）</div>
+                        <div class="inheritance-line"></div>
+                        <div class="child-classes">
+                            <div class="child-class">UndergraduateStudent<br>（学部生）</div>
+                            <div class="child-class">GraduateStudent<br>（大学院生）</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="code-example">public abstract class Student {
+    protected String name;
+    public abstract void displayInfo();
+}
+
+public class UndergraduateStudent extends Student {
+    @Override
+    public void displayInfo() {
+        // 学部生専用処理（if文不要）
+    }
+}</div>
+                
+                <div class="benefit-item">✅ 動的メソッド選択（自動的に適切な処理）</div>
+                <div class="benefit-item">✅ 新種別追加が容易（新クラス作成のみ）</div>
+                <div class="benefit-item">✅ 各種別の固有機能を自然に実装</div>
+                <div class="benefit-item">✅ コードの重複排除と整理</div>
+            </div>
+        </div>
+        
+        <div class="integration-flow">
+            <div class="flow-title">🔄 システム統合フロー</div>
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <strong>1. Week 4システム</strong><br>
+                    StudentManagementSystem<br>
+                    ReportGenerator<br>
+                    DataAnalyzer
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <strong>2. 継承階層追加</strong><br>
+                    Student（抽象化）<br>
+                    UndergraduateStudent<br>
+                    GraduateStudent
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <strong>3. 統合システム</strong><br>
+                    動的メソッド選択<br>
+                    統一インターフェース<br>
+                    拡張可能設計
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 30px; padding: 20px; background: linear-gradient(135deg, #fff5e6, #fed7aa); border: 2px solid #f6ad55; border-radius: 10px;">
+            <div style="text-align: center; font-weight: bold; font-size: 18px; color: #c05621; margin-bottom: 15px;">
+                🎯 統合により実現される威力
+            </div>
+            <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 15px;">
+                <div style="text-align: center; flex: 1; min-width: 200px;">
+                    <div style="background: #4299e1; color: white; padding: 10px; border-radius: 8px; margin-bottom: 10px; font-weight: bold;">
+                        統一インターフェース
+                    </div>
+                    <div style="font-size: 14px;">
+                        List&lt;Student&gt;で<br>
+                        異なる学生種別を<br>
+                        統一的に管理
+                    </div>
+                </div>
+                <div style="text-align: center; flex: 1; min-width: 200px;">
+                    <div style="background: #48bb78; color: white; padding: 10px; border-radius: 8px; margin-bottom: 10px; font-weight: bold;">
+                        動的メソッド選択
+                    </div>
+                    <div style="font-size: 14px;">
+                        実行時に適切な<br>
+                        メソッドが自動選択<br>
+                        される柔軟性
+                    </div>
+                </div>
+                <div style="text-align: center; flex: 1; min-width: 200px;">
+                    <div style="background: #ed8936; color: white; padding: 10px; border-radius: 8px; margin-bottom: 10px; font-weight: bold;">
+                        拡張可能設計
+                    </div>
+                    <div style="font-size: 14px;">
+                        新しい学生種別の<br>
+                        追加が容易な<br>
+                        アーキテクチャ
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
