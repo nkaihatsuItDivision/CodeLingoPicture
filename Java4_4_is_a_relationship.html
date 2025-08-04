@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>is-a関係による型の互換性</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: white;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        /* 継承関係の図 */
+        .inheritance-diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 40px 0;
+        }
+        
+        .parent-class {
+            background: linear-gradient(135deg, #e3f2fd 0%, #90caf9 100%);
+            border: 3px solid #1976d2;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            min-width: 200px;
+            box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+        }
+        
+        .parent-title {
+            font-weight: bold;
+            color: #0d47a1;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .parent-methods {
+            color: #1565c0;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-line;
+            line-height: 1.4;
+        }
+        
+        /* 継承線 */
+        .inheritance-line {
+            width: 3px;
+            height: 40px;
+            background: #1976d2;
+            margin: 0;
+        }
+        
+        .inheritance-split {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 60px;
+            flex-wrap: wrap;
+        }
+        
+        .child-branch {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .branch-line {
+            width: 3px;
+            height: 20px;
+            background: #1976d2;
+        }
+        
+        .horizontal-line {
+            height: 3px;
+            width: 200px;
+            background: #1976d2;
+            position: relative;
+        }
+        
+        .child-class {
+            background: linear-gradient(135deg, #e8f5e8 0%, #81c784 100%);
+            border: 3px solid #388e3c;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            min-width: 180px;
+            margin-top: 20px;
+            box-shadow: 0 4px 12px rgba(56, 142, 60, 0.3);
+        }
+        
+        .child-title {
+            font-weight: bold;
+            color: #1b5e20;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .child-methods {
+            color: #2e7d32;
+            font-size: 12px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-line;
+            line-height: 1.4;
+        }
+        
+        /* is-a関係の説明 */
+        .is-a-section {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffcc80 100%);
+            border: 2px solid #ff9800;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .is-a-title {
+            font-weight: bold;
+            color: #e65100;
+            font-size: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .is-a-examples {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        
+        .is-a-item {
+            background: white;
+            border: 2px solid #f57c00;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            min-width: 150px;
+        }
+        
+        .is-a-statement {
+            font-weight: bold;
+            color: #bf360c;
+            font-size: 16px;
+        }
+        
+        /* 型の互換性の説明 */
+        .compatibility-section {
+            background: linear-gradient(135deg, #f3e5f5 0%, #ce93d8 100%);
+            border: 2px solid #9c27b0;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .compatibility-title {
+            font-weight: bold;
+            color: #4a148c;
+            font-size: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .code-example {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            white-space: pre-line;
+            line-height: 1.4;
+            overflow-x: auto;
+        }
+        
+        .code-comment {
+            color: #68d391;
+        }
+        
+        .code-highlight {
+            background: #2b6cb0;
+            color: white;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .key-point {
+            background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+            border: 2px solid #e53e3e;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .key-point-title {
+            font-weight: bold;
+            color: #c53030;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .dynamic-binding {
+            background: linear-gradient(135deg, #e0f2fe 0%, #81d4fa 100%);
+            border: 2px solid #0288d1;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .dynamic-title {
+            font-weight: bold;
+            color: #01579b;
+            font-size: 18px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        /* レスポンシブ対応 */
+        @media (max-width: 768px) {
+            .inheritance-split {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .horizontal-line {
+                width: 100px;
+            }
+            
+            .is-a-examples {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">is-a関係による型の互換性</div>
+        
+        <!-- 継承関係の図 -->
+        <div class="inheritance-diagram">
+            <div class="parent-class">
+                <div class="parent-title">Student（親クラス）</div>
+                <div class="parent-methods">+ displayInfo()
++ study()
++ calculateGPA()</div>
+            </div>
+            
+            <div class="inheritance-line"></div>
+            
+            <div class="inheritance-split">
+                <div class="child-branch">
+                    <div class="branch-line"></div>
+                    <div class="child-class">
+                        <div class="child-title">UndergraduateStudent</div>
+                        <div class="child-methods">+ joinClub()
++ earnCredits()
+@Override displayInfo()
+@Override study()</div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; align-items: center;">
+                    <div class="horizontal-line"></div>
+                </div>
+                
+                <div class="child-branch">
+                    <div class="branch-line"></div>
+                    <div class="child-class">
+                        <div class="child-title">GraduateStudent</div>
+                        <div class="child-methods">+ writeThesis()
++ changeDegree()
+@Override displayInfo()
+@Override study()</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- is-a関係の説明 -->
+        <div class="is-a-section">
+            <div class="is-a-title">is-a関係の成立</div>
+            
+            <div class="is-a-examples">
+                <div class="is-a-item">
+                    <div class="is-a-statement">学部生 is-a 学生</div>
+                </div>
+                <div class="is-a-item">
+                    <div class="is-a-statement">大学院生 is-a 学生</div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; color: #bf360c; font-weight: bold; margin-top: 20px;">
+                継承関係により「is-a関係」が成立し、型の互換性が生まれる
+            </div>
+        </div>
+        
+        <!-- 型の互換性 -->
+        <div class="compatibility-section">
+            <div class="compatibility-title">型の互換性の実現</div>
+            
+            <div class="code-example">UndergraduateStudent undergraduate = new UndergraduateStudent(...);
+GraduateStudent graduate = new GraduateStudent(...);
+
+<span class="code-comment">// is-a関係により、以下の代入が可能</span>
+<span class="code-highlight">Student student1 = undergraduate;</span>  <span class="code-comment">// 学部生 is-a 学生</span>
+<span class="code-highlight">Student student2 = graduate;</span>       <span class="code-comment">// 大学院生 is-a 学生</span>
+
+<span class="code-comment">// 宣言時の型は Student だが、実際のオブジェクトは異なる</span></div>
+        </div>
+        
+        <!-- 動的バインディング -->
+        <div class="dynamic-binding">
+            <div class="dynamic-title">動的バインディング（実行時メソッド選択）</div>
+            
+            <div style="display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap; margin: 20px 0;">
+                <div style="background: white; border: 2px solid #0288d1; border-radius: 8px; padding: 15px; text-align: center; min-width: 120px;">
+                    <div style="font-weight: bold; color: #01579b;">宣言時の型</div>
+                    <div style="color: #0277bd; font-family: monospace;">Student</div>
+                </div>
+                
+                <div style="font-size: 24px; color: #0288d1;">≠</div>
+                
+                <div style="background: white; border: 2px solid #0288d1; border-radius: 8px; padding: 15px; text-align: center; min-width: 140px;">
+                    <div style="font-weight: bold; color: #01579b;">実際のオブジェクト</div>
+                    <div style="color: #0277bd; font-family: monospace; font-size: 12px;">UndergraduateStudent<br>GraduateStudent</div>
+                </div>
+            </div>
+            
+            <div class="code-example">student1.displayInfo();  <span class="code-comment">// 実行時に実際の型を判定</span>
+                        <span class="code-comment">// → UndergraduateStudent.displayInfo() が実行</span>
+
+student2.displayInfo();  <span class="code-comment">// 実行時に実際の型を判定</span>
+                        <span class="code-comment">// → GraduateStudent.displayInfo() が実行</span></div>
+        </div>
+        
+        <div class="key-point">
+            <div class="key-point-title">重要ポイント</div>
+            <div style="color: #2d3748; font-size: 16px;">
+                実行時に実際のオブジェクトの型が判定され、<br>
+                適切なメソッドが自動的に選択される<br>
+                <strong>これがポリモーフィズムの仕組み！</strong>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
