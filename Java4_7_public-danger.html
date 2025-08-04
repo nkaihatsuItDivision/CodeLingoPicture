@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>publicフィールドの危険性</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f8f9fa;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .danger-demo {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .code-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .code-section h3 {
+            margin: 0 0 15px 0;
+            color: #007bff;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .danger-section {
+            background: #fff5f5;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #dc3545;
+        }
+        
+        .danger-section h3 {
+            margin: 0 0 15px 0;
+            color: #dc3545;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+        }
+        
+        pre {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 13px;
+            line-height: 1.4;
+            overflow-x: auto;
+            margin: 0;
+        }
+        
+        .keyword {
+            color: #63b3ed;
+        }
+        
+        .string {
+            color: #68d391;
+        }
+        
+        .comment {
+            color: #a0aec0;
+            font-style: italic;
+        }
+        
+        .danger-example {
+            background: #fff5f5;
+            border: 2px dashed #dc3545;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .danger-example h4 {
+            color: #dc3545;
+            margin: 0 0 15px 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .problems-list {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .problems-list h3 {
+            color: #dc3545;
+            margin: 0 0 15px 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .problem-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            border-left: 4px solid #dc3545;
+        }
+        
+        .problem-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .problem-icon {
+            color: #dc3545;
+            font-size: 18px;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        
+        .arrow {
+            text-align: center;
+            font-size: 24px;
+            color: #dc3545;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚠️ publicフィールドの危険性</h1>
+        </div>
+        
+        <div class="content">
+            <div class="danger-demo">
+                <div class="code-section">
+                    <h3>
+                        <span class="icon">💻</span>
+                        DangerousStudentクラス
+                    </h3>
+                    <pre><code><span class="keyword">public class</span> DangerousStudent {
+    <span class="comment">// ❌ 危険：全て public</span>
+    <span class="keyword">public</span> String name;
+    <span class="keyword">public int</span> age;
+    <span class="keyword">public double</span> gpa;
+    
+    <span class="keyword">public</span> DangerousStudent(String name, 
+                         <span class="keyword">int</span> age, <span class="keyword">double</span> gpa) {
+        <span class="keyword">this</span>.name = name;
+        <span class="keyword">this</span>.age = age;
+        <span class="keyword">this</span>.gpa = gpa;
+    }
+}</code></pre>
+                </div>
+                
+                <div class="danger-section">
+                    <h3>
+                        <span class="icon">⚠️</span>
+                        外部からの不正アクセス
+                    </h3>
+                    <pre><code>DangerousStudent student = 
+    <span class="keyword">new</span> DangerousStudent(<span class="string">"田中"</span>, 20, 3.5);
+
+<span class="comment">// ❌ 直接フィールドを変更可能</span>
+student.name = <span class="string">""</span>;        <span class="comment">// 空文字</span>
+student.age = -5;       <span class="comment">// 負の年齢</span>
+student.gpa = 99.9;     <span class="comment">// 不正なGPA</span></code></pre>
+                </div>
+            </div>
+            
+            <div class="arrow">⬇️ 結果 ⬇️</div>
+            
+            <div class="danger-example">
+                <h4>
+                    <span class="icon">💥</span>
+                    実行時の異常な状態
+                </h4>
+                <pre><code><span class="comment">// 出力結果：異常なデータ</span>
+名前：、年齢：-5歳、GPA：99.9
+
+<span class="comment">// データの整合性が完全に破綻</span></code></pre>
+            </div>
+            
+            <div class="problems-list">
+                <h3>
+                    <span class="icon">🚨</span>
+                    publicフィールドが引き起こす問題
+                </h3>
+                
+                <div class="problem-item">
+                    <span class="problem-icon">❌</span>
+                    <div>
+                        <strong>データの整合性破綻</strong><br>
+                        年齢-5歳、GPA99.9など、現実的にありえない値が設定される
+                    </div>
+                </div>
+                
+                <div class="problem-item">
+                    <span class="problem-icon">🐛</span>
+                    <div>
+                        <strong>予期しないエラーの原因</strong><br>
+                        null参照や範囲外の値により実行時エラーが発生
+                    </div>
+                </div>
+                
+                <div class="problem-item">
+                    <span class="problem-icon">🔍</span>
+                    <div>
+                        <strong>デバッグの困難</strong><br>
+                        どこでデータが変更されたか追跡が不可能
+                    </div>
+                </div>
+                
+                <div class="problem-item">
+                    <span class="problem-icon">🔧</span>
+                    <div>
+                        <strong>保守の困難</strong><br>
+                        仕様変更時に全ての直接アクセス箇所を修正する必要
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

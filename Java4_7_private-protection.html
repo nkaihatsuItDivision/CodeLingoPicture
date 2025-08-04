@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>privateによる保護</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f8f9fa;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .protection-demo {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .safe-section {
+            background: #f8fff9;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #28a745;
+        }
+        
+        .safe-section h3 {
+            margin: 0 0 15px 0;
+            color: #28a745;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .method-section {
+            background: #f0f7ff;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .method-section h3 {
+            margin: 0 0 15px 0;
+            color: #007bff;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+        }
+        
+        pre {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 13px;
+            line-height: 1.4;
+            overflow-x: auto;
+            margin: 0;
+        }
+        
+        .keyword {
+            color: #63b3ed;
+        }
+        
+        .string {
+            color: #68d391;
+        }
+        
+        .comment {
+            color: #a0aec0;
+            font-style: italic;
+        }
+        
+        .safe-example {
+            background: #f8fff9;
+            border: 2px solid #28a745;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .safe-example h4 {
+            color: #28a745;
+            margin: 0 0 15px 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .benefits-list {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .benefits-list h3 {
+            color: #28a745;
+            margin: 0 0 15px 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            border-left: 4px solid #28a745;
+        }
+        
+        .benefit-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .benefit-icon {
+            color: #28a745;
+            font-size: 18px;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        
+        .arrow {
+            text-align: center;
+            font-size: 24px;
+            color: #28a745;
+            margin: 20px 0;
+        }
+        
+        .access-diagram {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .access-item {
+            display: inline-block;
+            margin: 10px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            min-width: 120px;
+        }
+        
+        .external-access {
+            background: #fff5f5;
+            color: #dc3545;
+            border: 2px dashed #dc3545;
+        }
+        
+        .internal-access {
+            background: #f8fff9;
+            color: #28a745;
+            border: 2px solid #28a745;
+        }
+        
+        .vs-text {
+            font-size: 18px;
+            font-weight: bold;
+            color: #6c757d;
+            margin: 0 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ privateによる保護</h1>
+        </div>
+        
+        <div class="content">
+            <div class="protection-demo">
+                <div class="safe-section">
+                    <h3>
+                        <span class="icon">🔒</span>
+                        SafeStudentクラス
+                    </h3>
+                    <pre><code><span class="keyword">public class</span> SafeStudent {
+    <span class="comment">// ✅ 安全：全て private</span>
+    <span class="keyword">private</span> String name;
+    <span class="keyword">private int</span> age; 
+    <span class="keyword">private double</span> gpa;
+    
+    <span class="comment">// コンストラクタで検証</span>
+    <span class="keyword">public</span> SafeStudent(String name, 
+                    <span class="keyword">int</span> age, <span class="keyword">double</span> gpa) {
+        <span class="keyword">this</span>.name = (name != <span class="keyword">null</span>) ? 
+                  name : <span class="string">"未設定"</span>;
+        <span class="keyword">this</span>.age = (age >= 0) ? age : 0;
+        <span class="keyword">this</span>.gpa = (gpa >= 0.0 && 
+                   gpa <= 4.0) ? gpa : 0.0;
+    }
+}</code></pre>
+                </div>
+                
+                <div class="method-section">
+                    <h3>
+                        <span class="icon">🔐</span>
+                        安全な更新メソッド
+                    </h3>
+                    <pre><code><span class="comment">// 検証付きメソッド</span>
+<span class="keyword">public void</span> updateAge(<span class="keyword">int</span> newAge) {
+    <span class="keyword">if</span> (newAge >= 0 && newAge <= 150) {
+        <span class="keyword">this</span>.age = newAge;
+        System.out.println(<span class="string">"更新成功"</span>);
+    } <span class="keyword">else</span> {
+        System.out.println(<span class="string">"無効な年齢"</span>);
+    }
+}
+
+<span class="comment">// 内部からのアクセスは可能</span>
+<span class="keyword">public void</span> showInfo() {
+    System.out.println(<span class="string">"名前："</span> + 
+                      <span class="keyword">this</span>.name);
+}</code></pre>
+                </div>
+            </div>
+            
+            <div class="access-diagram">
+                <h3>アクセス制御の仕組み</h3>
+                <div style="display: flex; align-items: center; justify-content: center; margin: 20px 0;">
+                    <div class="access-item external-access">
+                        外部クラス<br>
+                        ❌ アクセス不可
+                    </div>
+                    <span class="vs-text">VS</span>
+                    <div class="access-item internal-access">
+                        クラス内部<br>
+                        ✅ アクセス可能
+                    </div>
+                </div>
+                <p style="color: #6c757d; font-size: 14px;">privateフィールドはクラス内部からのみアクセス可能</p>
+            </div>
+            
+            <div class="arrow">⬇️ 結果 ⬇️</div>
+            
+            <div class="safe-example">
+                <h4>
+                    <span class="icon">✅</span>
+                    安全な実行結果
+                </h4>
+                <pre><code><span class="comment">// 正常な更新</span>
+student.updateAge(21);  <span class="comment">// "更新成功"</span>
+
+<span class="comment">// 不正値は自動的に拒否</span>
+student.updateAge(-5);  <span class="comment">// "無効な年齢"</span>
+
+<span class="comment">// 直接アクセスは不可</span>
+<span class="comment">// student.age = -5;  // コンパイルエラー</span></code></pre>
+            </div>
+            
+            <div class="benefits-list">
+                <h3>
+                    <span class="icon">🎯</span>
+                    カプセル化による効果
+                </h3>
+                
+                <div class="benefit-item">
+                    <span class="benefit-icon">🛡️</span>
+                    <div>
+                        <strong>データの整合性保証</strong><br>
+                        不正な値が設定されることを防ぎ、常に有効なデータを維持
+                    </div>
+                </div>
+                
+                <div class="benefit-item">
+                    <span class="benefit-icon">🔍</span>
+                    <div>
+                        <strong>変更箇所の限定</strong><br>
+                        データ変更はメソッド経由のみ、変更履歴の追跡が容易
+                    </div>
+                </div>
+                
+                <div class="benefit-item">
+                    <span class="benefit-icon">🔧</span>
+                    <div>
+                        <strong>保守性の向上</strong><br>
+                        内部実装変更時の外部への影響を最小限に抑制
+                    </div>
+                </div>
+                
+                <div class="benefit-item">
+                    <span class="benefit-icon">⚡</span>
+                    <div>
+                        <strong>エラー防止</strong><br>
+                        コンパイル時に不正アクセスを検出、実行時エラーを予防
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

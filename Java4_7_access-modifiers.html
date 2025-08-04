@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>アクセス修飾子の範囲</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f8f9fa;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #6f42c1, #5a67d8);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .access-levels {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .access-level {
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .public-level {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+        
+        .protected-level {
+            background: linear-gradient(135deg, #fd7e14, #e83e8c);
+            color: white;
+        }
+        
+        .package-level {
+            background: linear-gradient(135deg, #ffc107, #fd7e14);
+            color: white;
+        }
+        
+        .private-level {
+            background: linear-gradient(135deg, #dc3545, #6f42c1);
+            color: white;
+        }
+        
+        .access-level h3 {
+            margin: 0 0 10px 0;
+            font-size: 18px;
+        }
+        
+        .access-level p {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .access-table {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 30px 0;
+            overflow-x: auto;
+        }
+        
+        .access-table h3 {
+            margin: 0 0 20px 0;
+            color: #495057;
+            text-align: center;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        th {
+            background: #6f42c1;
+            color: white;
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #dee2e6;
+            font-size: 14px;
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .access-ok {
+            color: #28a745;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .access-ng {
+            color: #dc3545;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .modifier-name {
+            font-family: 'Courier New', monospace;
+            background: #f8f9fa;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .public-mod { color: #28a745; }
+        .protected-mod { color: #fd7e14; }
+        .package-mod { color: #ffc107; }
+        .private-mod { color: #dc3545; }
+        
+        .scope-visualization {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        
+        .scope-visualization h3 {
+            margin: 0 0 20px 0;
+            color: #495057;
+            text-align: center;
+        }
+        
+        .scope-levels {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .scope-level {
+            text-align: center;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .scope-level h4 {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .scope-level p {
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .public-scope {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+        
+        .protected-scope {
+            background: linear-gradient(135deg, #fd7e14, #e83e8c);
+            color: white;
+        }
+        
+        .package-scope {
+            background: linear-gradient(135deg, #ffc107, #fd7e14);
+            color: white;
+        }
+        
+        .private-scope {
+            background: linear-gradient(135deg, #dc3545, #6f42c1);
+            color: white;
+        }
+        
+        .range-diagram {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .range-item {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 5px solid;
+        }
+        
+        .public-range {
+            background: rgba(40, 167, 69, 0.1);
+            border-left-color: #28a745;
+        }
+        
+        .protected-range {
+            background: rgba(253, 126, 20, 0.1);
+            border-left-color: #fd7e14;
+        }
+        
+        .package-range {
+            background: rgba(255, 193, 7, 0.1);
+            border-left-color: #ffc107;
+        }
+        
+        .private-range {
+            background: rgba(220, 53, 69, 0.1);
+            border-left-color: #dc3545;
+        }
+        
+        .range-modifier {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 16px;
+            min-width: 100px;
+            margin-right: 20px;
+        }
+        
+        .range-bars {
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+        
+        .range-bar {
+            height: 20px;
+            margin-right: 5px;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .same-class { background: #28a745; width: 80px; }
+        .same-package { background: #fd7e14; width: 80px; }
+        .sub-class { background: #ffc107; width: 80px; color: #333; }
+        .external { background: #dc3545; width: 80px; }
+        
+        .legend {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .legend h4 {
+            margin: 0 0 15px 0;
+            color: #495057;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔑 アクセス修飾子の範囲</h1>
+        </div>
+        
+        <div class="content">
+            <div class="access-levels">
+                <div class="access-level public-level">
+                    <h3>public</h3>
+                    <p>どこからでも<br>アクセス可能</p>
+                </div>
+                <div class="access-level protected-level">
+                    <h3>protected</h3>
+                    <p>同パッケージ<br>継承クラス</p>
+                </div>
+                <div class="access-level package-level">
+                    <h3>package</h3>
+                    <p>同パッケージ<br>のみ</p>
+                </div>
+                <div class="access-level private-level">
+                    <h3>private</h3>
+                    <p>同クラス内<br>のみ</p>
+                </div>
+            </div>
+            
+            <div class="access-table">
+                <h3>📊 アクセス修飾子の適用範囲一覧</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>修飾子</th>
+                            <th>同クラス内</th>
+                            <th>同パッケージ</th>
+                            <th>サブクラス</th>
+                            <th>外部クラス</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="modifier-name public-mod">public</span></td>
+                            <td class="access-ok">✅ OK</td>
+                            <td class="access-ok">✅ OK</td>
+                            <td class="access-ok">✅ OK</td>
+                            <td class="access-ok">✅ OK</td>
+                        </tr>
+                        <tr>
+                            <td><span class="modifier-name protected-mod">protected</span></td>
+                            <td class="access-ok">✅ OK</td>
+                            <td class="access-ok">✅ OK</td>
+                            <td class="access-ok">✅ OK</td>
+                            <td class="access-ng">❌ NG</td>
+                        </tr>
+                        <tr>
+                            <td><span class="modifier-name package-mod">(なし)</span></td>
+                            <td class="access-ok">✅ OK</td>
+                            <td class="access-ok">✅ OK</td>
+                            <td class="access-ng">❌ NG</td>
+                            <td class="access-ng">❌ NG</td>
+                        </tr>
+                        <tr>
+                            <td><span class="modifier-name private-mod">private</span></td>
+                            <td class="access-ok">✅ OK</td>
+                            <td class="access-ng">❌ NG</td>
+                            <td class="access-ng">❌ NG</td>
+                            <td class="access-ng">❌ NG</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="scope-visualization">
+                <h3>🎯 アクセス範囲の視覚化</h3>
+                
+                <div class="scope-levels">
+                    <div class="scope-level public-scope">
+                        <h4>public</h4>
+                        <p>最も広い範囲<br>どこからでも<br>アクセス可能</p>
+                    </div>
+                    <div class="scope-level protected-scope">
+                        <h4>protected</h4>
+                        <p>中程度の範囲<br>継承+同パッケージ<br>でアクセス可能</p>
+                    </div>
+                    <div class="scope-level package-scope">
+                        <h4>package</h4>
+                        <p>限定的な範囲<br>同パッケージ内<br>のみアクセス可能</p>
+                    </div>
+                    <div class="scope-level private-scope">
+                        <h4>private</h4>
+                        <p>最も狭い範囲<br>同クラス内<br>のみアクセス可能</p>
+                    </div>
+                </div>
+                
+                <div class="range-diagram">
+                    <div class="range-item public-range">
+                        <div class="range-modifier public-mod">public</div>
+                        <div class="range-bars">
+                            <div class="range-bar same-class">同クラス</div>
+                            <div class="range-bar same-package">同パッケージ</div>
+                            <div class="range-bar sub-class">サブクラス</div>
+                            <div class="range-bar external">外部クラス</div>
+                        </div>
+                    </div>
+                    
+                    <div class="range-item protected-range">
+                        <div class="range-modifier protected-mod">protected</div>
+                        <div class="range-bars">
+                            <div class="range-bar same-class">同クラス</div>
+                            <div class="range-bar same-package">同パッケージ</div>
+                            <div class="range-bar sub-class">サブクラス</div>
+                            <div style="width: 80px; height: 20px; background: #e9ecef; border-radius: 3px; display: flex; align-items: center; justify-content: center; color: #6c757d; font-size: 12px;">❌ NG</div>
+                        </div>
+                    </div>
+                    
+                    <div class="range-item package-range">
+                        <div class="range-modifier package-mod">(なし)</div>
+                        <div class="range-bars">
+                            <div class="range-bar same-class">同クラス</div>
+                            <div class="range-bar same-package">同パッケージ</div>
+                            <div style="width: 80px; height: 20px; background: #e9ecef; border-radius: 3px; display: flex; align-items: center; justify-content: center; color: #6c757d; font-size: 12px; margin-right: 5px;">❌ NG</div>
+                            <div style="width: 80px; height: 20px; background: #e9ecef; border-radius: 3px; display: flex; align-items: center; justify-content: center; color: #6c757d; font-size: 12px;">❌ NG</div>
+                        </div>
+                    </div>
+                    
+                    <div class="range-item private-range">
+                        <div class="range-modifier private-mod">private</div>
+                        <div class="range-bars">
+                            <div class="range-bar same-class">同クラス</div>
+                            <div style="width: 80px; height: 20px; background: #e9ecef; border-radius: 3px; display: flex; align-items: center; justify-content: center; color: #6c757d; font-size: 12px; margin-right: 5px;">❌ NG</div>
+                            <div style="width: 80px; height: 20px; background: #e9ecef; border-radius: 3px; display: flex; align-items: center; justify-content: center; color: #6c757d; font-size: 12px; margin-right: 5px;">❌ NG</div>
+                            <div style="width: 80px; height: 20px; background: #e9ecef; border-radius: 3px; display: flex; align-items: center; justify-content: center; color: #6c757d; font-size: 12px;">❌ NG</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="legend">
+                <h4>💡 選択の基準</h4>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #28a745;"></div>
+                    <span><strong>public</strong>：外部から使ってもらいたいメソッド・定数</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #fd7e14;"></div>
+                    <span><strong>protected</strong>：継承関係で使用したい場合（レッスン5で詳細）</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ffc107;"></div>
+                    <span><strong>package</strong>：同パッケージ内での協調作業</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #dc3545;"></div>
+                    <span><strong>private</strong>：データやメソッドをクラス内部に隠蔽</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
