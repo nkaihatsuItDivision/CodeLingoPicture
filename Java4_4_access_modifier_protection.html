@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>アクセス修飾子による保護</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .comparison {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+        
+        .section {
+            flex: 1;
+            padding: 20px;
+            border-radius: 10px;
+            position: relative;
+        }
+        
+        .bad-section {
+            background: linear-gradient(135deg, #fee 0%, #fdd 100%);
+            border: 2px solid #e74c3c;
+        }
+        
+        .good-section {
+            background: linear-gradient(135deg, #efe 0%, #dfd 100%);
+            border: 2px solid #27ae60;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            padding: 8px;
+            border-radius: 5px;
+        }
+        
+        .bad-title {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .good-title {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .class-box {
+            background: #f8f9fa;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            position: relative;
+        }
+        
+        .class-name {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .field {
+            margin: 8px 0;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        
+        .private-field {
+            background: #d4edda;
+            border-left: 4px solid #27ae60;
+            color: #155724;
+        }
+        
+        .public-field {
+            background: #f8d7da;
+            border-left: 4px solid #e74c3c;
+            color: #721c24;
+        }
+        
+        .external-access {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            position: relative;
+        }
+        
+        .access-allowed {
+            background: #f8d7da;
+            border: 2px dashed #e74c3c;
+        }
+        
+        .access-blocked {
+            background: #d4edda;
+            border: 2px dashed #27ae60;
+        }
+        
+        .access-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .access-code {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin: 5px 0;
+            padding: 8px;
+            background: rgba(255,255,255,0.7);
+            border-radius: 4px;
+        }
+        
+        .arrow {
+            position: absolute;
+            top: 50%;
+            right: -20px;
+            transform: translateY(-50%);
+            font-size: 24px;
+            color: #e74c3c;
+        }
+        
+        .shield {
+            position: absolute;
+            top: 50%;
+            right: -20px;
+            transform: translateY(-50%);
+            font-size: 24px;
+            color: #27ae60;
+        }
+        
+        .problem-list, .benefit-list {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+        .problem-list {
+            background: rgba(231, 76, 60, 0.1);
+        }
+        
+        .benefit-list {
+            background: rgba(39, 174, 96, 0.1);
+        }
+        
+        .problem-list li, .benefit-list li {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        
+        .explanation {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .explanation h3 {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+        
+        .key-point {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border: 2px solid #f39c12;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">アクセス修飾子による保護</div>
+        
+        <div class="comparison">
+            <!-- 悪い例：publicフィールド -->
+            <div class="section bad-section">
+                <div class="section-title bad-title">❌ 危険：publicフィールド</div>
+                
+                <div class="class-box">
+                    <div class="class-name">BadStudent クラス</div>
+                    <div class="field public-field">public String name;</div>
+                    <div class="field public-field">public int score;</div>
+                </div>
+                
+                <div class="external-access access-allowed">
+                    <div class="access-title" style="color: #e74c3c;">外部からの自由なアクセス</div>
+                    <div class="access-code">student.name = "";</div>
+                    <div class="access-code">student.score = -50;</div>
+                    <div class="access-code">student.score = 999;</div>
+                    <div class="arrow">⚠️</div>
+                </div>
+                
+                <div class="problem-list">
+                    <strong>問題点：</strong>
+                    <ul>
+                        <li>不正なデータ設定が可能</li>
+                        <li>データの整合性が保てない</li>
+                        <li>バグの原因となりやすい</li>
+                        <li>セキュリティリスクが高い</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 良い例：privateフィールド -->
+            <div class="section good-section">
+                <div class="section-title good-title">✅ 安全：privateフィールド</div>
+                
+                <div class="class-box">
+                    <div class="class-name">GoodStudent クラス</div>
+                    <div class="field private-field">private String name;</div>
+                    <div class="field private-field">private int score;</div>
+                    <div style="margin-top: 10px; font-size: 12px; color: #666;">
+                        + setScore(int score) メソッド<br>
+                        + getName() メソッド
+                    </div>
+                </div>
+                
+                <div class="external-access access-blocked">
+                    <div class="access-title" style="color: #27ae60;">外部からの直接アクセスは不可</div>
+                    <div class="access-code" style="text-decoration: line-through; opacity: 0.6;">student.score = -50; // エラー！</div>
+                    <div class="access-code" style="color: #27ae60;">student.setScore(85); // 安全！</div>
+                    <div class="shield">🛡️</div>
+                </div>
+                
+                <div class="benefit-list">
+                    <strong>利点：</strong>
+                    <ul>
+                        <li>データの整合性を保護</li>
+                        <li>不正な値の設定を防止</li>
+                        <li>メソッドで検証可能</li>
+                        <li>セキュリティが向上</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="explanation">
+            <h3>🔒 privateフィールドの保護メカニズム</h3>
+            <p><strong>privateフィールド</strong>は、クラスの外部から直接アクセスできません。データの読み取りや変更には、専用のメソッドを通す必要があります。</p>
+            <p>これにより、<strong>データの検証</strong>や<strong>整合性チェック</strong>を行うことができ、不正なデータの設定を防ぐことができます。</p>
+        </div>
+        
+        <div class="key-point">
+            💡 重要ポイント：フィールドは原則private！メソッドで安全にアクセス！
+        </div>
+    </div>
+</body>
+</html>
