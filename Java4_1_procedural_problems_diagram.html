@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>手続き型プログラミングの問題点</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: white;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            text-align: center;
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .problem-section {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .data-arrays {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .array {
+            background: #fff;
+            border: 2px solid #dc3545;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px;
+            min-width: 150px;
+        }
+        
+        .array-title {
+            font-weight: bold;
+            color: #dc3545;
+            margin-bottom: 10px;
+        }
+        
+        .array-item {
+            background: #fee;
+            border: 1px solid #fcc;
+            margin: 5px 0;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .problem-list {
+            text-align: left;
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        
+        .problem-item {
+            display: flex;
+            align-items: flex-start;
+            margin: 15px 0;
+            background: #fff;
+            padding: 15px;
+            border-left: 4px solid #dc3545;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .problem-icon {
+            color: #dc3545;
+            font-size: 20px;
+            margin-right: 10px;
+            margin-top: 2px;
+        }
+        
+        .problem-text {
+            flex: 1;
+        }
+        
+        .problem-title {
+            font-weight: bold;
+            color: #dc3545;
+            margin-bottom: 5px;
+        }
+        
+        .arrows {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 15px 0;
+        }
+        
+        .arrow {
+            color: #dc3545;
+            font-size: 30px;
+            margin: 0 10px;
+        }
+        
+        .confusion-text {
+            color: #dc3545;
+            font-weight: bold;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">手続き型プログラミングの問題点</div>
+        
+        <div class="problem-section">
+            <h3 style="color: #dc3545; margin-top: 0;">データがバラバラに管理される</h3>
+            
+            <div class="data-arrays">
+                <div class="array">
+                    <div class="array-title">studentNames[]</div>
+                    <div class="array-item">[0] "田中"</div>
+                    <div class="array-item">[1] "佐藤"</div>
+                    <div class="array-item">[2] "山田"</div>
+                </div>
+                
+                <div class="array">
+                    <div class="array-title">scores[]</div>
+                    <div class="array-item">[0] 85</div>
+                    <div class="array-item">[1] 92</div>
+                    <div class="array-item">[2] 78</div>
+                </div>
+                
+                <div class="array">
+                    <div class="array-title">grades[]</div>
+                    <div class="array-item">[0] "B"</div>
+                    <div class="array-item">[1] "A"</div>
+                    <div class="array-item">[2] "C"</div>
+                </div>
+            </div>
+            
+            <div class="arrows">
+                <span class="arrow">⚠️</span>
+                <span class="confusion-text">同じ学生のデータなのに別々の配列...</span>
+                <span class="arrow">⚠️</span>
+            </div>
+        </div>
+        
+        <div class="problem-list">
+            <div class="problem-item">
+                <div class="problem-icon">❌</div>
+                <div class="problem-text">
+                    <div class="problem-title">データがバラバラ</div>
+                    同じ学生の情報が3つの配列に分散して管理される
+                </div>
+            </div>
+            
+            <div class="problem-item">
+                <div class="problem-icon">⚡</div>
+                <div class="problem-text">
+                    <div class="problem-title">管理が大変</div>
+                    学生追加時は3つの配列すべてを同時に更新する必要
+                </div>
+            </div>
+            
+            <div class="problem-item">
+                <div class="problem-icon">🔍</div>
+                <div class="problem-text">
+                    <div class="problem-title">関係が見えない</div>
+                    配列同士の関連性がコードから読み取りにくい
+                </div>
+            </div>
+            
+            <div class="problem-item">
+                <div class="problem-icon">♻️</div>
+                <div class="problem-text">
+                    <div class="problem-title">再利用しにくい</div>
+                    他のプログラムで同じロジックを使うのが困難
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

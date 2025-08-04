@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>オブジェクト指向の3つのメリット</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: white;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1100px;
+            text-align: center;
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 40px;
+        }
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .benefit-card {
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .benefit-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+        }
+        
+        .benefit1 {
+            background: linear-gradient(135deg, #e8f5e8, #c8e6c9);
+            border: 3px solid #4caf50;
+        }
+        
+        .benefit2 {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border: 3px solid #2196f3;
+        }
+        
+        .benefit3 {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            border: 3px solid #ff9800;
+        }
+        
+        .benefit-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            display: block;
+        }
+        
+        .benefit-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .benefit-description {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .example-section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: left;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .example-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .before-after {
+            display: flex;
+            gap: 15px;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .before, .after {
+            flex: 1;
+            min-width: 120px;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .before {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+        }
+        
+        .after {
+            background: #e8f5e8;
+            border-left: 4px solid #4caf50;
+        }
+        
+        .before-title, .after-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .before-title {
+            color: #d32f2f;
+        }
+        
+        .after-title {
+            color: #388e3c;
+        }
+        
+        .code-snippet {
+            background: #263238;
+            color: #ffffff;
+            border-radius: 6px;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        
+        .keyword {
+            color: #82b1ff;
+        }
+        
+        .string {
+            color: #c3e88d;
+        }
+        
+        .comment {
+            color: #546e7a;
+        }
+        
+        .highlight-points {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 15px 0;
+        }
+        
+        .point {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .benefit1 .point {
+            border-color: #4caf50;
+            color: #2e7d32;
+        }
+        
+        .benefit2 .point {
+            border-color: #2196f3;
+            color: #1565c0;
+        }
+        
+        .benefit3 .point {
+            border-color: #ff9800;
+            color: #f57c00;
+        }
+        
+        .summary {
+            background: linear-gradient(135deg, #f3e5f5, #e1bee7);
+            border: 3px solid #9c27b0;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 40px 0;
+        }
+        
+        .summary-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #7b1fa2;
+            margin-bottom: 15px;
+        }
+        
+        .summary-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">オブジェクト指向の3つのメリット</div>
+        
+        <div class="benefits-grid">
+            <!-- メリット1: 整理整頓 -->
+            <div class="benefit-card benefit1">
+                <div class="benefit-icon">🗂️</div>
+                <div class="benefit-title">1. 整理整頓</div>
+                <div class="benefit-description">
+                    関連するデータと処理が一箇所にまとまり、<br>
+                    コードの構造が分かりやすくなります
+                </div>
+                
+                <div class="highlight-points">
+                    <div class="point">データと処理が統合</div>
+                    <div class="point">役割が明確</div>
+                    <div class="point">管理しやすい</div>
+                </div>
+                
+                <div class="example-section">
+                    <div class="example-title">📊 整理整頓の効果</div>
+                    <div class="before-after">
+                        <div class="before">
+                            <div class="before-title">❌ 手続き型</div>
+                            • データがバラバラ<br>
+                            • 処理も別々<br>
+                            • 関連性が不明
+                        </div>
+                        <div class="after">
+                            <div class="after-title">✅ OOP</div>
+                            • データと処理が統合<br>
+                            • 責任が明確<br>
+                            • 一目で理解可能
+                        </div>
+                    </div>
+                    
+                    <div class="code-snippet">
+<span class="comment">// 整理された構造</span><br>
+<span class="keyword">class</span> Student {<br>
+    <span class="comment">// データ</span><br>
+    String name;<br>
+    <span class="keyword">int</span> score;<br>
+    
+    <span class="comment">// 関連する処理</span><br>
+    String getGrade() { ... }<br>
+    <span class="keyword">void</span> introduce() { ... }<br>
+}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- メリット2: 再利用性 -->
+            <div class="benefit-card benefit2">
+                <div class="benefit-icon">♻️</div>
+                <div class="benefit-title">2. 再利用性</div>
+                <div class="benefit-description">
+                    一度作ったクラスは何度でも使え、<br>
+                    同じコードを繰り返し書く必要がありません
+                </div>
+                
+                <div class="highlight-points">
+                    <div class="point">同じクラスで複数作成</div>
+                    <div class="point">他プロジェクトでも利用</div>
+                    <div class="point">開発効率UP</div>
+                </div>
+                
+                <div class="example-section">
+                    <div class="example-title">♻️ 再利用の威力</div>
+                    <div class="code-snippet">
+<span class="comment">// 1つのクラスから複数のオブジェクト</span><br>
+Student student1 = <span class="keyword">new</span> Student();<br>
+Student student2 = <span class="keyword">new</span> Student();<br>
+Student student3 = <span class="keyword">new</span> Student();<br>
+
+<span class="comment">// 別のプロジェクトでも同じクラスを使用</span><br>
+<span class="comment">// → コードの再利用で開発時間短縮</span>
+                    </div>
+                    
+                    <div class="before-after">
+                        <div class="before">
+                            <div class="before-title">❌ 従来</div>
+                            • 毎回同じコードを書く<br>
+                            • 修正も毎回必要<br>
+                            • 開発時間がかかる
+                        </div>
+                        <div class="after">
+                            <div class="after-title">✅ OOP</div>
+                            • 一度作れば何度でも使用<br>
+                            • 修正は一箇所だけ<br>
+                            • 開発時間大幅短縮
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- メリット3: 理解しやすさ -->
+            <div class="benefit-card benefit3">
+                <div class="benefit-icon">💡</div>
+                <div class="benefit-title">3. 理解しやすさ</div>
+                <div class="benefit-description">
+                    現実世界の「モノ」として考えられるため、<br>
+                    プログラムの動作が直感的に理解できます
+                </div>
+                
+                <div class="highlight-points">
+                    <div class="point">現実世界と対応</div>
+                    <div class="point">直感的な理解</div>
+                    <div class="point">チーム開発に最適</div>
+                </div>
+                
+                <div class="example-section">
+                    <div class="example-title">💡 理解しやすさの実感</div>
+                    <div class="code-snippet">
+<span class="comment">// 現実世界の「学生」と対応</span><br>
+Student tanaka = <span class="keyword">new</span> Student();<br>
+tanaka.name = <span class="string">"田中"</span>;<br>
+tanaka.score = 85;<br>
+
+<span class="comment">// 「田中さんが自己紹介する」</span><br>
+tanaka.introduce();<br>
+
+<span class="comment">// → 自然で理解しやすい！</span><br>
+                    </div>
+                    
+                    <div class="before-after">
+                        <div class="before">
+                            <div class="before-title">❌ 抽象的</div>
+                            • process1(), process2()<br>
+                            • 何をしているか不明<br>
+                            • 理解に時間がかかる
+                        </div>
+                        <div class="after">
+                            <div class="after-title">✅ 直感的</div>
+                            • student.introduce()<br>
+                            • 「学生が自己紹介」<br>
+                            • 一目で理解可能
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="summary">
+            <div class="summary-title">🎯 オブジェクト指向の本質</div>
+            <div class="summary-text">
+                これら3つのメリットにより、<strong>「保守しやすく」「理解しやすく」「再利用しやすい」</strong>プログラムを作ることができます。<br><br>
+                特に大規模な開発やチーム開発では、オブジェクト指向の恩恵を強く実感できるでしょう。<br>
+                あなたも Week 3 の StringUtils クラスで、これらのメリットを既に体験しているはずです！
+            </div>
+        </div>
+    </div>
+</body>
+</html>
