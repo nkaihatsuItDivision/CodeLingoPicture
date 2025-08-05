@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>抽象クラス vs インターフェース 比較図</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+        
+        .title {
+            text-align: center;
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            padding: 25px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .abstract-class-section, .interface-section {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+        
+        .abstract-class-section {
+            border: 3px solid #9c27b0;
+        }
+        
+        .interface-section {
+            border: 3px solid #2196f3;
+        }
+        
+        .section-header {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+        
+        .abstract-class-header {
+            background: linear-gradient(135deg, #9c27b0 0%, #673ab7 100%);
+        }
+        
+        .interface-header {
+            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .feature-item {
+            background: white;
+            margin: 12px 0;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            border-left: 5px solid;
+            display: flex;
+            align-items: center;
+        }
+        
+        .abstract-class-section .feature-item {
+            border-left-color: #9c27b0;
+        }
+        
+        .interface-section .feature-item {
+            border-left-color: #2196f3;
+        }
+        
+        .feature-icon {
+            font-size: 20px;
+            margin-right: 12px;
+            min-width: 30px;
+        }
+        
+        .feature-text {
+            flex: 1;
+        }
+        
+        .feature-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .abstract-class-section .feature-title {
+            color: #9c27b0;
+        }
+        
+        .interface-section .feature-title {
+            color: #2196f3;
+        }
+        
+        .feature-description {
+            color: #555;
+            font-size: 14px;
+        }
+        
+        .code-example {
+            background: #263238;
+            color: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            white-space: pre-line;
+            line-height: 1.5;
+            border: 2px solid #37474f;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .code-keyword {
+            color: #81c784;
+            font-weight: bold;
+        }
+        
+        .code-type {
+            color: #64b5f6;
+        }
+        
+        .code-method {
+            color: #ffb74d;
+        }
+        
+        .code-comment {
+            color: #90a4ae;
+            font-style: italic;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .comparison-table th {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .comparison-table td {
+            padding: 18px;
+            text-align: center;
+            border-bottom: 2px solid #f0f0f0;
+            vertical-align: top;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9ff;
+        }
+        
+        .comparison-table tr:hover {
+            background: #e3f2fd;
+            transform: scale(1.01);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-name {
+            font-weight: bold;
+            color: #333;
+            font-size: 16px;
+        }
+        
+        .abstract-answer {
+            color: #9c27b0;
+            font-weight: bold;
+            background: #f3e5f5;
+            padding: 8px 12px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        
+        .interface-answer {
+            color: #2196f3;
+            font-weight: bold;
+            background: #e3f2fd;
+            padding: 8px 12px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        
+        .decision-guide {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffcc02 20%, #fff3e0 100%);
+            border: 3px solid #ff9800;
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 40px;
+        }
+        
+        .decision-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #e65100;
+            text-align: center;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .decision-title::before {
+            content: "🤔";
+            margin-right: 10px;
+            font-size: 28px;
+        }
+        
+        .decision-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+        
+        .decision-box {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .decision-box-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            color: white;
+        }
+        
+        .abstract-decision .decision-box-title {
+            background: linear-gradient(135deg, #9c27b0 0%, #673ab7 100%);
+        }
+        
+        .interface-decision .decision-box-title {
+            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+        }
+        
+        .decision-criteria {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .decision-criteria li {
+            margin: 10px 0;
+            padding: 8px 12px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            border-left: 4px solid;
+            display: flex;
+            align-items: center;
+        }
+        
+        .abstract-decision .decision-criteria li {
+            border-left-color: #9c27b0;
+        }
+        
+        .interface-decision .decision-criteria li {
+            border-left-color: #2196f3;
+        }
+        
+        .decision-criteria li::before {
+            content: "✓";
+            color: #4caf50;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                margin: 10px;
+            }
+            
+            .comparison-grid, .decision-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .title {
+                font-size: 24px;
+                padding: 20px;
+            }
+            
+            .comparison-table {
+                font-size: 14px;
+            }
+            
+            .comparison-table th, .comparison-table td {
+                padding: 12px 8px;
+            }
+            
+            .code-example {
+                font-size: 13px;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">
+            抽象クラス vs インターフェース 完全比較
+        </div>
+        
+        <div class="comparison-grid">
+            <!-- 抽象クラス -->
+            <div class="abstract-class-section">
+                <div class="section-header abstract-class-header">
+                    🏗️ 抽象クラス (Abstract Class)
+                </div>
+                
+                <ul class="feature-list">
+                    <li class="feature-item">
+                        <div class="feature-icon">🔧</div>
+                        <div class="feature-text">
+                            <div class="feature-title">部分的な実装</div>
+                            <div class="feature-description">抽象メソッドと具体メソッドを混在</div>
+                        </div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-icon">👨‍👩‍👧</div>
+                        <div class="feature-text">
+                            <div class="feature-title">単一継承</div>
+                            <div class="feature-description">1つのクラスからのみ継承可能</div>
+                        </div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-icon">🏠</div>
+                        <div class="feature-text">
+                            <div class="feature-title">is-a 関係</div>
+                            <div class="feature-description">「〜は〜である」の関係を表現</div>
+                        </div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-icon">📦</div>
+                        <div class="feature-text">
+                            <div class="feature-title">フィールド保持</div>
+                            <div class="feature-description">インスタンス変数を持てる</div>
+                        </div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-icon">🔒</div>
+                        <div class="feature-text">
+                            <div class="feature-title">アクセス制御</div>
+                            <div class="feature-description">protected、privateメソッド可能</div>
+                        </div>
+                    </li>
+                </ul>
+                
+                <div class="code-example"><span class="code-keyword">public abstract class</span> <span class="code-type">Animal</span> {
+    <span class="code-keyword">protected</span> <span class="code-type">String</span> name; <span class="code-comment">// フィールド可能</span>
+    
+    <span class="code-comment">// 具体メソッド（共通処理）</span>
+    <span class="code-keyword">public void</span> <span class="code-method">sleep</span>() {
+        <span class="code-type">System</span>.out.println(name + <span class="code-type">"が眠っています"</span>);
+    }
+    
+    <span class="code-comment">// 抽象メソッド（実装強制）</span>
+    <span class="code-keyword">public abstract void</span> <span class="code-method">makeSound</span>();
+}</div>
+            </div>
+            
+            <!-- インターフェース -->
+            <div class="interface-section">
+                <div class="section-header interface-header">
+                    🤝 インターフェース (Interface)
+                </div>
+                
+                <ul class="feature-list">
+                    <li class="feature-item">
+                        <div class="feature-icon">🎯</div>
+                        <div class="feature-text">
+                            <div class="feature-title">完全な抽象化</div>
+                            <div class="feature-description">全てのメソッドが抽象</div>
+                        </div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-icon">🌟</div>
+                        <div class="feature-text">
+                            <div class="feature-title">多重実装</div>
+                            <div class="feature-description">複数のインターフェースを実装可能</div>
+                        </div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-icon">⚡</div>
+                        <div class="feature-text">
+                            <div class="feature-title">can-do 関係</div>
+                            <div class="feature-description">「〜できる」の能力を表現</div>
+                        </div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-icon">📋</div>
+                        <div class="feature-text">
+                            <div class="feature-title">定数のみ</div>
+                            <div class="feature-description">public static final定数のみ</div>
+                        </div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-icon">🌐</div>
+                        <div class="feature-text">
+                            <div class="feature-title">public メソッド</div>
+                            <div class="feature-description">全てのメソッドがpublic</div>
+                        </div>
+                    </li>
+                </ul>
+                
+                <div class="code-example"><span class="code-keyword">public interface</span> <span class="code-type">Flyable</span> {
+    <span class="code-comment">// 定数（暗黙的にpublic static final）</span>
+    <span class="code-type">int</span> MAX_ALTITUDE = 10000;
+    
+    <span class="code-comment">// 抽象メソッド（暗黙的にpublic abstract）</span>
+    <span class="code-keyword">void</span> <span class="code-method">fly</span>();
+    <span class="code-type">int</span> <span class="code-method">getFlightSpeed</span>();
+}
+
+<span class="code-keyword">public interface</span> <span class="code-type">Swimmable</span> {
+    <span class="code-keyword">void</span> <span class="code-method">swim</span>();
+}
+
+<span class="code-comment">// 多重実装</span>
+<span class="code-keyword">public class</span> <span class="code-type">Duck</span> <span class="code-keyword">implements</span> <span class="code-type">Flyable</span>, <span class="code-type">Swimmable</span> {
+    <span class="code-comment">// 全インターフェースのメソッドを実装</span>
+}</div>
+            </div>
+        </div>
+        
+        <!-- 詳細比較表 -->
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>特徴</th>
+                    <th>抽象クラス</th>
+                    <th>インターフェース</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="feature-name">継承・実装数</td>
+                    <td><span class="abstract-answer">1つのみ</span></td>
+                    <td><span class="interface-answer">複数可能</span></td>
+                </tr>
+                <tr>
+                    <td class="feature-name">メソッドの種類</td>
+                    <td><span class="abstract-answer">抽象 + 具体</span></td>
+                    <td><span class="interface-answer">抽象のみ</span></td>
+                </tr>
+                <tr>
+                    <td class="feature-name">フィールド</td>
+                    <td><span class="abstract-answer">すべて可能</span></td>
+                    <td><span class="interface-answer">定数のみ</span></td>
+                </tr>
+                <tr>
+                    <td class="feature-name">アクセス修飾子</td>
+                    <td><span class="abstract-answer">自由に設定</span></td>
+                    <td><span class="interface-answer">public のみ</span></td>
+                </tr>
+                <tr>
+                    <td class="feature-name">コンストラクタ</td>
+                    <td><span class="abstract-answer">使用可能</span></td>
+                    <td><span class="interface-answer">使用不可</span></td>
+                </tr>
+                <tr>
+                    <td class="feature-name">関係性</td>
+                    <td><span class="abstract-answer">is-a (〜は〜である)</span></td>
+                    <td><span class="interface-answer">can-do (〜できる)</span></td>
+                </tr>
+                <tr>
+                    <td class="feature-name">用途</td>
+                    <td><span class="abstract-answer">共通機能 + 強制実装</span></td>
+                    <td><span class="interface-answer">契約・能力の定義</span></td>
+                </tr>
+                <tr>
+                    <td class="feature-name">キーワード</td>
+                    <td><span class="abstract-answer">extends</span></td>
+                    <td><span class="interface-answer">implements</span></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- 使い分けガイド -->
+        <div class="decision-guide">
+            <div class="decision-title">使い分けの判断基準</div>
+            
+            <div class="decision-grid">
+                <div class="decision-box abstract-decision">
+                    <div class="decision-box-title">🏗️ 抽象クラスを選ぶ場合</div>
+                    <ul class="decision-criteria">
+                        <li>共通の実装を提供したい</li>
+                        <li>is-a関係を表現したい</li>
+                        <li>部分的な実装で十分</li>
+                        <li>フィールドや具体メソッドを共有</li>
+                        <li>テンプレートメソッドパターン</li>
+                        <li>段階的な機能拡張</li>
+                    </ul>
+                </div>
+                
+                <div class="decision-box interface-decision">
+                    <div class="decision-box-title">🤝 インターフェースを選ぶ場合</div>
+                    <ul class="decision-criteria">
+                        <li>能力・契約を表現したい</li>
+                        <li>多重実装が必要</li>
+                        <li>完全な抽象化が必要</li>
+                        <li>異なるクラス階層でも同じ機能</li>
+                        <li>プラグイン機能の実現</li>
+                        <li>API設計・ライブラリ設計</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

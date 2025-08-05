@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多重実装の概念図</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 50%, #74b9ff 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+        
+        .title {
+            text-align: center;
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            padding: 25px;
+            background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .diagram-container {
+            position: relative;
+            background: #f8f9ff;
+            border: 3px solid #e3f2fd;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 30px 0;
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        /* 上部のインターフェース配置 */
+        .interfaces-top {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .interface-box {
+            background: linear-gradient(135deg, #42a5f5 0%, #1e88e5 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            min-width: 180px;
+            position: relative;
+        }
+        
+        .interface-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .interface-method {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 12px;
+            margin: 5px 0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        /* SVG接続線コンテナ */
+        .connection-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        /* 実装クラス */
+        .implementation-class {
+            background: linear-gradient(135deg, #66bb6a 0%, #43a047 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            min-width: 250px;
+            margin-top: 60px;
+            position: relative;
+        }
+        
+        .class-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .implemented-method {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 12px;
+            margin: 5px 0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        /* implements ラベル */
+        .implements-label {
+            background: #fff3e0;
+            color: #e65100;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            border: 2px solid #ff9800;
+            position: absolute;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .implements-left {
+            left: 25%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .implements-right {
+            right: 25%;
+            top: 50%;
+            transform: translate(50%, -50%);
+        }
+        
+        /* 中間接続エリア */
+        .connection-area {
+            width: 100%;
+            height: 120px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .code-section {
+            background: #263238;
+            color: #ffffff;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            font-family: 'Courier New', monospace;
+            white-space: pre-line;
+            line-height: 1.5;
+            border: 3px solid #37474f;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .code-keyword {
+            color: #81c784;
+            font-weight: bold;
+        }
+        
+        .code-type {
+            color: #64b5f6;
+        }
+        
+        .code-method {
+            color: #ffb74d;
+        }
+        
+        .code-comment {
+            color: #90a4ae;
+            font-style: italic;
+        }
+        
+        .code-string {
+            color: #ffcc02;
+        }
+        
+        .advantages-section {
+            background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+            border: 3px solid #4caf50;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+        
+        .advantages-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2e7d32;
+            text-align: center;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .advantages-title::before {
+            content: "🌟";
+            margin-right: 10px;
+            font-size: 28px;
+        }
+        
+        .advantages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .advantage-item {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid #4caf50;
+        }
+        
+        .advantage-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2e7d32;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .advantage-title::before {
+            content: "✓";
+            color: #4caf50;
+            font-weight: bold;
+            margin-right: 8px;
+            font-size: 20px;
+        }
+        
+        .advantage-description {
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .comparison-examples {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .example-box {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        
+        .single-inheritance {
+            border: 3px solid #e91e63;
+        }
+        
+        .multiple-implementation {
+            border: 3px solid #4caf50;
+        }
+        
+        .example-title {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            color: white;
+        }
+        
+        .single-inheritance .example-title {
+            background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
+        }
+        
+        .multiple-implementation .example-title {
+            background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+        }
+        
+        .limitation-note {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 5px solid #e91e63;
+            margin: 15px 0;
+        }
+        
+        .flexibility-note {
+            background: #e8f5e8;
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 5px solid #4caf50;
+            margin: 15px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                margin: 10px;
+            }
+            
+            .title {
+                font-size: 24px;
+                padding: 20px;
+            }
+            
+            .diagram-container {
+                padding: 20px;
+                min-height: 600px;
+            }
+            
+            .interfaces-top {
+                flex-direction: column;
+                align-items: center;
+                gap: 30px;
+                margin-bottom: 30px;
+            }
+            
+            .interface-box {
+                min-width: 200px;
+            }
+            
+            .connection-area {
+                height: 120px;
+            }
+            
+            .connection-svg {
+                height: 120px;
+            }
+            
+            /* モバイル用SVG：シンプルな縦線に変更 */
+            .connection-svg {
+                display: none;
+            }
+            
+            /* モバイル用シンプル接続表示 */
+            .connection-area::after {
+                content: "⬇️ implements ⬇️";
+                display: block;
+                text-align: center;
+                font-size: 18px;
+                color: #ff6b6b;
+                font-weight: bold;
+                margin: 20px 0;
+                background: #fff3e0;
+                padding: 15px;
+                border-radius: 15px;
+                border: 2px solid #ff9800;
+            }
+            
+            .implementation-class {
+                margin-top: 20px;
+                min-width: 220px;
+            }
+            
+            .comparison-examples {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .advantages-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .code-section {
+                font-size: 14px;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">
+            多重実装：複数インターフェースの同時実装
+        </div>
+        
+        <!-- 概念図 -->
+        <div class="diagram-container">
+            <!-- 上部のインターフェース -->
+            <div class="interfaces-top">
+                <!-- Flyableインターフェース -->
+                <div class="interface-box" id="flyable-interface">
+                    <div class="interface-title">🛩️ Flyable</div>
+                    <div class="interface-method">fly()</div>
+                    <div class="interface-method">getFlightSpeed()</div>
+                </div>
+                
+                <!-- Swimmableインターフェース -->
+                <div class="interface-box" id="swimmable-interface">
+                    <div class="interface-title">🏊 Swimmable</div>
+                    <div class="interface-method">swim()</div>
+                    <div class="interface-method">getSwimSpeed()</div>
+                </div>
+            </div>
+            
+            <!-- 接続エリア -->
+            <div class="connection-area">
+                <!-- SVG接続線 -->
+                <svg class="connection-svg" viewBox="0 0 800 120" preserveAspectRatio="xMidYMid meet">
+                    <defs>
+                        <!-- グラデーション定義 -->
+                        <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />
+                            <stop offset="50%" style="stop-color:#ee5a24;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#ff6b6b;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    
+                    <!-- 接続線グループ -->
+                    <g stroke="url(#lineGradient)" stroke-width="5" fill="none">
+                        <!-- 左側インターフェースからの線 -->
+                        <path d="M 150 0 L 150 50 L 400 50 L 400 110" stroke-linecap="round" stroke-linejoin="round"/>
+                        
+                        <!-- 右側インターフェースからの線 -->
+                        <path d="M 650 0 L 650 50 L 400 50" stroke-linecap="round" stroke-linejoin="round"/>
+                        
+                        <!-- 接続点の強調 -->
+                        <circle cx="150" cy="50" r="4" fill="#ff6b6b"/>
+                        <circle cx="400" cy="50" r="4" fill="#ff6b6b"/>
+                        <circle cx="650" cy="50" r="4" fill="#ff6b6b"/>
+                        
+                        <!-- 矢印 -->
+                        <polygon points="395,105 400,118 405,105" fill="#ee5a24" stroke="#ee5a24" stroke-width="2"/>
+                    </g>
+                    
+                    <!-- implementsラベル -->
+                    <g>
+                        <!-- 左側ラベル -->
+                        <rect x="60" y="35" width="100" height="30" rx="15" fill="#fff3e0" stroke="#ff9800" stroke-width="2"/>
+                        <text x="110" y="55" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="13" font-weight="bold" fill="#e65100">implements</text>
+                        
+                        <!-- 右側ラベル -->
+                        <rect x="640" y="35" width="100" height="30" rx="15" fill="#fff3e0" stroke="#ff9800" stroke-width="2"/>
+                        <text x="690" y="55" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="13" font-weight="bold" fill="#e65100">implements</text>
+                        
+                        <!-- 中央の統合ポイントラベル -->
+                        <rect x="350" y="65" width="100" height="25" rx="12" fill="#e8f5e8" stroke="#4caf50" stroke-width="2"/>
+                        <text x="400" y="82" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="12" font-weight="bold" fill="#2e7d32">多重実装</text>
+                    </g>
+                </svg>
+            </div>
+            
+            <!-- 実装クラス -->
+            <div class="implementation-class">
+                <div class="class-title">🦆 Duck クラス</div>
+                <div class="implemented-method">✓ fly() 実装済み</div>
+                <div class="implemented-method">✓ getFlightSpeed() 実装済み</div>
+                <div class="implemented-method">✓ swim() 実装済み</div>
+                <div class="implemented-method">✓ getSwimSpeed() 実装済み</div>
+            </div>
+        </div>
+        
+        <!-- コード例 -->
+        <div class="code-section"><span class="code-comment">// 飛行能力のインターフェース</span>
+<span class="code-keyword">public interface</span> <span class="code-type">Flyable</span> {
+    <span class="code-keyword">void</span> <span class="code-method">fly</span>();
+    <span class="code-type">int</span> <span class="code-method">getFlightSpeed</span>();
+}
+
+<span class="code-comment">// 泳ぐ能力のインターフェース</span>
+<span class="code-keyword">public interface</span> <span class="code-type">Swimmable</span> {
+    <span class="code-keyword">void</span> <span class="code-method">swim</span>();
+    <span class="code-type">int</span> <span class="code-method">getSwimSpeed</span>();
+}
+
+<span class="code-comment">// カモ：飛ぶことも泳ぐこともできる（多重実装）</span>
+<span class="code-keyword">public class</span> <span class="code-type">Duck</span> <span class="code-keyword">implements</span> <span class="code-type">Flyable</span>, <span class="code-type">Swimmable</span> {
+    <span class="code-keyword">private</span> <span class="code-type">String</span> name;
+    
+    <span class="code-keyword">public</span> <span class="code-method">Duck</span>(<span class="code-type">String</span> name) {
+        <span class="code-keyword">this</span>.name = name;
+    }
+    
+    <span class="code-comment">// Flyableインターフェースの実装</span>
+    <span class="code-keyword">@Override</span>
+    <span class="code-keyword">public void</span> <span class="code-method">fly</span>() {
+        <span class="code-type">System</span>.out.println(name + <span class="code-string">"が空を飛んでいます"</span>);
+    }
+    
+    <span class="code-keyword">@Override</span>
+    <span class="code-keyword">public int</span> <span class="code-method">getFlightSpeed</span>() {
+        <span class="code-keyword">return</span> 50; <span class="code-comment">// km/h</span>
+    }
+    
+    <span class="code-comment">// Swimmableインターフェースの実装</span>
+    <span class="code-keyword">@Override</span>
+    <span class="code-keyword">public void</span> <span class="code-method">swim</span>() {
+        <span class="code-type">System</span>.out.println(name + <span class="code-string">"が水面を泳いでいます"</span>);
+    }
+    
+    <span class="code-keyword">@Override</span>
+    <span class="code-keyword">public int</span> <span class="code-method">getSwimSpeed</span>() {
+        <span class="code-keyword">return</span> 10; <span class="code-comment">// km/h</span>
+    }
+}</div>
+        
+        <!-- 単一継承 vs 多重実装の比較 -->
+        <div class="comparison-examples">
+            <div class="example-box single-inheritance">
+                <div class="example-title">❌ 抽象クラス（単一継承の制限）</div>
+                <div class="code-section"><span class="code-comment">// 抽象クラスの場合</span>
+<span class="code-keyword">public abstract class</span> <span class="code-type">FlyingAnimal</span> { ... }
+<span class="code-keyword">public abstract class</span> <span class="code-type">SwimmingAnimal</span> { ... }
+
+<span class="code-comment">// ❌ エラー：多重継承は不可能</span>
+<span class="code-keyword">public class</span> <span class="code-type">Duck</span> <span class="code-keyword">extends</span> <span class="code-type">FlyingAnimal</span>, <span class="code-type">SwimmingAnimal</span> {
+    <span class="code-comment">// コンパイルエラー！</span>
+}</div>
+                <div class="limitation-note">
+                    <strong>制限：</strong> 1つのクラスからしか継承できないため、複数の能力を組み合わせることができません。
+                </div>
+            </div>
+            
+            <div class="example-box multiple-implementation">
+                <div class="example-title">✅ インターフェース（多重実装の柔軟性）</div>
+                <div class="code-section"><span class="code-comment">// インターフェースの場合</span>
+<span class="code-keyword">public interface</span> <span class="code-type">Flyable</span> { ... }
+<span class="code-keyword">public interface</span> <span class="code-type">Swimmable</span> { ... }
+
+<span class="code-comment">// ✅ OK：複数のインターフェース実装可能</span>
+<span class="code-keyword">public class</span> <span class="code-type">Duck</span> <span class="code-keyword">implements</span> <span class="code-type">Flyable</span>, <span class="code-type">Swimmable</span> {
+    <span class="code-comment">// 両方の能力を実装！</span>
+}</div>
+                <div class="flexibility-note">
+                    <strong>柔軟性：</strong> 複数のインターフェースを実装することで、様々な能力を組み合わせることができます。
+                </div>
+            </div>
+        </div>
+        
+        <!-- 多重実装の利点 -->
+        <div class="advantages-section">
+            <div class="advantages-title">多重実装の利点</div>
+            
+            <div class="advantages-grid">
+                <div class="advantage-item">
+                    <div class="advantage-title">能力の組み合わせ自由度</div>
+                    <div class="advantage-description">
+                        必要な能力だけを選択して実装できます。鳥は飛べるが泳げない、魚は泳げるが飛べない、カモは両方できるなど、現実に即した設計が可能です。
+                    </div>
+                </div>
+                
+                <div class="advantage-item">
+                    <div class="advantage-title">コードの再利用性向上</div>
+                    <div class="advantage-description">
+                        共通の能力（インターフェース）を複数のクラスで実装することで、コードの再利用性が大幅に向上します。
+                    </div>
+                </div>
+                
+                <div class="advantage-item">
+                    <div class="advantage-title">統一的な処理が可能</div>
+                    <div class="advantage-description">
+                        同じインターフェースを実装したオブジェクトは、実装クラスに関係なく統一的に扱えます。ポリモーフィズムの活用が容易になります。
+                    </div>
+                </div>
+                
+                <div class="advantage-item">
+                    <div class="advantage-title">設計の柔軟性</div>
+                    <div class="advantage-description">
+                        将来の要件変更に対応しやすい設計が可能です。新しい能力が必要になった場合、新しいインターフェースを追加するだけで対応できます。
+                    </div>
+                </div>
+                
+                <div class="advantage-item">
+                    <div class="advantage-title">テストしやすい設計</div>
+                    <div class="advantage-description">
+                        インターフェースを使うことで、モックオブジェクトを簡単に作成でき、単体テストが容易になります。
+                    </div>
+                </div>
+                
+                <div class="advantage-item">
+                    <div class="advantage-title">プラグイン機能の実現</div>
+                    <div class="advantage-description">
+                        共通のインターフェースを定義することで、機能の追加・変更が容易なプラグイン機能を実現できます。
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 実際の使用例 -->
+        <div class="code-section"><span class="code-comment">// 多重実装の実際の活用例</span>
+<span class="code-keyword">public class</span> <span class="code-type">MultiInterfaceTest</span> {
+    <span class="code-keyword">public static void</span> <span class="code-method">main</span>(<span class="code-type">String</span>[] args) {
+        <span class="code-type">Duck</span> duck = <span class="code-keyword">new</span> <span class="code-type">Duck</span>(<span class="code-string">"アヒルのヒロシ"</span>);
+        <span class="code-type">Airplane</span> plane = <span class="code-keyword">new</span> <span class="code-type">Airplane</span>(<span class="code-string">"ボーイング747"</span>);
+        
+        <span class="code-comment">// カモは両方の能力を使用</span>
+        duck.<span class="code-method">fly</span>();
+        duck.<span class="code-method">swim</span>();
+        
+        <span class="code-comment">// 飛行機は飛行能力のみ</span>
+        plane.<span class="code-method">fly</span>();
+        
+        <span class="code-comment">// インターフェース型での統一処理</span>
+        <span class="code-type">Flyable</span>[] flyableObjects = {duck, plane};
+        
+        <span class="code-type">System</span>.out.println(<span class="code-string">"\n=== 飛行速度比較 ==="</span>);
+        <span class="code-keyword">for</span> (<span class="code-type">Flyable</span> flyable : flyableObjects) {
+            flyable.<span class="code-method">fly</span>();
+            <span class="code-type">System</span>.out.println(<span class="code-string">"飛行速度: "</span> + flyable.<span class="code-method">getFlightSpeed</span>() + <span class="code-string">"km/h"</span>);
+        }
+    }
+}</div>
+    </div>
+</body>
+</html>
