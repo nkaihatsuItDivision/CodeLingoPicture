@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git初期設定・日本語対応設定図</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+        
+        .title {
+            text-align: center;
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            padding: 25px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            border-radius: 15px;
+        }
+        
+        .config-sections {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        
+        .config-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 5px solid #007bff;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .config-item {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            border: 1px solid #e9ecef;
+            transition: transform 0.3s ease;
+        }
+        
+        .config-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .config-label {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 10px;
+        }
+        
+        .command-display {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        
+        .command-prompt {
+            color: #68d391;
+            margin-right: 10px;
+        }
+        
+        .command-text {
+            color: #90cdf4;
+        }
+        
+        .example-box {
+            background: #e3f2fd;
+            border: 1px solid #bbdefb;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .example-title {
+            font-weight: bold;
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+        
+        .verification-section {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+        
+        .verification-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .result-display {
+            background: rgba(0,0,0,0.2);
+            padding: 15px;
+            border-radius: 10px;
+            font-family: monospace;
+            margin: 15px 0;
+            white-space: pre-line;
+        }
+        
+        .benefit-section {
+            background: linear-gradient(135deg, #fd79a8, #fdcb6e);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+        
+        .benefit-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .benefit-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .benefit-list li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .check-icon {
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        
+        .icon {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .title {
+                font-size: 24px;
+                padding: 20px;
+            }
+            
+            .command-display {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">
+            ⚙️ Git初期設定・日本語対応設定
+        </div>
+        
+        <div class="config-sections">
+            <div class="config-section">
+                <div class="section-title">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    必須設定：ユーザー情報
+                </div>
+                
+                <div class="config-item">
+                    <div class="config-label">1. ユーザー名の設定</div>
+                    <div class="command-display">
+                        <span class="command-prompt">$</span>
+                        <span class="command-text">git config --global user.name "あなたの名前"</span>
+                    </div>
+                    <div class="example-box">
+                        <div class="example-title">設定例：</div>
+                        <div class="command-display">
+                            <span class="command-prompt">$</span>
+                            <span class="command-text">git config --global user.name "Taro Student"</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="config-item">
+                    <div class="config-label">2. メールアドレスの設定</div>
+                    <div class="command-display">
+                        <span class="command-prompt">$</span>
+                        <span class="command-text">git config --global user.email "あなたのメールアドレス"</span>
+                    </div>
+                    <div class="example-box">
+                        <div class="example-title">設定例：</div>
+                        <div class="command-display">
+                            <span class="command-prompt">$</span>
+                            <span class="command-text">git config --global user.email "taro.student@example.com"</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="config-section">
+                <div class="section-title">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.01-4.65.37-6.67-1.09-1.34-2.66-2.07-4.25-1.98L5.1 5.26l1.92 1.92-1.41 1.41-3.03-3.02L4.16 4.16l1.41 1.41L7.8 7.8c.51-.38 1.08-.59 1.65-.59.81 0 1.54.32 2.07.87 1.02 1.07.89 2.72-.18 3.64l-.84.82 2.35 2.35-1.41 1.42L9.61 14.49l-.84.82c-.92 1.07-2.57 1.2-3.64.18-.55-.53-.87-1.26-.87-2.07 0-.57.21-1.14.59-1.65l-1.73-1.73L1.71 11.46l3.02 3.02 1.41-1.41-1.92-1.92 1.38-1.38c-.09 1.59.64 3.16 1.98 4.25 2.02 1.64 4.73 1.37 6.67-.37l.03.03 2.51 2.54 1.42-1.42z"/>
+                    </svg>
+                    推奨設定：日本語対応
+                </div>
+                
+                <div class="config-item">
+                    <div class="config-label">3. 日本語ファイル名の正しい表示</div>
+                    <div class="command-display">
+                        <span class="command-prompt">$</span>
+                        <span class="command-text">git config --global core.quotepath false</span>
+                    </div>
+                    <div style="margin-top: 15px; color: #666; font-size: 14px;">
+                        この設定により、日本語のファイル名やフォルダ名が正しく表示されるようになります
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="verification-section">
+            <div class="verification-title">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                </svg>
+                設定内容の確認方法
+            </div>
+            
+            <div>設定が正しく行われたか確認するコマンド：</div>
+            
+            <div class="command-display">
+                <span class="command-prompt">$</span>
+                <span class="command-text">git config --global --list</span>
+            </div>
+            
+            <div>実行結果例：</div>
+            
+            <div class="result-display">user.name=Taro Student
+user.email=taro.student@example.com
+core.quotepath=false
+（その他の設定項目...）</div>
+        </div>
+        
+        <div class="benefit-section">
+            <div class="benefit-title">🌟 この設定による効果</div>
+            <ul class="benefit-list">
+                <li>
+                    <div class="check-icon">✓</div>
+                    <div>コミット作成者情報が正しく記録される</div>
+                </li>
+                <li>
+                    <div class="check-icon">✓</div>
+                    <div>日本語ファイル名が文字化けしない</div>
+                </li>
+                <li>
+                    <div class="check-icon">✓</div>
+                    <div>チーム開発で作成者の識別が可能</div>
+                </li>
+                <li>
+                    <div class="check-icon">✓</div>
+                    <div>GitHub等のリモートサービスとの連携が円滑</div>
+                </li>
+                <li>
+                    <div class="check-icon">✓</div>
+                    <div>日本語プロジェクトでも安心して利用可能</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

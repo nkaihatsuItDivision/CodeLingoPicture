@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gitコミット作成過程図</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+        
+        .title {
+            text-align: center;
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            padding: 25px;
+            background: linear-gradient(135deg, #fd79a8, #fdcb6e);
+            border-radius: 15px;
+        }
+        
+        .process-timeline {
+            position: relative;
+            margin: 50px 0;
+        }
+        
+        .timeline-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            position: relative;
+        }
+        
+        .process-step {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 3px solid;
+            text-align: center;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+        
+        .process-step:hover {
+            transform: translateY(-5px);
+        }
+        
+        .step-1 {
+            border-color: #e74c3c;
+        }
+        
+        .step-2 {
+            border-color: #f39c12;
+        }
+        
+        .step-3 {
+            border-color: #27ae60;
+        }
+        
+        .step-4 {
+            border-color: #3498db;
+        }
+        
+        .step-number {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0 auto 20px;
+        }
+        
+        .step-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .step-command {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 10px;
+            border-radius: 8px;
+            font-family: monospace;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        
+        .step-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        .step-result {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-size: 13px;
+            color: #495057;
+            border-left: 4px solid #28a745;
+        }
+        
+        .before-after {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .state-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+        }
+        
+        .state-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        
+        .before-title {
+            background: #ffe5e5;
+            color: #c92a2a;
+        }
+        
+        .after-title {
+            background: #e5f7e5;
+            color: #2b8a3e;
+        }
+        
+        .status-display {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            border: 1px solid #e9ecef;
+        }
+        
+        .status-line {
+            margin: 5px 0;
+            padding: 5px;
+        }
+        
+        .status-header {
+            color: #495057;
+            font-weight: bold;
+        }
+        
+        .status-untracked {
+            color: #e74c3c;
+        }
+        
+        .status-staged {
+            color: #27ae60;
+        }
+        
+        .status-clean {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .commit-info {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+        
+        .commit-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .commit-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .commit-detail {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .detail-label {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 8px;
+        }
+        
+        .detail-value {
+            font-size: 16px;
+            font-weight: bold;
+            font-family: monospace;
+        }
+        
+        .success-message {
+            background: linear-gradient(135deg, #00b894, #00cec9);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .success-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        .success-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .success-subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .timeline-line {
+            position: absolute;
+            top: 25px;
+            left: 12.5%;
+            right: 12.5%;
+            height: 4px;
+            background: linear-gradient(to right, #e74c3c, #f39c12, #27ae60, #3498db);
+            border-radius: 2px;
+            z-index: -1;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .title {
+                font-size: 24px;
+                padding: 20px;
+            }
+            
+            .timeline-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .before-after {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .commit-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .timeline-line {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">
+            🚀 初回コミット作成：Week 5システムをGit管理下に
+        </div>
+        
+        <div class="process-timeline">
+            <div class="timeline-line"></div>
+            <div class="timeline-container">
+                <div class="process-step step-1">
+                    <div class="step-number">1</div>
+                    <div class="step-title">リポジトリ初期化</div>
+                    <div class="step-command">git init</div>
+                    <div class="step-description">
+                        プロジェクトディレクトリに<br>
+                        空のGitリポジトリを作成
+                    </div>
+                    <div class="step-result">
+                        .gitフォルダが作成される
+                    </div>
+                </div>
+                
+                <div class="process-step step-2">
+                    <div class="step-number">2</div>
+                    <div class="step-title">ファイル追加</div>
+                    <div class="step-command">git add src/</div>
+                    <div class="step-description">
+                        Week 5システムの<br>
+                        ソースコードファイルを<br>
+                        ステージングエリアに追加
+                    </div>
+                    <div class="step-result">
+                        15ファイルがStaged状態に
+                    </div>
+                </div>
+                
+                <div class="process-step step-3">
+                    <div class="step-number">3</div>
+                    <div class="step-title">コミット実行</div>
+                    <div class="step-command">git commit -m "最初のコミット"</div>
+                    <div class="step-description">
+                        ステージングエリアの内容を<br>
+                        リポジトリに永続保存
+                    </div>
+                    <div class="step-result">
+                        687行のコードが記録される
+                    </div>
+                </div>
+                
+                <div class="process-step step-4">
+                    <div class="step-number">4</div>
+                    <div class="step-title">履歴確認</div>
+                    <div class="step-command">git log</div>
+                    <div class="step-description">
+                        作成されたコミットの<br>
+                        詳細情報を確認
+                    </div>
+                    <div class="step-result">
+                        コミット履歴が表示される
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="before-after">
+            <div class="state-card">
+                <div class="state-title before-title">🔍 コミット前の状態</div>
+                <div class="status-display">
+                    <div class="status-line status-header">On branch master</div>
+                    <div class="status-line status-header">No commits yet</div>
+                    <div class="status-line">&nbsp;</div>
+                    <div class="status-line status-header">Untracked files:</div>
+                    <div class="status-line status-untracked">  .classpath</div>
+                    <div class="status-line status-untracked">  .project</div>
+                    <div class="status-line status-untracked">  src/</div>
+                    <div class="status-line">&nbsp;</div>
+                    <div class="status-line">nothing added to commit but untracked files present</div>
+                </div>
+            </div>
+            
+            <div class="state-card">
+                <div class="state-title after-title">✅ コミット後の状態</div>
+                <div class="status-display">
+                    <div class="status-line status-header">On branch master</div>
+                    <div class="status-line status-clean">nothing to commit, working tree clean</div>
+                    <div class="status-line">&nbsp;</div>
+                    <div class="status-line status-header">✓ コミット完了:</div>
+                    <div class="status-line status-staged">  15 files changed</div>
+                    <div class="status-line status-staged">  687 insertions(+)</div>
+                    <div class="status-line status-staged">  0 deletions(-)</div>
+                    <div class="status-line">&nbsp;</div>
+                    <div class="status-line status-clean">Week 5システムが安全に保存されました！</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="commit-info">
+            <div class="commit-title">📊 作成されたコミットの詳細情報</div>
+            <div class="commit-details">
+                <div class="commit-detail">
+                    <div class="detail-label">コミットID</div>
+                    <div class="detail-value">a1b2c3d4e5f6789</div>
+                </div>
+                
+                <div class="commit-detail">
+                    <div class="detail-label">作成者</div>
+                    <div class="detail-value">Taro Student</div>
+                </div>
+                
+                <div class="commit-detail">
+                    <div class="detail-label">作成日時</div>
+                    <div class="detail-value">2024-08-05 10:30:00</div>
+                </div>
+                
+                <div class="commit-detail">
+                    <div class="detail-label">メッセージ</div>
+                    <div class="detail-value">最初のコミット: Week 5 OOP応用版学生管理システム完成</div>
+                </div>
+                
+                <div class="commit-detail">
+                    <div class="detail-label">変更ファイル数</div>
+                    <div class="detail-value">15 files</div>
+                </div>
+                
+                <div class="commit-detail">
+                    <div class="detail-label">追加行数</div>
+                    <div class="detail-value">687 lines</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="success-message">
+            <div class="success-icon">🎉</div>
+            <div class="success-title">初回コミット作成成功！</div>
+            <div class="success-subtitle">
+                Week 5で作成した600-700行のエンタープライズレベルシステムが<br>
+                Gitリポジトリに安全に保存されました
+            </div>
+        </div>
+    </div>
+</body>
+</html>

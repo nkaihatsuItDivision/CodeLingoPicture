@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gitコミット履歴確認図</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+        
+        .title {
+            text-align: center;
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            padding: 25px;
+            background: linear-gradient(135deg, #ff7675, #fd79a8);
+            border-radius: 15px;
+        }
+        
+        .log-commands {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .command-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 5px solid;
+            transition: transform 0.3s ease;
+        }
+        
+        .command-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .basic-log {
+            border-left-color: #007bff;
+        }
+        
+        .detailed-log {
+            border-left-color: #28a745;
+        }
+        
+        .oneline-log {
+            border-left-color: #ffc107;
+        }
+        
+        .command-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .command-icon {
+            font-size: 24px;
+        }
+        
+        .command-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .command-syntax {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: monospace;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        
+        .command-description {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .log-output {
+            background: #1a202c;
+            color: #e2e8f0;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+        
+        .output-title {
+            color: #63b3ed;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 2px solid #4a5568;
+            padding-bottom: 10px;
+        }
+        
+        .commit-hash {
+            color: #fbb665;
+        }
+        
+        .commit-author {
+            color: #68d391;
+        }
+        
+        .commit-date {
+            color: #90cdf4;
+        }
+        
+        .commit-message {
+            color: #e2e8f0;
+            font-weight: bold;
+        }
+        
+        .file-stats {
+            color: #a78bfa;
+        }
+        
+        .additions {
+            color: #68d391;
+        }
+        
+        .deletions {
+            color: #f56565;
+        }
+        
+        .comparison-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin: 40px 0;
+        }
+        
+        .comparison-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-top: 4px solid;
+        }
+        
+        .basic-comparison {
+            border-top-color: #007bff;
+        }
+        
+        .stat-comparison {
+            border-top-color: #28a745;
+        }
+        
+        .oneline-comparison {
+            border-top-color: #ffc107;
+        }
+        
+        .comparison-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .comparison-content {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+        
+        .usage-tips {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+        
+        .tips-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .tip-item {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .tip-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .tip-description {
+            font-size: 14px;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+        
+        .history-timeline {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+        
+        .timeline-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .timeline-items {
+            position: relative;
+        }
+        
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .timeline-dot {
+            background: #28a745;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 20px;
+            flex-shrink: 0;
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px #28a745;
+        }
+        
+        .timeline-content {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            flex: 1;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .timeline-hash {
+            font-family: monospace;
+            color: #e74c3c;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        
+        .timeline-message {
+            color: #2c3e50;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        
+        .timeline-meta {
+            color: #666;
+            font-size: 12px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .title {
+                font-size: 24px;
+                padding: 20px;
+            }
+            
+            .log-commands {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .tips-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">
+            📖 Gitコミット履歴の確認方法
+        </div>
+        
+        <div class="log-commands">
+            <div class="command-card basic-log">
+                <div class="command-header">
+                    <span class="command-icon">📋</span>
+                    <span class="command-title">基本的な履歴表示</span>
+                </div>
+                <div class="command-syntax">git log</div>
+                <div class="command-description">
+                    コミットの詳細情報を時系列順に表示。<br>
+                    コミットID、作成者、日時、メッセージが確認できます。
+                </div>
+            </div>
+            
+            <div class="command-card detailed-log">
+                <div class="command-header">
+                    <span class="command-icon">📊</span>
+                    <span class="command-title">統計情報付き表示</span>
+                </div>
+                <div class="command-syntax">git log --stat</div>
+                <div class="command-description">
+                    基本情報に加えて、各ファイルの変更行数も表示。<br>
+                    どのファイルがどの程度変更されたかが分かります。
+                </div>
+            </div>
+            
+            <div class="command-card oneline-log">
+                <div class="command-header">
+                    <span class="command-icon">📝</span>
+                    <span class="command-title">簡潔な履歴表示</span>
+                </div>
+                <div class="command-syntax">git log --oneline</div>
+                <div class="command-description">
+                    各コミットを1行で表示。<br>
+                    多数のコミットがある場合の概要確認に最適です。
+                </div>
+            </div>
+        </div>
+        
+        <div class="log-output">
+            <div class="output-title">🔍 git log の実行結果例</div>
+            <div>
+                <span class="commit-hash">commit a1b2c3d4e5f6789abcdef012345678901234567</span><br>
+                <span class="commit-author">Author: Taro Student &lt;taro.student@example.com&gt;</span><br>
+                <span class="commit-date">Date:   Mon Aug 5 10:30:00 2024 +0900</span><br>
+                <br>
+                <span class="commit-message">    最初のコミット: Week 5 OOP応用版学生管理システム完成</span>
+            </div>
+        </div>
+        
+        <div class="comparison-section">
+            <div class="comparison-card basic-comparison">
+                <div class="comparison-title">📋 git log（基本）</div>
+                <div class="comparison-content">
+commit a1b2c3d<br>
+Author: Taro Student<br>
+Date: Mon Aug 5 10:30:00<br>
+<br>
+    最初のコミット: Week 5<br>
+    OOP応用版学生管理<br>
+    システム完成
+                </div>
+            </div>
+            
+            <div class="comparison-card stat-comparison">
+                <div class="comparison-title">📊 git log --stat</div>
+                <div class="comparison-content">
+commit a1b2c3d<br>
+Author: Taro Student<br>
+<br>
+    最初のコミット<br>
+<br>
+<span class="file-stats"> .classpath           | 10 +</span><br>
+<span class="file-stats"> src/main/Person.java | 45 +</span><br>
+<span class="file-stats"> src/main/Student.java| 78 +</span><br>
+<span class="additions"> 15 files, 687 insertions(+)</span>
+                </div>
+            </div>
+            
+            <div class="comparison-card oneline-comparison">
+                <div class="comparison-title">📝 git log --oneline</div>
+                <div class="comparison-content">
+<span class="commit-hash">a1b2c3d</span> 最初のコミット: Week 5<br>
+        OOP応用版学生管理<br>
+        システム完成<br>
+<br>
+<span style="color: #666;">// シンプルで見やすい</span><br>
+<span style="color: #666;">// 履歴の概要把握に最適</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="history-timeline">
+            <div class="timeline-title">📅 コミット履歴のタイムライン表示</div>
+            <div class="timeline-items">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-hash">a1b2c3d</div>
+                        <div class="timeline-message">最初のコミット: Week 5 OOP応用版学生管理システム完成</div>
+                        <div class="timeline-meta">Taro Student • 2024-08-05 10:30:00 • 15 files, 687 insertions(+)</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item" style="opacity: 0.5;">
+                    <div class="timeline-dot" style="background: #95a5a6; box-shadow: 0 0 0 3px #95a5a6;"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-hash">b2c3d4e</div>
+                        <div class="timeline-message">（次のコミットがここに追加されます）</div>
+                        <div class="timeline-meta">今後の開発履歴 • 機能追加・バグ修正など</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="usage-tips">
+            <div class="tips-title">💡 git log 活用のコツ</div>
+            <div class="tips-grid">
+                <div class="tip-item">
+                    <div class="tip-title">
+                        <span>🎯</span>
+                        <span>目的に応じた使い分け</span>
+                    </div>
+                    <div class="tip-description">
+                        概要確認：--oneline<br>
+                        詳細確認：--stat<br>
+                        基本確認：デフォルト
+                    </div>
+                </div>
+                
+                <div class="tip-item">
+                    <div class="tip-title">
+                        <span>🔍</span>
+                        <span>コミットIDの活用</span>
+                    </div>
+                    <div class="tip-description">
+                        短縮ID（a1b2c3d）で<br>
+                        特定のコミットを参照<br>
+                        過去バージョンへの復元も可能
+                    </div>
+                </div>
+                
+                <div class="tip-item">
+                    <div class="tip-title">
+                        <span>📝</span>
+                        <span>メッセージの重要性</span>
+                    </div>
+                    <div class="tip-description">
+                        分かりやすいメッセージで<br>
+                        履歴が読みやすくなる<br>
+                        後の開発作業が効率化
+                    </div>
+                </div>
+                
+                <div class="tip-item">
+                    <div class="tip-title">
+                        <span>⏰</span>
+                        <span>開発進捗の可視化</span>
+                    </div>
+                    <div class="tip-description">
+                        いつ・誰が・何を変更したか<br>
+                        が一目で分かる<br>
+                        チーム開発での透明性確保
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

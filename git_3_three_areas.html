@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git 3つのエリアの状態理解図</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+        
+        .title {
+            text-align: center;
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            padding: 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+        }
+        
+        .workflow-container {
+            position: relative;
+            background: #f8f9fa;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 30px 0;
+        }
+        
+        .areas-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .area-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            border: 3px solid;
+            transition: transform 0.3s ease;
+        }
+        
+        .area-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .working-directory {
+            border-color: #e74c3c;
+        }
+        
+        .staging-area {
+            border-color: #f39c12;
+        }
+        
+        .repository {
+            border-color: #27ae60;
+        }
+        
+        .area-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .area-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .area-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .area-subtitle {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        
+        .area-content {
+            min-height: 200px;
+        }
+        
+        .file-item {
+            background: #f1f2f6;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        
+        .file-icon {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .file-status {
+            margin-left: auto;
+            font-size: 12px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: white;
+        }
+        
+        .status-untracked {
+            background: #e74c3c;
+        }
+        
+        .status-staged {
+            background: #f39c12;
+        }
+        
+        .status-committed {
+            background: #27ae60;
+        }
+        
+        .empty-state {
+            text-align: center;
+            color: #95a5a6;
+            font-style: italic;
+            padding: 40px 20px;
+        }
+        
+        .arrows-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .command-flow {
+            margin: 40px 0;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+        }
+        
+        .command-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .command-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .command-step {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            border-left: 4px solid;
+        }
+        
+        .step-add {
+            border-left-color: #f39c12;
+        }
+        
+        .step-commit {
+            border-left-color: #27ae60;
+        }
+        
+        .step-status {
+            border-left-color: #3498db;
+        }
+        
+        .command-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .command-syntax {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 10px;
+            border-radius: 6px;
+            font-family: monospace;
+            margin: 10px 0;
+        }
+        
+        .command-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        .state-explanation {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+        
+        .explanation-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .explanation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .explanation-item {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .explanation-item h4 {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+        }
+        
+        .explanation-item p {
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .title {
+                font-size: 24px;
+                padding: 20px;
+            }
+            
+            .areas-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .command-steps {
+                grid-template-columns: 1fr;
+            }
+            
+            .explanation-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">
+            🔄 Gitの3つのエリア：作業の流れ
+        </div>
+        
+        <div class="workflow-container">
+            <div class="areas-grid">
+                <!-- 作業ディレクトリ -->
+                <div class="area-card working-directory">
+                    <div class="area-header">
+                        <span class="area-icon">📝</span>
+                        <div class="area-title">作業ディレクトリ</div>
+                        <div class="area-subtitle">Working Directory</div>
+                    </div>
+                    <div class="area-content">
+                        <div class="file-item">
+                            <span class="file-icon">☕</span>
+                            <span>Person.java</span>
+                            <span class="file-status status-untracked">Untracked</span>
+                        </div>
+                        <div class="file-item">
+                            <span class="file-icon">☕</span>
+                            <span>Student.java</span>
+                            <span class="file-status status-untracked">Untracked</span>
+                        </div>
+                        <div class="file-item">
+                            <span class="file-icon">☕</span>
+                            <span>UndergraduateStudent.java</span>
+                            <span class="file-status status-untracked">Untracked</span>
+                        </div>
+                        <div class="file-item">
+                            <span class="file-icon">☕</span>
+                            <span>GraduateStudent.java</span>
+                            <span class="file-status status-untracked">Untracked</span>
+                        </div>
+                        <div class="file-item">
+                            <span class="file-icon">☕</span>
+                            <span>StudentManagementSystem.java</span>
+                            <span class="file-status status-untracked">Untracked</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ステージングエリア -->
+                <div class="area-card staging-area">
+                    <div class="area-header">
+                        <span class="area-icon">📋</span>
+                        <div class="area-title">ステージングエリア</div>
+                        <div class="area-subtitle">Staging Area (Index)</div>
+                    </div>
+                    <div class="area-content">
+                        <div class="file-item">
+                            <span class="file-icon">☕</span>
+                            <span>Person.java</span>
+                            <span class="file-status status-staged">Staged</span>
+                        </div>
+                        <div class="file-item">
+                            <span class="file-icon">☕</span>
+                            <span>Student.java</span>
+                            <span class="file-status status-staged">Staged</span>
+                        </div>
+                        <div class="file-item">
+                            <span class="file-icon">☕</span>
+                            <span>UndergraduateStudent.java</span>
+                            <span class="file-status status-staged">Staged</span>
+                        </div>
+                        <div class="file-item">
+                            <span class="file-icon">☕</span>
+                            <span>GraduateStudent.java</span>
+                            <span class="file-status status-staged">Staged</span>
+                        </div>
+                        <div class="file-item">
+                            <span class="file-icon">☕</span>
+                            <span>StudentManagementSystem.java</span>
+                            <span class="file-status status-staged">Staged</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- リポジトリ -->
+                <div class="area-card repository">
+                    <div class="area-header">
+                        <span class="area-icon">💾</span>
+                        <div class="area-title">リポジトリ</div>
+                        <div class="area-subtitle">Repository (.git)</div>
+                    </div>
+                    <div class="area-content">
+                        <div class="empty-state">
+                            まだコミットされていません<br><br>
+                            <strong>git commit</strong> で<br>
+                            ステージングエリアの内容が<br>
+                            ここに保存されます
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SVGで矢印を描画 -->
+            <svg class="arrows-container" viewBox="0 0 1200 300">
+                <!-- git add の矢印 -->
+                <defs>
+                    <marker id="arrowhead1" markerWidth="10" markerHeight="7" 
+                            refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#f39c12" />
+                    </marker>
+                    <marker id="arrowhead2" markerWidth="10" markerHeight="7" 
+                            refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#27ae60" />
+                    </marker>
+                </defs>
+                
+                <!-- git add 矢印 -->
+                <line x1="350" y1="150" x2="450" y2="150" 
+                      stroke="#f39c12" stroke-width="3" marker-end="url(#arrowhead1)" />
+                <text x="400" y="140" text-anchor="middle" fill="#f39c12" font-weight="bold" font-size="14">
+                    git add
+                </text>
+                
+                <!-- git commit 矢印 -->
+                <line x1="750" y1="150" x2="850" y2="150" 
+                      stroke="#27ae60" stroke-width="3" marker-end="url(#arrowhead2)" />
+                <text x="800" y="140" text-anchor="middle" fill="#27ae60" font-weight="bold" font-size="14">
+                    git commit
+                </text>
+            </svg>
+        </div>
+        
+        <div class="command-flow">
+            <div class="command-title">💻 主要なGitコマンドの役割</div>
+            <div class="command-steps">
+                <div class="command-step step-add">
+                    <div class="command-name">git add</div>
+                    <div class="command-syntax">git add src/</div>
+                    <div class="command-description">
+                        作業ディレクトリのファイルを<br>
+                        ステージングエリアに追加<br>
+                        （コミット準備）
+                    </div>
+                </div>
+                
+                <div class="command-step step-commit">
+                    <div class="command-name">git commit</div>
+                    <div class="command-syntax">git commit -m "メッセージ"</div>
+                    <div class="command-description">
+                        ステージングエリアの内容を<br>
+                        リポジトリに永続保存<br>
+                        （履歴作成）
+                    </div>
+                </div>
+                
+                <div class="command-step step-status">
+                    <div class="command-name">git status</div>
+                    <div class="command-syntax">git status</div>
+                    <div class="command-description">
+                        3つのエリアの現在状態を<br>
+                        分かりやすく表示<br>
+                        （状況確認）
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="state-explanation">
+            <div class="explanation-title">📊 各エリアの詳細説明</div>
+            <div class="explanation-grid">
+                <div class="explanation-item">
+                    <h4>🗂️ 作業ディレクトリ</h4>
+                    <p>
+                        実際にファイルを編集する場所。<br>
+                        Eclipse等のエディタで編集する際に操作するのはここ。<br>
+                        新規作成・修正したファイルは最初はUntrackedまたはModified状態。
+                    </p>
+                </div>
+                
+                <div class="explanation-item">
+                    <h4>📝 ステージングエリア</h4>
+                    <p>
+                        次回のコミットに含めるファイルを一時的に保存する場所。<br>
+                        git addで「このファイルをコミットに含める」と宣言。<br>
+                        コミット前の最終確認段階。
+                    </p>
+                </div>
+                
+                <div class="explanation-item">
+                    <h4>💾 リポジトリ</h4>
+                    <p>
+                        確定したバージョン履歴を永続保存する場所。<br>
+                        git commitで「変更を正式に記録」として履歴に追加。<br>
+                        過去のどの時点にも戻ることが可能。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

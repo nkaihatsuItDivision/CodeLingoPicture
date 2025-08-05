@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 5システム × Git技術統合マップ</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+        
+        .title {
+            text-align: center;
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            padding: 25px;
+            background: linear-gradient(135deg, #fd79a8, #fdcb6e);
+            border-radius: 15px;
+        }
+        
+        .integration-overview {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .system-side {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+        }
+        
+        .git-side {
+            background: linear-gradient(135deg, #fd79a8, #e84393);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+        }
+        
+        .side-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            text-align: center;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+        }
+        
+        .achievement-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .stat-box {
+            background: rgba(255,255,255,0.2);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .tech-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .tech-list li {
+            background: rgba(255,255,255,0.1);
+            padding: 12px 15px;
+            margin: 8px 0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .tech-icon {
+            font-size: 18px;
+        }
+        
+        .integration-flow {
+            background: #f8f9fa;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            position: relative;
+        }
+        
+        .flow-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .flow-steps {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            position: relative;
+        }
+        
+        .flow-step {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 3px solid;
+            transition: transform 0.3s ease;
+        }
+        
+        .flow-step:hover {
+            transform: translateY(-5px);
+        }
+        
+        .step-develop {
+            border-color: #e74c3c;
+        }
+        
+        .step-init {
+            border-color: #f39c12;
+        }
+        
+        .step-stage {
+            border-color: #3498db;
+        }
+        
+        .step-commit {
+            border-color: #27ae60;
+        }
+        
+        .step-manage {
+            border-color: #9b59b6;
+        }
+        
+        .step-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+        
+        .step-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .step-description {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        .benefits-matrix {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin: 40px 0;
+        }
+        
+        .benefit-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            border-top: 5px solid;
+            transition: transform 0.3s ease;
+        }
+        
+        .benefit-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .benefit-security {
+            border-top-color: #e74c3c;
+        }
+        
+        .benefit-collaboration {
+            border-top-color: #3498db;
+        }
+        
+        .benefit-productivity {
+            border-top-color: #27ae60;
+        }
+        
+        .benefit-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .benefit-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .benefit-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .growth-timeline {
+            background: linear-gradient(135deg, #00b894, #00cec9);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin: 40px 0;
+        }
+        
+        .timeline-title {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .timeline-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .timeline-item {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            position: relative;
+        }
+        
+        .timeline-badge {
+            background: rgba(255,255,255,0.3);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        
+        .timeline-content {
+            font-size: 14px;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+        
+        .next-steps {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .next-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .next-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .next-item {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        .arrow-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .title {
+                font-size: 24px;
+                padding: 20px;
+            }
+            
+            .integration-overview {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .flow-steps {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .benefits-matrix {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .timeline-items {
+                grid-template-columns: 1fr;
+            }
+            
+            .next-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">
+            🎯 Week 5システム × Git技術統合マップ
+        </div>
+        
+        <div class="integration-overview">
+            <div class="system-side">
+                <div class="side-title">🏗️ Week 5システム成果</div>
+                <div class="achievement-stats">
+                    <div class="stat-box">
+                        <div class="stat-number">687</div>
+                        <div class="stat-label">総コード行数</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">15</div>
+                        <div class="stat-label">Javaファイル</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">5</div>
+                        <div class="stat-label">継承階層</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">3</div>
+                        <div class="stat-label">インターフェース</div>
+                    </div>
+                </div>
+                
+                <ul class="tech-list">
+                    <li><span class="tech-icon">🏗️</span>継承・ポリモーフィズム</li>
+                    <li><span class="tech-icon">🔌</span>インターフェース設計</li>
+                    <li><span class="tech-icon">⚠️</span>カスタム例外処理</li>
+                    <li><span class="tech-icon">📝</span>Lombokアノテーション</li>
+                    <li><span class="tech-icon">🎯</span>エンタープライズ設計</li>
+                </ul>
+            </div>
+            
+            <div class="git-side">
+                <div class="side-title">🔄 Git管理技術</div>
+                <div class="achievement-stats">
+                    <div class="stat-box">
+                        <div class="stat-number">1</div>
+                        <div class="stat-label">初回コミット</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">3</div>
+                        <div class="stat-label">エリア管理</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">安全バックアップ</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">∞</div>
+                        <div class="stat-label">履歴保持</div>
+                    </div>
+                </div>
+                
+                <ul class="tech-list">
+                    <li><span class="tech-icon">📝</span>git init - リポジトリ初期化</li>
+                    <li><span class="tech-icon">➕</span>git add - ステージング管理</li>
+                    <li><span class="tech-icon">💾</span>git commit - 履歴記録</li>
+                    <li><span class="tech-icon">📊</span>git log - 履歴確認</li>
+                    <li><span class="tech-icon">🚫</span>.gitignore - 除外管理</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="integration-flow">
+            <div class="flow-title">🔄 統合開発フローの確立</div>
+            <div class="flow-steps">
+                <div class="flow-step step-develop">
+                    <div class="step-icon">👨‍💻</div>
+                    <div class="step-title">Week 5開発</div>
+                    <div class="step-description">
+                        OOP応用技術統合<br>
+                        エンタープライズシステム<br>
+                        完成
+                    </div>
+                </div>
+                
+                <div class="flow-step step-init">
+                    <div class="step-icon">🚀</div>
+                    <div class="step-title">Git初期化</div>
+                    <div class="step-description">
+                        git init実行<br>
+                        リポジトリ作成<br>
+                        管理開始
+                    </div>
+                </div>
+                
+                <div class="flow-step step-stage">
+                    <div class="step-icon">📋</div>
+                    <div class="step-title">ステージング</div>
+                    <div class="step-description">
+                        git add実行<br>
+                        ファイル選択<br>
+                        コミット準備
+                    </div>
+                </div>
+                
+                <div class="flow-step step-commit">
+                    <div class="step-icon">💾</div>
+                    <div class="step-title">コミット作成</div>
+                    <div class="step-description">
+                        git commit実行<br>
+                        履歴記録<br>
+                        安全保存
+                    </div>
+                </div>
+                
+                <div class="flow-step step-manage">
+                    <div class="step-icon">📈</div>
+                    <div class="step-title">継続管理</div>
+                    <div class="step-description">
+                        変更管理<br>
+                        履歴追跡<br>
+                        安全開発
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SVGで矢印を描画 -->
+            <svg class="arrow-container" viewBox="0 0 1200 100">
+                <defs>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" 
+                            refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#667eea" />
+                    </marker>
+                </defs>
+                
+                <line x1="200" y1="50" x2="280" y2="50" 
+                      stroke="#667eea" stroke-width="3" marker-end="url(#arrowhead)" />
+                <line x1="440" y1="50" x2="520" y2="50" 
+                      stroke="#667eea" stroke-width="3" marker-end="url(#arrowhead)" />
+                <line x1="680" y1="50" x2="760" y2="50" 
+                      stroke="#667eea" stroke-width="3" marker-end="url(#arrowhead)" />
+                <line x1="920" y1="50" x2="1000" y2="50" 
+                      stroke="#667eea" stroke-width="3" marker-end="url(#arrowhead)" />
+            </svg>
+        </div>
+        
+        <div class="benefits-matrix">
+            <div class="benefit-card benefit-security">
+                <div class="benefit-icon">🔒</div>
+                <div class="benefit-title">安全性の向上</div>
+                <div class="benefit-description">
+                    Week 5システムが完全にバックアップされ、<br>
+                    いつでも安全に復元可能。<br>
+                    開発作業の安心感が大幅に向上。
+                </div>
+            </div>
+            
+            <div class="benefit-card benefit-collaboration">
+                <div class="benefit-icon">👥</div>
+                <div class="benefit-title">チーム開発準備</div>
+                <div class="benefit-description">
+                    Gitによる履歴管理で、<br>
+                    複数人での共同開発が可能に。<br>
+                    実務レベルの協業環境を構築。
+                </div>
+            </div>
+            
+            <div class="benefit-card benefit-productivity">
+                <div class="benefit-icon">⚡</div>
+                <div class="benefit-title">開発効率化</div>
+                <div class="benefit-description">
+                    変更履歴の追跡により、<br>
+                    バグ修正や機能追加が効率化。<br>
+                    プロフェッショナル開発フロー確立。
+                </div>
+            </div>
+        </div>
+        
+        <div class="growth-timeline">
+            <div class="timeline-title">📈 技術レベルの成長軌跡</div>
+            <div class="timeline-items">
+                <div class="timeline-item">
+                    <div class="timeline-badge">Week 5完了時</div>
+                    <div class="timeline-content">
+                        エンタープライズJavaアーキテクト<br>
+                        ・OOP応用技術統合<br>
+                        ・687行の実用システム完成<br>
+                        ・現代的開発手法習得
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-badge">レッスン6.3完了時</div>
+                    <div class="timeline-content">
+                        Git管理対応アーキテクト<br>
+                        ・バージョン管理技術習得<br>
+                        ・安全な開発環境構築<br>
+                        ・チーム開発準備完了
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-badge">今後の発展</div>
+                    <div class="timeline-content">
+                        実務レベル開発者<br>
+                        ・継続的な機能追加<br>
+                        ・高度なGit運用<br>
+                        ・プロフェッショナル品質
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="next-steps">
+            <div class="next-title">🚀 次のステップ：レッスン6.4への展開</div>
+            <div>Week 5システムを基盤とした変更管理の実践学習</div>
+            
+            <div class="next-list">
+                <div class="next-item">📝 ファイル修正管理</div>
+                <div class="next-item">➕ 新機能追加管理</div>
+                <div class="next-item">🗑️ ファイル削除管理</div>
+                <div class="next-item">🔍 変更内容比較</div>
+                <div class="next-item">📊 詳細履歴管理</div>
+                <div class="next-item">🌿 ブランチ準備</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

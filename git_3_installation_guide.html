@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git環境準備・インストール手順図</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+        
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+        }
+        
+        .workflow {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .step-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-left: 5px solid #007bff;
+            transition: transform 0.3s ease;
+        }
+        
+        .step-container:hover {
+            transform: translateX(5px);
+            box-shadow: 0 10px 30px rgba(0,123,255,0.1);
+        }
+        
+        .step-number {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        .step-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        
+        .step-url {
+            background: #e3f2fd;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-family: monospace;
+            color: #1976d2;
+            font-size: 14px;
+        }
+        
+        .verification-section {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+        
+        .verification-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .command-box {
+            background: rgba(0,0,0,0.2);
+            padding: 15px;
+            border-radius: 10px;
+            font-family: monospace;
+            margin: 15px 0;
+        }
+        
+        .result-box {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 10px;
+            font-family: monospace;
+            margin: 10px 0;
+        }
+        
+        .icon {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            color: #856404;
+        }
+        
+        .warning-title {
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .title {
+                font-size: 24px;
+                padding: 15px;
+            }
+            
+            .step-container {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">
+            🔧 Git環境準備・インストール手順
+        </div>
+        
+        <div class="workflow">
+            <div class="step-container">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <div class="step-title">Git公式サイトにアクセス</div>
+                    <div class="step-description">
+                        Gitの公式ウェブサイトから最新版のインストーラーをダウンロードします
+                    </div>
+                    <div class="step-url">https://git-scm.com/</div>
+                </div>
+            </div>
+            
+            <div class="step-container">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <div class="step-title">Download for Windows をクリック</div>
+                    <div class="step-description">
+                        お使いのWindows環境に適した最新版が自動的に選択されます
+                    </div>
+                </div>
+            </div>
+            
+            <div class="step-container">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <div class="step-title">インストーラーを実行</div>
+                    <div class="step-description">
+                        ダウンロードしたインストーラーファイルをダブルクリックして実行します
+                    </div>
+                </div>
+            </div>
+            
+            <div class="step-container">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <div class="step-title">デフォルト設定でインストール</div>
+                    <div class="step-description">
+                        特別な理由がない限り、デフォルト設定のまま「Next」を連続でクリック
+                    </div>
+                </div>
+            </div>
+            
+            <div class="step-container">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                    <div class="step-title">インストール完了</div>
+                    <div class="step-description">
+                        「Finish」をクリックしてインストールを完了します
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="verification-section">
+            <div class="verification-title">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                </svg>
+                インストール確認方法
+            </div>
+            
+            <div>コマンドプロンプトまたはPowerShellを開いて以下を実行：</div>
+            
+            <div class="command-box">
+                git --version
+            </div>
+            
+            <div>正常にインストールされていれば、以下のような結果が表示されます：</div>
+            
+            <div class="result-box">
+                git version 2.41.0.windows.1
+            </div>
+        </div>
+        
+        <div class="warning-box">
+            <div class="warning-title">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
+                </svg>
+                重要な注意事項
+            </div>
+            <div>
+                インストール後は、コマンドプロンプトを<strong>再起動</strong>してからバージョン確認を行ってください。
+                既に開いていたコマンドプロンプトでは、パスが更新されていない可能性があります。
+            </div>
+        </div>
+    </div>
+</body>
+</html>
