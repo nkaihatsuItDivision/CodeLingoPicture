@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>非同期処理での例外処理フロー</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 24px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .flow-diagram {
+            position: relative;
+            width: 100%;
+            height: 700px;
+            margin: 30px 0;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .timeline {
+            position: absolute;
+            left: 50px;
+            top: 20px;
+            bottom: 20px;
+            width: 4px;
+            background: linear-gradient(180deg, #3498db 0%, #2980b9 100%);
+            border-radius: 2px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .process-step {
+            position: absolute;
+            left: 80px;
+            right: 20px;
+            height: 80px;
+            background: white;
+            border-radius: 12px;
+            padding: 15px 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            border-left: 4px solid #3498db;
+            transition: all 0.3s ease;
+        }
+        
+        .process-step:hover {
+            transform: translateX(5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+        
+        .step-1 { top: 20px; border-left-color: #e74c3c; }
+        .step-2 { top: 120px; border-left-color: #f39c12; }
+        .step-3 { top: 220px; border-left-color: #27ae60; }
+        .step-4 { top: 320px; border-left-color: #9b59b6; }
+        .step-5 { top: 420px; border-left-color: #e67e22; }
+        .step-6 { top: 520px; border-left-color: #34495e; }
+        .step-7 { top: 620px; border-left-color: #1abc9c; }
+        
+        .step-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        
+        .step-1 .step-icon { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .step-2 .step-icon { background: linear-gradient(135deg, #f39c12, #d68910); }
+        .step-3 .step-icon { background: linear-gradient(135deg, #27ae60, #229954); }
+        .step-4 .step-icon { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+        .step-5 .step-icon { background: linear-gradient(135deg, #e67e22, #d35400); }
+        .step-6 .step-icon { background: linear-gradient(135deg, #34495e, #2c3e50); }
+        .step-7 .step-icon { background: linear-gradient(135deg, #1abc9c, #16a085); }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .step-description {
+            font-size: 13px;
+            color: #7f8c8d;
+            line-height: 1.4;
+        }
+        
+        .step-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 15px;
+            flex-shrink: 0;
+        }
+        
+        .status-async {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+        
+        .status-exception {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+        }
+        
+        .status-recovery {
+            background: linear-gradient(135deg, #f39c12, #d68910);
+            color: white;
+        }
+        
+        .status-success {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+        }
+        
+        .timeline-marker {
+            position: absolute;
+            left: 42px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: white;
+            border: 4px solid #3498db;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .marker-1 { top: 50px; border-color: #e74c3c; }
+        .marker-2 { top: 150px; border-color: #f39c12; }
+        .marker-3 { top: 250px; border-color: #27ae60; }
+        .marker-4 { top: 350px; border-color: #9b59b6; }
+        .marker-5 { top: 450px; border-color: #e67e22; }
+        .marker-6 { top: 550px; border-color: #34495e; }
+        .marker-7 { top: 650px; border-color: #1abc9c; }
+        
+        .code-examples {
+            margin-top: 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+        }
+        
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            white-space: pre-line;
+            overflow-x: auto;
+        }
+        
+        .code-title {
+            color: #3498db;
+            font-weight: 700;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+        }
+        
+        .keyword {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+        
+        .string {
+            color: #27ae60;
+        }
+        
+        .comment {
+            color: #95a5a6;
+            font-style: italic;
+        }
+        
+        .method {
+            color: #f39c12;
+        }
+        
+        .patterns-section {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #ff7675 0%, #fdcb6e 100%);
+            border-radius: 12px;
+            color: white;
+        }
+        
+        .patterns-section h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        
+        .pattern-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        
+        .pattern-item {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid rgba(255,255,255,0.5);
+        }
+        
+        .pattern-item h4 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+        }
+        
+        .pattern-item p {
+            margin: 0;
+            font-size: 13px;
+            line-height: 1.4;
+            opacity: 0.9;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .flow-diagram {
+                height: 600px;
+                padding: 15px;
+            }
+            
+            .timeline {
+                left: 30px;
+            }
+            
+            .process-step {
+                left: 60px;
+                right: 10px;
+                height: 70px;
+                padding: 10px 15px;
+            }
+            
+            .step-1 { top: 15px; }
+            .step-2 { top: 100px; }
+            .step-3 { top: 185px; }
+            .step-4 { top: 270px; }
+            .step-5 { top: 355px; }
+            .step-6 { top: 440px; }
+            .step-7 { top: 525px; }
+            
+            .timeline-marker {
+                left: 22px;
+                width: 16px;
+                height: 16px;
+                border-width: 3px;
+            }
+            
+            .marker-1 { top: 40px; }
+            .marker-2 { top: 125px; }
+            .marker-3 { top: 210px; }
+            .marker-4 { top: 295px; }
+            .marker-5 { top: 380px; }
+            .marker-6 { top: 465px; }
+            .marker-7 { top: 550px; }
+            
+            .step-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+                margin-right: 15px;
+            }
+            
+            .step-title {
+                font-size: 14px;
+            }
+            
+            .step-description {
+                font-size: 12px;
+            }
+            
+            .step-status {
+                padding: 3px 8px;
+                font-size: 10px;
+                margin-left: 10px;
+            }
+            
+            .code-examples {
+                grid-template-columns: 1fr;
+            }
+            
+            .code-block {
+                font-size: 11px;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚡ CompletableFuture 非同期例外処理フロー</h1>
+        
+        <div class="flow-diagram">
+            <!-- Timeline -->
+            <div class="timeline"></div>
+            
+            <!-- Timeline Markers -->
+            <div class="timeline-marker marker-1"></div>
+            <div class="timeline-marker marker-2"></div>
+            <div class="timeline-marker marker-3"></div>
+            <div class="timeline-marker marker-4"></div>
+            <div class="timeline-marker marker-5"></div>
+            <div class="timeline-marker marker-6"></div>
+            <div class="timeline-marker marker-7"></div>
+            
+            <!-- Process Steps -->
+            <div class="process-step step-1">
+                <div class="step-icon">🚀</div>
+                <div class="step-content">
+                    <div class="step-title">1. supplyAsync() - 非同期処理開始</div>
+                    <div class="step-description">バリデーション処理を非同期で実行。別スレッドで処理開始。</div>
+                </div>
+                <div class="step-status status-async">ASYNC</div>
+            </div>
+            
+            <div class="process-step step-2">
+                <div class="step-icon">❌</div>
+                <div class="step-content">
+                    <div class="step-title">2. Exception発生 - バリデーションエラー</div>
+                    <div class="step-description">StudentValidationException が発生。RuntimeException でラップして例外伝播。</div>
+                </div>
+                <div class="step-status status-exception">EXCEPTION</div>
+            </div>
+            
+            <div class="process-step step-3">
+                <div class="step-icon">🔄</div>
+                <div class="step-content">
+                    <div class="step-title">3. thenCompose() - データベース保存処理</div>
+                    <div class="step-description">正常時はDB保存を実行。例外時はスキップされる。</div>
+                </div>
+                <div class="step-status status-async">ASYNC</div>
+            </div>
+            
+            <div class="process-step step-4">
+                <div class="step-icon">📧</div>
+                <div class="step-content">
+                    <div class="step-title">4. thenCompose() - メール送信処理</div>
+                    <div class="step-description">正常時はメール送信を実行。エラー時は警告ログで続行。</div>
+                </div>
+                <div class="step-status status-recovery">RECOVERY</div>
+            </div>
+            
+            <div class="process-step step-5">
+                <div class="step-icon">⏰</div>
+                <div class="step-content">
+                    <div class="step-title">5. orTimeout() - タイムアウト制御</div>
+                    <div class="step-description">3秒でタイムアウト。TimeoutException が発生する可能性。</div>
+                </div>
+                <div class="step-status status-exception">TIMEOUT</div>
+            </div>
+            
+            <div class="process-step step-6">
+                <div class="step-icon">🛡️</div>
+                <div class="step-content">
+                    <div class="step-title">6. exceptionally() - 例外処理</div>
+                    <div class="step-description">すべての例外をキャッチ。ログ出力とデフォルト値を返却。</div>
+                </div>
+                <div class="step-status status-recovery">HANDLE</div>
+            </div>
+            
+            <div class="process-step step-7">
+                <div class="step-icon">✅</div>
+                <div class="step-content">
+                    <div class="step-title">7. Result返却 - 処理完了</div>
+                    <div class="step-description">正常結果または例外処理結果を呼び出し元に返却。</div>
+                </div>
+                <div class="step-status status-success">COMPLETE</div>
+            </div>
+        </div>
+        
+        <div class="code-examples">
+            <div class="code-block">
+                <div class="code-title">基本的な非同期例外処理</div>
+<span class="keyword">public</span> CompletableFuture&lt;String&gt; <span class="method">processAsync</span>(StudentData data) {
+    <span class="keyword">return</span> CompletableFuture
+        .<span class="method">supplyAsync</span>(() -&gt; {
+            <span class="comment">// 1. バリデーション（例外発生可能性）</span>
+            <span class="keyword">try</span> {
+                <span class="method">validateStudent</span>(data);
+                <span class="keyword">return</span> data;
+            } <span class="keyword">catch</span> (StudentValidationException e) {
+                <span class="keyword">throw new</span> RuntimeException(<span class="string">"バリデーションエラー"</span>, e);
+            }
+        })
+        .<span class="method">thenCompose</span>(validData -&gt; {
+            <span class="comment">// 2. データベース保存</span>
+            <span class="keyword">return</span> CompletableFuture.<span class="method">supplyAsync</span>(() -&gt; {
+                <span class="keyword">try</span> {
+                    <span class="keyword">return</span> repository.<span class="method">save</span>(validData);
+                } <span class="keyword">catch</span> (DataAccessException e) {
+                    <span class="keyword">throw new</span> RuntimeException(<span class="string">"保存エラー"</span>, e);
+                }
+            });
+        })
+        .<span class="method">exceptionally</span>(throwable -&gt; {
+            <span class="comment">// 3. 例外処理</span>
+            logger.<span class="method">severe</span>(<span class="string">"処理エラー: "</span> + throwable.getMessage());
+            <span class="keyword">return</span> <span class="string">"処理失敗"</span>;
+        });
+}
+            </div>
+            
+            <div class="code-block">
+                <div class="code-title">タイムアウト付き例外処理</div>
+<span class="keyword">public</span> CompletableFuture&lt;String&gt; <span class="method">processWithTimeout</span>(StudentData data) {
+    <span class="keyword">return</span> CompletableFuture
+        .<span class="method">supplyAsync</span>(() -&gt; {
+            <span class="keyword">try</span> {
+                <span class="comment">// 時間のかかる処理をシミュレート</span>
+                Thread.<span class="method">sleep</span>(2000);
+                <span class="keyword">return</span> <span class="method">processStudent</span>(data);
+            } <span class="keyword">catch</span> (InterruptedException e) {
+                Thread.<span class="method">currentThread</span>().<span class="method">interrupt</span>();
+                <span class="keyword">throw new</span> RuntimeException(<span class="string">"処理中断"</span>, e);
+            }
+        })
+        .<span class="method">orTimeout</span>(3, TimeUnit.SECONDS) <span class="comment">// 3秒でタイムアウト</span>
+        .<span class="method">exceptionally</span>(throwable -&gt; {
+            <span class="keyword">if</span> (throwable <span class="keyword">instanceof</span> TimeoutException) {
+                logger.<span class="method">warning</span>(<span class="string">"処理タイムアウト: "</span> + data.getId());
+                <span class="keyword">return</span> <span class="string">"タイムアウトエラー"</span>;
+            } <span class="keyword">else</span> {
+                logger.<span class="method">severe</span>(<span class="string">"処理エラー: "</span> + throwable.getMessage());
+                <span class="keyword">return</span> <span class="string">"処理失敗"</span>;
+            }
+        });
+}
+            </div>
+            
+            <div class="code-block">
+                <div class="code-title">部分的失敗を許容する処理</div>
+<span class="keyword">public</span> CompletableFuture&lt;RegistrationResult&gt; <span class="method">registerWithOptionalServices</span>(StudentData data) {
+    <span class="comment">// メイン登録処理</span>
+    CompletableFuture&lt;Student&gt; mainRegistration = <span class="method">registerStudentCore</span>(data);
+    
+    <span class="comment">// メール送信（失敗OK）</span>
+    CompletableFuture&lt;Boolean&gt; emailResult = mainRegistration
+        .<span class="method">thenCompose</span>(student -&gt; <span class="method">sendWelcomeEmail</span>(student.getEmail()))
+        .<span class="method">exceptionally</span>(throwable -&gt; {
+            logger.<span class="method">warning</span>(<span class="string">"メール送信失敗（続行）: "</span> + throwable.getMessage());
+            <span class="keyword">return</span> false; <span class="comment">// 失敗でも続行</span>
+        });
+    
+    <span class="comment">// SMS送信（失敗OK）</span>
+    CompletableFuture&lt;Boolean&gt; smsResult = mainRegistration
+        .<span class="method">thenCompose</span>(student -&gt; <span class="method">sendWelcomeSMS</span>(student.getPhone()))
+        .<span class="method">exceptionally</span>(throwable -&gt; {
+            logger.<span class="method">warning</span>(<span class="string">"SMS送信失敗（続行）: "</span> + throwable.getMessage());
+            <span class="keyword">return</span> false; <span class="comment">// 失敗でも続行</span>
+        });
+    
+    <span class="comment">// すべての結果を統合</span>
+    <span class="keyword">return</span> mainRegistration
+        .<span class="method">thenCombine</span>(emailResult, (student, emailSuccess) -&gt; 
+            <span class="keyword">new</span> RegistrationResult(student, emailSuccess))
+        .<span class="method">thenCombine</span>(smsResult, (result, smsSuccess) -&gt; {
+            result.<span class="method">setSmsSuccess</span>(smsSuccess);
+            <span class="keyword">return</span> result;
+        });
+}
+            </div>
+        </div>
+        
+        <div class="patterns-section">
+            <h3>🎯 非同期例外処理のパターン</h3>
+            
+            <div class="pattern-grid">
+                <div class="pattern-item">
+                    <h4>🚨 クリティカルエラー（停止）</h4>
+                    <p>必須処理での例外は exceptionally() でエラー結果を返し、呼び出し元で判断</p>
+                </div>
+                
+                <div class="pattern-item">
+                    <h4>⚠️ オプションエラー（続行）</h4>
+                    <p>メール送信等の補助処理は警告ログのみで、メイン処理は続行</p>
+                </div>
+                
+                <div class="pattern-item">
+                    <h4>⏰ タイムアウト制御</h4>
+                    <p>orTimeout() で処理時間を制限し、TimeoutException を適切に処理</p>
+                </div>
+                
+                <div class="pattern-item">
+                    <h4>🔄 リトライ機能</h4>
+                    <p>一時的な障害に対してリトライ処理を実装し、堅牢性を向上</p>
+                </div>
+                
+                <div class="pattern-item">
+                    <h4>📝 詳細ログ出力</h4>
+                    <p>非同期処理では原因特定が困難なため、詳細なログ出力が必須</p>
+                </div>
+                
+                <div class="pattern-item">
+                    <h4>🎭 例外の種類判定</h4>
+                    <p>instanceof で例外の種類を判定し、それぞれに適した処理を実行</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

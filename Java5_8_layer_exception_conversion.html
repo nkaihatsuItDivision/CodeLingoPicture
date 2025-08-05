@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>レイヤー間例外変換図</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 24px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .architecture-diagram {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            margin: 30px 0;
+            background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .layer {
+            position: absolute;
+            left: 10%;
+            right: 10%;
+            height: 120px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .layer:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .controller-layer {
+            top: 30px;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+        }
+        
+        .service-layer {
+            top: 200px;
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            color: white;
+        }
+        
+        .repository-layer {
+            top: 370px;
+            background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+            color: white;
+        }
+        
+        .database-layer {
+            top: 510px;
+            background: linear-gradient(135deg, #9C27B0 0%, #7B1FA2 100%);
+            color: white;
+            height: 60px;
+        }
+        
+        .layer-info {
+            flex: 1;
+        }
+        
+        .layer-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .layer-description {
+            font-size: 14px;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+        
+        .exception-flow {
+            flex: 1;
+            text-align: right;
+        }
+        
+        .exception-box {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin: 4px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        
+        .conversion-arrow {
+            position: absolute;
+            right: 15%;
+            font-size: 24px;
+            color: #e74c3c;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        
+        .arrow1 { top: 160px; }
+        .arrow2 { top: 330px; }
+        .arrow3 { top: 470px; }
+        
+        .code-section {
+            margin-top: 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            white-space: pre-line;
+        }
+        
+        .code-title {
+            color: #3498db;
+            font-weight: 700;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+        }
+        
+        .keyword {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+        
+        .string {
+            color: #27ae60;
+        }
+        
+        .comment {
+            color: #95a5a6;
+            font-style: italic;
+        }
+        
+        .best-practices {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%);
+            border-radius: 12px;
+            color: white;
+        }
+        
+        .best-practices h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        
+        .practice-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+        
+        .practice-item {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid rgba(255,255,255,0.5);
+        }
+        
+        .practice-item h4 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+        }
+        
+        .practice-item p {
+            margin: 0;
+            font-size: 13px;
+            line-height: 1.4;
+            opacity: 0.9;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .architecture-diagram {
+                height: 500px;
+                padding: 15px;
+            }
+            
+            .layer {
+                left: 5%;
+                right: 5%;
+                height: 80px;
+                padding: 0 15px;
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .controller-layer { top: 20px; }
+            .service-layer { top: 130px; }
+            .repository-layer { top: 240px; }
+            .database-layer { top: 350px; height: 50px; }
+            
+            .arrow1 { top: 110px; }
+            .arrow2 { top: 220px; }
+            .arrow3 { top: 330px; }
+            
+            .layer-title {
+                font-size: 16px;
+                margin-bottom: 4px;
+            }
+            
+            .layer-description {
+                font-size: 12px;
+            }
+            
+            .exception-box {
+                font-size: 10px;
+                padding: 4px 8px;
+            }
+            
+            .conversion-arrow {
+                font-size: 20px;
+                right: 10%;
+            }
+            
+            .code-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .code-block {
+                font-size: 11px;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏗️ レイヤー間例外変換アーキテクチャ</h1>
+        
+        <div class="architecture-diagram">
+            <!-- Controller Layer -->
+            <div class="layer controller-layer">
+                <div class="layer-info">
+                    <div class="layer-title">Controller Layer</div>
+                    <div class="layer-description">プレゼンテーション層<br>ユーザー向けメッセージ生成</div>
+                </div>
+                <div class="exception-flow">
+                    <div class="exception-box">ユーザー向けメッセージ</div>
+                    <div class="exception-box">HTTPステータス設定</div>
+                </div>
+            </div>
+            
+            <!-- Conversion Arrow 1 -->
+            <div class="conversion-arrow arrow1">⬇️</div>
+            
+            <!-- Service Layer -->
+            <div class="layer service-layer">
+                <div class="layer-info">
+                    <div class="layer-title">Service Layer</div>
+                    <div class="layer-description">ビジネスロジック層<br>業務例外への変換</div>
+                </div>
+                <div class="exception-flow">
+                    <div class="exception-box">ServiceException</div>
+                    <div class="exception-box">BusinessException</div>
+                </div>
+            </div>
+            
+            <!-- Conversion Arrow 2 -->
+            <div class="conversion-arrow arrow2">⬇️</div>
+            
+            <!-- Repository Layer -->
+            <div class="layer repository-layer">
+                <div class="layer-info">
+                    <div class="layer-title">Repository Layer</div>
+                    <div class="layer-description">データアクセス層<br>技術例外をデータ例外に変換</div>
+                </div>
+                <div class="exception-flow">
+                    <div class="exception-box">DataAccessException</div>
+                    <div class="exception-box">EntityNotFoundException</div>
+                </div>
+            </div>
+            
+            <!-- Conversion Arrow 3 -->
+            <div class="conversion-arrow arrow3">⬇️</div>
+            
+            <!-- Database Layer -->
+            <div class="layer database-layer">
+                <div class="layer-info">
+                    <div class="layer-title">Database</div>
+                    <div class="layer-description">データベース</div>
+                </div>
+                <div class="exception-flow">
+                    <div class="exception-box">SQLException</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="code-section">
+            <div class="code-block">
+                <div class="code-title">Repository Layer (下位)</div>
+<span class="keyword">public</span> Student findById(String id) 
+    <span class="keyword">throws</span> DataAccessException {
+    <span class="keyword">try</span> {
+        <span class="comment">// データベースアクセス</span>
+        <span class="keyword">return</span> queryStudent(id);
+    } <span class="keyword">catch</span> (SQLException e) {
+        <span class="comment">// SQL例外をDAE例外に変換</span>
+        <span class="keyword">throw new</span> DataAccessException(
+            <span class="string">"学生データ取得エラー"</span>, e);
+    }
+}
+            </div>
+            
+            <div class="code-block">
+                <div class="code-title">Service Layer (中位)</div>
+<span class="keyword">public</span> StudentDTO getStudent(String id) 
+    <span class="keyword">throws</span> ServiceException {
+    <span class="keyword">try</span> {
+        Student student = repository.findById(id);
+        <span class="keyword">return</span> convertToDTO(student);
+    } <span class="keyword">catch</span> (DataAccessException e) {
+        <span class="comment">// DAE例外をService例外に変換</span>
+        <span class="keyword">throw new</span> ServiceException(
+            <span class="string">"学生取得サービスエラー"</span>, e);
+    }
+}
+            </div>
+            
+            <div class="code-block">
+                <div class="code-title">Controller Layer (上位)</div>
+<span class="keyword">public</span> String showStudent(String id) {
+    <span class="keyword">try</span> {
+        StudentDTO student = service.getStudent(id);
+        <span class="keyword">return</span> <span class="string">"student-profile"</span>;
+    } <span class="keyword">catch</span> (ServiceException e) {
+        <span class="comment">// ユーザー向けメッセージに変換</span>
+        logger.error(<span class="string">"学生表示エラー"</span>, e);
+        <span class="keyword">return</span> <span class="string">"error-page"</span>;
+    }
+}
+            </div>
+        </div>
+        
+        <div class="best-practices">
+            <h3>🎯 例外変換のベストプラクティス</h3>
+            
+            <div class="practice-grid">
+                <div class="practice-item">
+                    <h4>📋 原因例外の保持</h4>
+                    <p>throw new ServiceException(message, <strong>cause</strong>)<br>
+                    原因例外を必ず保持してデバッグ情報を維持</p>
+                </div>
+                
+                <div class="practice-item">
+                    <h4>🔄 適切な抽象化レベル</h4>
+                    <p>各レイヤーに適した抽象化レベルの例外に変換<br>
+                    技術詳細を上位レイヤーに漏らさない</p>
+                </div>
+                
+                <div class="practice-item">
+                    <h4>📝 文脈情報の追加</h4>
+                    <p>例外発生時の文脈（ID、操作内容）を含める<br>
+                    デバッグ時の情報を充実させる</p>
+                </div>
+                
+                <div class="practice-item">
+                    <h4>🎭 一貫した例外階層</h4>
+                    <p>プロジェクト内で統一された例外階層を設計<br>
+                    チーム全体で理解しやすい構造を維持</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
