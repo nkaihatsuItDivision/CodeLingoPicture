@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detached HEAD状態の理解</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            margin: 10px 0 0 0;
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .state-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin: 40px 0;
+        }
+        
+        .state-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .normal-state {
+            border-left: 5px solid #27ae60;
+        }
+        
+        .detached-state {
+            border-left: 5px solid #f39c12;
+        }
+        
+        .state-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .normal-title {
+            color: #27ae60;
+        }
+        
+        .detached-title {
+            color: #f39c12;
+        }
+        
+        .diagram-container {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .branch-diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .head-pointer {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+            animation: glow 2s infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3); }
+            to { box-shadow: 0 5px 25px rgba(231, 76, 60, 0.6); }
+        }
+        
+        .arrow-down {
+            font-size: 2em;
+            color: #e74c3c;
+        }
+        
+        .branch-pointer {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .commit-chain {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+            justify-content: center;
+        }
+        
+        .commit-node {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .commit-old {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+        }
+        
+        .commit-current {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            animation: pulse 2s infinite;
+        }
+        
+        .commit-latest {
+            background: linear-gradient(135deg, #27ae60, #229954);
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .commit-arrow {
+            font-size: 1.5em;
+            color: #bdc3c7;
+        }
+        
+        .commit-info {
+            font-size: 0.8em;
+            color: #7f8c8d;
+            margin-top: 8px;
+        }
+        
+        .warning-message {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            position: relative;
+        }
+        
+        .warning-message::before {
+            content: '⚠️';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2.5em;
+            opacity: 0.3;
+        }
+        
+        .warning-message h3 {
+            margin: 0 0 15px 0;
+            font-size: 1.3em;
+        }
+        
+        .terminal-demo {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 25px;
+            border-radius: 10px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 20px 0;
+            position: relative;
+            overflow-x: auto;
+        }
+        
+        .terminal-demo::before {
+            content: "Terminal";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #333;
+            color: #fff;
+            padding: 8px 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .terminal-content {
+            margin-top: 35px;
+        }
+        
+        .prompt {
+            color: #569cd6;
+        }
+        
+        .command {
+            color: #9cdcfe;
+            font-weight: bold;
+        }
+        
+        .output {
+            color: #d4d4d4;
+            margin: 10px 0;
+        }
+        
+        .warning-text {
+            color: #f39c12;
+        }
+        
+        .success-text {
+            color: #98c379;
+        }
+        
+        .capabilities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+        
+        .capability-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .capability-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .capability-icon {
+            font-size: 3em;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .capability-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .capability-desc {
+            color: #555;
+            text-align: center;
+            line-height: 1.6;
+        }
+        
+        .can-do {
+            border-left: 5px solid #27ae60;
+        }
+        
+        .can-do .capability-icon {
+            color: #27ae60;
+        }
+        
+        .cannot-do {
+            border-left: 5px solid #e74c3c;
+        }
+        
+        .cannot-do .capability-icon {
+            color: #e74c3c;
+        }
+        
+        .navigation-steps {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+        
+        .navigation-steps h3 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.4em;
+        }
+        
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .step-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+        
+        .step-number {
+            background: rgba(255, 255, 255, 0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px auto;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        .step-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .step-command {
+            font-family: 'Consolas', 'Monaco', monospace;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+        
+        .comparison-table {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            margin: 30px 0;
+        }
+        
+        .table-header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+        
+        .table-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+        
+        .table-section {
+            padding: 30px;
+        }
+        
+        .table-section:first-child {
+            border-right: 2px solid #ecf0f1;
+        }
+        
+        .section-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+        .normal-section .section-title {
+            background: #e8f5e8;
+            color: #27ae60;
+        }
+        
+        .detached-section .section-title {
+            background: #fef6e6;
+            color: #f39c12;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #ecf0f1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .feature-icon {
+            font-size: 1.2em;
+            width: 25px;
+            text-align: center;
+        }
+        
+        @media (max-width: 1024px) {
+            .state-comparison {
+                grid-template-columns: 1fr;
+            }
+            
+            .table-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .table-section:first-child {
+                border-right: none;
+                border-bottom: 2px solid #ecf0f1;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .commit-chain {
+                flex-direction: column;
+            }
+            
+            .commit-arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚠️ Detached HEAD状態の理解</h1>
+            <p>過去バージョン確認時の安全な操作ガイド</p>
+        </div>
+        
+        <div class="content">
+            <div class="state-comparison">
+                <div class="state-section normal-state">
+                    <div class="state-title normal-title">
+                        <span>✅</span>
+                        通常の状態 (Normal)
+                    </div>
+                    <div class="diagram-container">
+                        <div class="branch-diagram">
+                            <div class="head-pointer">HEAD</div>
+                            <div class="arrow-down">↓</div>
+                            <div class="branch-pointer">main ブランチ</div>
+                            <div class="arrow-down">↓</div>
+                            <div class="commit-chain">
+                                <div>
+                                    <div class="commit-node commit-old">b1c</div>
+                                    <div class="commit-info">過去</div>
+                                </div>
+                                <div class="commit-arrow">→</div>
+                                <div>
+                                    <div class="commit-node commit-latest">a7b</div>
+                                    <div class="commit-info">最新</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="terminal-demo">
+                        <div class="terminal-content">
+                            <div><span class="prompt">$</span> <span class="command">git status</span></div>
+                            <div class="output success-text">On branch main<br>nothing to commit, working tree clean</div>
+                            <div><span class="prompt">$</span> <span class="command">git log --oneline</span></div>
+                            <div class="output">a7b8c9d (HEAD -> main) 機能拡張完了<br>b1c2d3e Week 5システム開始</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="state-section detached-state">
+                    <div class="state-title detached-title">
+                        <span>⚠️</span>
+                        Detached HEAD状態
+                    </div>
+                    <div class="diagram-container">
+                        <div class="branch-diagram">
+                            <div class="head-pointer">HEAD</div>
+                            <div class="arrow-down">↓</div>
+                            <div class="commit-chain">
+                                <div>
+                                    <div class="commit-node commit-current">b1c</div>
+                                    <div class="commit-info">過去(現在位置)</div>
+                                </div>
+                                <div class="commit-arrow">→</div>
+                                <div>
+                                    <div class="commit-node commit-old">a7b</div>
+                                    <div class="commit-info">最新(離脱)</div>
+                                </div>
+                            </div>
+                            <div style="margin-top: 20px;">
+                                <div class="branch-pointer" style="opacity: 0.5;">main ブランチ</div>
+                                <div style="font-size: 0.8em; color: #7f8c8d; margin-top: 5px;">
+                                    (HEADが離れている)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="terminal-demo">
+                        <div class="terminal-content">
+                            <div><span class="prompt">$</span> <span class="command">git checkout b1c2d3e</span></div>
+                            <div class="output warning-text">Note: switching to 'b1c2d3e'.<br><br>You are in 'detached HEAD' state.</div>
+                            <div><span class="prompt">$</span> <span class="command">git status</span></div>
+                            <div class="output warning-text">HEAD detached at b1c2d3e<br>nothing to commit, working tree clean</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="warning-message">
+                <h3>⚠️ Detached HEAD状態とは？</h3>
+                <p><strong>Detached HEAD</strong>は「分離したHEAD」という意味で、HEADが特定のブランチではなく、直接コミットを指している状態です。</p>
+                <ul style="margin: 15px 0; line-height: 1.8;">
+                    <li>✅ <strong>安全な過去確認</strong>: 過去のバージョンを安全に確認できる</li>
+                    <li>✅ <strong>実験的変更OK</strong>: 実験的な変更やテストが可能</li>
+                    <li>⚠️ <strong>コミット注意</strong>: この状態でのコミットは通常保持されない</li>
+                    <li>🔄 <strong>一時的状態</strong>: 確認後は必ずブランチに戻る</li>
+                </ul>
+            </div>
+
+            <div class="capabilities-grid">
+                <div class="capability-card can-do">
+                    <div class="capability-icon">👀</div>
+                    <div class="capability-title">過去の確認</div>
+                    <div class="capability-desc">過去のファイル内容やシステム状態を安全に確認できます。プログラムの実行も可能です。</div>
+                </div>
+                
+                <div class="capability-card can-do">
+                    <div class="capability-icon">🧪</div>
+                    <div class="capability-title">実験的変更</div>
+                    <div class="capability-desc">ファイルを編集したり、実験的なコードを試したりできます。失敗しても影響ありません。</div>
+                </div>
+                
+                <div class="capability-card can-do">
+                    <div class="capability-icon">📁</div>
+                    <div class="capability-title">ファイル操作</div>
+                    <div class="capability-desc">ファイルの読み取り、コピー、編集など、通常のファイル操作が可能です。</div>
+                </div>
+                
+                <div class="capability-card cannot-do">
+                    <div class="capability-icon">❌</div>
+                    <div class="capability-title">永続的コミット</div>
+                    <div class="capability-desc">この状態でのコミットは、ブランチに戻ると通常は失われます。注意が必要です。</div>
+                </div>
+                
+                <div class="capability-card cannot-do">
+                    <div class="capability-icon">⚠️</div>
+                    <div class="capability-title">ブランチ操作</div>
+                    <div class="capability-desc">通常のブランチ操作（push、pullなど）は推奨されません。まずブランチに復帰しましょう。</div>
+                </div>
+                
+                <div class="capability-card cannot-do">
+                    <div class="capability-icon">🔄</div>
+                    <div class="capability-title">継続的開発</div>
+                    <div class="capability-desc">継続的な開発作業には適しません。あくまで一時的な確認・実験用の状態です。</div>
+                </div>
+            </div>
+
+            <div class="navigation-steps">
+                <h3>🧭 Detached HEAD状態の安全な操作手順</h3>
+                <div class="steps-container">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <div class="step-title">移動前の確認</div>
+                        <div>現在の状態を確認してから過去に移動</div>
+                        <div class="step-command">git status<br>git log --oneline</div>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <div class="step-title">過去に移動</div>
+                        <div>特定のコミットに移動してDetached HEAD状態に</div>
+                        <div class="step-command">git checkout &lt;commit-hash&gt;</div>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <div class="step-title">安全な確認</div>
+                        <div>ファイル確認や実験的変更を実行</div>
+                        <div class="step-command">ls -la<br>cat ファイル名<br>java プログラム名</div>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-number">4</div>
+                        <div class="step-title">必ず復帰</div>
+                        <div>確認完了後は必ずブランチに復帰</div>
+                        <div class="step-command">git checkout main<br># または<br>git switch -</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="comparison-table">
+                <div class="table-header">
+                    📊 通常状態 vs Detached HEAD状態の比較
+                </div>
+                <div class="table-content">
+                    <div class="table-section normal-section">
+                        <div class="section-title">✅ 通常状態 (on branch main)</div>
+                        <ul class="feature-list">
+                            <li><span class="feature-icon">🎯</span>HEADがブランチを指している</li>
+                            <li><span class="feature-icon">💾</span>コミットが自動的に保存される</li>
+                            <li><span class="feature-icon">🔄</span>push/pullが正常に動作</li>
+                            <li><span class="feature-icon">📈</span>継続的な開発に適している</li>
+                            <li><span class="feature-icon">👥</span>チーム開発で標準的な状態</li>
+                            <li><span class="feature-icon">🛡️</span>変更履歴が確実に保持</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="table-section detached-section">
+                        <div class="section-title">⚠️ Detached HEAD状態</div>
+                        <ul class="feature-list">
+                            <li><span class="feature-icon">🎯</span>HEADが直接コミットを指している</li>
+                            <li><span class="feature-icon">⚠️</span>コミットが失われる可能性</li>
+                            <li><span class="feature-icon">❌</span>push/pullは推奨されない</li>
+                            <li><span class="feature-icon">🔍</span>過去の確認・実験に適している</li>
+                            <li><span class="feature-icon">🧪</span>安全な実験環境を提供</li>
+                            <li><span class="feature-icon">⏰</span>一時的な状態として活用</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: #e8f5e8; padding: 30px; border-radius: 15px; margin: 30px 0; border-left: 5px solid #27ae60;">
+                <h3 style="color: #27ae60; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                    <span>✅</span> Detached HEAD活用のメリット
+                </h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                    <div>
+                        <h4 style="color: #2c3e50; margin-bottom: 10px;">🔍 安全な調査</h4>
+                        <p style="margin: 0; color: #555;">バグ発生前の状態を安全に確認し、問題の原因を特定できます。</p>
+                    </div>
+                    <div>
+                        <h4 style="color: #2c3e50; margin-bottom: 10px;">🧪 リスクフリー実験</h4>
+                        <p style="margin: 0; color: #555;">本流に影響せずに実験的な変更やテストを実行できます。</p>
+                    </div>
+                    <div>
+                        <h4 style="color: #2c3e50; margin-bottom: 10px;">📚 学習・理解</h4>
+                        <p style="margin: 0; color: #555;">過去の実装を詳しく学習し、開発手法を理解できます。</p>
+                    </div>
+                    <div>
+                        <h4 style="color: #2c3e50; margin-bottom: 10px;">🎯 精密な確認</h4>
+                        <p style="margin: 0; color: #555;">特定時点の正確な状態を確認し、デバッグに活用できます。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: #f8f9fa; padding: 30px; border-radius: 15px; margin: 30px 0; text-align: center;">
+                <h3 style="color: #2c3e50; margin-bottom: 20px;">🎯 Detached HEAD習得の価値</h3>
+                <p style="color: #555; font-size: 1.1em; line-height: 1.8; margin: 0;">
+                    Detached HEAD状態を理解することで、<strong>安全で効果的な過去確認技術</strong>を習得できます。<br>
+                    これにより、<strong>問題調査</strong>、<strong>実験的開発</strong>、<strong>学習活動</strong>を安心して実行できるようになります。
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

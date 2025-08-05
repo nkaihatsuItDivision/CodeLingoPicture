@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>安全な復元ワークフロー</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            margin: 10px 0 0 0;
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .workflow-container {
+            background: #f8f9fa;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 30px 0;
+            position: relative;
+        }
+        
+        .workflow-title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 2em;
+            margin-bottom: 40px;
+            font-weight: bold;
+        }
+        
+        .workflow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            position: relative;
+        }
+        
+        .step-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+        
+        .step-number {
+            position: absolute;
+            top: -20px;
+            left: 30px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.3em;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .step-header {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .step-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .step-subtitle {
+            color: #7f8c8d;
+            font-size: 0.95em;
+        }
+        
+        .step-content {
+            margin: 20px 0;
+        }
+        
+        .command-demo {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+            margin: 15px 0;
+            position: relative;
+        }
+        
+        .command-demo::before {
+            content: "Terminal";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #333;
+            color: #fff;
+            padding: 5px 15px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        
+        .terminal-content {
+            margin-top: 25px;
+        }
+        
+        .prompt {
+            color: #569cd6;
+        }
+        
+        .command {
+            color: #9cdcfe;
+            font-weight: bold;
+        }
+        
+        .output {
+            color: #d4d4d4;
+            margin: 8px 0;
+        }
+        
+        .success {
+            color: #98c379;
+        }
+        
+        .warning {
+            color: #f39c12;
+        }
+        
+        .error {
+            color: #e06c75;
+        }
+        
+        .checklist {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+        
+        .checklist li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #555;
+        }
+        
+        .checklist .check-icon {
+            color: #27ae60;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        .safety-levels {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .safety-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .safety-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .safety-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        
+        .safety-high {
+            border-left: 5px solid #27ae60;
+        }
+        
+        .safety-high .safety-icon {
+            color: #27ae60;
+        }
+        
+        .safety-medium {
+            border-left: 5px solid #f39c12;
+        }
+        
+        .safety-medium .safety-icon {
+            color: #f39c12;
+        }
+        
+        .safety-low {
+            border-left: 5px solid #e74c3c;
+        }
+        
+        .safety-low .safety-icon {
+            color: #e74c3c;
+        }
+        
+        .safety-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .safety-desc {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .safety-commands {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+            color: #2c3e50;
+        }
+        
+        .emergency-procedures {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 40px 0;
+            position: relative;
+        }
+        
+        .emergency-procedures::before {
+            content: '🚨';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 3em;
+            opacity: 0.3;
+        }
+        
+        .emergency-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .emergency-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .emergency-step {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .emergency-step-number {
+            background: rgba(255, 255, 255, 0.2);
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .emergency-step-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .emergency-step-command {
+            font-family: 'Consolas', 'Monaco', monospace;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 0.85em;
+            margin-top: 10px;
+        }
+        
+        .best-practices-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .practice-category {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .practice-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #3498db;
+        }
+        
+        .practice-icon {
+            font-size: 2.5em;
+            color: #3498db;
+        }
+        
+        .practice-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .practice-items {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .practice-items li {
+            padding: 12px 0;
+            border-bottom: 1px solid #ecf0f1;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+        
+        .practice-items li:last-child {
+            border-bottom: none;
+        }
+        
+        .practice-point {
+            background: #3498db;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            font-weight: bold;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .practice-text {
+            flex: 1;
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .workflow-summary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            margin: 40px 0;
+            text-align: center;
+        }
+        
+        .summary-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+        
+        .summary-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .summary-point {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .summary-point-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+        
+        .summary-point-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .summary-point-desc {
+            font-size: 0.95em;
+            opacity: 0.9;
+        }
+        
+        @media (max-width: 1024px) {
+            .safety-levels {
+                grid-template-columns: 1fr;
+            }
+            
+            .workflow-steps {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .workflow-container {
+                padding: 20px;
+            }
+            
+            .emergency-steps {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ 安全な復元ワークフロー</h1>
+            <p>データ損失を防ぐ履歴操作の完全ガイド</p>
+        </div>
+        
+        <div class="content">
+            <div class="workflow-container">
+                <div class="workflow-title">🔄 安全復元の5ステップ</div>
+                <div class="workflow-steps">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <div class="step-header">
+                            <div class="step-title">現状確認</div>
+                            <div class="step-subtitle">安全な操作のための事前チェック</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="command-demo">
+                                <div class="terminal-content">
+                                    <div><span class="prompt">$</span> <span class="command">git status</span></div>
+                                    <div class="output success">On branch main<br>nothing to commit, working tree clean</div>
+                                    <div><span class="prompt">$</span> <span class="command">git log --oneline</span></div>
+                                    <div class="output">a7b8c9d 機能拡張完了<br>b1c2d3e Week 5システム開始</div>
+                                </div>
+                            </div>
+                            <ul class="checklist">
+                                <li><span class="check-icon">✓</span>未保存の変更がないことを確認</li>
+                                <li><span class="check-icon">✓</span>現在の履歴を把握</li>
+                                <li><span class="check-icon">✓</span>復元したい時点を特定</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <div class="step-header">
+                            <div class="step-title">バックアップ作成</div>
+                            <div class="step-subtitle">万が一のための退避処理</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="command-demo">
+                                <div class="terminal-content">
+                                    <div><span class="prompt">$</span> <span class="command">git tag backup-before-reset</span></div>
+                                    <div class="output success"># またはブランチを作成</div>
+                                    <div><span class="prompt">$</span> <span class="command">git branch backup-main</span></div>
+                                    <div class="output success"># バックアップ完了</div>
+                                </div>
+                            </div>
+                            <ul class="checklist">
+                                <li><span class="check-icon">✓</span>タグまたはブランチで現在位置を保存</li>
+                                <li><span class="check-icon">✓</span>緊急時の復旧ポイント確保</li>
+                                <li><span class="check-icon">✓</span>心理的安全性の確保</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <div class="step-header">
+                            <div class="step-title">段階的復元</div>
+                            <div class="step-subtitle">安全性の高い順序で実行</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="command-demo">
+                                <div class="terminal-content">
+                                    <div><span class="prompt">$</span> <span class="command">git reset --soft HEAD~1</span></div>
+                                    <div class="output success"># 最も安全な方法から開始</div>
+                                    <div><span class="prompt">$</span> <span class="command">git status</span></div>
+                                    <div class="output">Changes to be committed:<br>&nbsp;&nbsp;modified: file.java</div>
+                                </div>
+                            </div>
+                            <ul class="checklist">
+                                <li><span class="check-icon">✓</span>--soft → --mixed → --hard の順序</li>
+                                <li><span class="check-icon">✓</span>各段階で結果を確認</li>
+                                <li><span class="check-icon">✓</span>必要最小限の操作に留める</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-number">4</div>
+                        <div class="step-header">
+                            <div class="step-title">結果検証</div>
+                            <div class="step-subtitle">復元結果の詳細確認</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="command-demo">
+                                <div class="terminal-content">
+                                    <div><span class="prompt">$</span> <span class="command">git status</span></div>
+                                    <div class="output">Changes to be committed:<br>&nbsp;&nbsp;modified: SystemManager.java</div>
+                                    <div><span class="prompt">$</span> <span class="command">git diff --cached</span></div>
+                                    <div class="output">+    private FileHandler fileHandler;</div>
+                                </div>
+                            </div>
+                            <ul class="checklist">
+                                <li><span class="check-icon">✓</span>期待通りの状態になっているか確認</li>
+                                <li><span class="check-icon">✓</span>重要なファイルが存在するか確認</li>
+                                <li><span class="check-icon">✓</span>プログラムが正常に動作するか確認</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-number">5</div>
+                        <div class="step-header">
+                            <div class="step-title">最終確定</div>
+                            <div class="step-subtitle">復元完了と後処理</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="command-demo">
+                                <div class="terminal-content">
+                                    <div><span class="prompt">$</span> <span class="command">git commit -m "修正版: 復元後の改良"</span></div>
+                                    <div class="output success">[main c4d5e6f] 修正版: 復元後の改良</div>
+                                    <div><span class="prompt">$</span> <span class="command">git tag -d backup-before-reset</span></div>
+                                    <div class="output success"># 不要なバックアップを削除</div>
+                                </div>
+                            </div>
+                            <ul class="checklist">
+                                <li><span class="check-icon">✓</span>必要に応じて再コミット</li>
+                                <li><span class="check-icon">✓</span>バックアップの整理</li>
+                                <li><span class="check-icon">✓</span>履歴の最終確認</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="safety-levels">
+                <div class="safety-card safety-high">
+                    <div class="safety-icon">🟢</div>
+                    <div class="safety-title">高安全性操作</div>
+                    <div class="safety-desc">
+                        データ損失リスクが極めて低く、<br>
+                        初心者でも安心して使用できる操作
+                    </div>
+                    <div class="safety-commands">
+                        git checkout &lt;commit&gt;<br>
+                        git reset --soft HEAD~1<br>
+                        git log / git show
+                    </div>
+                </div>
+
+                <div class="safety-card safety-medium">
+                    <div class="safety-icon">🟡</div>
+                    <div class="safety-title">中程度安全性操作</div>
+                    <div class="safety-desc">
+                        適切な手順を踏めば安全だが、<br>
+                        事前確認が重要な操作
+                    </div>
+                    <div class="safety-commands">
+                        git reset --mixed HEAD~1<br>
+                        git reset HEAD~1<br>
+                        git commit --amend
+                    </div>
+                </div>
+
+                <div class="safety-card safety-low">
+                    <div class="safety-icon">🔴</div>
+                    <div class="safety-title">要注意操作</div>
+                    <div class="safety-desc">
+                        強力だが危険性も高く、<br>
+                        バックアップ必須の操作
+                    </div>
+                    <div class="safety-commands">
+                        git reset --hard HEAD~1<br>
+                        git reset --hard &lt;commit&gt;<br>
+                        強制プッシュ
+                    </div>
+                </div>
+            </div>
+
+            <div class="emergency-procedures">
+                <div class="emergency-title">🚨 緊急復旧手順</div>
+                <div class="emergency-steps">
+                    <div class="emergency-step">
+                        <div class="emergency-step-number">1</div>
+                        <div class="emergency-step-title">冷静な状況把握</div>
+                        <div>パニックにならず、現在の状況を正確に把握する</div>
+                        <div class="emergency-step-command">git status<br>git log --oneline</div>
+                    </div>
+                    
+                    <div class="emergency-step">
+                        <div class="emergency-step-number">2</div>
+                        <div class="emergency-step-title">reflogで履歴確認</div>
+                        <div>削除されたコミットも含めて全履歴を確認</div>
+                        <div class="emergency-step-command">git reflog</div>
+                    </div>
+                    
+                    <div class="emergency-step">
+                        <div class="emergency-step-number">3</div>
+                        <div class="emergency-step-title">復旧コミット特定</div>
+                        <div>復旧したいコミットのハッシュ値を特定</div>
+                        <div class="emergency-step-command">git show &lt;hash&gt;</div>
+                    </div>
+                    
+                    <div class="emergency-step">
+                        <div class="emergency-step-number">4</div>
+                        <div class="emergency-step-title">安全な復旧実行</div>
+                        <div>段階的なresetで安全に復旧</div>
+                        <div class="emergency-step-command">git reset --hard &lt;hash&gt;</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="best-practices-grid">
+                <div class="practice-category">
+                    <div class="practice-header">
+                        <div class="practice-icon">🔍</div>
+                        <div class="practice-title">事前確認の習慣</div>
+                    </div>
+                    <ul class="practice-items">
+                        <li>
+                            <div class="practice-point">1</div>
+                            <div class="practice-text">操作前に必ずgit statusで現在の状態を確認する</div>
+                        </li>
+                        <li>
+                            <div class="practice-point">2</div>
+                            <div class="practice-text">git log --onelineで履歴の全体像を把握する</div>
+                        </li>
+                        <li>
+                            <div class="practice-point">3</div>
+                            <div class="practice-text">復元対象のコミットをgit showで詳細確認する</div>
+                        </li>
+                        <li>
+                            <div class="practice-point">4</div>
+                            <div class="practice-text">未保存の変更がないことを必ず確認する</div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="practice-category">
+                    <div class="practice-header">
+                        <div class="practice-icon">🛡️</div>
+                        <div class="practice-title">バックアップ戦略</div>
+                    </div>
+                    <ul class="practice-items">
+                        <li>
+                            <div class="practice-point">1</div>
+                            <div class="practice-text">重要な操作前にはgit tagでバックアップポイント作成</div>
+                        </li>
+                        <li>
+                            <div class="practice-point">2</div>
+                            <div class="practice-text">実験用ブランチを作成して安全に作業</div>
+                        </li>
+                        <li>
+                            <div class="practice-point">3</div>
+                            <div class="practice-text">定期的にリモートリポジトリにプッシュ</div>
+                        </li>
+                        <li>
+                            <div class="practice-point">4</div>
+                            <div class="practice-text">git reflogの使い方を理解しておく</div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="practice-category">
+                    <div class="practice-header">
+                        <div class="practice-icon">⚡</div>
+                        <div class="practice-title">段階的アプローチ</div>
+                    </div>
+                    <ul class="practice-items">
+                        <li>
+                            <div class="practice-point">1</div>
+                            <div class="practice-text">まず--softで安全性を確認してから--mixedを検討</div>
+                        </li>
+                        <li>
+                            <div class="practice-point">2</div>
+                            <div class="practice-text">--hardは最後の手段として慎重に使用</div>
+                        </li>
+                        <li>
+                            <div class="practice-point">3</div>
+                            <div class="practice-text">各段階で結果を確認してから次のステップへ</div>
+                        </li>
+                        <li>
+                            <div class="practice-point">4</div>
+                            <div class="practice-text">一度に大きな変更をせず、小刻みに調整</div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="practice-category">
+                    <div class="practice-header">
+                        <div class="practice-icon">🎯</div>
+                        <div class="practice-title">結果検証</div>
+                    </div>
+                    <ul class="practice-items">
+                        <li>
+                            <div class="practice-point">1</div>
+                            <div class="practice-text">復元後は必ずファイルの存在と内容を確認</div>
+                        </li>
+                        <li>
+                            <div class="practice-point">2</div>
+                            <div class="practice-text">プログラムをコンパイル・実行して動作確認</div>
+                        </li>
+                        <li>
+                            <div class="practice-point">3</div>
+                            <div class="practice-text">git diffで期待通りの変更になっているか確認</div>
+                        </li>
+                        <li>
+                            <div class="practice-point">4</div>
+                            <div class="practice-text">履歴が想定通りの状態になっているか確認</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="workflow-summary">
+                <div class="summary-title">🎯 安全復元ワークフローの価値</div>
+                <p style="font-size: 1.1em; line-height: 1.8; margin: 0 0 30px 0; opacity: 0.9;">
+                    体系的なワークフローに従うことで、データ損失リスクを最小化し、<br>
+                    確実で安全な履歴操作を実現できます
+                </p>
+                <div class="summary-points">
+                    <div class="summary-point">
+                        <div class="summary-point-icon">🛡️</div>
+                        <div class="summary-point-title">リスク最小化</div>
+                        <div class="summary-point-desc">段階的アプローチによる安全性の確保</div>
+                    </div>
+                    
+                    <div class="summary-point">
+                        <div class="summary-point-icon">⚡</div>
+                        <div class="summary-point-title">効率的復旧</div>
+                        <div class="summary-point-desc">体系的な手順による迅速な問題解決</div>
+                    </div>
+                    
+                    <div class="summary-point">
+                        <div class="summary-point-icon">🎯</div>
+                        <div class="summary-point-title">確実な成果</div>
+                        <div class="summary-point-desc">検証プロセスによる品質保証</div>
+                    </div>
+                    
+                    <div class="summary-point">
+                        <div class="summary-point-icon">💡</div>
+                        <div class="summary-point-title">学習効果</div>
+                        <div class="summary-point-desc">習慣化による技術力向上</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

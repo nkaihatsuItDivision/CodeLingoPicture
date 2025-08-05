@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git Reset の3つのモード説明図</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 1000px;
+            width: 100%;
+        }
+        
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .reset-modes {
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .mode-card {
+            flex: 1;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 3px solid transparent;
+        }
+        
+        .mode-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        
+        .mode-card.soft {
+            border-color: #28a745;
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+        }
+        
+        .mode-card.mixed {
+            border-color: #ffc107;
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+        }
+        
+        .mode-card.hard {
+            border-color: #dc3545;
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+        }
+        
+        .mode-header {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .mode-command {
+            background: #343a40;
+            color: #ffc107;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        
+        .mode-description {
+            font-size: 14px;
+            color: #495057;
+            margin: 10px 0;
+            text-align: left;
+        }
+        
+        .safety-level {
+            margin-top: 15px;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .safety-safe {
+            background: #28a745;
+        }
+        
+        .safety-caution {
+            background: #ffc107;
+            color: #343a40;
+        }
+        
+        .safety-danger {
+            background: #dc3545;
+        }
+        
+        .example-section {
+            background: #f1f3f4;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+        
+        .example-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .states-diagram {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+        }
+        
+        .state-box {
+            background: #4285f4;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            min-width: 120px;
+        }
+        
+        .arrow {
+            font-size: 24px;
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        .comparison-table {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .table-header {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .table-row {
+            display: flex;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .table-cell {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .table-cell:first-child {
+            background: #f8f9fa;
+            font-weight: bold;
+            text-align: left;
+        }
+        
+        .check {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .cross {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .warning-icon {
+            font-size: 30px;
+            color: #ffc107;
+            margin-bottom: 10px;
+        }
+        
+        .warning-text {
+            color: #856404;
+            font-size: 16px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Git Reset の3つのモード</div>
+        
+        <div class="reset-modes">
+            <div class="mode-card soft">
+                <div class="mode-header">--soft</div>
+                <div class="mode-command">git reset --soft HEAD~1</div>
+                <div class="mode-description">
+                    ✅ コミットのみ取り消し<br>
+                    ✅ ファイル内容は保持<br>
+                    ✅ ステージング状態も保持<br>
+                    ✅ すぐに再コミット可能
+                </div>
+                <div class="safety-level safety-safe">最も安全</div>
+            </div>
+            
+            <div class="mode-card mixed">
+                <div class="mode-header">--mixed</div>
+                <div class="mode-command">git reset HEAD~1</div>
+                <div class="mode-description">
+                    ⚠️ コミットを取り消し<br>
+                    ⚠️ ステージングも解除<br>
+                    ✅ ファイル内容は保持<br>
+                    ⚠️ git add が必要
+                </div>
+                <div class="safety-level safety-caution">注意が必要</div>
+            </div>
+            
+            <div class="mode-card hard">
+                <div class="mode-header">--hard</div>
+                <div class="mode-command">git reset --hard HEAD~1</div>
+                <div class="mode-description">
+                    ❌ コミットを取り消し<br>
+                    ❌ ステージングも解除<br>
+                    ❌ ファイル内容も削除<br>
+                    ❌ 変更が完全に消去
+                </div>
+                <div class="safety-level safety-danger">危険</div>
+            </div>
+        </div>
+        
+        <div class="example-section">
+            <div class="example-title">各モードの動作比較</div>
+            
+            <div class="states-diagram">
+                <div class="state-box">コミット履歴</div>
+                <div class="arrow">→</div>
+                <div class="state-box">ステージング</div>
+                <div class="arrow">→</div>
+                <div class="state-box">ワーキング</div>
+            </div>
+            
+            <div class="comparison-table">
+                <div class="table-header">影響範囲の比較</div>
+                <div class="table-row">
+                    <div class="table-cell">リセットモード</div>
+                    <div class="table-cell">コミット履歴</div>
+                    <div class="table-cell">ステージング</div>
+                    <div class="table-cell">ワーキング</div>
+                </div>
+                <div class="table-row">
+                    <div class="table-cell">--soft</div>
+                    <div class="table-cell cross">❌ 削除</div>
+                    <div class="table-cell check">✅ 保持</div>
+                    <div class="table-cell check">✅ 保持</div>
+                </div>
+                <div class="table-row">
+                    <div class="table-cell">--mixed</div>
+                    <div class="table-cell cross">❌ 削除</div>
+                    <div class="table-cell cross">❌ 削除</div>
+                    <div class="table-cell check">✅ 保持</div>
+                </div>
+                <div class="table-row">
+                    <div class="table-cell">--hard</div>
+                    <div class="table-cell cross">❌ 削除</div>
+                    <div class="table-cell cross">❌ 削除</div>
+                    <div class="table-cell cross">❌ 削除</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="warning-box">
+            <div class="warning-icon">⚠️</div>
+            <div class="warning-text">
+                --hard は変更を完全に削除します！<br>
+                事前にバックアップやreflogで復旧可能か確認してください
+            </div>
+        </div>
+    </div>
+</body>
+</html>

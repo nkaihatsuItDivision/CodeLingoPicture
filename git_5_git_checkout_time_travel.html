@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git Checkout タイムトラベル</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            margin: 10px 0 0 0;
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .timeline-container {
+            background: #f8f9fa;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 30px 0;
+            overflow-x: auto;
+        }
+        
+        .timeline {
+            display: flex;
+            align-items: center;
+            gap: 60px;
+            min-width: 800px;
+            position: relative;
+            padding: 20px 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #3498db, #e74c3c);
+            border-radius: 2px;
+            z-index: 1;
+        }
+        
+        .commit-node {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .commit-node:hover {
+            transform: scale(1.1);
+        }
+        
+        .commit-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px auto;
+            font-size: 1.8em;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            border: 4px solid white;
+        }
+        
+        .commit-past {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+        }
+        
+        .commit-current {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            animation: pulse 2s infinite;
+        }
+        
+        .commit-info {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            min-width: 180px;
+        }
+        
+        .commit-hash {
+            color: #f39c12;
+            font-weight: bold;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+        }
+        
+        .commit-message {
+            color: #2c3e50;
+            margin: 8px 0;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+        
+        .commit-date {
+            color: #7f8c8d;
+            font-size: 0.8em;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 8px 20px rgba(231, 76, 60, 0.3); }
+            50% { box-shadow: 0 8px 30px rgba(231, 76, 60, 0.6); }
+            100% { box-shadow: 0 8px 20px rgba(231, 76, 60, 0.3); }
+        }
+        
+        .travel-demo {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin: 40px 0;
+        }
+        
+        .demo-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+        
+        .demo-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #3498db;
+        }
+        
+        .demo-icon {
+            font-size: 2em;
+        }
+        
+        .demo-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .terminal {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 25px;
+            border-radius: 10px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 20px 0;
+            position: relative;
+            overflow-x: auto;
+        }
+        
+        .terminal::before {
+            content: "Terminal";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #333;
+            color: #fff;
+            padding: 8px 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .terminal-content {
+            margin-top: 35px;
+        }
+        
+        .prompt {
+            color: #569cd6;
+        }
+        
+        .command {
+            color: #9cdcfe;
+            font-weight: bold;
+        }
+        
+        .output {
+            color: #d4d4d4;
+            margin: 10px 0;
+        }
+        
+        .warning {
+            color: #f39c12;
+        }
+        
+        .success {
+            color: #98c379;
+        }
+        
+        .error {
+            color: #e06c75;
+        }
+        
+        .detached-head-box {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .detached-head-box::before {
+            content: '⚠️';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 3em;
+            opacity: 0.3;
+        }
+        
+        .detached-head-box h3 {
+            margin: 0 0 20px 0;
+            font-size: 1.5em;
+        }
+        
+        .file-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .file-state {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .file-state h4 {
+            margin: 0 0 15px 0;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            color: white;
+        }
+        
+        .past-state h4 {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+        }
+        
+        .current-state h4 {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+        
+        .file-list {
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+            line-height: 1.8;
+        }
+        
+        .file-present {
+            color: #27ae60;
+        }
+        
+        .file-absent {
+            color: #95a5a6;
+            text-decoration: line-through;
+        }
+        
+        .navigation-guide {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+        
+        .navigation-guide h3 {
+            margin: 0 0 20px 0;
+            font-size: 1.5em;
+            text-align: center;
+        }
+        
+        .nav-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .nav-step {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav-step-number {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .nav-step-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .nav-step-command {
+            font-family: 'Consolas', 'Monaco', monospace;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+        
+        @media (max-width: 1024px) {
+            .travel-demo {
+                grid-template-columns: 1fr;
+            }
+            
+            .file-comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .timeline {
+                gap: 40px;
+            }
+            
+            .commit-circle {
+                width: 60px;
+                height: 60px;
+                font-size: 1.4em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⏰ Git Checkout タイムトラベル</h1>
+            <p>過去のバージョンへの安全な移動技術</p>
+        </div>
+        
+        <div class="content">
+            <div class="timeline-container">
+                <h3 style="text-align: center; margin-bottom: 30px; color: #2c3e50; font-size: 1.4em;">📅 コミット履歴のタイムライン</h3>
+                <div class="timeline">
+                    <div class="commit-node">
+                        <div class="commit-circle commit-past">📚</div>
+                        <div class="commit-info">
+                            <div class="commit-hash">b1c2d3e</div>
+                            <div class="commit-message">Week 5システム<br>Git管理開始</div>
+                            <div class="commit-date">Aug 5 13:45</div>
+                        </div>
+                    </div>
+                    
+                    <div class="commit-node">
+                        <div class="commit-circle commit-current">🎯</div>
+                        <div class="commit-info">
+                            <div class="commit-hash">a7b8c9d</div>
+                            <div class="commit-message">機能拡張完了<br>統合管理システム</div>
+                            <div class="commit-date">Aug 5 14:30</div>
+                        </div>
+                    </div>
+                </div>
+                <p style="text-align: center; color: #7f8c8d; margin-top: 20px;">
+                    🎯 現在位置 (HEAD) → ⏰ タイムトラベル可能
+                </p>
+            </div>
+
+            <div class="travel-demo">
+                <div class="demo-section">
+                    <div class="demo-header">
+                        <div class="demo-icon">🚀</div>
+                        <div class="demo-title">過去への移動</div>
+                    </div>
+                    <div class="terminal">
+                        <div class="terminal-content">
+                            <div><span class="prompt">$</span> <span class="command">git checkout b1c2d3e</span></div>
+                            <div class="output warning">
+                                Note: switching to 'b1c2d3e'.<br><br>
+                                You are in 'detached HEAD' state. You can look around, make experimental<br>
+                                changes and commit them, and you can discard any commits you make in this<br>
+                                state without impacting any branches by switching back to a branch.<br><br>
+                                HEAD is now at b1c2d3e Week 5システムのGit管理開始
+                            </div>
+                        </div>
+                    </div>
+                    <p><strong>✅ タイムトラベル成功！</strong> Week 5システムの初期状態に移動しました。</p>
+                </div>
+
+                <div class="demo-section">
+                    <div class="demo-header">
+                        <div class="demo-icon">🏠</div>
+                        <div class="demo-title">現在への復帰</div>
+                    </div>
+                    <div class="terminal">
+                        <div class="terminal-content">
+                            <div><span class="prompt">$</span> <span class="command">git checkout main</span></div>
+                            <div class="output success">
+                                Previous HEAD position was b1c2d3e Week 5システムのGit管理開始<br>
+                                Switched to branch 'main'
+                            </div>
+                            <div><span class="prompt">$</span> <span class="command">git switch -</span></div>
+                            <div class="output success">
+                                Switched to branch 'main'
+                            </div>
+                        </div>
+                    </div>
+                    <p><strong>✅ 安全に復帰！</strong> 最新の状態に戻りました。</p>
+                </div>
+            </div>
+
+            <div class="detached-head-box">
+                <h3>⚠️ Detached HEAD状態の理解</h3>
+                <p><strong>Detached HEAD</strong>は「分離したHEAD」という意味で、過去のコミットを安全に確認するための特別な状態です。</p>
+                <ul style="margin: 15px 0; line-height: 1.8;">
+                    <li>✅ <strong>過去の状態を安全に確認可能</strong></li>
+                    <li>✅ <strong>ファイルの内容を確認できる</strong></li>
+                    <li>✅ <strong>実験的な変更も可能</strong></li>
+                    <li>⚠️ <strong>この状態でのコミットは通常は保持されない</strong></li>
+                </ul>
+            </div>
+
+            <div class="file-comparison">
+                <div class="file-state">
+                    <h4 class="past-state">📚 過去の状態 (b1c2d3e)</h4>
+                    <div class="file-list">
+                        <div class="file-present">✅ Student.java</div>
+                        <div class="file-present">✅ StudentManagementSystem.java</div>
+                        <div class="file-present">✅ Person.java</div>
+                        <div class="file-absent">❌ SystemManager.java</div>
+                        <div class="file-absent">❌ FileHandler.java</div>
+                        <div class="file-absent">❌ README.md</div>
+                    </div>
+                </div>
+
+                <div class="file-state">
+                    <h4 class="current-state">🎯 現在の状態 (a7b8c9d)</h4>
+                    <div class="file-list">
+                        <div class="file-present">✅ Student.java</div>
+                        <div class="file-present">✅ StudentManagementSystem.java</div>
+                        <div class="file-present">✅ Person.java</div>
+                        <div class="file-present">✅ SystemManager.java</div>
+                        <div class="file-present">✅ FileHandler.java</div>
+                        <div class="file-present">✅ README.md</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="navigation-guide">
+                <h3>🧭 安全なタイムトラベルガイド</h3>
+                <div class="nav-steps">
+                    <div class="nav-step">
+                        <div class="nav-step-number">1</div>
+                        <div class="nav-step-title">状態確認</div>
+                        <div class="nav-step-command">git status</div>
+                    </div>
+                    
+                    <div class="nav-step">
+                        <div class="nav-step-number">2</div>
+                        <div class="nav-step-title">履歴確認</div>
+                        <div class="nav-step-command">git log --oneline</div>
+                    </div>
+                    
+                    <div class="nav-step">
+                        <div class="nav-step-number">3</div>
+                        <div class="nav-step-title">過去に移動</div>
+                        <div class="nav-step-command">git checkout &lt;commit&gt;</div>
+                    </div>
+                    
+                    <div class="nav-step">
+                        <div class="nav-step-number">4</div>
+                        <div class="nav-step-title">確認・実験</div>
+                        <div class="nav-step-command">ls -la<br>cat ファイル名</div>
+                    </div>
+                    
+                    <div class="nav-step">
+                        <div class="nav-step-number">5</div>
+                        <div class="nav-step-title">現在に復帰</div>
+                        <div class="nav-step-command">git checkout main</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: #f8f9fa; padding: 30px; border-radius: 15px; margin: 30px 0; text-align: center;">
+                <h3 style="color: #2c3e50; margin-bottom: 20px;">🎯 タイムトラベル習得の価値</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px;">
+                    <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                        <h4 style="color: #3498db; margin-bottom: 10px;">🔍 問題調査</h4>
+                        <p style="margin: 0; color: #555;">バグ発生前の正常な状態を確認し、問題の原因を特定</p>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                        <h4 style="color: #e74c3c; margin-bottom: 10px;">📋 実装参照</h4>
+                        <p style="margin: 0; color: #555;">過去の実装方法を確認し、新機能開発の参考にする</p>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                        <h4 style="color: #f39c12; margin-bottom: 10px;">🧪 安全な実験</h4>
+                        <p style="margin: 0; color: #555;">過去の状態で実験的な変更を試し、影響を確認</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
