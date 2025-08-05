@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>複合変更管理 - Git status の活用術</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', 'Hiragino Sans', 'Yu Gothic', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            max-width: 1400px;
+            width: 100%;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            font-size: 16px;
+        }
+        
+        .scenario-box {
+            background: #e8f4fd;
+            border: 2px solid #3498db;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .scenario-box h3 {
+            color: #2980b9;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .scenario-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        
+        .scenario-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .scenario-item h4 {
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        .scenario-item p {
+            color: #34495e;
+            font-size: 14px;
+        }
+        
+        .change-demo {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .before-after {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+        }
+        
+        .before-after h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        .status-display {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 10px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .command {
+            color: #f39c12;
+            font-weight: bold;
+        }
+        
+        .section-title {
+            color: #3498db;
+            font-weight: bold;
+            margin: 10px 0 5px 0;
+        }
+        
+        .modified {
+            color: #e74c3c;
+        }
+        
+        .untracked {
+            color: #f39c12;
+        }
+        
+        .staged {
+            color: #2ecc71;
+        }
+        
+        .renamed {
+            color: #9b59b6;
+        }
+        
+        .new-file {
+            color: #3498db;
+        }
+        
+        .step-process {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        
+        .step-title {
+            color: #2c3e50;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .step-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .step-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            border: 2px solid #dee2e6;
+            transition: all 0.3s ease;
+        }
+        
+        .step-item:hover {
+            border-color: #667eea;
+            transform: translateY(-3px);
+        }
+        
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .step-description {
+            color: #34495e;
+            font-size: 14px;
+        }
+        
+        .final-status {
+            background: #e8f5e8;
+            border: 2px solid #27ae60;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+        
+        .final-status h3 {
+            color: #27ae60;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .commit-preview {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 10px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+        
+        .highlight-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .highlight-title {
+            color: #856404;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .success-message {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .success-message h3 {
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 複合変更管理</h1>
+            <p>修正・追加・削除・リネームを組み合わせた実践的な変更管理</p>
+        </div>
+        
+        <div class="scenario-box">
+            <h3>📋 シナリオ設定：システム拡張の複合開発</h3>
+            <div class="scenario-list">
+                <div class="scenario-item">
+                    <h4>1. 既存ファイル修正</h4>
+                    <p>Person.javaにメソッド追加</p>
+                </div>
+                <div class="scenario-item">
+                    <h4>2. 新規ファイル作成</h4>
+                    <p>StudentUtils.javaユーティリティクラス</p>
+                </div>
+                <div class="scenario-item">
+                    <h4>3. ファイル名変更</h4>
+                    <p>AuditStudentTest.java → AuditStudentDemo.java</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="change-demo">
+            <div class="before-after">
+                <h3>🔄 変更実行前</h3>
+                <div class="status-display">
+                    <div class="command">$ git status</div>
+                    <div style="margin-top: 10px;">
+                        On branch main<br>
+                        <span class="staged">nothing to commit, working tree clean</span>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 15px; color: #27ae60;">
+                    ✨ クリーンな状態
+                </div>
+            </div>
+            
+            <div class="before-after">
+                <h3>⚡ 複合変更実行後</h3>
+                <div class="status-display">
+                    <div class="command">$ git status</div>
+                    <div style="margin-top: 10px;">
+                        On branch main<br><br>
+                        
+                        <div class="section-title">Changes to be committed:</div>
+                        <span class="renamed">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;renamed:&nbsp;&nbsp;&nbsp;&nbsp;AuditStudentTest.java → AuditStudentDemo.java</span><br><br>
+                        
+                        <div class="section-title">Changes not staged for commit:</div>
+                        <span class="modified">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;modified:&nbsp;&nbsp;&nbsp;Person.java</span><br><br>
+                        
+                        <div class="section-title">Untracked files:</div>
+                        <span class="untracked">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;StudentUtils.java</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="step-process">
+            <div class="step-title">📊 git status の詳細解読</div>
+            <div class="step-grid">
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <h4 style="color: #2ecc71;">Changes to be committed</h4>
+                    <div class="step-description">
+                        ステージング済みの変更<br>
+                        <strong>renamed:</strong> ファイル名変更が検出
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">2</div>
+                    <h4 style="color: #e74c3c;">Changes not staged</h4>
+                    <div class="step-description">
+                        ステージングされていない変更<br>
+                        <strong>modified:</strong> 既存ファイルの修正
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">3</div>
+                    <h4 style="color: #f39c12;">Untracked files</h4>
+                    <div class="step-description">
+                        管理されていない新規ファイル<br>
+                        新規作成されたファイル
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="step-process">
+            <div class="step-title">⚙️ 段階的ステージング処理</div>
+            <div class="status-display">
+                <div class="command"># Person.javaの変更を確認</div>
+                <div class="command">$ git diff Person.java</div><br>
+                
+                <div class="command"># Person.javaをステージング</div>
+                <div class="command">$ git add Person.java</div><br>
+                
+                <div class="command"># StudentUtils.javaもステージング</div>
+                <div class="command">$ git add StudentUtils.java</div><br>
+                
+                <div class="command"># 最終状態確認</div>
+                <div class="command">$ git status</div>
+            </div>
+        </div>
+        
+        <div class="final-status">
+            <h3>📋 全変更ステージング後の状態</h3>
+            <div class="commit-preview">
+                <div class="command">$ git status</div>
+                <div style="margin-top: 10px;">
+                    On branch main<br>
+                    <div class="section-title">Changes to be committed:</div>
+                    <span class="staged">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;modified:&nbsp;&nbsp;&nbsp;Person.java</span><br>
+                    <span class="renamed">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;renamed:&nbsp;&nbsp;&nbsp;&nbsp;AuditStudentTest.java → AuditStudentDemo.java</span><br>
+                    <span class="new-file">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new file:&nbsp;&nbsp;&nbsp;StudentUtils.java</span>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <div class="highlight-title">✨ 重要なポイント</div>
+                • <strong>modified:</strong> 既存ファイルの修正<br>
+                • <strong>renamed:</strong> ファイル名の変更<br>
+                • <strong>new file:</strong> 新規ファイルの追加<br>
+                <br>
+                すべて異なる種類の変更が1つのコミットにまとめられます
+            </div>
+        </div>
+        
+        <div class="step-process">
+            <div class="step-title">💾 複合変更のコミット</div>
+            <div class="commit-preview">
+                <div class="command">$ git commit -m "システム拡張: ユーティリティ機能とデモファイル整理
+
+- Person.java: 短縮情報表示とメールドメイン取得機能を追加
+- StudentUtils.java: 学生管理用ユーティリティクラスを新規作成
+- AuditStudentTest.java → AuditStudentDemo.java: ファイル名変更
+
+Week 6レッスン4: 複合変更管理の実践完了"</div>
+                
+                <div style="margin-top: 15px; color: #2ecc71;">
+                    [main p4q5r6s] システム拡張: ユーティリティ機能とデモファイル整理<br>
+                    &nbsp;3 files changed, 67 insertions(+), 5 deletions(-)<br>
+                    &nbsp;rename AuditStudentTest.java => AuditStudentDemo.java (95%)<br>
+                    &nbsp;create mode 100644 StudentUtils.java
+                </div>
+            </div>
+        </div>
+        
+        <div class="success-message">
+            <h3>🎊 複合変更の管理が完了しました！</h3>
+            <p>修正・追加・削除・リネームを組み合わせた実践的な変更管理をマスターしました。<br>
+            git status を活用した段階的なステージングで、複雑な変更も安全に管理できます！</p>
+        </div>
+    </div>
+</body>
+</html>

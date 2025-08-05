@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>前回の成果確認 - Git基本操作の習得状況</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', 'Hiragino Sans', 'Yu Gothic', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            width: 100%;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            font-size: 16px;
+        }
+        
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .achievement-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 5px solid #27ae60;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .achievement-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .achievement-card h3 {
+            color: #2c3e50;
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .checkmark {
+            background: #27ae60;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+        
+        .achievement-list {
+            list-style: none;
+        }
+        
+        .achievement-list li {
+            color: #34495e;
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .achievement-list li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #3498db;
+            font-weight: bold;
+        }
+        
+        .status-section {
+            background: #e8f5e8;
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid #27ae60;
+        }
+        
+        .status-title {
+            color: #27ae60;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .command-demo {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 10px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+        }
+        
+        .command-line {
+            margin: 8px 0;
+        }
+        
+        .prompt {
+            color: #3498db;
+        }
+        
+        .command {
+            color: #f39c12;
+        }
+        
+        .output {
+            color: #2ecc71;
+            margin-left: 20px;
+        }
+        
+        .next-step {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .next-step h3 {
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+        
+        .next-step p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 レッスン6.3の成果確認</h1>
+            <p>Git基本操作の習得状況とプロジェクト状態の確認</p>
+        </div>
+        
+        <div class="achievement-grid">
+            <div class="achievement-card">
+                <h3><span class="checkmark">✓</span>Git基本操作の習得</h3>
+                <ul class="achievement-list">
+                    <li><strong>git init</strong>: Week 5システムをGit管理下に配置</li>
+                    <li><strong>git add</strong>: ファイルをステージング領域に追加</li>
+                    <li><strong>git commit</strong>: 変更を確定してリポジトリに保存</li>
+                    <li><strong>.gitignore</strong>: 管理対象外ファイルの指定</li>
+                </ul>
+            </div>
+            
+            <div class="achievement-card">
+                <h3><span class="checkmark">✓</span>プロジェクト文書化</h3>
+                <ul class="achievement-list">
+                    <li><strong>README.md</strong>: プロジェクト説明文書の作成</li>
+                    <li><strong>システム概要</strong>: 機能説明の記述</li>
+                    <li><strong>使用方法</strong>: 実行手順の明記</li>
+                    <li><strong>開発者情報</strong>: 責任者情報の記載</li>
+                </ul>
+            </div>
+            
+            <div class="achievement-card">
+                <h3><span class="checkmark">✓</span>コミット履歴の構築</h3>
+                <ul class="achievement-list">
+                    <li><strong>初回コミット</strong>: プロジェクト開始の記録</li>
+                    <li><strong>第2回コミット</strong>: システム全体の追加</li>
+                    <li><strong>第3回コミット</strong>: READMEとgitignore追加</li>
+                    <li><strong>適切なメッセージ</strong>: 変更内容の明確な記述</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="status-section">
+            <div class="status-title">📋 現在のプロジェクト状態確認</div>
+            
+            <div class="command-demo">
+                <div class="command-line">
+                    <span class="prompt">$</span> <span class="command">git log --oneline</span>
+                </div>
+                <div class="output">
+                    a3f2b1c (HEAD -> main) 第3回目コミット: READMEとgitignore追加<br>
+                    b2e1a3d 第2回目コミット: システム全体を追加<br>
+                    c1d4e2f 初回コミット: プロジェクト開始
+                </div>
+            </div>
+            
+            <div class="command-demo">
+                <div class="command-line">
+                    <span class="prompt">$</span> <span class="command">git status</span>
+                </div>
+                <div class="output">
+                    On branch main<br>
+                    nothing to commit, working tree clean
+                </div>
+            </div>
+            
+            <p style="text-align: center; margin-top: 20px; color: #27ae60; font-weight: bold;">
+                ✨ 完璧なクリーン状態！レッスン6.4の開始準備完了！
+            </p>
+        </div>
+        
+        <div class="next-step">
+            <h3>🚀 次のステップ</h3>
+            <p>Git基本操作の基盤が確立されました。これから実際の開発現場で最も重要な変更管理技術を習得していきましょう！</p>
+        </div>
+    </div>
+</body>
+</html>
