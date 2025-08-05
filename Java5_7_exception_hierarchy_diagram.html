@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>例外階層の継承関係図</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .diagram-container {
+            position: relative;
+            width: 100%;
+            height: 700px;
+            margin: 20px 0;
+            background: #fafafa;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            overflow: hidden;
+        }
+        
+        .exception-class {
+            position: absolute;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 2px solid;
+            font-weight: bold;
+            text-align: center;
+            width: 200px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .exception-class:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* 第1階層：基底例外クラス */
+        .base-exception {
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            border-color: #2b77cb;
+            color: white;
+            top: 30px;
+            left: calc(50% - 100px);
+        }
+        
+        /* 第2階層：分類例外クラス */
+        .category-exception {
+            background: linear-gradient(135deg, #38b2ac, #319795);
+            border-color: #2c7a7b;
+            color: white;
+            top: 150px;
+        }
+        
+        .data-exception {
+            left: calc(25% - 100px);
+        }
+        
+        .search-exception {
+            left: calc(75% - 100px);
+        }
+        
+        /* 第3階層：具象例外クラス */
+        .concrete-exception {
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+            border-color: #c05621;
+            color: white;
+            top: 300px;
+        }
+        
+        .duplicate-exception {
+            left: calc(16.67% - 100px);
+        }
+        
+        .invalid-data-exception {
+            left: calc(50% - 100px);
+        }
+        
+        .not-found-exception {
+            left: calc(83.33% - 100px);
+        }
+        
+        /* 第4階層：特化例外クラス */
+        .validation-exception {
+            background: linear-gradient(135deg, #9f7aea, #805ad5);
+            border-color: #6b46c1;
+            color: white;
+            top: 480px;
+            left: calc(50% - 100px);
+        }
+        
+        .class-name {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .class-details {
+            font-size: 11px;
+            font-weight: normal;
+            opacity: 0.9;
+            line-height: 1.3;
+        }
+        
+        .inheritance-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .exception-class {
+            z-index: 2;
+        }
+        
+        .legend {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .legend h3 {
+            margin: 0 0 15px 0;
+            color: #2d3748;
+            font-size: 18px;
+        }
+        
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+        }
+        
+        .legend-base { background: linear-gradient(135deg, #4299e1, #3182ce); }
+        .legend-category { background: linear-gradient(135deg, #38b2ac, #319795); }
+        .legend-concrete { background: linear-gradient(135deg, #ed8936, #dd6b20); }
+        .legend-validation { background: linear-gradient(135deg, #9f7aea, #805ad5); }
+        
+        .code-example {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin: 20px 0;
+            white-space: pre-line;
+            overflow-x: auto;
+        }
+        
+        .keyword { color: #81c784; }
+        .class-name-code { color: #64b5f6; }
+        .comment { color: #a0aec0; }
+        .string { color: #ffb74d; }
+        
+        .benefits-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px;
+        }
+        
+        .benefits-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .benefits-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .benefits-list li {
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            border-left: 4px solid #ffd700;
+        }
+        
+        .hierarchy-level {
+            position: absolute;
+            left: 10px;
+            font-size: 12px;
+            color: #666;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        
+        .level-1 { top: 45px; }
+        .level-2 { top: 165px; }
+        .level-3 { top: 315px; }
+        .level-4 { top: 495px; }
+        
+        @media (max-width: 1024px) {
+            .diagram-container {
+                height: 650px;
+            }
+            
+            .exception-class {
+                width: 180px;
+                padding: 10px 12px;
+            }
+            
+            .class-name {
+                font-size: 13px;
+            }
+            
+            .class-details {
+                font-size: 10px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+            
+            .diagram-container {
+                height: 600px;
+            }
+            
+            .exception-class {
+                width: 160px;
+                padding: 8px 10px;
+            }
+            
+            .class-name {
+                font-size: 12px;
+            }
+            
+            .class-details {
+                font-size: 9px;
+            }
+            
+            .legend-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>例外階層の継承関係図</h1>
+        </div>
+        
+        <div class="content">
+            <div class="diagram-container">
+                <!-- 階層レベル表示 -->
+                <div class="hierarchy-level level-1">第1階層：基底</div>
+                <div class="hierarchy-level level-2">第2階層：分類</div>
+                <div class="hierarchy-level level-3">第3階層：具象</div>
+                <div class="hierarchy-level level-4">第4階層：特化</div>
+                
+                <!-- SVGで継承線を描画 -->
+                <svg class="inheritance-svg">
+                    <!-- 第1階層から第2階層への線 -->
+                    <!-- StudentManagementException → StudentDataException -->
+                    <line x1="50%" y1="95" x2="25%" y2="140" 
+                          stroke="#4a5568" stroke-width="3" 
+                          marker-end="url(#arrowhead)" />
+                    
+                    <!-- StudentManagementException → StudentSearchException -->
+                    <line x1="50%" y1="95" x2="75%" y2="140" 
+                          stroke="#4a5568" stroke-width="3" 
+                          marker-end="url(#arrowhead)" />
+                    
+                    <!-- 第2階層から第3階層への線 -->
+                    <!-- StudentDataException → DuplicateStudentException -->
+                    <line x1="25%" y1="215" x2="16.67%" y2="290" 
+                          stroke="#4a5568" stroke-width="2" 
+                          marker-end="url(#arrowhead)" />
+                    
+                    <!-- StudentDataException → InvalidStudentDataException -->
+                    <line x1="25%" y1="215" x2="50%" y2="290" 
+                          stroke="#4a5568" stroke-width="2" 
+                          marker-end="url(#arrowhead)" />
+                    
+                    <!-- StudentSearchException → StudentNotFoundException -->
+                    <line x1="75%" y1="215" x2="83.33%" y2="290" 
+                          stroke="#4a5568" stroke-width="2" 
+                          marker-end="url(#arrowhead)" />
+                    
+                    <!-- 第3階層から第4階層への線 -->
+                    <!-- InvalidStudentDataException → InvalidGpaException -->
+                    <line x1="50%" y1="365" x2="50%" y2="470" 
+                          stroke="#4a5568" stroke-width="2" 
+                          marker-end="url(#arrowhead)" />
+                    
+                    <!-- 矢印の定義 -->
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7" 
+                                refX="9" refY="3.5" orient="auto">
+                            <polygon points="0 0, 10 3.5, 0 7" fill="#4a5568" />
+                        </marker>
+                    </defs>
+                </svg>
+                
+                <!-- 第1階層：基底例外クラス -->
+                <div class="exception-class base-exception">
+                    <div class="class-name">StudentManagementException</div>
+                    <div class="class-details">
+                        • 基底例外クラス（abstract）<br>
+                        • エラーコード・タイムスタンプ保持<br>
+                        • 全学生管理例外の親クラス
+                    </div>
+                </div>
+                
+                <!-- 第2階層：分類例外クラス -->
+                <div class="exception-class category-exception data-exception">
+                    <div class="class-name">StudentDataException</div>
+                    <div class="class-details">
+                        • データ関連例外の分類<br>
+                        • エラーコード: "DATA_ERROR"<br>
+                        • 追加・更新・検証エラー
+                    </div>
+                </div>
+                
+                <div class="exception-class category-exception search-exception">
+                    <div class="class-name">StudentSearchException</div>
+                    <div class="class-details">
+                        • 検索関連例外の分類<br>
+                        • エラーコード: "SEARCH_ERROR"<br>
+                        • 検索・取得エラー
+                    </div>
+                </div>
+                
+                <!-- 第3階層：具象例外クラス -->
+                <div class="exception-class concrete-exception duplicate-exception">
+                    <div class="class-name">DuplicateStudentException</div>
+                    <div class="class-details">
+                        • 重複学生例外<br>
+                        • duplicateId フィールド<br>
+                        • 学生ID重複時にスロー
+                    </div>
+                </div>
+                
+                <div class="exception-class concrete-exception invalid-data-exception">
+                    <div class="class-name">InvalidStudentDataException</div>
+                    <div class="class-details">
+                        • 無効データ例外<br>
+                        • fieldName, invalidValue 保持<br>
+                        • データ検証失敗時にスロー
+                    </div>
+                </div>
+                
+                <div class="exception-class concrete-exception not-found-exception">
+                    <div class="class-name">StudentNotFoundException</div>
+                    <div class="class-details">
+                        • 学生未発見例外<br>
+                        • studentId フィールド<br>
+                        • 該当学生不存在時にスロー
+                    </div>
+                </div>
+                
+                <!-- 第4階層：特化例外クラス -->
+                <div class="exception-class validation-exception">
+                    <div class="class-name">InvalidGpaException</div>
+                    <div class="class-details">
+                        • GPA検証特化例外<br>
+                        • invalidGpa フィールド<br>
+                        • GPA範囲外時にスロー<br>
+                        • (0.0-4.0 範囲チェック)
+                    </div>
+                </div>
+            </div>
+            
+            <div class="legend">
+                <h3>例外クラスの分類と役割</h3>
+                <div class="legend-grid">
+                    <div class="legend-item">
+                        <div class="legend-color legend-base"></div>
+                        <span><strong>基底例外:</strong> 全例外の親クラス（共通機能提供）</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color legend-category"></div>
+                        <span><strong>分類例外:</strong> 機能別の中間クラス（エラー分類）</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color legend-concrete"></div>
+                        <span><strong>具象例外:</strong> 具体的なエラー（実際にスローされる）</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color legend-validation"></div>
+                        <span><strong>特化例外:</strong> データ検証特化（詳細な検証ロジック）</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="code-example">
+<span class="comment">// 例外階層を活用したキャッチ処理（具体的→一般的の順序）</span>
+<span class="keyword">try</span> {
+    studentService.addStudent(student);
+    
+} <span class="keyword">catch</span> (<span class="class-name-code">InvalidGpaException</span> e) {
+    <span class="comment">// 最も具体的：GPA検証エラーの専用処理</span>
+    System.err.println(<span class="string">"GPA範囲エラー: "</span> + e.getInvalidGpa() + <span class="string">" (0.0-4.0で入力)"</span>);
+    
+} <span class="keyword">catch</span> (<span class="class-name-code">DuplicateStudentException</span> e) {
+    <span class="comment">// 具体的：重複エラーの専用処理</span>
+    System.err.println(<span class="string">"学生ID重複: "</span> + e.getDuplicateId() + <span class="string">" は既に存在します"</span>);
+    
+} <span class="keyword">catch</span> (<span class="class-name-code">InvalidStudentDataException</span> e) {
+    <span class="comment">// 具体的：データエラーの専用処理</span>
+    System.err.println(<span class="string">"データ検証エラー: "</span> + e.getFieldName() + <span class="string">" = "</span> + e.getInvalidValue());
+    
+} <span class="keyword">catch</span> (<span class="class-name-code">StudentDataException</span> e) {
+    <span class="comment">// 分類：データ関連の一般的なエラー処理</span>
+    System.err.println(<span class="string">"データ処理エラー[</span> + e.getErrorCode() + <span class="string">]: "</span> + e.getMessage());
+    
+} <span class="keyword">catch</span> (<span class="class-name-code">StudentSearchException</span> e) {
+    <span class="comment">// 分類：検索関連の一般的なエラー処理</span>
+    System.err.println(<span class="string">"検索エラー[</span> + e.getErrorCode() + <span class="string">]: "</span> + e.getMessage());
+    
+} <span class="keyword">catch</span> (<span class="class-name-code">StudentManagementException</span> e) {
+    <span class="comment">// 最も一般的：全ての学生管理エラーの最終処理</span>
+    System.err.println(<span class="string">"システムエラー[</span> + e.getErrorCode() + <span class="string">]: "</span> + e.getMessage());
+    e.printStackTrace(); <span class="comment">// デバッグ情報出力</span>
+}
+            </div>
+            
+            <div class="benefits-section">
+                <div class="benefits-title">例外階層設計の利点</div>
+                <ul class="benefits-list">
+                    <li><strong>段階的処理:</strong> 具体的→一般的な順序でキャッチ、適切なレベルで処理</li>
+                    <li><strong>コード再利用:</strong> 共通的な処理（エラーコード、ログ等）を基底クラスに集約</li>
+                    <li><strong>保守性向上:</strong> 新しい例外の追加時、既存コードへの影響を最小化</li>
+                    <li><strong>分類の明確化:</strong> エラーの種類を体系的に整理、責任範囲が明確</li>
+                    <li><strong>情報の構造化:</strong> 各例外レベルに応じた適切な詳細情報を付加</li>
+                    <li><strong>柔軟な処理選択:</strong> 処理要件に応じて適切な階層レベルでキャッチ可能</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
