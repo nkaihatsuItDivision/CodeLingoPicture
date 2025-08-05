@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>統合エラーハンドリングシステムアーキテクチャ図</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 2000px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 24px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .architecture-diagram {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 40px;
+            margin: 30px 0;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        /* メインレイヤー（縦積み、重なりなし） */
+        .layer-stack {
+            position: absolute;
+            left: 50px;
+            right: 350px;
+            top: 20px;
+        }
+        
+        .layer {
+            height: 80px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            padding: 15px 20px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+        }
+        
+        .layer:hover {
+            transform: translateX(5px);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+        }
+        
+        .controller-layer {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+        }
+        
+        .service-layer {
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+        }
+        
+        .repository-layer {
+            background: linear-gradient(135deg, #FF9800, #F57C00);
+        }
+        
+        .infrastructure-layer {
+            background: linear-gradient(135deg, #9C27B0, #7B1FA2);
+        }
+        
+        .layer-info {
+            flex: 1;
+        }
+        
+        .layer-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .layer-description {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        .layer-exception {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        
+        /* 横断的関心事（右側、重なりなし） */
+        .cross-cutting-concerns {
+            position: absolute;
+            right: 40px;
+            top: 20px;
+            width: 280px;
+        }
+        
+        .concern-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+        }
+        
+        .concern-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+        }
+        
+        .logging-card {
+            border-left-color: #e74c3c;
+        }
+        
+        .async-card {
+            border-left-color: #1abc9c;
+        }
+        
+        .performance-card {
+            border-left-color: #f39c12;
+        }
+        
+        .testing-card {
+            border-left-color: #8e44ad;
+        }
+        
+        .concern-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .concern-icon {
+            font-size: 16px;
+            margin-right: 8px;
+        }
+        
+        .concern-content {
+            font-size: 11px;
+            color: #7f8c8d;
+            line-height: 1.4;
+        }
+        
+        /* フロー矢印 */
+        .flow-arrows {
+            position: absolute;
+            left: 30px;
+            top: 30px;
+            width: 10px;
+            height: 480px;
+        }
+        
+        .arrow-down {
+            position: absolute;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 10px solid #3498db;
+        }
+        
+        .arrow1 { top: 90px; }
+        .arrow2 { top: 190px; }
+        .arrow3 { top: 290px; }
+        
+        .flow-line {
+            position: absolute;
+            left: 4px;
+            width: 2px;
+            height: 480px;
+            background: linear-gradient(180deg, #3498db 0%, #2980b9 100%);
+            border-radius: 1px;
+        }
+        
+        /* 接続線（SVG） */
+        .connections {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .connection-line {
+            stroke: #95a5a6;
+            stroke-width: 2;
+            stroke-dasharray: 3,3;
+            fill: none;
+            opacity: 0.6;
+        }
+        
+        .benefits-section {
+            margin-top: 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .benefit-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-left: 4px solid #3498db;
+            transition: all 0.3s ease;
+        }
+        
+        .benefit-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+        }
+        
+        .benefit-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .benefit-icon {
+            font-size: 16px;
+            margin-right: 8px;
+        }
+        
+        .benefit-description {
+            color: #7f8c8d;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .architecture-diagram {
+                height: 800px;
+                padding: 20px;
+            }
+            
+            .layer-stack {
+                left: 20px;
+                right: 20px;
+                top: 20px;
+            }
+            
+            .cross-cutting-concerns {
+                position: relative;
+                right: auto;
+                top: auto;
+                width: auto;
+                margin-top: 420px;
+            }
+            
+            .layer {
+                height: 60px;
+                margin-bottom: 15px;
+                padding: 10px 15px;
+            }
+            
+            .layer-title {
+                font-size: 14px;
+            }
+            
+            .layer-description {
+                font-size: 11px;
+            }
+            
+            .concern-card {
+                margin-bottom: 10px;
+                padding: 12px;
+            }
+            
+            .concern-title {
+                font-size: 13px;
+            }
+            
+            .concern-content {
+                font-size: 10px;
+            }
+            
+            .flow-arrows {
+                display: none;
+            }
+            
+            h1 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏗️ 統合エラーハンドリングシステム アーキテクチャ</h1>
+        
+        <div class="architecture-diagram">
+            <!-- SVG for connections -->
+            <svg class="connections" xmlns="http://www.w3.org/2000/svg">
+                <!-- 接続線 -->
+                <path class="connection-line" d="M 400 60 L 520 80" />
+                <path class="connection-line" d="M 400 160 L 520 160" />
+                <path class="connection-line" d="M 400 260 L 520 240" />
+                <path class="connection-line" d="M 400 360 L 520 320" />
+            </svg>
+            
+            <!-- フロー矢印 -->
+            <div class="flow-arrows">
+                <div class="flow-line"></div>
+                <div class="arrow-down arrow1"></div>
+                <div class="arrow-down arrow2"></div>
+                <div class="arrow-down arrow3"></div>
+            </div>
+            
+            <!-- メインレイヤー（左側） -->
+            <div class="layer-stack">
+                <div class="layer controller-layer">
+                    <div class="layer-info">
+                        <div class="layer-title">🎮 Controller Layer</div>
+                        <div class="layer-description">ユーザー向けエラーメッセージ・HTTPステータス制御</div>
+                    </div>
+                    <div class="layer-exception">User Messages</div>
+                </div>
+                
+                <div class="layer service-layer">
+                    <div class="layer-info">
+                        <div class="layer-title">⚙️ Service Layer</div>
+                        <div class="layer-description">例外変換・非同期処理・ビジネスロジック統合</div>
+                    </div>
+                    <div class="layer-exception">ServiceException</div>
+                </div>
+                
+                <div class="layer repository-layer">
+                    <div class="layer-info">
+                        <div class="layer-title">📊 Repository Layer</div>
+                        <div class="layer-description">技術例外→データ例外変換・接続プール管理</div>
+                    </div>
+                    <div class="layer-exception">DataAccessException</div>
+                </div>
+                
+                <div class="layer infrastructure-layer">
+                    <div class="layer-info">
+                        <div class="layer-title">🏛️ Infrastructure Layer</div>
+                        <div class="layer-description">データベース・外部API・ファイルシステム</div>
+                    </div>
+                    <div class="layer-exception">SQLException</div>
+                </div>
+            </div>
+            
+            <!-- 横断的関心事（右側） -->
+            <div class="cross-cutting-concerns">
+                <div class="concern-card logging-card">
+                    <div class="concern-title">
+                        <span class="concern-icon">📝</span>
+                        ログ統合システム
+                    </div>
+                    <div class="concern-content">
+                        • INFO/WARNING/SEVERE<br>
+                        • コンソール・ファイル出力<br>
+                        • 文脈情報・スタックトレース<br>
+                        • 運用監視・アラート連携
+                    </div>
+                </div>
+                
+                <div class="concern-card async-card">
+                    <div class="concern-title">
+                        <span class="concern-icon">⚡</span>
+                        非同期通知システム
+                    </div>
+                    <div class="concern-content">
+                        • CompletableFuture活用<br>
+                        • メール・SMS並行処理<br>
+                        • タイムアウト制御（3秒）<br>
+                        • 部分的失敗許容
+                    </div>
+                </div>
+                
+                <div class="concern-card performance-card">
+                    <div class="concern-title">
+                        <span class="concern-icon">📊</span>
+                        パフォーマンス監視
+                    </div>
+                    <div class="concern-content">
+                        • 事前チェックで例外回避<br>
+                        • 例外インスタンス再利用<br>
+                        • 処理時間・例外発生率<br>
+                        • メモリ・CPU使用率監視
+                    </div>
+                </div>
+                
+                <div class="concern-card testing-card">
+                    <div class="concern-title">
+                        <span class="concern-icon">🧪</span>
+                        包括的テスト
+                    </div>
+                    <div class="concern-content">
+                        • JUnit5テスト<br>
+                        • assertThrows()例外検証<br>
+                        • 全例外パス実行<br>
+                        • モック外部依存テスト
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="benefits-section">
+            <div class="benefit-card">
+                <div class="benefit-title">
+                    <span class="benefit-icon">🛡️</span>
+                    堅牢性の向上
+                </div>
+                <div class="benefit-description">
+                    レイヤー間の適切な例外変換により、技術詳細を上位レイヤーに漏らすことなく適切なエラーハンドリングを実現
+                </div>
+            </div>
+            
+            <div class="benefit-card">
+                <div class="benefit-title">
+                    <span class="benefit-icon">🔍</span>
+                    可観測性の確保
+                </div>
+                <div class="benefit-description">
+                    統合ログシステムにより本番環境での問題発生時に迅速な原因特定と対応が可能
+                </div>
+            </div>
+            
+            <div class="benefit-card">
+                <div class="benefit-title">
+                    <span class="benefit-icon">⚡</span>
+                    パフォーマンス最適化
+                </div>
+                <div class="benefit-description">
+                    事前チェックによる例外回避と非同期処理の活用により高いパフォーマンスを維持
+                </div>
+            </div>
+            
+            <div class="benefit-card">
+                <div class="benefit-title">
+                    <span class="benefit-icon">🎯</span>
+                    ユーザビリティ向上
+                </div>
+                <div class="benefit-description">
+                    Controller層での適切なエラーメッセージ変換によりユーザーに理解しやすい情報を提供
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
