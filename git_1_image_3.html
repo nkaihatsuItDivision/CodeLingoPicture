@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5人チーム開発での情報共有の複雑さ</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 50%, #ff6b6b 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #e74c3c;
+            font-size: 16px;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+        
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .team-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #3498db;
+            color: #2c3e50;
+        }
+        
+        .chaos-section .section-title {
+            border-bottom-color: #e74c3c;
+        }
+        
+        .network-container {
+            position: relative;
+            height: 400px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .simple-network {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+        }
+        
+        .chaos-network {
+            background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);
+        }
+        
+        .developer {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+        
+        .developer-icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .dev1 { top: 50px; left: 50%; transform: translateX(-50%); background: #6c5ce7; }
+        .dev2 { top: 150px; left: 50px; background: #00b894; }
+        .dev3 { top: 150px; right: 50px; background: #fd79a8; }
+        .dev4 { bottom: 50px; left: 100px; background: #fdcb6e; }
+        .dev5 { bottom: 50px; right: 50px; background: #e17055; }
+        
+        /* Git Hub中央ハブ（シンプル版用） */
+        .central-hub {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+            font-weight: bold;
+            color: #2c3e50;
+            z-index: 5;
+        }
+        
+        .hub-icon {
+            font-size: 30px;
+            margin-bottom: 5px;
+        }
+        
+        /* SVGで線を描画 */
+        .connection-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        .connection-line {
+            stroke: white;
+            stroke-width: 3;
+            stroke-opacity: 0.8;
+        }
+        
+        .chaos-line {
+            stroke: #ff4757;
+            stroke-width: 2;
+            stroke-dasharray: 5,5;
+            animation: dash 2s linear infinite;
+        }
+        
+        @keyframes dash {
+            to { stroke-dashoffset: -10; }
+        }
+        
+        .statistics {
+            margin-top: 30px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+        }
+        
+        .stats-title {
+            color: #2c3e50;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .problems-list {
+            margin-top: 30px;
+            background: #fff5f5;
+            border: 2px solid #e74c3c;
+            border-radius: 12px;
+            padding: 25px;
+        }
+        
+        .problems-title {
+            color: #e74c3c;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .warning-icon {
+            width: 30px;
+            height: 30px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+        }
+        
+        .problem-item {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .problem-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .problem-title {
+            font-weight: bold;
+            color: #c53030;
+            margin-bottom: 8px;
+        }
+        
+        .problem-description {
+            color: #2d3748;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .title {
+                font-size: 20px;
+            }
+            
+            .network-container {
+                height: 300px;
+            }
+            
+            .developer {
+                width: 60px;
+                height: 60px;
+                font-size: 10px;
+            }
+            
+            .developer-icon {
+                font-size: 20px;
+            }
+            
+            .central-hub {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .hub-icon {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">
+            5人チーム開発での情報共有の複雑さ
+        </div>
+        <div class="subtitle">
+            バージョン管理システムなし vs ありの比較
+        </div>
+        
+        <div class="comparison">
+            <!-- カオス状態（バージョン管理なし） -->
+            <div class="team-section chaos-section">
+                <div class="section-title">❌ バージョン管理なし（現状）</div>
+                <div class="network-container chaos-network">
+                    <svg class="connection-svg">
+                        <!-- 全員が全員と直接やり取り（カオス） -->
+                        <line x1="50%" y1="90" x2="90" y2="190" class="chaos-line" />
+                        <line x1="50%" y1="90" x2="85%" y2="190" class="chaos-line" />
+                        <line x1="50%" y1="90" x2="140" y2="340" class="chaos-line" />
+                        <line x1="50%" y1="90" x2="75%" y2="340" class="chaos-line" />
+                        <line x1="90" y1="190" x2="85%" y2="190" class="chaos-line" />
+                        <line x1="90" y1="190" x2="140" y2="340" class="chaos-line" />
+                        <line x1="90" y1="190" x2="75%" y2="340" class="chaos-line" />
+                        <line x1="85%" y1="190" x2="140" y2="340" class="chaos-line" />
+                        <line x1="85%" y1="190" x2="75%" y2="340" class="chaos-line" />
+                        <line x1="140" y1="340" x2="75%" y2="340" class="chaos-line" />
+                    </svg>
+                    
+                    <div class="developer dev1">
+                        <div class="developer-icon">👨‍💻</div>
+                        <div>あなた</div>
+                    </div>
+                    <div class="developer dev2">
+                        <div class="developer-icon">👩‍💻</div>
+                        <div>田中さん</div>
+                    </div>
+                    <div class="developer dev3">
+                        <div class="developer-icon">👨‍💻</div>
+                        <div>佐藤さん</div>
+                    </div>
+                    <div class="developer dev4">
+                        <div class="developer-icon">👩‍💻</div>
+                        <div>鈴木さん</div>
+                    </div>
+                    <div class="developer dev5">
+                        <div class="developer-icon">👨‍💻</div>
+                        <div>高橋さん</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 整理された状態（バージョン管理あり） -->
+            <div class="team-section">
+                <div class="section-title">✅ Git/GitHub活用（理想）</div>
+                <div class="network-container simple-network">
+                    <svg class="connection-svg">
+                        <!-- 中央ハブ（GitHub）を通じた整理された接続 -->
+                        <line x1="50%" y1="90" x2="50%" y2="50%" class="connection-line" />
+                        <line x1="90" y1="190" x2="50%" y2="50%" class="connection-line" />
+                        <line x1="85%" y1="190" x2="50%" y2="50%" class="connection-line" />
+                        <line x1="140" y1="340" x2="50%" y2="50%" class="connection-line" />
+                        <line x1="80%" y1="340" x2="50%" y2="50%" class="connection-line" />
+                    </svg>
+                    
+                    <div class="central-hub">
+                        <div class="hub-icon">🐱</div>
+                        <div>GitHub</div>
+                    </div>
+                    
+                    <div class="developer dev1">
+                        <div class="developer-icon">👨‍💻</div>
+                        <div>あなた</div>
+                    </div>
+                    <div class="developer dev2">
+                        <div class="developer-icon">👩‍💻</div>
+                        <div>田中さん</div>
+                    </div>
+                    <div class="developer dev3">
+                        <div class="developer-icon">👨‍💻</div>
+                        <div>佐藤さん</div>
+                    </div>
+                    <div class="developer dev4">
+                        <div class="developer-icon">👩‍💻</div>
+                        <div>鈴木さん</div>
+                    </div>
+                    <div class="developer dev5">
+                        <div class="developer-icon">👨‍💻</div>
+                        <div>高橋さん</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="statistics">
+            <div class="stats-title">数字で見る複雑さの違い</div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">10</div>
+                    <div class="stat-label">必要な個別連絡<br>（5人チーム）</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">45</div>
+                    <div class="stat-label">実際のやり取り回数<br>（1日平均）</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">15</div>
+                    <div class="stat-label">バージョン競合<br>（週間発生数）</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">作業重複<br>（同じ機能の重複開発）</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="problems-list">
+            <div class="problems-title">
+                <div class="warning-icon">⚠</div>
+                5人チーム開発で発生する具体的問題
+            </div>
+            
+            <div class="problem-item">
+                <div class="problem-title">情報伝達の複雑化</div>
+                <div class="problem-description">
+                    5人×4人 = 20の情報伝達経路が発生。誰が何を知っているか把握困難。
+                </div>
+            </div>
+            
+            <div class="problem-item">
+                <div class="problem-title">修正内容の重複・競合</div>
+                <div class="problem-description">
+                    同じバグを複数人が同時に修正。異なる解決策が複数存在し、統合が困難。
+                </div>
+            </div>
+            
+            <div class="problem-item">
+                <div class="problem-title">責任範囲の曖昧化</div>
+                <div class="problem-description">
+                    誰がどのファイルを担当しているか不明。修正時の影響範囲が予測できない。
+                </div>
+            </div>
+            
+            <div class="problem-item">
+                <div class="problem-title">品質管理の困難</div>
+                <div class="problem-description">
+                    コードレビューの仕組みがなく、5人分の修正内容を統合時に一括確認が必要。
+                </div>
+            </div>
+            
+            <div class="problem-item">
+                <div class="problem-title">進捗管理の混乱</div>
+                <div class="problem-description">
+                    誰がどの機能をいつまでに完成させるか共有できず、スケジュール管理が破綻。
+                </div>
+            </div>
+            
+            <div class="problem-item">
+                <div class="problem-title">緊急時の対応遅延</div>
+                <div class="problem-description">
+                    バグ発生時に原因特定が困難。誰の修正が影響したか調査に時間がかかる。
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
