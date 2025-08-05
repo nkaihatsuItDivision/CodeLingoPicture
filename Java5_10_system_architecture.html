@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OOP応用システム設計図</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 1400px;
+            width: 100%;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #3498db;
+        }
+
+        .architecture-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        /* 継承階層部分 */
+        .inheritance-section {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            border-radius: 15px;
+            padding: 25px;
+            color: white;
+        }
+
+        .inheritance-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .inheritance-hierarchy {
+            position: relative;
+            height: 450px;
+            overflow: visible;
+        }
+
+        .class-box {
+            position: absolute;
+            background: white;
+            color: #2c3e50;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border: 2px solid;
+            width: 120px;
+            text-align: center;
+            z-index: 2;
+        }
+
+        .abstract-class {
+            border-color: #e74c3c;
+            background: linear-gradient(135deg, #ffe4e1, #ffd6cc);
+        }
+
+        .concrete-class {
+            border-color: #27ae60;
+            background: linear-gradient(135deg, #e8f5e8, #d4edda);
+        }
+
+        .person-class {
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .student-class {
+            top: 140px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .undergraduate-class {
+            top: 280px;
+            left: 5%;
+        }
+
+        .graduate-class {
+            top: 280px;
+            right: 5%;
+        }
+
+        .class-name {
+            font-weight: bold;
+            font-size: 13px;
+            margin-bottom: 6px;
+            line-height: 1.2;
+        }
+
+        .class-type {
+            font-size: 11px;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 4px;
+        }
+
+        /* SVGによる継承線 */
+        .inheritance-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .inheritance-line-svg {
+            stroke: #34495e;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        /* インターフェース部分 */
+        .interface-section {
+            background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+            border-radius: 15px;
+            padding: 25px;
+            color: white;
+        }
+
+        .interface-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .interface-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            height: 400px;
+        }
+
+        .interface-box {
+            background: white;
+            color: #2c3e50;
+            border-radius: 10px;
+            padding: 15px;
+            border: 2px dashed #9b59b6;
+            text-align: center;
+        }
+
+        .interface-name {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: #9b59b6;
+        }
+
+        .interface-methods {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        /* 例外階層部分 */
+        .exception-section {
+            background: linear-gradient(135deg, #fd79a8, #e84393);
+            border-radius: 15px;
+            padding: 25px;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .exception-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .exception-hierarchy {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .exception-box {
+            background: white;
+            color: #2c3e50;
+            border-radius: 8px;
+            padding: 12px;
+            border: 2px solid #e74c3c;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        /* Lombok効果部分 */
+        .lombok-section {
+            background: linear-gradient(135deg, #55efc4, #00cec9);
+            border-radius: 15px;
+            padding: 25px;
+            color: white;
+        }
+
+        .lombok-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .lombok-effects {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .lombok-effect {
+            background: white;
+            color: #2c3e50;
+            border-radius: 8px;
+            padding: 12px;
+            border: 2px solid #00cec9;
+            text-align: center;
+        }
+
+        .effect-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .effect-desc {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* システム統合部分 */
+        .integration-section {
+            background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .integration-title {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .integration-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .flow-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            text-align: center;
+            flex: 1;
+            min-width: 120px;
+            border: 2px solid #e17055;
+        }
+
+        .flow-arrow {
+            font-size: 24px;
+            color: #e17055;
+            font-weight: bold;
+        }
+
+        .flow-title {
+            font-weight: bold;
+            font-size: 13px;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+
+        .flow-desc {
+            font-size: 11px;
+            color: #666;
+        }
+
+        /* レスポンシブ対応 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .architecture-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+            
+            .inheritance-hierarchy {
+                height: 400px;
+            }
+            
+            .interface-grid {
+                height: 350px;
+            }
+            
+            .integration-flow {
+                flex-direction: column;
+            }
+            
+            .flow-arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">OOP応用版学生管理システム設計図<br><span style="font-size: 18px; color: #666;">Week 5全技術統合アーキテクチャ</span></div>
+        
+        <div class="architecture-container">
+            <!-- 継承階層 -->
+            <div class="inheritance-section">
+                <div class="inheritance-title">🏗️ 継承階層設計</div>
+                <div class="inheritance-hierarchy">
+                    <!-- SVGによる継承線 -->
+                    <svg class="inheritance-svg" viewBox="0 0 300 450">
+                        <!-- Person → Student -->
+                        <line class="inheritance-line-svg" x1="150" y1="80" x2="150" y2="140" />
+                        <!-- Student → 分岐点 -->
+                        <line class="inheritance-line-svg" x1="150" y1="220" x2="150" y2="250" />
+                        <!-- 分岐横線（より広く） -->
+                        <line class="inheritance-line-svg" x1="60" y1="250" x2="240" y2="250" />
+                        <!-- 左の子クラスへ -->
+                        <line class="inheritance-line-svg" x1="60" y1="250" x2="60" y2="280" />
+                        <!-- 右の子クラスへ -->
+                        <line class="inheritance-line-svg" x1="240" y1="250" x2="240" y2="280" />
+                    </svg>
+                    
+                    <!-- Person抽象クラス -->
+                    <div class="class-box abstract-class person-class">
+                        <div class="class-name">Person</div>
+                        <div class="class-type">抽象基底クラス</div>
+                        <div style="font-size: 10px; margin-top: 4px; line-height: 1.2;">
+                            共通フィールド<br>
+                            抽象メソッド
+                        </div>
+                    </div>
+                    
+                    <!-- Student抽象クラス -->
+                    <div class="class-box abstract-class student-class">
+                        <div class="class-name">Student</div>
+                        <div class="class-type">学生抽象クラス</div>
+                        <div style="font-size: 10px; margin-top: 4px; line-height: 1.2;">
+                            成績管理<br>
+                            インターフェース実装
+                        </div>
+                    </div>
+                    
+                    <!-- UndergraduateStudent具象クラス -->
+                    <div class="class-box concrete-class undergraduate-class">
+                        <div class="class-name">Undergraduate<br>Student</div>
+                        <div class="class-type">学部生クラス</div>
+                        <div style="font-size: 10px; margin-top: 4px; line-height: 1.2;">
+                            学年管理<br>
+                            クラブ活動
+                        </div>
+                    </div>
+                    
+                    <!-- GraduateStudent具象クラス -->
+                    <div class="class-box concrete-class graduate-class">
+                        <div class="class-name">Graduate<br>Student</div>
+                        <div class="class-type">大学院生クラス</div>
+                        <div style="font-size: 10px; margin-top: 4px; line-height: 1.2;">
+                            研究分野<br>
+                            TA担当
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- インターフェース -->
+            <div class="interface-section">
+                <div class="interface-title">📋 インターフェース契約</div>
+                <div class="interface-grid">
+                    <div class="interface-box">
+                        <div class="interface-name">Evaluable</div>
+                        <div class="interface-methods">
+                            calculateGPA()<br>
+                            getGradeLevel()<br>
+                            isEligibleForHonors()
+                        </div>
+                    </div>
+                    
+                    <div class="interface-box">
+                        <div class="interface-name">Reportable</div>
+                        <div class="interface-methods">
+                            generateReport()<br>
+                            generateSummary()
+                        </div>
+                    </div>
+                    
+                    <div class="interface-box">
+                        <div class="interface-name">ScholarshipEligible</div>
+                        <div class="interface-methods">
+                            isEligibleForScholarship()<br>
+                            getScholarshipAmount()<br>
+                            getScholarshipType()
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 例外階層 -->
+        <div class="exception-section">
+            <div class="exception-title">⚠️ カスタム例外階層</div>
+            <div class="exception-hierarchy">
+                <div class="exception-box">
+                    <strong>StudentManagementException</strong><br>
+                    <span style="font-size: 11px;">基底例外クラス</span>
+                </div>
+                <div class="exception-box">
+                    <strong>InvalidGradeException</strong><br>
+                    <span style="font-size: 11px;">不正成績例外</span>
+                </div>
+                <div class="exception-box">
+                    <strong>StudentNotFoundException</strong><br>
+                    <span style="font-size: 11px;">学生未発見例外</span>
+                </div>
+                <div class="exception-box">
+                    <strong>ScholarshipNotEligibleException</strong><br>
+                    <span style="font-size: 11px;">奨学金不適合例外</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Lombok効果 -->
+        <div class="lombok-section">
+            <div class="lombok-title">🚀 Lombok効率化技術</div>
+            <div class="lombok-effects">
+                <div class="lombok-effect">
+                    <div class="effect-title">@Data</div>
+                    <div class="effect-desc">getter/setter/toString<br>自動生成</div>
+                </div>
+                <div class="lombok-effect">
+                    <div class="effect-title">@Builder</div>
+                    <div class="effect-desc">ビルダーパターン<br>自動実装</div>
+                </div>
+                <div class="lombok-effect">
+                    <div class="effect-title">@Slf4j</div>
+                    <div class="effect-desc">ログ出力機能<br>自動追加</div>
+                </div>
+                <div class="lombok-effect">
+                    <div class="effect-title">コード削減</div>
+                    <div class="effect-desc">86%のボイラープレート<br>コード削減</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- システム統合フロー -->
+        <div class="integration-section">
+            <div class="integration-title">🔄 Week 5技術統合フロー</div>
+            <div class="integration-flow">
+                <div class="flow-item">
+                    <div class="flow-title">継承技術</div>
+                    <div class="flow-desc">コード再利用<br>階層設計</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-item">
+                    <div class="flow-title">ポリモーフィズム</div>
+                    <div class="flow-desc">統一処理<br>動的選択</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-item">
+                    <div class="flow-title">抽象化</div>
+                    <div class="flow-desc">契約設計<br>品質確保</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-item">
+                    <div class="flow-title">例外処理</div>
+                    <div class="flow-desc">堅牢性<br>エラー安全</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-item">
+                    <div class="flow-title">Lombok</div>
+                    <div class="flow-desc">効率化<br>保守性向上</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

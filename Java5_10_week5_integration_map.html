@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 5技術統合マップ</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 1600px;
+            width: 100%;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #3498db;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 40px;
+        }
+
+        /* メイングリッド */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        /* 技術習得フロー */
+        .tech-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .lesson-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-left: 5px solid;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .lesson-card:hover {
+            transform: translateX(5px);
+        }
+
+        .lesson1-3 {
+            border-left-color: #e74c3c;
+            background: linear-gradient(135deg, #ffeaa7, #fab1a0);
+        }
+
+        .lesson4 {
+            border-left-color: #9b59b6;
+            background: linear-gradient(135deg, #fd79a8, #fdcb6e);
+        }
+
+        .lesson5-6 {
+            border-left-color: #3498db;
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+        }
+
+        .lesson7-8 {
+            border-left-color: #e67e22;
+            background: linear-gradient(135deg, #fd79a8, #e84393);
+        }
+
+        .lesson9 {
+            border-left-color: #27ae60;
+            background: linear-gradient(135deg, #55efc4, #00cec9);
+        }
+
+        .lesson-number {
+            font-size: 12px;
+            font-weight: bold;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .lesson-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .lesson-tech {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        /* 中央統合システム */
+        .integration-center {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 20px;
+            padding: 30px;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+
+        .center-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .center-subtitle {
+            font-size: 16px;
+            margin-bottom: 25px;
+            opacity: 0.9;
+        }
+
+        .system-features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .feature-item {
+            background: rgba(255,255,255,0.2);
+            border-radius: 8px;
+            padding: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-title {
+            font-weight: bold;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        .feature-desc {
+            font-size: 11px;
+            opacity: 0.9;
+        }
+
+        .code-stats {
+            background: rgba(255,255,255,0.15);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        /* 実用効果 */
+        .practical-effects {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .effect-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-right: 5px solid;
+        }
+
+        .enterprise-effect {
+            border-right-color: #8e44ad;
+            background: linear-gradient(135deg, #e8f4fd, #c3e9ff);
+        }
+
+        .design-effect {
+            border-right-color: #e67e22;
+            background: linear-gradient(135deg, #fff5e6, #ffe0cc);
+        }
+
+        .efficiency-effect {
+            border-right-color: #27ae60;
+            background: linear-gradient(135deg, #e8f5e8, #d4edda);
+        }
+
+        .quality-effect {
+            border-right-color: #e74c3c;
+            background: linear-gradient(135deg, #ffeaea, #ffcccc);
+        }
+
+        .effect-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .effect-desc {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        /* 成長マップ */
+        .growth-map {
+            background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .growth-title {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .growth-timeline {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .growth-stage {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            text-align: center;
+            flex: 1;
+            min-width: 150px;
+            border: 2px solid #e17055;
+        }
+
+        .stage-week {
+            font-weight: bold;
+            font-size: 12px;
+            color: #e17055;
+            margin-bottom: 5px;
+        }
+
+        .stage-level {
+            font-weight: bold;
+            font-size: 13px;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .stage-skill {
+            font-size: 11px;
+            color: #666;
+        }
+
+        .growth-arrow {
+            font-size: 20px;
+            color: #e17055;
+            font-weight: bold;
+        }
+
+        /* レスポンシブ対応 */
+        @media (max-width: 1200px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .tech-flow {
+                flex-direction: row;
+                overflow-x: auto;
+                padding-bottom: 10px;
+            }
+            
+            .lesson-card {
+                min-width: 200px;
+            }
+            
+            .practical-effects {
+                flex-direction: row;
+                overflow-x: auto;
+                padding-bottom: 10px;
+            }
+            
+            .effect-card {
+                min-width: 200px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+            
+            .system-features {
+                grid-template-columns: 1fr;
+            }
+            
+            .growth-timeline {
+                flex-direction: column;
+            }
+            
+            .growth-arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Week 5技術統合マップ</div>
+        <div class="subtitle">継承・ポリモーフィズム・抽象化・例外処理・Lombokの完全統合</div>
+        
+        <div class="main-grid">
+            <!-- 左側：技術習得フロー -->
+            <div class="tech-flow">
+                <div class="lesson-card lesson1-3">
+                    <div class="lesson-number">レッスン5.1-5.3</div>
+                    <div class="lesson-title">継承技術の確立</div>
+                    <div class="lesson-tech">
+                        • extends、super<br>
+                        • メソッドオーバーライド<br>
+                        • システム拡張設計
+                    </div>
+                </div>
+                
+                <div class="lesson-card lesson4">
+                    <div class="lesson-number">レッスン5.4</div>
+                    <div class="lesson-title">ポリモーフィズム</div>
+                    <div class="lesson-tech">
+                        • 動的メソッド選択<br>
+                        • 統一インターフェース<br>
+                        • 実行時型判定
+                    </div>
+                </div>
+                
+                <div class="lesson-card lesson5-6">
+                    <div class="lesson-number">レッスン5.5-5.6</div>
+                    <div class="lesson-title">抽象化技術</div>
+                    <div class="lesson-tech">
+                        • 抽象クラス設計<br>
+                        • インターフェース契約<br>
+                        • 多重継承の代替
+                    </div>
+                </div>
+                
+                <div class="lesson-card lesson7-8">
+                    <div class="lesson-number">レッスン5.7-5.8</div>
+                    <div class="lesson-title">例外処理体系化</div>
+                    <div class="lesson-tech">
+                        • カスタム例外設計<br>
+                        • 例外安全設計<br>
+                        • エラーハンドリング
+                    </div>
+                </div>
+                
+                <div class="lesson-card lesson9">
+                    <div class="lesson-number">レッスン5.9</div>
+                    <div class="lesson-title">Lombok導入</div>
+                    <div class="lesson-tech">
+                        • @Data、@Builder<br>
+                        • @Slf4j<br>
+                        • 86%コード削減
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 中央：統合システム -->
+            <div class="integration-center">
+                <div class="center-title">OOP応用版<br>学生管理システム</div>
+                <div class="center-subtitle">Week 5全技術統合の集大成</div>
+                
+                <div class="system-features">
+                    <div class="feature-item">
+                        <div class="feature-title">継承階層設計</div>
+                        <div class="feature-desc">Person→Student→各学生タイプ</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-title">ポリモーフィズム活用</div>
+                        <div class="feature-desc">統一処理による柔軟性</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-title">インターフェース契約</div>
+                        <div class="feature-desc">品質確保の設計パターン</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-title">例外安全設計</div>
+                        <div class="feature-desc">堅牢なエラーハンドリング</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-title">Lombok効率化</div>
+                        <div class="feature-desc">現代的コード記述</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-title">エンタープライズ品質</div>
+                        <div class="feature-desc">実務レベルの機能完成度</div>
+                    </div>
+                </div>
+                
+                <div class="code-stats">
+                    <strong>システム規模：600-700行</strong><br>
+                    <span style="font-size: 14px;">9クラス + 3インターフェース + 4例外クラス</span>
+                </div>
+            </div>
+            
+            <!-- 右側：実用効果 -->
+            <div class="practical-effects">
+                <div class="effect-card enterprise-effect">
+                    <div class="effect-title">🏢 エンタープライズ品質</div>
+                    <div class="effect-desc">
+                        実際の企業システムで<br>
+                        使用される設計パターン<br>
+                        と品質基準を達成
+                    </div>
+                </div>
+                
+                <div class="effect-card design-effect">
+                    <div class="effect-title">🎨 設計思考の確立</div>
+                    <div class="effect-desc">
+                        継承・抽象化による<br>
+                        拡張可能で保守性の<br>
+                        高い設計思考を習得
+                    </div>
+                </div>
+                
+                <div class="effect-card efficiency-effect">
+                    <div class="effect-title">⚡ 開発効率化</div>
+                    <div class="effect-desc">
+                        Lombokによる86%の<br>
+                        コード削減と開発<br>
+                        効率の劇的向上
+                    </div>
+                </div>
+                
+                <div class="effect-card quality-effect">
+                    <div class="effect-title">🛡️ 品質・堅牢性</div>
+                    <div class="effect-desc">
+                        例外安全設計による<br>
+                        障害に強いシステム<br>
+                        構築技術を獲得
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 成長マップ -->
+        <div class="growth-map">
+            <div class="growth-title">🚀 Week 5学習成果：技術レベルの飛躍的向上</div>
+            <div class="growth-timeline">
+                <div class="growth-stage">
+                    <div class="stage-week">Week 4完了時</div>
+                    <div class="stage-level">エンタープライズOOPアーキテクト</div>
+                    <div class="stage-skill">基本的なOOP設計能力</div>
+                </div>
+                <div class="growth-arrow">→</div>
+                <div class="growth-stage">
+                    <div class="stage-week">レッスン5.1-5.4</div>
+                    <div class="stage-level">継承・ポリモーフィズムマスター</div>
+                    <div class="stage-skill">高度なOOP技術習得</div>
+                </div>
+                <div class="growth-arrow">→</div>
+                <div class="growth-stage">
+                    <div class="stage-week">レッスン5.5-5.8</div>
+                    <div class="stage-level">抽象化・例外処理エキスパート</div>
+                    <div class="stage-skill">堅牢な設計技術習得</div>
+                </div>
+                <div class="growth-arrow">→</div>
+                <div class="growth-stage">
+                    <div class="stage-week">レッスン5.9-5.10</div>
+                    <div class="stage-level">エンタープライズJavaアーキテクト</div>
+                    <div class="stage-skill">現代的統合開発技術習得</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
