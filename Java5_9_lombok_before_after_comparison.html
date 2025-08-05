@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Before/After比較図：Lombokによるコード削減効果の視覚的比較</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #fc466b 0%, #3f5efb 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 1600px;
+            width: 100%;
+        }
+
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 40px;
+        }
+
+        .comparison-container {
+            display: flex;
+            gap: 40px;
+            align-items: stretch;
+            margin: 40px 0;
+        }
+
+        .before-section {
+            flex: 1;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            border-radius: 15px;
+            padding: 25px;
+            color: white;
+        }
+
+        .after-section {
+            flex: 1;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            border-radius: 15px;
+            padding: 25px;
+            color: white;
+        }
+
+        .section-header {
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+        }
+
+        .code-container {
+            background: rgba(0,0,0,0.8);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .code-content {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.5;
+            white-space: pre-line;
+            color: #f8f8f2;
+        }
+
+        .code-keyword {
+            color: #66d9ef;
+        }
+
+        .code-type {
+            color: #a6e22e;
+        }
+
+        .code-annotation {
+            color: #fd971f;
+        }
+
+        .line-numbers {
+            position: absolute;
+            left: 0;
+            top: 20px;
+            width: 40px;
+            padding-right: 10px;
+            border-right: 1px solid #44475a;
+            color: #6272a4;
+            font-size: 10px;
+            line-height: 1.5;
+            text-align: right;
+        }
+
+        .code-with-numbers {
+            margin-left: 50px;
+        }
+
+        .arrow-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-width: 120px;
+        }
+
+        .arrow-svg {
+            width: 80px;
+            height: 60px;
+        }
+
+        .arrow-text {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 16px;
+            margin: 10px 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 15px;
+            color: white;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 15px;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .highlight-box {
+            background: rgba(255,255,255,0.1);
+            border-left: 4px solid rgba(255,255,255,0.8);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 8px 0;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .arrow-container {
+                min-width: auto;
+                padding: 20px 0;
+            }
+            
+            .arrow-svg {
+                transform: rotate(90deg);
+            }
+            
+            .code-content {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Before/After比較図：Lombokによるコード削減効果</div>
+        
+        <div class="comparison-container">
+            <!-- Before (従来の方法) -->
+            <div class="before-section">
+                <div class="section-header">❌ BEFORE：従来の方法</div>
+                
+                <div class="code-container">
+                    <div class="line-numbers">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+...
+48
+49
+50
+                    </div>
+                    <div class="code-content code-with-numbers"><span class="code-keyword">public class</span> <span class="code-type">Student</span> {
+    <span class="code-keyword">private</span> <span class="code-type">Long</span> id;
+    <span class="code-keyword">private</span> <span class="code-type">String</span> name;
+    <span class="code-keyword">private</span> <span class="code-type">Integer</span> score;
+    
+    <span class="code-keyword">public</span> <span class="code-type">Student</span>() {}
+    
+    <span class="code-keyword">public</span> <span class="code-type">Student</span>(<span class="code-type">Long</span> id, <span class="code-type">String</span> name, <span class="code-type">Integer</span> score) {
+        <span class="code-keyword">this</span>.id = id;
+        <span class="code-keyword">this</span>.name = name;
+        <span class="code-keyword">this</span>.score = score;
+    }
+    
+    <span class="code-keyword">public</span> <span class="code-type">Long</span> getId() { <span class="code-keyword">return</span> id; }
+    <span class="code-keyword">public</span> <span class="code-type">String</span> getName() { <span class="code-keyword">return</span> name; }
+    <span class="code-keyword">public</span> <span class="code-type">Integer</span> getScore() { <span class="code-keyword">return</span> score; }
+    
+    <span class="code-keyword">public void</span> setId(<span class="code-type">Long</span> id) { <span class="code-keyword">this</span>.id = id; }
+    <span class="code-keyword">public void</span> setName(<span class="code-type">String</span> name) { <span class="code-keyword">this</span>.name = name; }
+    <span class="code-keyword">public void</span> setScore(<span class="code-type">Integer</span> score) { <span class="code-keyword">this</span>.score = score; }
+    
+    <span class="code-annotation">@Override</span>
+    <span class="code-keyword">public</span> <span class="code-type">String</span> toString() {
+        <span class="code-keyword">return</span> <span class="code-type">"Student{"</span> + <span class="code-type">"id="</span> + id + 
+               <span class="code-type">", name='"</span> + name + <span class="code-type">'\''</span> + 
+               <span class="code-type">", score="</span> + score + <span class="code-type">'}'</span>;
+    }
+    
+    <span class="code-comment">// equals(), hashCode() メソッド...</span>
+    <span class="code-comment">// さらに20行以上のコード</span>
+}</div>
+                </div>
+                
+                <div class="highlight-box">
+                    <strong>問題点：</strong>
+                    <ul class="feature-list">
+                        <li>50行以上の冗長なコード</li>
+                        <li>手動実装によるヒューマンエラーリスク</li>
+                        <li>フィールド追加時の手動更新</li>
+                        <li>開発時間の大幅な消費</li>
+                        <li>本質的でないボイラープレートコード</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Arrow -->
+            <div class="arrow-container">
+                <svg class="arrow-svg" viewBox="0 0 80 60" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10 30 L60 30" stroke="#3498db" stroke-width="4" fill="none"/>
+                    <polygon points="55,25 70,30 55,35" fill="#3498db"/>
+                </svg>
+                <div class="arrow-text">
+                    Lombok<br>導入
+                </div>
+                <svg class="arrow-svg" viewBox="0 0 80 60" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10 30 L60 30" stroke="#3498db" stroke-width="4" fill="none"/>
+                    <polygon points="55,25 70,30 55,35" fill="#3498db"/>
+                </svg>
+            </div>
+
+            <!-- After (Lombok使用) -->
+            <div class="after-section">
+                <div class="section-header">✅ AFTER：Lombok使用</div>
+                
+                <div class="code-container">
+                    <div class="line-numbers">
+1
+2
+3
+4
+5
+6
+7
+                    </div>
+                    <div class="code-content code-with-numbers"><span class="code-keyword">import</span> lombok.Data;
+
+<span class="code-annotation">@Data</span>
+<span class="code-keyword">public class</span> <span class="code-type">Student</span> {
+    <span class="code-keyword">private</span> <span class="code-type">Long</span> id;
+    <span class="code-keyword">private</span> <span class="code-type">String</span> name;
+    <span class="code-keyword">private</span> <span class="code-type">Integer</span> score;
+}</div>
+                </div>
+                
+                <div class="highlight-box">
+                    <strong>自動生成される内容：</strong>
+                    <ul class="feature-list">
+                        <li>getter/setterメソッド（全フィールド）</li>
+                        <li>toString()メソッド</li>
+                        <li>equals()メソッド</li>
+                        <li>hashCode()メソッド</li>
+                        <li>引数なしコンストラクタ</li>
+                    </ul>
+                </div>
+                
+                <div class="highlight-box">
+                    <strong>革命的な効果：</strong>
+                    <ul class="feature-list">
+                        <li>86%のコード削減</li>
+                        <li>ヒューマンエラーの完全防止</li>
+                        <li>自動更新による保守性向上</li>
+                        <li>本質的なコードに集中</li>
+                        <li>開発効率の劇的向上</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 統計情報 -->
+        <div class="stats-row">
+            <div class="stat-box">
+                <div class="stat-number">50行</div>
+                <div class="stat-label">→ 7行</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">86%</div>
+                <div class="stat-label">コード削減</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">50-70%</div>
+                <div class="stat-label">開発時間短縮</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">エラー防止</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
