@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gitワークフロー：3つのエリア</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        
+        .subtitle {
+            margin: 10px 0 0 0;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .workflow-container {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 30px 0;
+            position: relative;
+        }
+        
+        .workflow-title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 40px;
+        }
+        
+        .areas-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 40px;
+            margin: 40px 0;
+            position: relative;
+        }
+        
+        .area {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border: 3px solid;
+            position: relative;
+            min-height: 400px;
+        }
+        
+        .working-directory {
+            border-color: #e74c3c;
+        }
+        
+        .staging-area {
+            border-color: #f39c12;
+        }
+        
+        .repository {
+            border-color: #27ae60;
+        }
+        
+        .area-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .area-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+            margin: 0 auto 15px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        
+        .working-directory .area-icon {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+        
+        .staging-area .area-icon {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+        }
+        
+        .repository .area-icon {
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+        }
+        
+        .area-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0;
+        }
+        
+        .area-description {
+            font-size: 13px;
+            color: #7f8c8d;
+            margin: 8px 0 0 0;
+            line-height: 1.4;
+        }
+        
+        .files-section {
+            margin: 20px 0;
+        }
+        
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #34495e;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-icon {
+            width: 20px;
+            height: 20px;
+            background: #95a5a6;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            margin-right: 8px;
+        }
+        
+        .file-item {
+            background: #ecf0f1;
+            border: 1px solid #bdc3c7;
+            border-radius: 8px;
+            padding: 10px 12px;
+            margin: 6px 0;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        
+        .file-item:hover {
+            background: #d5dbdb;
+            transform: translateX(3px);
+        }
+        
+        .file-icon {
+            width: 24px;
+            height: 24px;
+            background: #3498db;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            margin-right: 10px;
+        }
+        
+        .java-file .file-icon {
+            background: #e67e22;
+        }
+        
+        .modified-file .file-icon {
+            background: #f39c12;
+        }
+        
+        .staged-file .file-icon {
+            background: #f39c12;
+        }
+        
+        .committed-file .file-icon {
+            background: #27ae60;
+        }
+        
+        .file-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: #2c3e50;
+            flex-grow: 1;
+        }
+        
+        .file-status {
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .status-modified {
+            background: #e74c3c;
+        }
+        
+        .status-staged {
+            background: #f39c12;
+        }
+        
+        .status-committed {
+            background: #27ae60;
+        }
+        
+        .arrow-container {
+            position: absolute;
+            top: 50%;
+            width: 40px;
+            height: 60px;
+            transform: translateY(-50%);
+            z-index: 10;
+        }
+        
+        .arrow1 {
+            right: -60px;
+        }
+        
+        .arrow2 {
+            right: -60px;
+        }
+        
+        .workflow-arrow {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        
+        .arrow-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 30px;
+            height: 3px;
+            background: #3498db;
+            transform: translateY(-50%);
+        }
+        
+        .arrow-head {
+            position: absolute;
+            top: 50%;
+            right: 0;
+            width: 0;
+            height: 0;
+            border-left: 10px solid #3498db;
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+            transform: translateY(-50%);
+        }
+        
+        .arrow-label {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 11px;
+            font-weight: 600;
+            color: #3498db;
+            background: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            white-space: nowrap;
+        }
+        
+        .commands-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        }
+        
+        .commands-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .commands-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .command-card {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            transition: all 0.2s ease;
+        }
+        
+        .command-card:hover {
+            border-color: #3498db;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.2);
+        }
+        
+        .command-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .command-icon {
+            width: 30px;
+            height: 30px;
+            background: #3498db;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        
+        .command-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .command-syntax {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin: 8px 0;
+        }
+        
+        .command-description {
+            font-size: 13px;
+            color: #7f8c8d;
+            line-height: 1.4;
+        }
+        
+        .lifecycle-section {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 40px 0;
+        }
+        
+        .lifecycle-title {
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .lifecycle-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .lifecycle-step {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: white;
+            color: #0984e3;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            margin: 0 auto 15px;
+        }
+        
+        .step-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .step-description {
+            font-size: 12px;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+        
+        @media (max-width: 768px) {
+            .areas-container {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .arrow-container {
+                display: none;
+            }
+            
+            .commands-grid,
+            .lifecycle-steps {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔄 Gitワークフロー：3つのエリア</h1>
+            <p class="subtitle">変更のライフサイクルと操作コマンド</p>
+        </div>
+        
+        <div class="content">
+            <div class="workflow-container">
+                <div class="workflow-title">変更管理の3つのエリア</div>
+                
+                <div class="areas-container">
+                    <!-- ワーキングディレクトリ -->
+                    <div class="area working-directory">
+                        <div class="area-header">
+                            <div class="area-icon">📝</div>
+                            <div class="area-title">ワーキングディレクトリ</div>
+                            <div class="area-description">実際にファイルを編集する場所<br>現在作業中のファイル状態</div>
+                        </div>
+                        
+                        <div class="files-section">
+                            <div class="section-title">
+                                <div class="section-icon">📁</div>
+                                現在のファイル状態
+                            </div>
+                            
+                            <div class="file-item modified-file">
+                                <div class="file-icon">☕</div>
+                                <div class="file-name">Student.java</div>
+                                <div class="file-status status-modified">修正済み</div>
+                            </div>
+                            
+                            <div class="file-item modified-file">
+                                <div class="file-icon">☕</div>
+                                <div class="file-name">Person.java</div>
+                                <div class="file-status status-modified">修正済み</div>
+                            </div>
+                            
+                            <div class="file-item">
+                                <div class="file-icon">☕</div>
+                                <div class="file-name">StudentManager.java</div>
+                                <div class="file-status">未変更</div>
+                            </div>
+                        </div>
+                        
+                        <div class="files-section">
+                            <div class="section-title">
+                                <div class="section-icon">⚡</div>
+                                作業内容
+                            </div>
+                            <div style="font-size: 12px; color: #7f8c8d; line-height: 1.4;">
+                                • Lombokアノテーション追加<br>
+                                • コンストラクタ自動生成<br>
+                                • getter/setterの削除<br>
+                                • コードの簡素化完了
+                            </div>
+                        </div>
+                        
+                        <div class="arrow-container arrow1">
+                            <div class="workflow-arrow">
+                                <div class="arrow-line"></div>
+                                <div class="arrow-head"></div>
+                                <div class="arrow-label">git add</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- ステージングエリア -->
+                    <div class="area staging-area">
+                        <div class="area-header">
+                            <div class="area-icon">📋</div>
+                            <div class="area-title">ステージングエリア</div>
+                            <div class="area-description">コミット予定の変更を準備する場所<br>次のコミットに含める変更を選択</div>
+                        </div>
+                        
+                        <div class="files-section">
+                            <div class="section-title">
+                                <div class="section-icon">✅</div>
+                                ステージング済みファイル
+                            </div>
+                            
+                            <div class="file-item staged-file">
+                                <div class="file-icon">☕</div>
+                                <div class="file-name">Student.java</div>
+                                <div class="file-status status-staged">準備完了</div>
+                            </div>
+                            
+                            <div class="file-item staged-file">
+                                <div class="file-icon">☕</div>
+                                <div class="file-name">Person.java</div>
+                                <div class="file-status status-staged">準備完了</div>
+                            </div>
+                        </div>
+                        
+                        <div class="files-section">
+                            <div class="section-title">
+                                <div class="section-icon">📝</div>
+                                コミットメッセージ準備
+                            </div>
+                            <div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px; padding: 10px; font-size: 12px; color: #856404;">
+                                "Lombok統合：86%コード削減達成"
+                            </div>
+                        </div>
+                        
+                        <div class="arrow-container arrow2">
+                            <div class="workflow-arrow">
+                                <div class="arrow-line"></div>
+                                <div class="arrow-head"></div>
+                                <div class="arrow-label">git commit</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- リポジトリ -->
+                    <div class="area repository">
+                        <div class="area-header">
+                            <div class="area-icon">💾</div>
+                            <div class="area-title">リポジトリ</div>
+                            <div class="area-description">コミットされた履歴が保存される場所<br>プロジェクトの確定した履歴</div>
+                        </div>
+                        
+                        <div class="files-section">
+                            <div class="section-title">
+                                <div class="section-icon">📜</div>
+                                コミット履歴
+                            </div>
+                            
+                            <div class="file-item committed-file">
+                                <div class="file-icon">🏷️</div>
+                                <div class="file-name">q7r8s9t0</div>
+                                <div class="file-status status-committed">最新</div>
+                            </div>
+                            
+                            <div class="file-item">
+                                <div class="file-icon">🏷️</div>
+                                <div class="file-name">m3n4o5p6</div>
+                                <div class="file-status">例外処理</div>
+                            </div>
+                            
+                            <div class="file-item">
+                                <div class="file-icon">🏷️</div>
+                                <div class="file-name">i9j0k1l2</div>
+                                <div class="file-status">ポリモーフィズム</div>
+                            </div>
+                        </div>
+                        
+                        <div class="files-section">
+                            <div class="section-title">
+                                <div class="section-icon">🎯</div>
+                                確定した変更
+                            </div>
+                            <div style="background: #d1ecf1; border: 1px solid #bee5eb; border-radius: 4px; padding: 10px; font-size: 12px; color: #0c5460;">
+                                永続的に記録され、<br>
+                                過去のバージョンに<br>
+                                いつでも復元可能
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="commands-section">
+                <div class="commands-title">主要なGitコマンド</div>
+                <div class="commands-grid">
+                    <div class="command-card">
+                        <div class="command-header">
+                            <div class="command-icon">➕</div>
+                            <div class="command-name">git add</div>
+                        </div>
+                        <div class="command-syntax">git add Student.java</div>
+                        <div class="command-description">
+                            ワーキングディレクトリの変更をステージングエリアに追加。コミット対象として準備する。
+                        </div>
+                    </div>
+                    
+                    <div class="command-card">
+                        <div class="command-header">
+                            <div class="command-icon">💾</div>
+                            <div class="command-name">git commit</div>
+                        </div>
+                        <div class="command-syntax">git commit -m "メッセージ"</div>
+                        <div class="command-description">
+                            ステージングエリアの変更をリポジトリに確定保存。履歴として永続的に記録される。
+                        </div>
+                    </div>
+                    
+                    <div class="command-card">
+                        <div class="command-header">
+                            <div class="command-icon">📊</div>
+                            <div class="command-name">git status</div>
+                        </div>
+                        <div class="command-syntax">git status</div>
+                        <div class="command-description">
+                            各エリアの現在状態を確認。どのファイルが変更・ステージングされているかを表示。
+                        </div>
+                    </div>
+                    
+                    <div class="command-card">
+                        <div class="command-header">
+                            <div class="command-icon">🔍</div>
+                            <div class="command-name">git diff</div>
+                        </div>
+                        <div class="command-syntax">git diff Student.java</div>
+                        <div class="command-description">
+                            ファイルの具体的な変更内容を表示。どの行が追加・削除・修正されたかを確認。
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="lifecycle-section">
+                <div class="lifecycle-title">変更のライフサイクル</div>
+                <div class="lifecycle-steps">
+                    <div class="lifecycle-step">
+                        <div class="step-number">1</div>
+                        <div class="step-title">ファイル編集</div>
+                        <div class="step-description">Eclipse等でコードを修正・作成</div>
+                    </div>
+                    
+                    <div class="lifecycle-step">
+                        <div class="step-number">2</div>
+                        <div class="step-title">ステージング</div>
+                        <div class="step-description">git addで変更をコミット準備エリアに追加</div>
+                    </div>
+                    
+                    <div class="lifecycle-step">
+                        <div class="step-number">3</div>
+                        <div class="step-title">コミット</div>
+                        <div class="step-description">git commitで変更を履歴として確定</div>
+                    </div>
+                    
+                    <div class="lifecycle-step">
+                        <div class="step-number">4</div>
+                        <div class="step-title">プッシュ</div>
+                        <div class="step-description">git pushでリモートリポジトリに共有</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

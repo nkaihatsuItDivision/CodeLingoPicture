@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分散型vs中央集権型比較</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2d3436 0%, #636e72 100%);
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        
+        .subtitle {
+            margin: 10px 0 0 0;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin: 30px 0;
+        }
+        
+        .system-section {
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .centralized {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            border: 3px solid #e17055;
+        }
+        
+        .distributed {
+            background: linear-gradient(135deg, #81ecec 0%, #74b9ff 100%);
+            border: 3px solid #00b894;
+        }
+        
+        .system-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #2d3436;
+        }
+        
+        .system-subtitle {
+            text-align: center;
+            font-size: 14px;
+            color: #636e72;
+            margin-bottom: 30px;
+        }
+        
+        .architecture-diagram {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            min-height: 300px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .server-node {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #e17055 0%, #d63031 100%);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 6px 20px rgba(225, 112, 85, 0.4);
+            margin-bottom: 40px;
+        }
+        
+        .server-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        
+        .server-label {
+            font-size: 12px;
+        }
+        
+        .client-nodes {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            gap: 20px;
+        }
+        
+        .client-node {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(116, 185, 255, 0.4);
+            position: relative;
+        }
+        
+        .client-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        
+        .client-label {
+            font-size: 10px;
+        }
+        
+        .connection-line {
+            position: absolute;
+            background: #636e72;
+            height: 2px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .arrow {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 8px solid #636e72;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+        }
+        
+        .distributed-nodes {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            width: 100%;
+        }
+        
+        .distributed-node {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0, 184, 148, 0.4);
+            position: relative;
+        }
+        
+        .node-icon {
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+        
+        .node-label {
+            font-size: 11px;
+            text-align: center;
+        }
+        
+        .github-node {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #6c5ce7 0%, #5f3dc4 100%);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
+            margin: 20px auto;
+        }
+        
+        .features-comparison {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .features-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2d3436;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f2f6;
+        }
+        
+        .feature-item:last-child {
+            border-bottom: none;
+        }
+        
+        .feature-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            margin-right: 10px;
+        }
+        
+        .positive {
+            background: #00b894;
+        }
+        
+        .negative {
+            background: #e17055;
+        }
+        
+        .neutral {
+            background: #74b9ff;
+        }
+        
+        .feature-text {
+            font-size: 13px;
+            color: #2d3436;
+            line-height: 1.4;
+        }
+        
+        .scenario-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 2px solid #dee2e6;
+        }
+        
+        .scenario-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3436;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .scenario-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            border: 2px solid #dee2e6;
+        }
+        
+        .scenario-card.centralized-scenario {
+            border-color: #e17055;
+        }
+        
+        .scenario-card.distributed-scenario {
+            border-color: #00b894;
+        }
+        
+        .scenario-header {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .scenario-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            margin-right: 10px;
+        }
+        
+        .centralized-scenario .scenario-icon {
+            background: #e17055;
+        }
+        
+        .distributed-scenario .scenario-icon {
+            background: #00b894;
+        }
+        
+        .scenario-content {
+            font-size: 13px;
+            color: #636e72;
+            line-height: 1.4;
+        }
+        
+        .conclusion {
+            background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 40px 0;
+            text-align: center;
+        }
+        
+        .conclusion-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .conclusion-text {
+            font-size: 16px;
+            line-height: 1.6;
+            margin: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison-container {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .client-nodes,
+            .distributed-nodes {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+            
+            .scenario-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚖️ 分散型 vs 中央集権型</h1>
+            <p class="subtitle">バージョン管理システムの違いを理解する</p>
+        </div>
+        
+        <div class="content">
+            <div class="comparison-container">
+                <!-- 中央集権型システム -->
+                <div class="system-section centralized">
+                    <div class="system-title">中央集権型（従来型）</div>
+                    <div class="system-subtitle">SVN、CVS、Perforce など</div>
+                    
+                    <div class="architecture-diagram">
+                        <div class="server-node">
+                            <div class="server-icon">🏢</div>
+                            <div class="server-label">中央サーバー</div>
+                        </div>
+                        
+                        <div class="client-nodes">
+                            <div class="client-node">
+                                <div class="client-icon">👤</div>
+                                <div class="client-label">開発者A</div>
+                            </div>
+                            <div class="client-node">
+                                <div class="client-icon">👤</div>
+                                <div class="client-label">開発者B</div>
+                            </div>
+                            <div class="client-node">
+                                <div class="client-icon">👤</div>
+                                <div class="client-label">開発者C</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="features-comparison">
+                        <div class="features-title">特徴</div>
+                        <ul class="feature-list">
+                            <li class="feature-item">
+                                <div class="feature-icon positive">✓</div>
+                                <div class="feature-text">シンプルな管理構造</div>
+                            </li>
+                            <li class="feature-item">
+                                <div class="feature-icon positive">✓</div>
+                                <div class="feature-text">アクセス制御が容易</div>
+                            </li>
+                            <li class="feature-item">
+                                <div class="feature-icon negative">✗</div>
+                                <div class="feature-text">サーバー停止時は作業不可</div>
+                            </li>
+                            <li class="feature-item">
+                                <div class="feature-icon negative">✗</div>
+                                <div class="feature-text">履歴情報が分散されていない</div>
+                            </li>
+                            <li class="feature-item">
+                                <div class="feature-icon negative">✗</div>
+                                <div class="feature-text">オフライン作業の制限</div>
+                            </li>
+                            <li class="feature-item">
+                                <div class="feature-icon negative">✗</div>
+                                <div class="feature-text">ネットワーク依存が高い</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- 分散型システム -->
+                <div class="system-section distributed">
+                    <div class="system-title">分散型（Git）</div>
+                    <div class="system-subtitle">Git、Mercurial、Bazaar など</div>
+                    
+                    <div class="architecture-diagram">
+                        <div class="github-node">
+                            <div class="node-icon">🌐</div>
+                            <div class="node-label">GitHub<br>（共有拠点）</div>
+                        </div>
+                        
+                        <div class="distributed-nodes">
+                            <div class="distributed-node">
+                                <div class="node-icon">💻</div>
+                                <div class="node-label">開発者A<br>完全な履歴</div>
+                            </div>
+                            <div class="distributed-node">
+                                <div class="node-icon">💻</div>
+                                <div class="node-label">開発者B<br>完全な履歴</div>
+                            </div>
+                            <div class="distributed-node">
+                                <div class="node-icon">💻</div>
+                                <div class="node-label">開発者C<br>完全な履歴</div>
+                            </div>
+                            <div class="distributed-node">
+                                <div class="node-icon">💻</div>
+                                <div class="node-label">開発者D<br>完全な履歴</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="features-comparison">
+                        <div class="features-title">特徴</div>
+                        <ul class="feature-list">
+                            <li class="feature-item">
+                                <div class="feature-icon positive">✓</div>
+                                <div class="feature-text">各自が完全な履歴を保持</div>
+                            </li>
+                            <li class="feature-item">
+                                <div class="feature-icon positive">✓</div>
+                                <div class="feature-text">オフライン作業が可能</div>
+                            </li>
+                            <li class="feature-item">
+                                <div class="feature-icon positive">✓</div>
+                                <div class="feature-text">単一障害点が存在しない</div>
+                            </li>
+                            <li class="feature-item">
+                                <div class="feature-icon positive">✓</div>
+                                <div class="feature-text">高速なブランチ操作</div>
+                            </li>
+                            <li class="feature-item">
+                                <div class="feature-icon neutral">△</div>
+                                <div class="feature-text">学習コストが高い</div>
+                            </li>
+                            <li class="feature-item">
+                                <div class="feature-icon neutral">△</div>
+                                <div class="feature-text">概念理解に時間が必要</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="scenario-section">
+                <div class="scenario-title">Week 5システム開発での実際のシナリオ比較</div>
+                <div class="scenario-grid">
+                    <div class="scenario-card centralized-scenario">
+                        <div class="scenario-header">
+                            <div class="scenario-icon">🏢</div>
+                            中央集権型での開発
+                        </div>
+                        <div class="scenario-content">
+                            <strong>問題シーン：</strong><br>
+                            • サーバーメンテナンス中は作業不可<br>
+                            • ネットワーク切断で履歴確認できない<br>
+                            • 大きな変更の実験が困難<br>
+                            • 過去のバージョン取得に時間がかかる<br><br>
+                            
+                            <strong>学生管理システムの場合：</strong><br>
+                            継承機能の実験的実装を試すとき、失敗すると他の開発者に影響を与えるリスクがある
+                        </div>
+                    </div>
+                    
+                    <div class="scenario-card distributed-scenario">
+                        <div class="scenario-header">
+                            <div class="scenario-icon">🌐</div>
+                            分散型（Git）での開発
+                        </div>
+                        <div class="scenario-content">
+                            <strong>解決シーン：</strong><br>
+                            • オフラインでも全機能使用可能<br>
+                            • 各自の完全な履歴で安心作業<br>
+                            • ブランチで安全な実験が可能<br>
+                            • 高速な履歴検索とバージョン切り替え<br><br>
+                            
+                            <strong>学生管理システムの場合：</strong><br>
+                            新しいブランチでLombok統合を実験し、成功したらmainブランチに統合。失敗しても他に影響なし
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="scenario-section">
+                <div class="scenario-title">具体的な作業フロー比較</div>
+                <div class="scenario-grid">
+                    <div class="scenario-card centralized-scenario">
+                        <div class="scenario-header">
+                            <div class="scenario-icon">📝</div>
+                            中央集権型の作業フロー
+                        </div>
+                        <div class="scenario-content">
+                            <strong>1. 作業開始</strong><br>
+                            • サーバーから最新版を取得<br>
+                            • ネットワーク接続必須<br><br>
+                            
+                            <strong>2. 開発作業</strong><br>
+                            • ローカルでコード修正<br>
+                            • 履歴確認はサーバーアクセス必須<br><br>
+                            
+                            <strong>3. 保存・共有</strong><br>
+                            • サーバーに直接コミット<br>
+                            • 競合時は手動解決<br>
+                            • 失敗すると他の人に影響
+                        </div>
+                    </div>
+                    
+                    <div class="scenario-card distributed-scenario">
+                        <div class="scenario-header">
+                            <div class="scenario-icon">⚡</div>
+                            分散型（Git）の作業フロー
+                        </div>
+                        <div class="scenario-content">
+                            <strong>1. 作業開始</strong><br>
+                            • ローカルリポジトリで即座に開始<br>
+                            • オフラインでも全機能利用可能<br><br>
+                            
+                            <strong>2. 開発作業</strong><br>
+                            • ブランチで安全な実験<br>
+                            • ローカルで完全な履歴管理<br><br>
+                            
+                            <strong>3. 保存・共有</strong><br>
+                            • ローカルコミット → プッシュで共有<br>
+                            • Pull Requestでコードレビュー<br>
+                            • 安全なマージで品質確保
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="conclusion">
+                <div class="conclusion-title">🎯 なぜGitが現代の標準なのか</div>
+                <p class="conclusion-text">
+                    Week 5で作成した600-700行のエンタープライズシステムのような複雑なプロジェクトでは、<br>
+                    <strong>安全な実験</strong>、<strong>確実な履歴管理</strong>、<strong>効率的な協業</strong>が不可欠です。<br><br>
+                    
+                    Gitの分散型アーキテクチャにより、これらすべてが実現可能になり、<br>
+                    現代のソフトウェア開発において必須の技術となっています。
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>履歴管理：プロジェクトの成長過程</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2d3436 0%, #636e72 100%);
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        
+        .subtitle {
+            margin: 10px 0 0 0;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .growth-timeline {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 40px;
+            margin: 30px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .timeline-title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 40px;
+        }
+        
+        .growth-stages {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            min-height: 400px;
+            margin: 40px 0;
+        }
+        
+        .stage {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            margin: 0 10px;
+        }
+        
+        .stage-bar {
+            background: linear-gradient(180deg, #74b9ff 0%, #0984e3 100%);
+            border-radius: 8px 8px 0 0;
+            width: 60px;
+            margin-bottom: 15px;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(116, 185, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .stage:hover .stage-bar {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 25px rgba(116, 185, 255, 0.5);
+        }
+        
+        .stage1 .stage-bar { height: 100px; }
+        .stage2 .stage-bar { height: 150px; }
+        .stage3 .stage-bar { height: 200px; }
+        .stage4 .stage-bar { height: 250px; }
+        .stage5 .stage-bar { height: 300px; }
+        .stage6 .stage-bar { height: 350px; }
+        
+        .stage-icon {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 50px;
+            background: white;
+            border: 4px solid #0984e3;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .stage-label {
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        .stage-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .stage-desc {
+            font-size: 11px;
+            color: #7f8c8d;
+            line-height: 1.3;
+        }
+        
+        .stage-metrics {
+            background: white;
+            border-radius: 8px;
+            padding: 8px;
+            margin-top: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            font-size: 10px;
+            color: #495057;
+            text-align: center;
+        }
+        
+        .connecting-line {
+            position: absolute;
+            bottom: 85px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #74b9ff 0%, #0984e3 100%);
+            z-index: 1;
+        }
+        
+        .information-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .info-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border: 2px solid #dee2e6;
+            transition: all 0.3s ease;
+        }
+        
+        .info-card:hover {
+            border-color: #00b894;
+            transform: translateY(-5px);
+        }
+        
+        .info-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            margin-right: 15px;
+        }
+        
+        .info-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f2f6;
+        }
+        
+        .info-item:last-child {
+            border-bottom: none;
+        }
+        
+        .item-icon {
+            width: 20px;
+            height: 20px;
+            background: #74b9ff;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            margin-right: 10px;
+        }
+        
+        .item-text {
+            font-size: 14px;
+            color: #495057;
+            line-height: 1.4;
+        }
+        
+        .benefits-section {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 40px 0;
+        }
+        
+        .benefits-title {
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .benefit-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+        
+        .benefit-icon {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0984e3;
+            font-size: 20px;
+            margin: 0 auto 15px;
+        }
+        
+        .benefit-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .benefit-desc {
+            font-size: 13px;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+        
+        .scenario-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 40px 0;
+        }
+        
+        .scenario-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .scenario-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .scenario-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 5px solid #e74c3c;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .scenario-card.solution {
+            border-left-color: #00b894;
+        }
+        
+        .scenario-header {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .scenario-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        
+        .problem .scenario-icon {
+            background: #e74c3c;
+        }
+        
+        .solution .scenario-icon {
+            background: #00b894;
+        }
+        
+        .scenario-content {
+            font-size: 14px;
+            color: #495057;
+            line-height: 1.5;
+        }
+        
+        @media (max-width: 768px) {
+            .growth-stages {
+                flex-direction: column;
+                align-items: center;
+                min-height: auto;
+            }
+            
+            .stage {
+                margin: 20px 0;
+                flex-direction: row;
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .stage-bar {
+                width: 100px;
+                height: 40px !important;
+                margin-right: 15px;
+                margin-bottom: 0;
+            }
+            
+            .stage-icon {
+                position: static;
+                transform: none;
+                margin-right: 15px;
+            }
+            
+            .connecting-line {
+                display: none;
+            }
+            
+            .information-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📈 履歴管理：プロジェクトの成長追跡</h1>
+            <p class="subtitle">時系列での変更追跡とプロジェクト成長の可視化</p>
+        </div>
+        
+        <div class="content">
+            <div class="growth-timeline">
+                <div class="timeline-title">Week 5システムの成長過程</div>
+                
+                <div class="growth-stages">
+                    <div class="connecting-line"></div>
+                    
+                    <div class="stage stage1">
+                        <div class="stage-bar">
+                            <div class="stage-icon">📝</div>
+                        </div>
+                        <div class="stage-label">
+                            <div class="stage-title">設計開始</div>
+                            <div class="stage-desc">基本クラス設計<br>Person・Student</div>
+                            <div class="stage-metrics">120行<br>2ファイル</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stage stage2">
+                        <div class="stage-bar">
+                            <div class="stage-icon">🔗</div>
+                        </div>
+                        <div class="stage-label">
+                            <div class="stage-title">継承実装</div>
+                            <div class="stage-desc">階層構造<br>コード再利用</div>
+                            <div class="stage-metrics">300行<br>4ファイル</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stage stage3">
+                        <div class="stage-bar">
+                            <div class="stage-icon">🎭</div>
+                        </div>
+                        <div class="stage-label">
+                            <div class="stage-title">ポリモーフィズム</div>
+                            <div class="stage-desc">インターフェース<br>統一処理</div>
+                            <div class="stage-metrics">395行<br>7ファイル</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stage stage4">
+                        <div class="stage-bar">
+                            <div class="stage-icon">🛡️</div>
+                        </div>
+                        <div class="stage-label">
+                            <div class="stage-title">例外処理</div>
+                            <div class="stage-desc">エラーハンドリング<br>システム安定性</div>
+                            <div class="stage-metrics">535行<br>12ファイル</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stage stage5">
+                        <div class="stage-bar">
+                            <div class="stage-icon">⚡</div>
+                        </div>
+                        <div class="stage-label">
+                            <div class="stage-title">Lombok統合</div>
+                            <div class="stage-desc">86%コード削減<br>効率化</div>
+                            <div class="stage-metrics">300行<br>12ファイル</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stage stage6">
+                        <div class="stage-bar">
+                            <div class="stage-icon">🏆</div>
+                        </div>
+                        <div class="stage-label">
+                            <div class="stage-title">完成</div>
+                            <div class="stage-desc">エンタープライズ<br>レベル到達</div>
+                            <div class="stage-metrics">600-700行<br>完全システム</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="information-grid">
+                <div class="info-card">
+                    <div class="info-title">
+                        <div class="info-icon">📊</div>
+                        履歴から得られる情報
+                    </div>
+                    <ul class="info-list">
+                        <li class="info-item">
+                            <div class="item-icon">⏰</div>
+                            <div class="item-text">いつその機能が追加されたか</div>
+                        </li>
+                        <li class="info-item">
+                            <div class="item-icon">❓</div>
+                            <div class="item-text">なぜその変更が必要だったか</div>
+                        </li>
+                        <li class="info-item">
+                            <div class="item-icon">🔧</div>
+                            <div class="item-text">どのように実装されたか</div>
+                        </li>
+                        <li class="info-item">
+                            <div class="item-icon">👤</div>
+                            <div class="item-text">誰が変更を行ったか</div>
+                        </li>
+                        <li class="info-item">
+                            <div class="item-icon">📈</div>
+                            <div class="item-text">プロジェクトの成長過程</div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-title">
+                        <div class="info-icon">🎯</div>
+                        履歴活用の場面
+                    </div>
+                    <ul class="info-list">
+                        <li class="info-item">
+                            <div class="item-icon">🔍</div>
+                            <div class="item-text">バグが発生した時期の特定</div>
+                        </li>
+                        <li class="info-item">
+                            <div class="item-icon">📚</div>
+                            <div class="item-text">成功した実装パターンの参照</div>
+                        </li>
+                        <li class="info-item">
+                            <div class="item-icon">⚖️</div>
+                            <div class="item-text">リファクタリングの効果測定</div>
+                        </li>
+                        <li class="info-item">
+                            <div class="item-icon">🎓</div>
+                            <div class="item-text">技術的な進歩の記録</div>
+                        </li>
+                        <li class="info-item">
+                            <div class="item-icon">🏗️</div>
+                            <div class="item-text">設計思想の変化追跡</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="benefits-section">
+                <div class="benefits-title">履歴管理による長期的メリット</div>
+                <div class="benefits-grid">
+                    <div class="benefit-item">
+                        <div class="benefit-icon">🔍</div>
+                        <div class="benefit-title">問題の迅速な特定</div>
+                        <div class="benefit-desc">いつから問題が発生したかを正確に把握し、効率的なデバッグが可能</div>
+                    </div>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon">📚</div>
+                        <div class="benefit-title">知識の蓄積</div>
+                        <div class="benefit-desc">過去の成功・失敗パターンを蓄積し、将来のプロジェクトに活用</div>
+                    </div>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon">👥</div>
+                        <div class="benefit-title">チーム学習</div>
+                        <div class="benefit-desc">メンバー間での技術共有と、プロジェクト全体の品質向上</div>
+                    </div>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon">📈</div>
+                        <div class="benefit-title">成長の可視化</div>
+                        <div class="benefit-desc">プロジェクトの成長過程を定量的に測定し、改善点を明確化</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="scenario-section">
+                <div class="scenario-title">実際の問題解決シナリオ</div>
+                <div class="scenario-cards">
+                    <div class="scenario-card problem">
+                        <div class="scenario-header">
+                            <div class="scenario-icon">❗</div>
+                            問題発生
+                        </div>
+                        <div class="scenario-content">
+                            <strong>状況：</strong><br>
+                            「学生の成績計算が昨日まで正常に動作していたのに、今日になって正しく計算されない」
+                            
+                            <br><br><strong>従来の対応：</strong><br>
+                            • 全コードを手作業で確認<br>
+                            • 変更箇所が不明で時間がかかる<br>
+                            • 原因特定が困難
+                        </div>
+                    </div>
+                    
+                    <div class="scenario-card solution">
+                        <div class="scenario-header">
+                            <div class="scenario-icon">✅</div>
+                            履歴管理による解決
+                        </div>
+                        <div class="scenario-content">
+                            <strong>Git履歴での対応：</strong><br>
+                            1. 昨日と今日のコミットを比較<br>
+                            2. 成績計算に関連する変更箇所を特定<br>
+                            3. 該当するコミットメッセージで変更意図を確認<br>
+                            4. 問題のある変更を特定し、迅速に修正
+                            
+                            <br><br><strong>結果：</strong><br>
+                            5分で原因特定、10分で修正完了
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
