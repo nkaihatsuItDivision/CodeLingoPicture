@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新規ファイル追加の流れ - Git新機能管理の実践</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', 'Hiragino Sans', 'Yu Gothic', sans-serif;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            max-width: 1200px;
+            width: 100%;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            font-size: 16px;
+        }
+        
+        .flow-container {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .step {
+            display: flex;
+            align-items: flex-start;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .step-number {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-right: 25px;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-title {
+            color: #2c3e50;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .step-description {
+            color: #34495e;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 10px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        
+        .command {
+            color: #f39c12;
+        }
+        
+        .output {
+            color: #2ecc71;
+            margin-top: 8px;
+        }
+        
+        .file-creation {
+            background: #e8f5e8;
+            border: 2px solid #27ae60;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        
+        .file-name {
+            color: #27ae60;
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .file-preview {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #495057;
+            overflow-x: auto;
+        }
+        
+        .highlight-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        
+        .highlight-title {
+            color: #856404;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .status-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 15px 0;
+        }
+        
+        .status-box {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            border: 2px solid #dee2e6;
+        }
+        
+        .status-box h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .untracked {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .tracked {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        .new-file {
+            color: #3498db;
+            font-weight: bold;
+        }
+        
+        .arrow-down {
+            text-align: center;
+            color: #4facfe;
+            font-size: 30px;
+            margin: 10px 0;
+        }
+        
+        .success-box {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .success-box h3 {
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+        
+        .file-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📁 新規ファイル追加の流れ</h1>
+            <p>AuditStudentクラスの新規作成を通じて新機能開発の管理を実践</p>
+        </div>
+        
+        <div class="flow-container">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <div class="step-title">新しいクラスファイルの作成</div>
+                    <div class="step-description">システム拡張のため、聴講生を管理するAuditStudentクラスを新規作成</div>
+                    <div class="file-grid">
+                        <div class="file-creation">
+                            <div class="file-name">📄 AuditStudent.java</div>
+                            <div class="file-preview">
+/**
+ * 聴講生クラス
+ * Week 6レッスン4で新規追加
+ */
+public class AuditStudent extends Person {
+    private String auditCourse;
+    private int attendanceCount;
+    // ... コンストラクタ、メソッド
+}
+                            </div>
+                        </div>
+                        <div class="file-creation">
+                            <div class="file-name">📄 AuditStudentTest.java</div>
+                            <div class="file-preview">
+/**
+ * AuditStudentクラスのテストプログラム
+ */
+public class AuditStudentTest {
+    public static void main(String[] args) {
+        // テストコード
+    }
+}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="arrow-down">⬇️</div>
+            
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <div class="step-title">新規ファイルの検出</div>
+                    <div class="step-description">Gitが新規ファイルをどのように認識するかを確認</div>
+                    <div class="code-block">
+                        <span class="command">$ git status</span>
+                        <div class="output">
+On branch main<br>
+Untracked files:<br>
+&nbsp;&nbsp;(use "git add &lt;file&gt;..." to include in what will be committed)<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AuditStudent.java<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AuditStudentTest.java<br>
+<br>
+nothing added to commit but untracked files present
+                        </div>
+                    </div>
+                    <div class="highlight-box">
+                        <div class="highlight-title">📝 重要なポイント</div>
+                        <strong class="untracked">Untracked files</strong> として新規ファイルが認識されます<br>
+                        まだGitの管理下にない状態を「追跡されていない」と表現します
+                    </div>
+                </div>
+            </div>
+            
+            <div class="arrow-down">⬇️</div>
+            
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <div class="step-title">複数新規ファイルの管理</div>
+                    <div class="step-description">複数の新規ファイルを効率的にステージングに追加</div>
+                    <div class="code-block">
+                        <span class="command">$ git add AuditStudent.java AuditStudentTest.java</span>
+                    </div>
+                    <div style="text-align: center; margin: 15px 0; color: #7f8c8d;">または</div>
+                    <div class="code-block">
+                        <span class="command">$ git add *.java</span>
+                    </div>
+                    <div class="status-comparison">
+                        <div class="status-box">
+                            <h4>追加前</h4>
+                            <div class="code-block">
+                                <div class="untracked">Untracked files:</div>
+                                <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AuditStudent.java</div>
+                                <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AuditStudentTest.java</div>
+                            </div>
+                        </div>
+                        <div class="status-box">
+                            <h4>追加後</h4>
+                            <div class="code-block">
+                                <div class="tracked">Changes to be committed:</div>
+                                <div class="new-file">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new file:&nbsp;&nbsp;&nbsp;AuditStudent.java</div>
+                                <div class="new-file">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new file:&nbsp;&nbsp;&nbsp;AuditStudentTest.java</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="arrow-down">⬇️</div>
+            
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <div class="step-title">新規ファイルをコミット</div>
+                    <div class="step-description">新機能の追加として適切なメッセージでコミット</div>
+                    <div class="code-block">
+                        <span class="command">$ git commit -m "新機能追加: 聴講生（AuditStudent）クラスとテストプログラムを追加
+
+- AuditStudent.java: 聴講生を管理するクラス
+  - Person継承で基本情報管理
+  - 聴講講座、出席回数、継続状況の管理
+- AuditStudentTest.java: 聴講生機能のテストプログラム"</span>
+                        <div class="output">
+[main h8i9j0k] 新機能追加: 聴講生（AuditStudent）クラスとテストプログラムを追加<br>
+&nbsp;2 files changed, 145 insertions(+)<br>
+&nbsp;create mode 100644 AuditStudent.java<br>
+&nbsp;create mode 100644 AuditStudentTest.java
+                        </div>
+                    </div>
+                    <div class="highlight-box">
+                        <div class="highlight-title">✨ 注目ポイント</div>
+                        <strong class="new-file">create mode 100644</strong> で新規ファイル作成が記録されます<br>
+                        修正ファイルとは異なる履歴として管理されます
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="success-box">
+            <h3>🎊 新規ファイル追加の管理が完了しました！</h3>
+            <p>システム拡張時の新機能ファイルを安全にGitで管理する技術をマスターしました。<br>
+            新規作成 → 検出確認 → ステージング → コミットの流れで、チーム開発での新機能追加が可能です！</p>
+        </div>
+    </div>
+</body>
+</html>
