@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>データ管理方法の進化比較図</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .evolution-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 30px;
+        }
+        
+        .method-card {
+            flex: 1;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            border: 3px solid;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+        
+        .method-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .array-method {
+            border-color: #e74c3c;
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+        }
+        
+        .file-method {
+            border-color: #f39c12;
+            background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+        }
+        
+        .database-method {
+            border-color: #27ae60;
+            background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+        }
+        
+        .method-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            color: white;
+        }
+        
+        .array-title { background: #e74c3c; }
+        .file-title { background: #f39c12; }
+        .database-title { background: #27ae60; }
+        
+        .method-content {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+        }
+        
+        .problems-list {
+            margin: 15px 0;
+        }
+        
+        .problems-list h4 {
+            color: #e74c3c;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .problems-list ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .problems-list li {
+            background: rgba(231, 76, 60, 0.1);
+            margin: 5px 0;
+            padding: 8px 12px;
+            border-left: 4px solid #e74c3c;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        
+        .benefits-list {
+            margin: 15px 0;
+        }
+        
+        .benefits-list h4 {
+            color: #27ae60;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .benefits-list ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .benefits-list li {
+            background: rgba(39, 174, 96, 0.1);
+            margin: 5px 0;
+            padding: 8px 12px;
+            border-left: 4px solid #27ae60;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        
+        .arrow {
+            font-size: 40px;
+            color: #3498db;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 10px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+        
+        .evolution-flow {
+            text-align: center;
+            margin: 40px 0;
+            font-size: 18px;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        
+        .performance-comparison {
+            margin-top: 40px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #3498db;
+        }
+        
+        .performance-title {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+            font-size: 14px;
+        }
+        
+        .comparison-table th {
+            background: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .comparison-table .poor { background: #ffebee; color: #c62828; }
+        .comparison-table .fair { background: #fff8e1; color: #f57f17; }
+        .comparison-table .good { background: #e8f5e8; color: #2e7d32; }
+        .comparison-table .excellent { background: #e3f2fd; color: #1565c0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">データ管理方法の進化比較図</div>
+        
+        <div class="evolution-flow">
+            Week 5システムの現状 → より良い管理方法を求めて → データベースの発見
+        </div>
+        
+        <div class="evolution-container">
+            <!-- 配列・ArrayList方式 -->
+            <div class="method-card array-method">
+                <div class="method-title array-title">配列・ArrayList方式</div>
+                <div class="method-content">
+                    <div class="code-example">
+Map&lt;String, Student&gt; students = new HashMap&lt;&gt;();
+List&lt;Grade&gt; gradeHistory = new ArrayList&lt;&gt;();
+
+// プログラム終了でデータ消失
+students.put("S001", new Student("田中太郎"));
+                    </div>
+                    
+                    <div class="problems-list">
+                        <h4>❌ 問題点</h4>
+                        <ul>
+                            <li>プログラム終了でデータ消失</li>
+                            <li>複数PC間でデータ共有不可</li>
+                            <li>大量データで検索が遅い</li>
+                            <li>データ整合性の手動管理</li>
+                            <li>バックアップ・復旧が困難</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="arrow">→</div>
+            
+            <!-- ファイル管理方式 -->
+            <div class="method-card file-method">
+                <div class="method-title file-title">ファイル管理方式</div>
+                <div class="method-content">
+                    <div class="code-example">
+// students.txt に保存
+PrintWriter writer = new PrintWriter("students.txt");
+writer.println("S001,田中太郎,20,CS");
+
+// 読み込み時に全解析が必要
+BufferedReader reader = new BufferedReader(...);
+                    </div>
+                    
+                    <div class="problems-list">
+                        <h4>❌ 新たな問題</h4>
+                        <ul>
+                            <li>同時アクセスでデータ競合</li>
+                            <li>複雑な継承構造の保存困難</li>
+                            <li>検索で全ファイル読込必要</li>
+                            <li>データ整合性制御が複雑</li>
+                            <li>ファイル破損リスク</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="arrow">→</div>
+            
+            <!-- データベース方式 -->
+            <div class="method-card database-method">
+                <div class="method-title database-title">データベース方式</div>
+                <div class="method-content">
+                    <div class="code-example">
+-- 高速で安全なデータ管理
+INSERT INTO students VALUES ('S001', '田中太郎', 20, 'CS');
+
+-- 複雑な検索も瞬時に実行
+SELECT s.name, AVG(g.score) 
+FROM students s JOIN grades g ON s.id = g.student_id 
+WHERE s.major = 'CS' GROUP BY s.name;
+                    </div>
+                    
+                    <div class="benefits-list">
+                        <h4>✅ 解決される問題</h4>
+                        <ul>
+                            <li>データの永続的な保存保証</li>
+                            <li>複数ユーザーの安全な同時アクセス</li>
+                            <li>高速な検索・集計処理</li>
+                            <li>自動的なデータ整合性確保</li>
+                            <li>完全なバックアップ・復旧機能</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="performance-comparison">
+            <div class="performance-title">性能・機能比較表</div>
+            <table class="comparison-table">
+                <tr>
+                    <th>評価項目</th>
+                    <th>配列・ArrayList</th>
+                    <th>ファイル管理</th>
+                    <th>データベース</th>
+                </tr>
+                <tr>
+                    <td><strong>データ永続性</strong></td>
+                    <td class="poor">なし</td>
+                    <td class="fair">あり</td>
+                    <td class="excellent">完全保証</td>
+                </tr>
+                <tr>
+                    <td><strong>同時アクセス</strong></td>
+                    <td class="poor">不可</td>
+                    <td class="poor">危険</td>
+                    <td class="excellent">安全</td>
+                </tr>
+                <tr>
+                    <td><strong>検索性能</strong></td>
+                    <td class="fair">メモリ内高速</td>
+                    <td class="poor">全読込必要</td>
+                    <td class="excellent">インデックス高速</td>
+                </tr>
+                <tr>
+                    <td><strong>データ整合性</strong></td>
+                    <td class="poor">手動管理</td>
+                    <td class="poor">手動管理</td>
+                    <td class="excellent">自動保証</td>
+                </tr>
+                <tr>
+                    <td><strong>拡張性</strong></td>
+                    <td class="poor">メモリ制限</td>
+                    <td class="fair">ファイルサイズ制限</td>
+                    <td class="excellent">大容量対応</td>
+                </tr>
+                <tr>
+                    <td><strong>バックアップ</strong></td>
+                    <td class="poor">なし</td>
+                    <td class="fair">手動コピー</td>
+                    <td class="excellent">自動・増分対応</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

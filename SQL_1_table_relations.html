@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>テーブル構造とリレーションの基本概念図</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            font-size: 16px;
+        }
+        
+        .main-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+        
+        .java-section {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            border: 3px solid #e74c3c;
+            border-radius: 12px;
+            padding: 25px;
+        }
+        
+        .database-section {
+            background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+            border: 3px solid #27ae60;
+            border-radius: 12px;
+            padding: 25px;
+        }
+        
+        .section-title {
+            text-align: center;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .java-title { background: #e74c3c; }
+        .database-title { background: #27ae60; }
+        
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin: 15px 0;
+            overflow-x: auto;
+            line-height: 1.6;
+        }
+        
+        .keyword { color: #3498db; }
+        .string { color: #2ecc71; }
+        .comment { color: #95a5a6; }
+        
+        .problem-list {
+            background: rgba(231, 76, 60, 0.1);
+            border: 1px solid #e74c3c;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .problem-list h4 {
+            color: #e74c3c;
+            margin: 0 0 10px 0;
+            font-size: 14px;
+        }
+        
+        .problem-list ul {
+            margin: 0;
+            padding-left: 20px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        
+        .solution-list {
+            background: rgba(39, 174, 96, 0.1);
+            border: 1px solid #27ae60;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .solution-list h4 {
+            color: #27ae60;
+            margin: 0 0 10px 0;
+            font-size: 14px;
+        }
+        
+        .solution-list ul {
+            margin: 0;
+            padding-left: 20px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        
+        .table-concept-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 30px;
+            border: 2px solid #3498db;
+            margin: 40px 0;
+        }
+        
+        .concept-title {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 22px;
+            font-weight: bold;
+        }
+        
+        .tables-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .table-wrapper {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border: 2px solid #3498db;
+        }
+        
+        .table-header {
+            background: #3498db;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .grades-header {
+            background: #27ae60;
+        }
+        
+        .demo-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .demo-table th {
+            background: #34495e;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        
+        .demo-table td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #ecf0f1;
+            font-size: 12px;
+        }
+        
+        .demo-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .highlight-connection {
+            background: #fff3cd !important;
+            border: 2px solid #ffc107 !important;
+        }
+        
+        .relation-explanation {
+            grid-column: 1 / -1;
+            background: white;
+            border: 2px solid #9b59b6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .relation-title {
+            text-align: center;
+            color: #9b59b6;
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .relation-arrow {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 24px;
+            color: #e74c3c;
+        }
+        
+        .relation-description {
+            font-size: 14px;
+            line-height: 1.6;
+            text-align: center;
+            color: #2c3e50;
+        }
+        
+        .concepts-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin: 40px 0;
+        }
+        
+        .concept-card {
+            background: white;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .concept-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .concept-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+        
+        .concept-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .concept-desc {
+            font-size: 12px;
+            color: #7f8c8d;
+            line-height: 1.4;
+        }
+        
+        .relationship-section {
+            background: #e8f5e8;
+            border-radius: 12px;
+            padding: 30px;
+            border: 2px solid #27ae60;
+            margin: 40px 0;
+        }
+        
+        .relationship-demo {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 30px 0;
+            position: relative;
+        }
+        
+        .entity-box {
+            background: white;
+            border: 3px solid #2c3e50;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+        
+        .entity-title {
+            background: #2c3e50;
+            color: white;
+            padding: 8px;
+            margin: -20px -20px 15px -20px;
+            font-weight: bold;
+        }
+        
+        .entity-fields {
+            font-size: 13px;
+            line-height: 1.8;
+            text-align: left;
+        }
+        
+        .primary-key {
+            background: #f39c12;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 10px;
+            margin-right: 8px;
+            font-weight: bold;
+        }
+        
+        .foreign-key {
+            background: #e74c3c;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 10px;
+            margin-right: 8px;
+            font-weight: bold;
+        }
+        
+        .connection-arrow {
+            font-size: 30px;
+            color: #e74c3c;
+            position: relative;
+        }
+        
+        .connection-label {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            border: 2px solid #e74c3c;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #e74c3c;
+            white-space: nowrap;
+        }
+        
+        .benefits-section {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 40px;
+        }
+        
+        .benefits-title {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ffc107;
+        }
+        
+        .benefit-icon {
+            font-size: 24px;
+            margin-right: 15px;
+        }
+        
+        .benefit-text {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .benefit-text strong {
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">テーブル構造とリレーションの基本概念</div>
+        <div class="subtitle">Week 5学生管理システムを例に理解するデータベースの基本</div>
+        
+        <!-- Java配列 vs データベーステーブル比較 -->
+        <div class="main-comparison">
+            <div class="java-section">
+                <div class="section-title java-title">❌ Week 5での配列管理</div>
+                
+                <div class="code-example">
+<span class="comment">// Week 5システムでのデータ管理</span>
+<span class="keyword">Map</span>&lt;<span class="keyword">String</span>, Student&gt; students = <span class="keyword">new</span> HashMap&lt;&gt;();
+<span class="keyword">List</span>&lt;Grade&gt; gradeHistory = <span class="keyword">new</span> ArrayList&lt;&gt;();
+
+<span class="comment">// 学生データの設定</span>
+students.put(<span class="string">"S001"</span>, <span class="keyword">new</span> Student(<span class="string">"田中太郎"</span>, <span class="string">"CS"</span>));
+students.put(<span class="string">"S002"</span>, <span class="keyword">new</span> Student(<span class="string">"山田花子"</span>, <span class="string">"ML"</span>));
+
+<span class="comment">// 成績データの設定</span>
+gradeHistory.add(<span class="keyword">new</span> Grade(<span class="string">"S001"</span>, <span class="string">"数学"</span>, 85));
+gradeHistory.add(<span class="keyword">new</span> Grade(<span class="string">"S001"</span>, <span class="string">"プログラミング"</span>, 92));
+                </div>
+                
+                <div class="problem-list">
+                    <h4>⚠️ 配列管理の問題点</h4>
+                    <ul>
+                        <li>プログラム終了でデータ消失</li>
+                        <li>学生と成績の関連が手動管理</li>
+                        <li>データ整合性チェックが困難</li>
+                        <li>複雑な検索処理が必要</li>
+                        <li>メモリ使用量の制限</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="database-section">
+                <div class="section-title database-title">✅ データベーステーブル管理</div>
+                
+                <div class="code-example">
+<span class="comment">-- 学生テーブルの作成</span>
+<span class="keyword">CREATE TABLE</span> students (
+    student_id <span class="keyword">VARCHAR</span>(10) <span class="keyword">PRIMARY KEY</span>,
+    name <span class="keyword">VARCHAR</span>(50),
+    major <span class="keyword">VARCHAR</span>(50)
+);
+
+<span class="comment">-- 成績テーブルの作成（外部キーで関連付け）</span>
+<span class="keyword">CREATE TABLE</span> grades (
+    grade_id <span class="keyword">INT</span> <span class="keyword">AUTO_INCREMENT PRIMARY KEY</span>,
+    student_id <span class="keyword">VARCHAR</span>(10),
+    subject <span class="keyword">VARCHAR</span>(100),
+    score <span class="keyword">INT</span>,
+    <span class="keyword">FOREIGN KEY</span> (student_id) <span class="keyword">REFERENCES</span> students(student_id)
+);
+                </div>
+                
+                <div class="solution-list">
+                    <h4>✅ データベースの解決策</h4>
+                    <ul>
+                        <li>永続的なデータ保存</li>
+                        <li>外部キーによる自動関連管理</li>
+                        <li>制約による整合性保証</li>
+                        <li>高速なSQL検索</li>
+                        <li>大容量データ対応</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- テーブル構造の基本概念 -->
+        <div class="table-concept-section">
+            <div class="concept-title">📊 テーブル構造の基本要素</div>
+            
+            <div class="concepts-grid">
+                <div class="concept-card">
+                    <div class="concept-icon">🗄️</div>
+                    <div class="concept-name">データベース</div>
+                    <div class="concept-desc">関連するテーブルをまとめて管理する入れ物</div>
+                </div>
+                
+                <div class="concept-card">
+                    <div class="concept-icon">📋</div>
+                    <div class="concept-name">テーブル</div>
+                    <div class="concept-desc">データを行と列の表形式で格納する構造</div>
+                </div>
+                
+                <div class="concept-card">
+                    <div class="concept-icon">📝</div>
+                    <div class="concept-name">レコード（行）</div>
+                    <div class="concept-desc">1つの完全なデータセット（例：1人の学生情報）</div>
+                </div>
+                
+                <div class="concept-card">
+                    <div class="concept-icon">📊</div>
+                    <div class="concept-name">カラム（列）</div>
+                    <div class="concept-desc">データの属性を定義（例：名前、年齢、専攻）</div>
+                </div>
+            </div>
+            
+            <!-- 実際のテーブル例 -->
+            <div class="tables-container">
+                <div class="table-wrapper">
+                    <div class="table-header">👥 students テーブル</div>
+                    <table class="demo-table">
+                        <tr>
+                            <th>student_id</th>
+                            <th>name</th>
+                            <th>major</th>
+                        </tr>
+                        <tr>
+                            <td class="highlight-connection">S001</td>
+                            <td>田中太郎</td>
+                            <td>CS</td>
+                        </tr>
+                        <tr>
+                            <td>S002</td>
+                            <td>山田花子</td>
+                            <td>ML</td>
+                        </tr>
+                        <tr>
+                            <td>S003</td>
+                            <td>佐藤一郎</td>
+                            <td>AI</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="table-wrapper">
+                    <div class="table-header grades-header">📊 grades テーブル</div>
+                    <table class="demo-table">
+                        <tr>
+                            <th>grade_id</th>
+                            <th>student_id</th>
+                            <th>subject</th>
+                            <th>score</th>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td class="highlight-connection">S001</td>
+                            <td>数学</td>
+                            <td>85</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td class="highlight-connection">S001</td>
+                            <td>プログラミング</td>
+                            <td>92</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>S002</td>
+                            <td>機械学習</td>
+                            <td>88</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="relation-explanation">
+                <div class="relation-title">🔗 テーブル間の関係性</div>
+                <div class="relation-arrow">↕️</div>
+                <div class="relation-description">
+                    <strong>students.student_id</strong> と <strong>grades.student_id</strong> が連携<br>
+                    一人の学生は複数の成績を持つ（1対多の関係）<br>
+                    外部キー制約により、存在しない学生の成績は登録不可
+                </div>
+            </div>
+        </div>
+        
+        <!-- リレーション（関係）の詳細説明 -->
+        <div class="relationship-section">
+            <div class="concept-title">🔗 リレーション（関係）の仕組み</div>
+            
+            <div class="relationship-demo">
+                <div class="entity-box">
+                    <div class="entity-title">👥 Students</div>
+                    <div class="entity-fields">
+                        <div><span class="primary-key">PK</span> student_id</div>
+                        <div>name</div>
+                        <div>major</div>
+                    </div>
+                </div>
+                
+                <div class="connection-arrow">
+                    ←→
+                    <div class="connection-label">1 : N</div>
+                </div>
+                
+                <div class="entity-box">
+                    <div class="entity-title">📊 Grades</div>
+                    <div class="entity-fields">
+                        <div><span class="primary-key">PK</span> grade_id</div>
+                        <div><span class="foreign-key">FK</span> student_id</div>
+                        <div>subject</div>
+                        <div>score</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; font-size: 16px; color: #2c3e50; margin: 20px 0;">
+                <strong>1人の学生（Students） : 複数の成績（Grades）</strong>
+            </div>
+        </div>
+        
+        <!-- データベース方式の利点 -->
+        <div class="benefits-section">
+            <div class="benefits-title">✨ データベーステーブルの利点</div>
+            
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="benefit-icon">💾</div>
+                    <div class="benefit-text">
+                        <strong>永続性:</strong> プログラム終了後もデータが保持され、次回起動時に自動的に利用可能
+                    </div>
+                </div>
+                
+                <div class="benefit-item">
+                    <div class="benefit-icon">🔗</div>
+                    <div class="benefit-text">
+                        <strong>関係性:</strong> 外部キーにより学生と成績の関連が自動的に管理・保証される
+                    </div>
+                </div>
+                
+                <div class="benefit-item">
+                    <div class="benefit-icon">🔍</div>
+                    <div class="benefit-text">
+                        <strong>高速検索:</strong> インデックスにより大量データでも瞬時に目的の情報を取得
+                    </div>
+                </div>
+                
+                <div class="benefit-item">
+                    <div class="benefit-icon">✅</div>
+                    <div class="benefit-text">
+                        <strong>整合性:</strong> 制約により不正なデータの登録を防ぎ、データの品質を自動保証
+                    </div>
+                </div>
+                
+                <div class="benefit-item">
+                    <div class="benefit-icon">👥</div>
+                    <div class="benefit-text">
+                        <strong>同時アクセス:</strong> 複数のユーザーが安全に同時にデータを操作可能
+                    </div>
+                </div>
+                
+                <div class="benefit-item">
+                    <div class="benefit-icon">📈</div>
+                    <div class="benefit-text">
+                        <strong>拡張性:</strong> メモリ制限を超えた大容量データの効率的な管理が可能
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
