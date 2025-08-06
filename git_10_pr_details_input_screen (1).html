@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pull Request詳細入力画面</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            color: #24292f;
+        }
+        
+        .github-header {
+            background-color: #24292f;
+            color: white;
+            padding: 16px 0;
+            margin: -20px -20px 20px -20px;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .github-logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .pr-header {
+            margin-bottom: 24px;
+        }
+        
+        .pr-title-section {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .pr-subtitle {
+            color: #656d76;
+            font-size: 14px;
+        }
+        
+        .pr-form-container {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+        }
+        
+        .pr-form-main {
+            background-color: white;
+            border: 1px solid #d1d9e0;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        
+        .pr-form-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d1d9e0;
+            border-radius: 6px;
+            font-size: 14px;
+            background-color: #f6f8fa;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #0969da;
+            box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.1);
+        }
+        
+        .form-textarea {
+            width: 100%;
+            min-height: 300px;
+            padding: 12px;
+            border: 1px solid #d1d9e0;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            line-height: 1.5;
+            resize: vertical;
+        }
+        
+        .form-textarea:focus {
+            outline: none;
+            border-color: #0969da;
+            box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.1);
+        }
+        
+        .markdown-toolbar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            padding: 8px;
+            background-color: #f6f8fa;
+            border: 1px solid #d1d9e0;
+            border-bottom: none;
+            border-radius: 6px 6px 0 0;
+        }
+        
+        .markdown-btn {
+            padding: 4px 8px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            background: none;
+            cursor: pointer;
+            font-size: 12px;
+            color: #656d76;
+        }
+        
+        .markdown-btn:hover {
+            background-color: #e6edf3;
+            border-color: #d1d9e0;
+        }
+        
+        .sidebar-section {
+            background-color: white;
+            border: 1px solid #d1d9e0;
+            border-radius: 8px;
+            padding: 16px;
+        }
+        
+        .sidebar-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+        
+        .sidebar-content {
+            font-size: 14px;
+            color: #656d76;
+        }
+        
+        .branch-comparison {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            padding: 12px;
+            background-color: #f6f8fa;
+            border: 1px solid #d1d9e0;
+            border-radius: 6px;
+        }
+        
+        .branch-label {
+            background-color: #0969da;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            font-family: 'Monaco', 'Menlo', monospace;
+        }
+        
+        .branch-arrow {
+            font-size: 16px;
+            color: #656d76;
+        }
+        
+        .commit-summary {
+            background-color: #e6f7e1;
+            border: 1px solid #1f883d;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .commit-summary-title {
+            font-weight: 600;
+            color: #1f883d;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .commit-summary-text {
+            color: #1f883d;
+            font-size: 14px;
+        }
+        
+        .pr-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #d1d9e0;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border: 1px solid #d1d9e0;
+            border-radius: 6px;
+            background-color: #f6f8fa;
+            color: #24292f;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn:hover {
+            background-color: #f3f4f6;
+            border-color: #c4cdd0;
+        }
+        
+        .btn-primary {
+            background-color: #1f883d;
+            color: white;
+            border-color: #1f883d;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1a7f37;
+            border-color: #1a7f37;
+        }
+        
+        .form-helper-text {
+            font-size: 12px;
+            color: #656d76;
+            margin-top: 4px;
+        }
+        
+        .template-suggestion {
+            background-color: #fff8c5;
+            border: 1px solid #d4a72c;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .template-suggestion-title {
+            font-weight: 600;
+            color: #975a00;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .template-suggestion-text {
+            color: #975a00;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .reviewers-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .reviewer-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .reviewer-item:hover {
+            background-color: #f6f8fa;
+            border-color: #d1d9e0;
+        }
+        
+        .reviewer-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: #0969da;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .reviewer-name {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .instruction-box {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #0969da;
+            color: white;
+            padding: 16px;
+            border-radius: 8px;
+            max-width: 320px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .instruction-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="github-header">
+        <div class="header-content">
+            <div class="github-logo">GitHub</div>
+        </div>
+    </div>
+    
+    <div class="content">
+        <div class="pr-header">
+            <div class="pr-title-section">Open a pull request</div>
+            <div class="pr-subtitle">Create a new pull request by comparing changes across two branches</div>
+        </div>
+        
+        <div class="branch-comparison">
+            <span class="branch-label">main</span>
+            <span class="branch-arrow">←</span>
+            <span class="branch-label">feature/add-basic-operations</span>
+            <div style="margin-left: auto; font-size: 14px; color: #1f883d; font-weight: 500;">
+                ✓ Able to merge
+            </div>
+        </div>
+        
+        <div class="commit-summary">
+            <div class="commit-summary-title">
+                <span>📊</span>
+                <span>1 commit</span>
+            </div>
+            <div class="commit-summary-text">
+                feat: 四則演算機能を追加 - add(), subtract(), multiply(), divide()メソッドを実装
+            </div>
+        </div>
+        
+        <div class="template-suggestion">
+            <div class="template-suggestion-title">
+                <span>💡</span>
+                <span>PR作成のポイント</span>
+            </div>
+            <div class="template-suggestion-text">
+                分かりやすいタイトルと詳細な説明で、レビュアーが変更内容を理解しやすくしましょう。
+            </div>
+        </div>
+        
+        <div class="pr-form-container">
+            <div class="pr-form-main">
+                <div class="form-group">
+                    <label class="form-label">Title *</label>
+                    <input type="text" class="form-input" value="feat: 四則演算機能を追加（Calculator v2.0）" placeholder="タイトルを入力してください">
+                    <div class="form-helper-text">変更内容が分かりやすいタイトルをつけましょう</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <div class="markdown-toolbar">
+                        <button class="markdown-btn"><strong>B</strong></button>
+                        <button class="markdown-btn"><em>I</em></button>
+                        <button class="markdown-btn"># H</button>
+                        <button class="markdown-btn">≡ List</button>
+                        <button class="markdown-btn">🔗 Link</button>
+                        <button class="markdown-btn">💻 Code</button>
+                    </div>
+                    <textarea class="form-textarea" placeholder="プルリクエストの説明を入力してください">## 概要
+Calculatorクラスに減算、乗算、除算機能を追加し、基本的な四則演算を完全サポートしました。
+
+## 変更内容
+### 追加機能
+- `subtract(int a, int b)`: 減算処理
+- `multiply(int a, int b)`: 乗算処理  
+- `divide(int a, int b)`: 除算処理（ゼロ除算チェック付き）
+
+### 改善点
+- 全メソッドにJavadocコメントを追加
+- より詳細な出力フォーマットに変更
+- バージョン表示をv2.0に更新
+
+## テスト結果
+```
+Calculator v2.0 - 四則演算対応
+=========================
+計算対象: 20, 5
+
+加算結果: 25
+減算結果: 15
+乗算結果: 100
+除算結果: 4
+```
+
+## 確認事項
+- [x] 全メソッドが正常に動作することを確認
+- [x] ゼロ除算エラーハンドリングをテスト
+- [x] コンパイルエラーがないことを確認
+- [x] Javadocコメントが適切に記述されていることを確認
+
+## レビューポイント
+以下の点について特にレビューをお願いします：
+1. メソッド設計の妥当性
+2. エラーハンドリングの適切性
+3. コメント・ドキュメントの品質
+4. 命名規則の統一性</textarea>
+                    <div class="form-helper-text">Markdownフォーマットが使用できます</div>
+                </div>
+            </div>
+            
+            <div class="pr-form-sidebar">
+                <div class="sidebar-section">
+                    <div class="sidebar-title">Reviewers</div>
+                    <div class="reviewers-list">
+                        <div class="reviewer-item">
+                            <div class="reviewer-avatar">TL</div>
+                            <div class="reviewer-name">Tech Lead</div>
+                        </div>
+                        <div class="reviewer-item">
+                            <div class="reviewer-avatar">SM</div>
+                            <div class="reviewer-name">Senior Member</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="sidebar-section">
+                    <div class="sidebar-title">Assignees</div>
+                    <div class="sidebar-content">
+                        No one assigned
+                    </div>
+                </div>
+                
+                <div class="sidebar-section">
+                    <div class="sidebar-title">Labels</div>
+                    <div class="sidebar-content">
+                        <span style="background-color: #0969da; color: white; padding: 2px 6px; border-radius: 12px; font-size: 12px;">enhancement</span>
+                        <span style="background-color: #1f883d; color: white; padding: 2px 6px; border-radius: 12px; font-size: 12px; margin-left: 4px;">feature</span>
+                    </div>
+                </div>
+                
+                <div class="sidebar-section">
+                    <div class="sidebar-title">Projects</div>
+                    <div class="sidebar-content">
+                        Calculator Enhancement Project
+                    </div>
+                </div>
+                
+                <div class="sidebar-section">
+                    <div class="sidebar-title">Milestone</div>
+                    <div class="sidebar-content">
+                        v2.0 Release
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="pr-actions">
+            <button class="btn">Cancel</button>
+            <button class="btn btn-primary">Create pull request</button>
+        </div>
+    </div>
+    
+    <div class="instruction-box">
+        <div class="instruction-title">📝 PR作成の流れ</div>
+        1. 分かりやすいタイトルを入力<br>
+        2. 詳細な説明をMarkdownで記述<br>
+        3. レビュアーを指定<br>
+        4. 「Create pull request」をクリック
+    </div>
+</body>
+</html>

@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 6 技術統合マップ</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: radial-gradient(ellipse at center, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 40px 20px;
+            color: #24292f;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            padding: 48px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 50%, #667eea 100%);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 48px;
+            position: relative;
+        }
+        
+        .title {
+            font-size: 42px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+        }
+        
+        .subtitle {
+            font-size: 20px;
+            color: #64748b;
+            margin-bottom: 12px;
+        }
+        
+        .level-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #10b981, #047857);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+        
+        .week-progress {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin: 32px 0 48px 0;
+            flex-wrap: wrap;
+        }
+        
+        .week-item {
+            background-color: #f1f5f9;
+            padding: 16px 24px;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            text-align: center;
+            min-width: 120px;
+            transition: all 0.3s ease;
+        }
+        
+        .week-item.completed {
+            background: linear-gradient(135deg, #10b981, #047857);
+            color: white;
+            border-color: #10b981;
+            transform: scale(1.05);
+        }
+        
+        .week-item.current {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border-color: #3b82f6;
+            animation: pulse 2s infinite;
+        }
+        
+        .week-item.future {
+            background-color: #f8fafc;
+            color: #94a3b8;
+            border-color: #e2e8f0;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
+            50% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+        }
+        
+        .week-number {
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+        
+        .week-title {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+            margin-bottom: 48px;
+        }
+        
+        .skills-network {
+            position: relative;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: 16px;
+            padding: 32px;
+            border: 1px solid #cbd5e1;
+        }
+        
+        .network-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        
+        .skill-categories {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+        
+        .skill-category {
+            background-color: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-left: 4px solid;
+            position: relative;
+        }
+        
+        .category-git { border-left-color: #f97316; }
+        .category-github { border-left-color: #3b82f6; }
+        .category-workflow { border-left-color: #8b5cf6; }
+        .category-collaboration { border-left-color: #10b981; }
+        
+        .category-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #1e293b;
+        }
+        
+        .skill-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .skill-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 8px 12px;
+            background-color: #f8fafc;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+        
+        .skill-item:hover {
+            background-color: #e2e8f0;
+            transform: translateX(4px);
+        }
+        
+        .skill-icon {
+            margin-right: 8px;
+            font-size: 14px;
+        }
+        
+        .skill-name {
+            font-size: 14px;
+            color: #475569;
+        }
+        
+        .integration-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        
+        .stats-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 32px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+        }
+        
+        .stats-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+        
+        .stat-item {
+            background-color: rgba(255,255,255,0.1);
+            padding: 16px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .stat-number {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        .connection-card {
+            background-color: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+        }
+        
+        .connection-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #1e293b;
+        }
+        
+        .connection-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 12px;
+            background-color: #f8fafc;
+            border-radius: 8px;
+            border-left: 3px solid #e2e8f0;
+        }
+        
+        .connection-from {
+            font-size: 14px;
+            color: #64748b;
+        }
+        
+        .connection-to {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1e293b;
+        }
+        
+        .learning-path {
+            background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%);
+            border: 2px solid #f59e0b;
+            border-radius: 16px;
+            padding: 32px;
+            margin-top: 32px;
+        }
+        
+        .path-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #92400e;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        
+        .path-timeline {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        
+        .path-timeline::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #10b981, #3b82f6, #f59e0b, #ef4444);
+            border-radius: 2px;
+        }
+        
+        .path-milestone {
+            background-color: white;
+            border: 3px solid;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .milestone-week1-5 { border-color: #10b981; }
+        .milestone-week6 { border-color: #3b82f6; }
+        .milestone-week7 { border-color: #f59e0b; }
+        .milestone-week8-12 { border-color: #ef4444; }
+        
+        .milestone-label {
+            position: absolute;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            font-weight: 600;
+            color: #92400e;
+            text-align: center;
+            width: 80px;
+        }
+        
+        .achievement-badges {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin-top: 32px;
+        }
+        
+        .badge {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 2px solid;
+            transition: all 0.3s ease;
+        }
+        
+        .badge:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .badge-git { border-color: #f97316; }
+        .badge-github { border-color: #3b82f6; }
+        .badge-teamwork { border-color: #10b981; }
+        .badge-professional { border-color: #8b5cf6; }
+        
+        .badge-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+        
+        .badge-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1e293b;
+        }
+        
+        .badge-description {
+            font-size: 12px;
+            color: #64748b;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">🎯 Week 6 技術統合マップ</div>
+            <div class="subtitle">Git/GitHub マスター：チーム開発の完全実践</div>
+            <div class="level-badge">
+                🏆 到達レベル: バージョン管理をマスターしたチーム開発対応エンタープライズJavaアーキテクト
+            </div>
+        </div>
+        
+        <!-- 学習進捗 -->
+        <div class="week-progress">
+            <div class="week-item completed">
+                <div class="week-number">Week 1</div>
+                <div class="week-title">Web基礎</div>
+            </div>
+            <div class="week-item completed">
+                <div class="week-number">Week 2</div>
+                <div class="week-title">Java入門</div>
+            </div>
+            <div class="week-item completed">
+                <div class="week-number">Week 3</div>
+                <div class="week-title">Java基礎</div>
+            </div>
+            <div class="week-item completed">
+                <div class="week-number">Week 4</div>
+                <div class="week-title">OOP基礎</div>
+            </div>
+            <div class="week-item completed">
+                <div class="week-number">Week 5</div>
+                <div class="week-title">OOP応用</div>
+            </div>
+            <div class="week-item current">
+                <div class="week-number">Week 6</div>
+                <div class="week-title">Git/GitHub</div>
+            </div>
+            <div class="week-item future">
+                <div class="week-number">Week 7</div>
+                <div class="week-title">SQL/DB</div>
+            </div>
+            <div class="week-item future">
+                <div class="week-number">Week 8-12</div>
+                <div class="week-title">Spring Boot</div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <!-- スキルネットワーク -->
+            <div class="skills-network">
+                <div class="network-title">🔗 Week 6 習得技術体系</div>
+                <div class="skill-categories">
+                    <div class="skill-category category-git">
+                        <div class="category-title">📁 Git基本操作</div>
+                        <ul class="skill-list">
+                            <li class="skill-item">
+                                <span class="skill-icon">✓</span>
+                                <span class="skill-name">git init, add, commit の基本サイクル</span>
+                            </li>
+                            <li class="skill-item">
+                                <span class="skill-icon">✓</span>
+                                <span class="skill-name">ブランチ作成・切り替え・マージ</span>
+                            </li>
+                            <li class="skill-item">
+                                <span class="skill-icon">✓</span>
+                                <span class="skill-name">コンフリクト解決・履歴管理</span>
+                            </li>
+                            <li class="skill-item">
+                                <span class="skill-icon">✓</span>
+                                <span class="skill-name">remote設定・upstream管理</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="skill-category category-github">
+                        <div class="category-title">🌐 GitHub連携</div>
+                        <ul class="skill-list">
+                            <li class="skill-item">
+                                <span class="skill-icon">✓</span>
+                                <span class="skill-name">リモートリポジトリ管理・同期</span>
+                            </li>
+                            <li class="skill-item">
+                                <span class="skill-icon">✓</span>
+                                <span class="skill-name">Fork機能・独立開発環境構築</span>
+                            </li>
+                            <li class="skill-item">
+                                <span class="skill-icon">✓</span>
+                                <span class="skill-name">Issue管理・プロジェクト管理</span>
+                            </li>
+                            <li class="skill-item">
+                                <span class="skill-icon">✓</span>
+                                <span class="skill-name">README・ドキュメント管理</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="skill-category category-workflow">
+                        <div class="category-title">🔄 開発ワークフロー</div>
+                        <ul class="skill-list">
+                            <li class="skill-item">
+                                <span class="skill-icon">✓</span>
+                                <span class="skill-name">Feature Branch Workflow実践</span>
+                            </li>
+                            <li class="skill-item">
+                                <span class="skill-icon">✓</span>
+                                <span class="skill-name">Pull Request作成・管理</span>
+                            </li>
+                            <li class="skill-item">
+                                <span class="skill-icon">✓</span>
+                                <span class="skill-name">マージ戦略・ブランチ保護</span>
+                            </li>
+                            <li class="skill-item">
+                                <span class="skill-icon">✓</span>
+                                <span class="skill-name">統合管理・品質確保フロー</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="skill-category category-collaboration">
+                        <div class="category-title">👥 チーム開発・協業</div>
+                        <ul class="skill-list">
+                            <li class="skill-item">
+                                <span class="skill-icon">✓</span>
+                                <span class="skill-name">コードレビュー・建設的フィードバック</span>
+                            </li>
+                            <li class="skill-item">
+                                <span class="skill-icon">✓</span>
+                                <span class="skill-name">協業コミュニケーション・技術議論</span>
+                            </li>
+                            <li class="skill-item">
+                                <span class="skill-icon">✓</span>
+                                <span class="skill-name">品質意識・エラーハンドリング</span>
+                            </li>
+                            <li class="skill-item">
+                                <span class="skill-icon">✓</span>
+                                <span class="skill-name">企業開発プロセス理解・実践</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 統合パネル -->
+            <div class="integration-panel">
+                <div class="stats-card">
+                    <div class="stats-title">📊 Week 6 学習成果</div>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number">10</div>
+                            <div class="stat-label">レッスン数</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">8-10h</div>
+                            <div class="stat-label">学習時間</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">4</div>
+                            <div class="stat-label">主要技術領域</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">16</div>
+                            <div class="stat-label">習得スキル</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="connection-card">
+                    <div class="connection-title">🔗 他週との技術連携</div>
+                    <div class="connection-item">
+                        <div class="connection-from">Week 5 システム</div>
+                        <div class="connection-to">→ Git管理対象</div>
+                    </div>
+                    <div class="connection-item">
+                        <div class="connection-from">OOP応用技術</div>
+                        <div class="connection-to">→ レビュー品質向上</div>
+                    </div>
+                    <div class="connection-item">
+                        <div class="connection-from">ブランチ戦略</div>
+                        <div class="connection-to">→ Week 7 DB設計</div>
+                    </div>
+                    <div class="connection-item">
+                        <div class="connection-from">チーム開発スキル</div>
+                        <div class="connection-to">→ Week 8-12 実用開発</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 学習パス全体像 -->
+        <div class="learning-path">
+            <div class="path-title">🚀 学習進捗とスキル積み上げ</div>
+            <div class="path-timeline">
+                <div class="path-milestone milestone-week1-5">
+                    <span>💻</span>
+                    <div class="milestone-label">基礎〜OOP応用<br>完全習得</div>
+                </div>
+                <div class="path-milestone milestone-week6">
+                    <span>🔄</span>
+                    <div class="milestone-label">バージョン管理<br>チーム開発</div>
+                </div>
+                <div class="path-milestone milestone-week7">
+                    <span>📊</span>
+                    <div class="milestone-label">SQL・DB設計<br>データ管理</div>
+                </div>
+                <div class="path-milestone milestone-week8-12">
+                    <span>🌐</span>
+                    <div class="milestone-label">Spring Boot<br>実用システム</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 獲得バッジ -->
+        <div class="achievement-badges">
+            <div class="badge badge-git">
+                <div class="badge-icon">📁</div>
+                <div class="badge-title">Git Master</div>
+                <div class="badge-description">
+                    コミット・ブランチ・マージを完全習得し、複雑なバージョン管理を安全に実行できる
+                </div>
+            </div>
+            
+            <div class="badge badge-github">
+                <div class="badge-icon">🌐</div>
+                <div class="badge-title">GitHub Expert</div>
+                <div class="badge-description">
+                    PR・Issue・Projectsを統合活用し、効率的なプロジェクト管理を実践できる
+                </div>
+            </div>
+            
+            <div class="badge badge-teamwork">
+                <div class="badge-icon">👥</div>
+                <div class="badge-title">Team Collaborator</div>
+                <div class="badge-description">
+                    コードレビュー・協業フローを通じて、チーム開発で即戦力として活躍できる
+                </div>
+            </div>
+            
+            <div class="badge badge-professional">
+                <div class="badge-icon">🏢</div>
+                <div class="badge-title">Enterprise Ready</div>
+                <div class="badge-description">
+                    企業開発プロセスを理解し、実務レベルの品質・効率・協働力を発揮できる
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

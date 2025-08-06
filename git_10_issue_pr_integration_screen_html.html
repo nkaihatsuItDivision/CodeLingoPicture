@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Issue・PR連携設定画面</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #0d1117;
+            margin: 0;
+            padding: 0;
+            color: #f0f6fc;
+            min-height: 100vh;
+        }
+        
+        .github-header {
+            background-color: #161b22;
+            padding: 16px 0;
+            border-bottom: 1px solid #30363d;
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .github-logo {
+            font-size: 18px;
+            font-weight: bold;
+            color: #f0f6fc;
+        }
+        
+        .project-path {
+            color: #7d8590;
+            font-size: 14px;
+        }
+        
+        .content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .project-header {
+            background-color: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: between;
+            animation: slideInFromTop 0.6s ease-out;
+        }
+        
+        @keyframes slideInFromTop {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .project-info {
+            flex: 1;
+        }
+        
+        .project-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #f0f6fc;
+            margin-bottom: 6px;
+        }
+        
+        .project-description {
+            color: #7d8590;
+            font-size: 14px;
+        }
+        
+        .settings-button {
+            background-color: #21262d;
+            color: #f0f6fc;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .settings-button:hover {
+            background-color: #30363d;
+            border-color: #6e7681;
+        }
+        
+        .board-container {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            overflow: hidden;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .board-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 80px;
+            gap: 1px;
+            background-color: #30363d;
+        }
+        
+        .column-header {
+            background-color: #161b22;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .header-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #f0f6fc;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .item-count {
+            background-color: #6e7681;
+            color: #f0f6fc;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        
+        .count-todo { background-color: #6e7681; }
+        .count-progress { background-color: #8957e5; }
+        .count-done { background-color: #238636; }
+        
+        .automation-header {
+            background-color: #1c2128;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
+        
+        .automation-title {
+            font-size: 10px;
+            font-weight: 600;
+            color: #f0f6fc;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .board-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 80px;
+            gap: 1px;
+            background-color: #30363d;
+            min-height: 500px;
+        }
+        
+        .column {
+            background-color: #21262d;
+            padding: 20px;
+        }
+        
+        .automation-column {
+            background-color: #1c2128;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .card {
+            background-color: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 16px;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            animation: cardFadeIn 0.6s ease-out;
+        }
+        
+        @keyframes cardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .card:hover {
+            border-color: #6e7681;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .issue-card {
+            border-left: 3px solid #238636;
+            animation-delay: 0.1s;
+        }
+        
+        .pr-card {
+            border-left: 3px solid #8957e5;
+            animation-delay: 0.3s;
+        }
+        
+        .completed-card {
+            border-left: 3px solid #238636;
+            animation-delay: 0.5s;
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .card-icon {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+        
+        .icon-issue {
+            background-color: #238636;
+            color: white;
+        }
+        
+        .icon-pr {
+            background-color: #8957e5;
+            color: white;
+        }
+        
+        .icon-bug {
+            background-color: #d73a49;
+            color: white;
+        }
+        
+        .card-id {
+            font-size: 12px;
+            font-weight: 600;
+            color: #f0f6fc;
+        }
+        
+        .card-type {
+            font-size: 11px;
+            color: #7d8590;
+            text-transform: uppercase;
+        }
+        
+        .card-title {
+            font-size: 14px;
+            color: #f0f6fc;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+        
+        .card-meta {
+            color: #7d8590;
+            font-size: 11px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .linked-indicator {
+            background-color: rgba(137, 87, 229, 0.2);
+            color: #8957e5;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 9px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        
+        .status-indicator {
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 9px;
+            font-weight: 600;
+        }
+        
+        .status-review {
+            background-color: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+        }
+        
+        .status-completed {
+            background-color: rgba(35, 134, 54, 0.2);
+            color: #238636;
+        }
+        
+        .automation-button {
+            width: 50px;
+            height: 30px;
+            border-radius: 6px;
+            border: 1px solid #30363d;
+            color: white;
+            font-size: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            line-height: 1.1;
+        }
+        
+        .auto-move {
+            background-color: #238636;
+        }
+        
+        .auto-link {
+            background-color: #8957e5;
+        }
+        
+        .auto-close {
+            background-color: #d73a49;
+        }
+        
+        .automation-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .connection-line {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, #8957e5, transparent);
+            animation: flowAnimation 2s infinite;
+            z-index: 10;
+        }
+        
+        @keyframes flowAnimation {
+            0% {
+                background: linear-gradient(90deg, transparent, transparent);
+            }
+            50% {
+                background: linear-gradient(90deg, #8957e5, #8957e5);
+            }
+            100% {
+                background: linear-gradient(90deg, transparent, transparent);
+            }
+        }
+        
+        .line-issue-to-pr {
+            top: 250px;
+            left: 33.33%;
+            width: 33.33%;
+            animation-delay: 0s;
+        }
+        
+        .line-pr-to-done {
+            top: 250px;
+            left: 66.66%;
+            width: 33.33%;
+            background: linear-gradient(90deg, #238636, transparent);
+            animation-delay: 1s;
+        }
+        
+        .status-bar {
+            background-color: #161b22;
+            padding: 12px 20px;
+            border-top: 1px solid #30363d;
+            color: #7d8590;
+            font-size: 11px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        .dot-green { background-color: #238636; }
+        .dot-purple { background-color: #8957e5; }
+        .dot-red { background-color: #d73a49; }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .workflow-labels {
+            position: absolute;
+            top: 220px;
+            left: 0;
+            right: 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            padding: 0 20px;
+            pointer-events: none;
+        }
+        
+        .workflow-label {
+            background-color: rgba(35, 134, 54, 0.1);
+            border: 1px solid #238636;
+            border-radius: 4px;
+            padding: 4px 8px;
+            color: #238636;
+            font-size: 8px;
+            font-weight: 600;
+            text-align: center;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: labelFadeIn 0.5s ease-out forwards;
+        }
+        
+        .label-link { animation-delay: 1s; border-color: #8957e5; color: #8957e5; background-color: rgba(137, 87, 229, 0.1); }
+        .label-close { animation-delay: 2s; }
+        
+        @keyframes labelFadeIn {
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="github-header">
+        <div class="header-content">
+            <div class="github-logo">GitHub Projects</div>
+            <div class="project-path">Student Management Development Board</div>
+        </div>
+    </div>
+    
+    <div class="content">
+        <div class="project-header">
+            <div class="project-info">
+                <div class="project-title">📋 Student Management System Development</div>
+                <div class="project-description">Track development progress for student management features</div>
+            </div>
+            <button class="settings-button">
+                <span>⚙️</span>
+                <span>Settings</span>
+            </button>
+        </div>
+        
+        <div class="board-container">
+            <div class="board-header">
+                <div class="column-header">
+                    <div class="header-title">
+                        <span>📝</span>
+                        <span>To Do</span>
+                    </div>
+                    <div class="item-count count-todo">4</div>
+                </div>
+                <div class="column-header">
+                    <div class="header-title">
+                        <span>⏳</span>
+                        <span>In Progress</span>
+                    </div>
+                    <div class="item-count count-progress">2</div>
+                </div>
+                <div class="column-header">
+                    <div class="header-title">
+                        <span>✅</span>
+                        <span>Done</span>
+                    </div>
+                    <div class="item-count count-done">3</div>
+                </div>
+                <div class="column-header automation-header">
+                    <div class="automation-title">Automation</div>
+                </div>
+            </div>
+            
+            <div class="board-content">
+                <div class="column">
+                    <!-- Issue Card -->
+                    <div class="card issue-card">
+                        <div class="card-header">
+                            <div class="card-icon icon-issue">●</div>
+                            <div class="card-id">#2</div>
+                            <div class="card-type">New Issue</div>
+                        </div>
+                        <div class="card-title">新機能: 履歴管理機能の追加</div>
+                        <div class="card-meta">
+                            <span>Labels: enhancement, feature</span>
+                        </div>
+                        <div class="card-meta">
+                            <span>Assigned: username</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Bug Report Card -->
+                    <div class="card issue-card">
+                        <div class="card-header">
+                            <div class="card-icon icon-bug">●</div>
+                            <div class="card-id">#3</div>
+                            <div class="card-type">Bug Report</div>
+                        </div>
+                        <div class="card-title">バグ修正: 入力検証エラー</div>
+                        <div class="card-meta">
+                            <span>Labels: bug, high-priority</span>
+                        </div>
+                        <div class="card-meta">
+                            <span>Assigned: developer2</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="column">
+                    <!-- Linked PR Card -->
+                    <div class="card pr-card">
+                        <div class="card-header">
+                            <div class="card-icon icon-pr">●</div>
+                            <div class="card-id">#1</div>
+                            <div class="card-type">Pull Request</div>
+                        </div>
+                        <div class="card-title">feat: 四則演算機能を追加</div>
+                        <div class="card-meta">
+                            <div class="linked-indicator">
+                                🔗 Linked to Issue #2
+                            </div>
+                        </div>
+                        <div class="card-meta">
+                            <div class="status-indicator status-review">Under Review</div>
+                        </div>
+                        <div class="card-meta">
+                            <span>Assigned: username</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Draft PR -->
+                    <div class="card pr-card">
+                        <div class="card-header">
+                            <div class="card-icon icon-pr" style="background-color: #6e7681;">●</div>
+                            <div class="card-id">#4</div>
+                            <div class="card-type">Draft PR</div>
+                        </div>
+                        <div class="card-title">WIP: 検索機能の実装</div>
+                        <div class="card-meta">
+                            <span>Status: Work in Progress</span>
+                        </div>
+                        <div class="card-meta">
+                            <span>Ready for review: No</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="column">
+                    <!-- Completed Issue -->
+                    <div class="card completed-card">
+                        <div class="card-header">
+                            <div class="card-icon icon-issue">✓</div>
+                            <div class="card-id">#1</div>
+                            <div class="card-type">Completed</div>
+                        </div>
+                        <div class="card-title">基本機能の実装完了</div>
+                        <div class="card-meta">
+                            <span>Closed via PR #1</span>
+                        </div>
+                        <div class="card-meta">
+                            <div class="status-indicator status-completed">Merged: 2 hours ago</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="automation-column">
+                    <div class="automation-button auto-move" title="Auto Move Cards">
+                        Auto<br>Move
+                    </div>
+                    <div class="automation-button auto-link" title="Link PRs to Issues">
+                        Link<br>PR
+                    </div>
+                    <div class="automation-button auto-close" title="Auto Close Issues">
+                        Close<br>Issue
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Connection Lines -->
+            <div class="connection-line line-issue-to-pr"></div>
+            <div class="connection-line line-pr-to-done"></div>
+            
+            <!-- Workflow Labels -->
+            <div class="workflow-labels">
+                <div class="workflow-label">Create Issue</div>
+                <div class="workflow-label label-link">Link PR</div>
+                <div class="workflow-label label-close">Auto Close</div>
+            </div>
+            
+            <div class="status-bar">
+                <div class="status-item">
+                    <div class="pulse-dot dot-green"></div>
+                    <span>3 open issues</span>
+                </div>
+                <div class="status-item">
+                    <div class="pulse-dot dot-purple"></div>
+                    <span>1 in progress</span>
+                </div>
+                <div class="status-item">
+                    <div class="pulse-dot dot-green"></div>
+                    <span>1 completed</span>
+                </div>
+                <div class="status-item">
+                    <span>📊 Automation: Active</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Add interactive hover effects
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                // Highlight related cards
+                const cardId = this.querySelector('.card-id')?.textContent;
+                const isLinked = this.querySelector('.linked-indicator');
+                
+                if (isLinked || cardId === '#1' || cardId === '#2') {
+                    document.querySelectorAll('.card').forEach(otherCard => {
+                        const otherCardId = otherCard.querySelector('.card-id')?.textContent;
+                        if ((cardId === '#1' || cardId === '#2') && (otherCardId === '#1' || otherCardId === '#2')) {
+                            otherCard.style.borderColor = '#8957e5';
+                            otherCard.style.boxShadow = '0 0 12px rgba(137, 87, 229, 0.3)';
+                        }
+                    });
+                }
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                // Reset all cards
+                document.querySelectorAll('.card').forEach(otherCard => {
+                    otherCard.style.borderColor = '';
+                    otherCard.style.boxShadow = '';
+                });
+            });
+        });
+        
+        // Add click interactions to automation buttons
+        document.querySelectorAll('.automation-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const buttonType = this.classList.contains('auto-move') ? 'Auto Move' :
+                                 this.classList.contains('auto-link') ? 'Link PR' : 'Auto Close';
+                
+                // Animate button
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1.05)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 100);
+                }, 100);
+                
+                // Show effect
+                if (buttonType === 'Link PR') {
+                    // Trigger connection animation
+                    document.querySelectorAll('.connection-line').forEach(line => {
+                        line.style.animationDuration = '0.8s';
+                        setTimeout(() => {
+                            line.style.animationDuration = '2s';
+                        }, 2000);
+                    });
+                }
+                
+                // Create floating feedback
+                const feedback = document.createElement('div');
+                feedback.style.position = 'absolute';
+                feedback.style.top = this.getBoundingClientRect().top + 'px';
+                feedback.style.left = this.getBoundingClientRect().left + 'px';
+                feedback.style.color = '#238636';
+                feedback.style.fontSize = '12px';
+                feedback.style.fontWeight = 'bold';
+                feedback.style.pointerEvents = 'none';
+                feedback.style.zIndex = '1000';
+                feedback.textContent = `${buttonType} activated!`;
+                feedback.style.animation = 'floatUpFade 2s ease-out forwards';
+                
+                document.body.appendChild(feedback);
+                setTimeout(() => feedback.remove(), 2000);
+            });
+        });
+        
+        // Add float up animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes floatUpFade {
+                0% {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+                100% {
+                    opacity: 0;
+                    transform: translateY(-30px);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Simulate real-time updates
+        setInterval(() => {
+            // Randomly pulse connection lines
+            if (Math.random() < 0.3) {
+                document.querySelectorAll('.connection-line').forEach(line => {
+                    line.style.opacity = '0.5';
+                    setTimeout(() => {
+                        line.style.opacity = '1';
+                    }, 500);
+                });
+            }
+        }, 3000);
+        
+        // Add settings button functionality
+        document.querySelector('.settings-button').addEventListener('click', function() {
+            alert('⚙️ プロジェクト設定画面では以下の機能を設定できます:\n\n• 自動化ルールの詳細設定\n• 通知設定\n• アクセス権限管理\n• カスタムフィールドの追加\n• ワークフローの設定');
+        });
+    </script>
+</body>
+</html>

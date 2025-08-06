@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Files changed画面（変更内容確認）</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            color: #24292f;
+        }
+        
+        .github-header {
+            background-color: #24292f;
+            color: white;
+            padding: 16px 0;
+            margin: -20px -20px 20px -20px;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .github-logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .pr-header {
+            margin-bottom: 24px;
+        }
+        
+        .pr-title-section {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .pr-title {
+            font-size: 24px;
+            font-weight: 600;
+            flex: 1;
+        }
+        
+        .pr-number {
+            color: #656d76;
+            font-size: 24px;
+            font-weight: 400;
+        }
+        
+        .pr-tabs {
+            border-bottom: 1px solid #d1d9e0;
+            margin-bottom: 24px;
+        }
+        
+        .pr-tabs-nav {
+            display: flex;
+            gap: 0;
+        }
+        
+        .pr-tab {
+            padding: 12px 16px;
+            border: none;
+            background: none;
+            color: #656d76;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .pr-tab.active {
+            color: #24292f;
+            border-bottom-color: #fd8c73;
+        }
+        
+        .pr-tab:hover:not(.active) {
+            color: #24292f;
+        }
+        
+        .files-summary {
+            background-color: #f6f8fa;
+            border: 1px solid #d1d9e0;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .files-summary-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        
+        .files-stats {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .stat-item.additions {
+            color: #1f883d;
+        }
+        
+        .stat-item.deletions {
+            color: #d1242f;
+        }
+        
+        .diff-bar {
+            display: flex;
+            width: 100px;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            background-color: #d1d9e0;
+        }
+        
+        .diff-bar-addition {
+            background-color: #1f883d;
+            width: 85%;
+        }
+        
+        .diff-bar-deletion {
+            background-color: #d1242f;
+            width: 15%;
+        }
+        
+        .file-header {
+            background-color: #f6f8fa;
+            border: 1px solid #d1d9e0;
+            border-radius: 8px 8px 0 0;
+            padding: 12px 16px;
+            margin-bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .file-name {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .file-stats {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #656d76;
+        }
+        
+        .file-additions {
+            color: #1f883d;
+            font-weight: 500;
+        }
+        
+        .file-deletions {
+            color: #d1242f;
+            font-weight: 500;
+        }
+        
+        .diff-viewer {
+            border: 1px solid #d1d9e0;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            background-color: white;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+        
+        .diff-table {
+            width: 100%;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 12px;
+            border-collapse: collapse;
+        }
+        
+        .diff-line {
+            display: table-row;
+        }
+        
+        .diff-line-number {
+            width: 40px;
+            padding: 0 8px;
+            text-align: right;
+            color: #656d76;
+            background-color: #f6f8fa;
+            border-right: 1px solid #d1d9e0;
+            user-select: none;
+            vertical-align: top;
+        }
+        
+        .diff-line-content {
+            padding: 0 8px;
+            white-space: pre-wrap;
+            line-height: 1.4;
+            vertical-align: top;
+        }
+        
+        .diff-line.added {
+            background-color: #e6ffed;
+        }
+        
+        .diff-line.added .diff-line-number {
+            background-color: #ccffd8;
+            color: #1f883d;
+        }
+        
+        .diff-line.added .diff-line-content {
+            background-color: #e6ffed;
+        }
+        
+        .diff-line.added .diff-line-content::before {
+            content: '+';
+            color: #1f883d;
+            font-weight: bold;
+            margin-right: 4px;
+        }
+        
+        .diff-line.removed {
+            background-color: #ffecec;
+        }
+        
+        .diff-line.removed .diff-line-number {
+            background-color: #ffd7d5;
+            color: #d1242f;
+        }
+        
+        .diff-line.removed .diff-line-content {
+            background-color: #ffecec;
+        }
+        
+        .diff-line.removed .diff-line-content::before {
+            content: '-';
+            color: #d1242f;
+            font-weight: bold;
+            margin-right: 4px;
+        }
+        
+        .diff-line.context .diff-line-content::before {
+            content: ' ';
+            margin-right: 4px;
+        }
+        
+        .diff-hunk-header {
+            background-color: #f1f8ff;
+            border-top: 1px solid #d1d9e0;
+            border-bottom: 1px solid #d1d9e0;
+        }
+        
+        .diff-hunk-header .diff-line-content {
+            color: #656d76;
+            background-color: #f1f8ff;
+            font-weight: 500;
+        }
+        
+        .diff-hunk-header .diff-line-content::before {
+            content: '@@ ';
+            font-weight: bold;
+        }
+        
+        .review-toolbar {
+            background-color: #f6f8fa;
+            border: 1px solid #d1d9e0;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .review-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border: 1px solid #d1d9e0;
+            border-radius: 6px;
+            background-color: #f6f8fa;
+            color: #24292f;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn:hover {
+            background-color: #f3f4f6;
+            border-color: #c4cdd0;
+        }
+        
+        .btn-primary {
+            background-color: #1f883d;
+            color: white;
+            border-color: #1f883d;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1a7f37;
+            border-color: #1a7f37;
+        }
+        
+        .instruction-box {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #0969da;
+            color: white;
+            padding: 16px;
+            border-radius: 8px;
+            max-width: 320px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .instruction-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="github-header">
+        <div class="header-content">
+            <div class="github-logo">GitHub</div>
+        </div>
+    </div>
+    
+    <div class="content">
+        <div class="pr-header">
+            <div class="pr-title-section">
+                <div class="pr-title">feat: 四則演算機能を追加（Calculator v2.0）</div>
+                <div class="pr-number">#1</div>
+            </div>
+        </div>
+        
+        <div class="pr-tabs">
+            <div class="pr-tabs-nav">
+                <button class="pr-tab">
+                    💬 Conversation <span style="background-color: #656d76; color: white; padding: 2px 6px; border-radius: 10px; font-size: 12px; margin-left: 4px;">1</span>
+                </button>
+                <button class="pr-tab active">
+                    🔍 Files changed <span style="background-color: #656d76; color: white; padding: 2px 6px; border-radius: 10px; font-size: 12px; margin-left: 4px;">1</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="files-summary">
+            <div class="files-summary-content">
+                <div class="files-stats">
+                    <div class="stat-item">
+                        <span>📄</span>
+                        <span>1 changed file</span>
+                    </div>
+                    <div class="stat-item additions">
+                        <span>+</span>
+                        <span>45 additions</span>
+                    </div>
+                    <div class="stat-item deletions">
+                        <span>-</span>
+                        <span>7 deletions</span>
+                    </div>
+                </div>
+                <div class="diff-bar">
+                    <div class="diff-bar-addition"></div>
+                    <div class="diff-bar-deletion"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="review-toolbar">
+            <div style="font-size: 14px; color: #656d76;">
+                Reviewing changes in <strong>src/Calculator.java</strong>
+            </div>
+            <div class="review-actions">
+                <button class="btn">💬 Add single comment</button>
+                <button class="btn btn-primary">📝 Start a review</button>
+            </div>
+        </div>
+        
+        <div class="file-header">
+            <div class="file-name">
+                <span>📄</span>
+                <span>src/Calculator.java</span>
+            </div>
+            <div class="file-stats">
+                <span class="file-additions">+45</span>
+                <span class="file-deletions">-7</span>
+            </div>
+        </div>
+        
+        <div class="diff-viewer">
+            <table class="diff-table">
+                <tbody>
+                    <tr class="diff-line context">
+                        <td class="diff-line-number">1</td>
+                        <td class="diff-line-content">public class Calculator {</td>
+                    </tr>
+                    <tr class="diff-line context">
+                        <td class="diff-line-number">2</td>
+                        <td class="diff-line-content">    public static void main(String[] args) {</td>
+                    </tr>
+                    <tr class="diff-line removed">
+                        <td class="diff-line-number">3</td>
+                        <td class="diff-line-content">        System.out.println("Calculator v1.0");</td>
+                    </tr>
+                    <tr class="diff-line removed">
+                        <td class="diff-line-number">4</td>
+                        <td class="diff-line-content">        System.out.println("加算結果: " + add(10, 20));</td>
+                    </tr>
+                    <tr class="diff-line added">
+                        <td class="diff-line-number">3</td>
+                        <td class="diff-line-content">        System.out.println("Calculator v2.0 - 四則演算対応");</td>
+                    </tr>
+                    <tr class="diff-line added">
+                        <td class="diff-line-number">4</td>
+                        <td class="diff-line-content">        System.out.println("=========================");</td>
+                    </tr>
+                    <tr class="diff-line added">
+                        <td class="diff-line-number">5</td>
+                        <td class="diff-line-content">        </td>
+                    </tr>
+                    <tr class="diff-line added">
+                        <td class="diff-line-number">6</td>
+                        <td class="diff-line-content">        int a = 20, b = 5;</td>
+                    </tr>
+                    <tr class="diff-line added">
+                        <td class="diff-line-number">7</td>
+                        <td class="diff-line-content">        System.out.println("計算対象: " + a + ", " + b);</td>
+                    </tr>
+                    <tr class="diff-line added">
+                        <td class="diff-line-number">8</td>
+                        <td class="diff-line-content">        System.out.println();</td>
+                    </tr>
+                    <tr class="diff-line added">
+                        <td class="diff-line-number">9</td>
+                        <td class="diff-line-content">        </td>
+                    </tr>
+                    <tr class="diff-line added">
+                        <td class="diff-line-number">10</td>
+                        <td class="diff-line-content">        System.out.println("加算結果: " + add(a, b));</td>
+                    </tr>
+                    <tr class="diff-line added">
+                        <td class="diff-line-number">11</td>
+                        <td class="diff-line-content">        System.out.println("減算結果: " + subtract(a, b));</td>
+                    </tr>
+                    <tr class="diff-line added">
+                        <td class="diff-line-number">12</td>
+                        <td class="diff-line-content">        System.out.println("乗算結果: " + multiply(a, b));</td>
+                    </tr>
+                    <tr class="diff-line added">
+                        <td class="diff-line-number">13</td>
+                        <td class="diff-line-content">        System.out.println("除算結果: " + divide(a, b));</td>
+                    </tr>
+                    <tr class="diff-line context">
+                        <td class="diff-line-number">14</td>
+                        <td class="diff-line-content">    }</td>
+                    </tr>
+                    <tr class="diff-line context">
+                        <td class="diff-line-number">15</td>
+                        <td class="diff-line-content">    </td>
+                    </tr>
+                    <tr class="diff-hunk-header">
+                        <td class="diff-line-number">...</td>
+                        <td class="diff-line-content">-8,4 +16,40 @@ public class Calculator {</td>
+                    </tr>
+                    <tr class="diff-line added">
+                        <td class="diff-line-number">16</td>
+                        <td class="diff-line-content">    /**</td>
+                    </tr>
+                    <tr class="diff-line added">
+                        <td class="diff-line-number">17</td>
+                        <td class="diff-line-content">     * 加算処理</td>
+                    </tr>
+                    <tr class="diff-line added">
+                        <td class="diff-line-number">18</td>
+                        <td class="diff-line-content">     * @param a 第一引数</td>
+                    </tr>
+                    <tr class="diff-line added">
+                        <td class="diff-line-number">19</td>
+                        <td class="diff-line-content">     * @param b 第二引数</td>
+                    </tr>
+                    <tr class="diff-line added">
+                        <td class="diff-line-number">20</td>
+                        <td class="diff-line-content">     * @return a + b</td>
+                    </tr>
+                    <tr class="diff-line added">
+                        <td class="diff-line-number">21</td>
+                        <td class="diff-line-content">     */</td>
+                    </tr>
+                    <tr class="diff-line context">
+                        <td class="diff-line-number">22</td>
+                        <td class="diff-line-content">    public static int add(int a, int b) {</td>
+                    </tr>
+                    <tr class="diff-line context">
+                        <td class="diff-line-number">23</td>
+                        <td class="diff-line-content">        return a + b;</td>
+                    </tr>
+                    <tr class="diff-line context">
+                        <td class="diff-line-number">24</td>
+                        <td class="diff-line-content">    }</td>
+                    </tr>
+                    <tr class="diff-line added">
+                        <td class="diff-line-number">25</td>
+                        <td class="diff-line-content">    </td>
+                    </tr>
+                    <tr class="diff-line added">
+                        <td class="diff-line-number">26</td>
+                        <td class="diff-line-content">    /**</td>
+                    </tr>
+                    <tr class="diff-line added">
+                        <td class="diff-line-number">27</td>
+                        <td class="diff-line-content">     * 減算処理</td>
+                    </tr>
+                    <tr class="diff-line added">
+                        <td class="diff-line-number">28</td>
+                        <td class="diff-line-content">     * @param a 第一引数</td>
+                    </tr>
+                    <tr class="diff-line added">
+                        <td class="diff-line-number">29</td>
+                        <td class="diff-line-content">     * @param b 第二引数</td>
+                    </tr>
+                    <tr class="diff-line added">
+                        <td class="diff-line-number">30</td>
+                        <td class="diff-line-content">     * @return a - b</td>
+                    </tr>
+                    <tr class="diff-line added">
+                        <td class="diff-line-number">31</td>
+                        <td class="diff-line-content">     */</td>
+                    </tr>
+                    <tr class="diff-line added">
+                        <td class="diff-line-number">32</td>
+                        <td class="diff-line-content">    public static int subtract(int a, int b) {</td>
+                    </tr>
+                    <tr class="diff-line added">
+                        <td class="diff-line-number">33</td>
+                        <td class="diff-line-content">        return a - b;</td>
+                    </tr>
+                    <tr class="diff-line added">
+                        <td class="diff-line-number">34</td>
+                        <td class="diff-line-content">    }</td>
+                    </tr>
+                    <tr class="diff-line added">
+                        <td class="diff-line-number">35</td>
+                        <td class="diff-line-content">    </td>
+                    </tr>
+                    <tr class="diff-line added">
+                        <td class="diff-line-number">36</td>
+                        <td class="diff-line-content">    // ... 他のメソッドも同様に追加</td>
+                    </tr>
+                    <tr class="diff-line context">
+                        <td class="diff-line-number">37</td>
+                        <td class="diff-line-content">}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="instruction-box">
+        <div class="instruction-title">🔍 変更内容確認</div>
+        緑色の行が追加された部分、赤色の行が削除された部分です。コードレビューでは、この画面で詳細な変更内容を確認します。
+    </div>
+</body>
+</html>

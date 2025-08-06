@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ブランチ削除画面</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #0d1117;
+            margin: 0;
+            padding: 0;
+            color: #f0f6fc;
+            min-height: 100vh;
+        }
+        
+        .github-header {
+            background-color: #161b22;
+            padding: 16px 0;
+            border-bottom: 1px solid #30363d;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .github-logo {
+            font-size: 18px;
+            font-weight: bold;
+            color: #f0f6fc;
+        }
+        
+        .repo-path {
+            color: #7d8590;
+            font-size: 14px;
+        }
+        
+        .content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .success-notification {
+            background: linear-gradient(135deg, #0c2a1a 0%, #238636 100%);
+            border: 1px solid #238636;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+            animation: successSlideDown 0.8s ease-out;
+        }
+        
+        .success-notification::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shine 2s ease-out 0.5s;
+        }
+        
+        @keyframes successSlideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes shine {
+            from { left: -100%; }
+            to { left: 100%; }
+        }
+        
+        .notification-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .notification-icon {
+            font-size: 36px;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            animation: checkmarkDraw 1s ease-out 0.5s both;
+        }
+        
+        @keyframes checkmarkDraw {
+            0% { transform: scale(0) rotate(180deg); opacity: 0; }
+            50% { transform: scale(1.2) rotate(0deg); opacity: 1; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+        
+        .notification-text {
+            flex: 1;
+        }
+        
+        .notification-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 6px;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        
+        .notification-subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+            font-family: ui-monospace, 'Cascadia Code', 'Consolas', monospace;
+            margin-bottom: 4px;
+        }
+        
+        .notification-description {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+        
+        .branch-management {
+            background-color: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            animation: fadeInUp 0.6s ease-out 0.2s both;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .management-header {
+            padding: 20px;
+            border-bottom: 1px solid #30363d;
+            font-size: 18px;
+            font-weight: 600;
+            color: #f0f6fc;
+        }
+        
+        .branch-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 20px;
+            border-bottom: 1px solid #21262d;
+            transition: all 0.2s ease;
+        }
+        
+        .branch-item:hover {
+            background-color: #161b22;
+        }
+        
+        .branch-item:last-child {
+            border-bottom: none;
+        }
+        
+        .branch-status {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+        
+        .status-active {
+            background-color: #238636;
+            color: white;
+        }
+        
+        .status-deleted {
+            background-color: #da3633;
+            color: white;
+            animation: pulseRed 2s infinite;
+        }
+        
+        @keyframes pulseRed {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .branch-info {
+            flex: 1;
+        }
+        
+        .branch-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            font-family: ui-monospace, 'Cascadia Code', 'Consolas', monospace;
+        }
+        
+        .branch-name.active {
+            color: #f0f6fc;
+        }
+        
+        .branch-name.deleted {
+            color: #f85149;
+            text-decoration: line-through;
+            animation: strikeThrough 0.8s ease-out;
+        }
+        
+        @keyframes strikeThrough {
+            from { text-decoration-color: transparent; }
+            to { text-decoration-color: #f85149; }
+        }
+        
+        .branch-description {
+            color: #7d8590;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+        
+        .branch-meta {
+            color: #7d8590;
+            font-size: 12px;
+        }
+        
+        .branch-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .badge-protected {
+            background-color: rgba(35, 134, 54, 0.2);
+            color: #238636;
+        }
+        
+        .badge-deleted {
+            background-color: rgba(248, 81, 73, 0.2);
+            color: #f85149;
+        }
+        
+        .restore-note {
+            background-color: #1c2128;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 16px;
+            margin-bottom: 24px;
+            animation: fadeInUp 0.6s ease-out 0.4s both;
+        }
+        
+        .restore-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .restore-icon {
+            font-size: 16px;
+            color: #fbbf24;
+            margin-top: 2px;
+        }
+        
+        .restore-text {
+            flex: 1;
+            color: #7d8590;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        
+        .restore-text code {
+            background-color: #0d1117;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: ui-monospace, 'Cascadia Code', 'Consolas', monospace;
+            color: #79c0ff;
+        }
+        
+        .cleanup-instructions {
+            background-color: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            animation: fadeInUp 0.6s ease-out 0.6s both;
+        }
+        
+        .instructions-header {
+            padding: 20px;
+            border-bottom: 1px solid #30363d;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .instructions-icon {
+            font-size: 18px;
+            color: #f0f6fc;
+        }
+        
+        .instructions-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #f0f6fc;
+            margin: 0;
+        }
+        
+        .instructions-content {
+            padding: 20px;
+        }
+        
+        .instructions-description {
+            color: #7d8590;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+        
+        .command-block {
+            background-color: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 16px;
+            font-family: ui-monospace, 'Cascadia Code', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            position: relative;
+            overflow-x: auto;
+        }
+        
+        .command-line {
+            color: #79c0ff;
+            margin-bottom: 8px;
+            position: relative;
+            animation: typewriter 0.8s ease-out;
+            overflow: hidden;
+        }
+        
+        .command-line:last-child {
+            margin-bottom: 0;
+        }
+        
+        @keyframes typewriter {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        
+        .command-line:nth-child(1) { animation-delay: 0.5s; animation-fill-mode: both; }
+        .command-line:nth-child(2) { animation-delay: 1s; animation-fill-mode: both; }
+        .command-line:nth-child(3) { animation-delay: 1.5s; animation-fill-mode: both; }
+        .command-line:nth-child(4) { animation-delay: 2s; animation-fill-mode: both; }
+        
+        .copy-button {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: none;
+            border: 1px solid #30363d;
+            border-radius: 4px;
+            color: #7d8590;
+            padding: 6px 8px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .copy-button:hover {
+            background-color: #21262d;
+            color: #f0f6fc;
+        }
+        
+        .completion-message {
+            text-align: center;
+            padding: 24px;
+            animation: fadeIn 1s ease-out 2.5s both;
+        }
+        
+        .completion-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: #238636;
+            margin: 0;
+            animation: glow 2s infinite alternate;
+        }
+        
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px rgba(35, 134, 54, 0.5);
+            }
+            to {
+                text-shadow: 0 0 20px rgba(35, 134, 54, 0.8);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="github-header">
+        <div class="header-content">
+            <div class="github-logo">GitHub</div>
+            <div class="repo-path">/ fork-practice-upstream</div>
+        </div>
+    </div>
+    
+    <div class="content">
+        <div class="success-notification">
+            <div class="notification-content">
+                <div class="notification-icon">✅</div>
+                <div class="notification-text">
+                    <div class="notification-title">Branch successfully deleted</div>
+                    <div class="notification-subtitle">feature/add-basic-operations</div>
+                    <div class="notification-description">The branch has been permanently removed from the repository</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="branch-management">
+            <div class="management-header">Branch management</div>
+            
+            <div class="branch-item">
+                <div class="branch-status status-active">✓</div>
+                <div class="branch-info">
+                    <div class="branch-name active">main</div>
+                    <div class="branch-description">Default branch • Up to date</div>
+                    <div class="branch-meta">Latest commit: d4e6f2a (2 minutes ago)</div>
+                </div>
+                <div class="branch-actions">
+                    <div class="status-badge badge-protected">Protected</div>
+                </div>
+            </div>
+            
+            <div class="branch-item">
+                <div class="branch-status status-deleted">🗑</div>
+                <div class="branch-info">
+                    <div class="branch-name deleted">feature/add-basic-operations</div>
+                    <div class="branch-description">Deleted branch</div>
+                    <div class="branch-meta">Last commit: c3d4e5f (1 hour ago) • Merged via #1</div>
+                </div>
+                <div class="branch-actions">
+                    <div class="status-badge badge-deleted">Removed</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="restore-note">
+            <div class="restore-content">
+                <div class="restore-icon">💡</div>
+                <div class="restore-text">
+                    Tip: If you need to restore the branch, you can create it from commit <code>c3d4e5f</code> using:
+                    <code>git checkout -b feature/add-basic-operations c3d4e5f</code>
+                </div>
+            </div>
+        </div>
+        
+        <div class="cleanup-instructions">
+            <div class="instructions-header">
+                <div class="instructions-icon">🧹</div>
+                <div class="instructions-title">Clean up your local repository</div>
+            </div>
+            
+            <div class="instructions-content">
+                <div class="instructions-description">
+                    Run the following commands to clean up your local repository:
+                </div>
+                
+                <div class="command-block">
+                    <button class="copy-button" onclick="copyCommands()">Copy</button>
+                    <div class="command-line">git checkout main</div>
+                    <div class="command-line">git pull upstream main</div>
+                    <div class="command-line">git branch -d feature/add-basic-operations</div>
+                    <div class="command-line">git remote prune origin</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="completion-message">
+            <p class="completion-text">🧹 Repository cleanup completed!</p>
+        </div>
+    </div>
+    
+    <script>
+        function copyCommands() {
+            const commands = [
+                'git checkout main',
+                'git pull upstream main',
+                'git branch -d feature/add-basic-operations',
+                'git remote prune origin'
+            ];
+            
+            const commandText = commands.join('\n');
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(commandText).then(() => {
+                    showCopyFeedback();
+                });
+            } else {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = commandText;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showCopyFeedback();
+            }
+        }
+        
+        function showCopyFeedback() {
+            const button = document.querySelector('.copy-button');
+            const originalText = button.textContent;
+            
+            button.textContent = 'Copied!';
+            button.style.background = '#238636';
+            button.style.color = 'white';
+            
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.style.background = '';
+                button.style.color = '';
+            }, 2000);
+        }
+        
+        // Simulate the deletion animation when page loads
+        window.addEventListener('load', function() {
+            // Add some random sparkle effects
+            setTimeout(() => {
+                createSparkles();
+            }, 1500);
+        });
+        
+        function createSparkles() {
+            const sparkles = ['✨', '💫', '⭐', '🌟'];
+            const container = document.body;
+            
+            for (let i = 0; i < 8; i++) {
+                setTimeout(() => {
+                    const sparkle = document.createElement('div');
+                    sparkle.style.position = 'fixed';
+                    sparkle.style.fontSize = '16px';
+                    sparkle.style.color = '#238636';
+                    sparkle.style.pointerEvents = 'none';
+                    sparkle.style.zIndex = '1000';
+                    sparkle.textContent = sparkles[Math.floor(Math.random() * sparkles.length)];
+                    
+                    const rect = document.querySelector('.success-notification').getBoundingClientRect();
+                    sparkle.style.left = (rect.left + Math.random() * rect.width) + 'px';
+                    sparkle.style.top = (rect.top + Math.random() * rect.height) + 'px';
+                    
+                    sparkle.style.animation = 'sparkleFloat 2s ease-out forwards';
+                    
+                    container.appendChild(sparkle);
+                    
+                    setTimeout(() => sparkle.remove(), 2000);
+                }, i * 200);
+            }
+        }
+        
+        // Add the sparkle animation CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes sparkleFloat {
+                0% {
+                    opacity: 1;
+                    transform: translateY(0) scale(0.5);
+                }
+                50% {
+                    opacity: 1;
+                    transform: translateY(-20px) scale(1);
+                }
+                100% {
+                    opacity: 0;
+                    transform: translateY(-40px) scale(0.5);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
