@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>作成されたPull Request画面</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            color: #24292f;
+        }
+        
+        .github-header {
+            background-color: #24292f;
+            color: white;
+            padding: 16px 0;
+            margin: -20px -20px 20px -20px;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .github-logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .pr-header {
+            margin-bottom: 24px;
+        }
+        
+        .pr-title-section {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .pr-title {
+            font-size: 24px;
+            font-weight: 600;
+            flex: 1;
+        }
+        
+        .pr-number {
+            color: #656d76;
+            font-size: 24px;
+            font-weight: 400;
+        }
+        
+        .pr-status-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .pr-status-badge {
+            background-color: #1f883d;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .pr-meta {
+            color: #656d76;
+            font-size: 14px;
+        }
+        
+        .pr-meta a {
+            color: #24292f;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .pr-meta a:hover {
+            color: #0969da;
+        }
+        
+        .pr-tabs {
+            border-bottom: 1px solid #d1d9e0;
+            margin-bottom: 24px;
+        }
+        
+        .pr-tabs-nav {
+            display: flex;
+            gap: 0;
+        }
+        
+        .pr-tab {
+            padding: 12px 16px;
+            border: none;
+            background: none;
+            color: #656d76;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .pr-tab.active {
+            color: #24292f;
+            border-bottom-color: #fd8c73;
+        }
+        
+        .pr-tab:hover:not(.active) {
+            color: #24292f;
+        }
+        
+        .pr-content-container {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 24px;
+        }
+        
+        .pr-main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .pr-description {
+            background-color: white;
+            border: 1px solid #d1d9e0;
+            border-radius: 8px;
+            padding: 16px;
+        }
+        
+        .pr-description h2 {
+            font-size: 18px;
+            margin: 0 0 12px 0;
+        }
+        
+        .pr-description h3 {
+            font-size: 16px;
+            margin: 16px 0 8px 0;
+            color: #24292f;
+        }
+        
+        .pr-description ul {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+        
+        .pr-description li {
+            margin: 4px 0;
+        }
+        
+        .pr-description code {
+            background-color: #f6f8fa;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 12px;
+        }
+        
+        .pr-description pre {
+            background-color: #f6f8fa;
+            padding: 12px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+        
+        .checkbox-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .checkbox-list li {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 8px 0;
+        }
+        
+        .checkbox-checked {
+            color: #1f883d;
+            font-weight: 500;
+        }
+        
+        .pr-merge-box {
+            background-color: #f6f8fa;
+            border: 1px solid #d1d9e0;
+            border-radius: 8px;
+            padding: 16px;
+        }
+        
+        .merge-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .merge-status-icon {
+            width: 32px;
+            height: 32px;
+            background-color: #1f883d;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .merge-status-text {
+            flex: 1;
+        }
+        
+        .merge-status-title {
+            font-weight: 600;
+            color: #1f883d;
+            margin-bottom: 2px;
+        }
+        
+        .merge-status-subtitle {
+            font-size: 14px;
+            color: #656d76;
+        }
+        
+        .merge-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border: 1px solid #d1d9e0;
+            border-radius: 6px;
+            background-color: #f6f8fa;
+            color: #24292f;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn:hover {
+            background-color: #f3f4f6;
+            border-color: #c4cdd0;
+        }
+        
+        .btn-primary {
+            background-color: #1f883d;
+            color: white;
+            border-color: #1f883d;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1a7f37;
+            border-color: #1a7f37;
+        }
+        
+        .pr-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .sidebar-section {
+            background-color: white;
+            border: 1px solid #d1d9e0;
+            border-radius: 8px;
+            padding: 16px;
+        }
+        
+        .sidebar-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: #656d76;
+        }
+        
+        .reviewer-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .reviewer-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .reviewer-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: #0969da;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .reviewer-name {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .reviewer-status {
+            margin-left: auto;
+            font-size: 12px;
+            color: #656d76;
+        }
+        
+        .label-item {
+            display: inline-block;
+            background-color: #0969da;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+        
+        .label-item.feature {
+            background-color: #1f883d;
+        }
+        
+        .branch-info {
+            background-color: #f6f8fa;
+            border: 1px solid #d1d9e0;
+            border-radius: 6px;
+            padding: 12px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 14px;
+        }
+        
+        .branch-comparison {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .branch-name {
+            background-color: #0969da;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .instruction-box {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #1f883d;
+            color: white;
+            padding: 16px;
+            border-radius: 8px;
+            max-width: 320px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .instruction-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="github-header">
+        <div class="header-content">
+            <div class="github-logo">GitHub</div>
+        </div>
+    </div>
+    
+    <div class="content">
+        <div class="pr-header">
+            <div class="pr-title-section">
+                <div class="pr-title">feat: 四則演算機能を追加（Calculator v2.0）</div>
+                <div class="pr-number">#1</div>
+            </div>
+            
+            <div class="pr-status-bar">
+                <div class="pr-status-badge">
+                    <span>🟢</span>
+                    Open
+                </div>
+                <div class="pr-meta">
+                    <a href="#">あなたのユーザー名</a> wants to merge 1 commit into 
+                    <span class="branch-name">main</span> from 
+                    <span class="branch-name">feature/add-basic-operations</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="pr-tabs">
+            <div class="pr-tabs-nav">
+                <button class="pr-tab active">
+                    💬 Conversation <span style="background-color: #656d76; color: white; padding: 2px 6px; border-radius: 10px; font-size: 12px; margin-left: 4px;">1</span>
+                </button>
+                <button class="pr-tab">
+                    🔍 Files changed <span style="background-color: #656d76; color: white; padding: 2px 6px; border-radius: 10px; font-size: 12px; margin-left: 4px;">1</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="pr-content-container">
+            <div class="pr-main-content">
+                <div class="pr-description">
+                    <h2>概要</h2>
+                    <p>Calculatorクラスに減算、乗算、除算機能を追加し、基本的な四則演算を完全サポートしました。</p>
+                    
+                    <h3>変更内容</h3>
+                    <h4>追加機能</h4>
+                    <ul>
+                        <li><code>subtract(int a, int b)</code>: 減算処理</li>
+                        <li><code>multiply(int a, int b)</code>: 乗算処理</li>
+                        <li><code>divide(int a, int b)</code>: 除算処理（ゼロ除算チェック付き）</li>
+                    </ul>
+                    
+                    <h4>改善点</h4>
+                    <ul>
+                        <li>全メソッドにJavadocコメントを追加</li>
+                        <li>より詳細な出力フォーマットに変更</li>
+                        <li>バージョン表示をv2.0に更新</li>
+                    </ul>
+                    
+                    <h3>テスト結果</h3>
+                    <pre>Calculator v2.0 - 四則演算対応
+=========================
+計算対象: 20, 5
+
+加算結果: 25
+減算結果: 15
+乗算結果: 100
+除算結果: 4</pre>
+                    
+                    <h3>確認事項</h3>
+                    <ul class="checkbox-list">
+                        <li><span class="checkbox-checked">✅ 全メソッドが正常に動作することを確認</span></li>
+                        <li><span class="checkbox-checked">✅ ゼロ除算エラーハンドリングをテスト</span></li>
+                        <li><span class="checkbox-checked">✅ コンパイルエラーがないことを確認</span></li>
+                        <li><span class="checkbox-checked">✅ Javadocコメントが適切に記述されていることを確認</span></li>
+                    </ul>
+                    
+                    <h3>レビューポイント</h3>
+                    <p>以下の点について特にレビューをお願いします：</p>
+                    <ol>
+                        <li>メソッド設計の妥当性</li>
+                        <li>エラーハンドリングの適切性</li>
+                        <li>コメント・ドキュメントの品質</li>
+                        <li>命名規則の統一性</li>
+                    </ol>
+                </div>
+                
+                <div class="pr-merge-box">
+                    <div class="merge-status">
+                        <div class="merge-status-icon">✓</div>
+                        <div class="merge-status-text">
+                            <div class="merge-status-title">This branch has no conflicts with the base branch</div>
+                            <div class="merge-status-subtitle">Merging can be performed automatically</div>
+                        </div>
+                    </div>
+                    
+                    <div class="merge-actions">
+                        <button class="btn btn-primary">Merge pull request</button>
+                        <button class="btn">Close pull request</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="pr-sidebar">
+                <div class="sidebar-section">
+                    <div class="sidebar-title">Reviewers</div>
+                    <div class="reviewer-list">
+                        <div class="reviewer-item">
+                            <div class="reviewer-avatar">TL</div>
+                            <div class="reviewer-name">Tech Lead</div>
+                            <div class="reviewer-status">Requested</div>
+                        </div>
+                        <div class="reviewer-item">
+                            <div class="reviewer-avatar">SM</div>
+                            <div class="reviewer-name">Senior Member</div>
+                            <div class="reviewer-status">Requested</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="sidebar-section">
+                    <div class="sidebar-title">Assignees</div>
+                    <div style="color: #656d76; font-size: 14px;">No one assigned</div>
+                </div>
+                
+                <div class="sidebar-section">
+                    <div class="sidebar-title">Labels</div>
+                    <div>
+                        <span class="label-item">enhancement</span>
+                        <span class="label-item feature">feature</span>
+                    </div>
+                </div>
+                
+                <div class="sidebar-section">
+                    <div class="sidebar-title">Projects</div>
+                    <div style="color: #656d76; font-size: 14px;">Calculator Enhancement Project</div>
+                </div>
+                
+                <div class="sidebar-section">
+                    <div class="sidebar-title">Milestone</div>
+                    <div style="color: #656d76; font-size: 14px;">v2.0 Release</div>
+                </div>
+                
+                <div class="sidebar-section">
+                    <div class="sidebar-title">Development</div>
+                    <div class="branch-info">
+                        <div class="branch-comparison">
+                            <span class="branch-name">feature/add-basic-operations</span>
+                            <span>→</span>
+                            <span class="branch-name">main</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="instruction-box">
+        <div class="instruction-title">✅ PR作成完了！</div>
+        Pull Requestが正常に作成されました。レビュアーからのフィードバックを待つか、「Files changed」タブで変更内容を確認できます。
+    </div>
+</body>
+</html>

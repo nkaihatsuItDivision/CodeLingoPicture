@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Projects カンバンボード</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            color: #24292f;
+        }
+        
+        .github-header {
+            background-color: #24292f;
+            color: white;
+            padding: 16px 0;
+            margin: -20px -20px 20px -20px;
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .github-logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .project-header {
+            background-color: #f6f8fa;
+            border-bottom: 1px solid #d1d9e0;
+            padding: 20px 0;
+            margin-bottom: 24px;
+        }
+        
+        .project-header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .project-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #24292f;
+        }
+        
+        .project-description {
+            color: #656d76;
+            font-size: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .project-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 14px;
+            color: #656d76;
+        }
+        
+        .kanban-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .kanban-board {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding-bottom: 20px;
+        }
+        
+        .kanban-column {
+            flex: 0 0 350px;
+            background-color: #f6f8fa;
+            border-radius: 8px;
+            border: 1px solid #d1d9e0;
+        }
+        
+        .column-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #d1d9e0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .column-title {
+            font-weight: 600;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .column-count {
+            background-color: #656d76;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .column-content {
+            padding: 16px;
+            min-height: 400px;
+        }
+        
+        .card {
+            background-color: white;
+            border: 1px solid #d1d9e0;
+            border-radius: 6px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .card:hover {
+            border-color: #0969da;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        
+        .card-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: #24292f;
+        }
+        
+        .card-description {
+            font-size: 13px;
+            color: #656d76;
+            line-height: 1.4;
+            margin-bottom: 12px;
+        }
+        
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+        }
+        
+        .card-labels {
+            display: flex;
+            gap: 4px;
+        }
+        
+        .label {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .label-bug {
+            background-color: #d73a49;
+            color: white;
+        }
+        
+        .label-feature {
+            background-color: #0366d6;
+            color: white;
+        }
+        
+        .label-enhancement {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .label-priority-high {
+            background-color: #d93f0b;
+            color: white;
+        }
+        
+        .card-assignee {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: #0366d6;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
+        }
+        
+        .card-issue {
+            border-left: 4px solid #28a745;
+        }
+        
+        .card-pr {
+            border-left: 4px solid #6f42c1;
+        }
+        
+        .card-bug {
+            border-left: 4px solid #d73a49;
+        }
+        
+        .todo-column {
+            background-color: #fff5b4;
+        }
+        
+        .in-progress-column {
+            background-color: #e1f5fe;
+        }
+        
+        .review-column {
+            background-color: #fff3e0;
+        }
+        
+        .done-column {
+            background-color: #e8f5e8;
+        }
+        
+        .add-card-btn {
+            width: 100%;
+            padding: 12px;
+            border: 2px dashed #d1d9e0;
+            background-color: transparent;
+            border-radius: 6px;
+            color: #656d76;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .add-card-btn:hover {
+            border-color: #0969da;
+            background-color: #f6f8fa;
+            color: #0969da;
+        }
+    </style>
+</head>
+<body>
+    <div class="github-header">
+        <div class="header-content">
+            <div class="github-logo">GitHub Projects</div>
+            <div style="color: #8b949e; font-size: 14px;">Calculator機能拡張プロジェクト</div>
+        </div>
+    </div>
+    
+    <div class="project-header">
+        <div class="project-header-content">
+            <div class="project-title">🚀 Calculator機能拡張プロジェクト</div>
+            <div class="project-description">
+                四則演算機能の追加とコードレビュープロセスの実践
+            </div>
+            <div class="project-meta">
+                <span>📊 4 列</span>
+                <span>📝 8 アイテム</span>
+                <span>👥 2 担当者</span>
+                <span>🕒 最終更新: 2分前</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="kanban-container">
+        <div class="kanban-board">
+            <!-- TODO Column -->
+            <div class="kanban-column todo-column">
+                <div class="column-header">
+                    <div class="column-title">
+                        📋 To Do
+                        <div class="column-count">2</div>
+                    </div>
+                </div>
+                <div class="column-content">
+                    <div class="card card-issue">
+                        <div class="card-title">新機能: 履歴管理機能の追加</div>
+                        <div class="card-description">
+                            計算機に履歴管理機能を追加。過去の計算結果を記録・表示し、履歴のクリア機能も実装する。
+                        </div>
+                        <div class="card-meta">
+                            <div class="card-labels">
+                                <span class="label label-feature">feature</span>
+                                <span class="label label-enhancement">enhancement</span>
+                            </div>
+                            <div class="card-assignee">TK</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card card-bug">
+                        <div class="card-title">バグ修正: ゼロ除算エラーハンドリング改善</div>
+                        <div class="card-description">
+                            現在の例外処理を改善し、より詳細なエラーメッセージとログ出力を追加。
+                        </div>
+                        <div class="card-meta">
+                            <div class="card-labels">
+                                <span class="label label-bug">bug</span>
+                                <span class="label label-priority-high">priority: high</span>
+                            </div>
+                            <div class="card-assignee">YM</div>
+                        </div>
+                    </div>
+                    
+                    <button class="add-card-btn">+ カードを追加</button>
+                </div>
+            </div>
+            
+            <!-- In Progress Column -->
+            <div class="kanban-column in-progress-column">
+                <div class="column-header">
+                    <div class="column-title">
+                        🔄 In Progress
+                        <div class="column-count">2</div>
+                    </div>
+                </div>
+                <div class="column-content">
+                    <div class="card card-pr">
+                        <div class="card-title">PR #1: 四則演算機能を追加</div>
+                        <div class="card-description">
+                            Calculator クラスに subtract, multiply, divide メソッドを実装。Javadocコメントと例外処理も追加済み。
+                        </div>
+                        <div class="card-meta">
+                            <div class="card-labels">
+                                <span class="label label-feature">feature</span>
+                            </div>
+                            <div class="card-assignee">TK</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card card-issue">
+                        <div class="card-title">レビュー指摘事項の修正対応</div>
+                        <div class="card-description">
+                            セマンティックバージョニング適用とtry-catch構文の追加。テストコードも修正中。
+                        </div>
+                        <div class="card-meta">
+                            <div class="card-labels">
+                                <span class="label label-enhancement">enhancement</span>
+                            </div>
+                            <div class="card-assignee">TK</div>
+                        </div>
+                    </div>
+                    
+                    <button class="add-card-btn">+ カードを追加</button>
+                </div>
+            </div>
+            
+            <!-- Review Column -->
+            <div class="kanban-column review-column">
+                <div class="column-header">
+                    <div class="column-title">
+                        👀 Review
+                        <div class="column-count">2</div>
+                    </div>
+                </div>
+                <div class="column-content">
+                    <div class="card card-pr">
+                        <div class="card-title">コードレビュー実施中</div>
+                        <div class="card-description">
+                            レビューアーによる品質チェック実施中。メソッド設計とエラーハンドリングの妥当性を確認。
+                        </div>
+                        <div class="card-meta">
+                            <div class="card-labels">
+                                <span class="label label-enhancement">review</span>
+                            </div>
+                            <div class="card-assignee">YM</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card card-issue">
+                        <div class="card-title">テスト実行・品質確認</div>
+                        <div class="card-description">
+                            各メソッドの動作確認とゼロ除算テスト実行。コンパイルエラーやバグの最終チェック。
+                        </div>
+                        <div class="card-meta">
+                            <div class="card-labels">
+                                <span class="label label-enhancement">testing</span>
+                            </div>
+                            <div class="card-assignee">YM</div>
+                        </div>
+                    </div>
+                    
+                    <button class="add-card-btn">+ カードを追加</button>
+                </div>
+            </div>
+            
+            <!-- Done Column -->
+            <div class="kanban-column done-column">
+                <div class="column-header">
+                    <div class="column-title">
+                        ✅ Done
+                        <div class="column-count">2</div>
+                    </div>
+                </div>
+                <div class="column-content">
+                    <div class="card card-issue">
+                        <div class="card-title">基本Calculator クラス作成完了</div>
+                        <div class="card-description">
+                            初期バージョンのCalculator クラス実装完了。add メソッドと基本的なmain メソッドを実装。
+                        </div>
+                        <div class="card-meta">
+                            <div class="card-labels">
+                                <span class="label label-feature">feature</span>
+                            </div>
+                            <div class="card-assignee">TK</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card card-pr">
+                        <div class="card-title">リポジトリ初期設定完了</div>
+                        <div class="card-description">
+                            GitHub リポジトリ作成、README.md追加、初期コミット実行。開発環境の準備完了。
+                        </div>
+                        <div class="card-meta">
+                            <div class="card-labels">
+                                <span class="label label-enhancement">setup</span>
+                            </div>
+                            <div class="card-assignee">TK</div>
+                        </div>
+                    </div>
+                    
+                    <button class="add-card-btn">+ カードを追加</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

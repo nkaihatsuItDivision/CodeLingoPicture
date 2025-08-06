@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>マージ実行画面</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #0d1117;
+            margin: 0;
+            padding: 0;
+            color: #f0f6fc;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        .github-header {
+            background-color: #161b22;
+            padding: 16px 0;
+            border-bottom: 1px solid #30363d;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .github-logo {
+            font-size: 18px;
+            font-weight: bold;
+            color: #f0f6fc;
+        }
+        
+        .repo-path {
+            color: #7d8590;
+            font-size: 14px;
+        }
+        
+        .content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: backdropFadeIn 0.3s ease-out;
+        }
+        
+        @keyframes backdropFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .merge-dialog {
+            background-color: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            width: 480px;
+            max-width: 90vw;
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.5);
+            animation: dialogSlideIn 0.4s ease-out;
+            position: relative;
+        }
+        
+        @keyframes dialogSlideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        
+        .dialog-header {
+            background-color: #161b22;
+            padding: 20px;
+            border-radius: 12px 12px 0 0;
+            border-bottom: 1px solid #30363d;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .dialog-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #f0f6fc;
+            margin: 0;
+        }
+        
+        .close-button {
+            background: none;
+            border: none;
+            color: #7d8590;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .close-button:hover {
+            color: #f0f6fc;
+            background-color: #30363d;
+        }
+        
+        .dialog-content {
+            padding: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #f0f6fc;
+            margin-bottom: 8px;
+        }
+        
+        .form-input {
+            width: 100%;
+            background-color: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 14px;
+            color: #f0f6fc;
+            font-family: ui-monospace, 'Cascadia Code', 'Consolas', monospace;
+            line-height: 1.4;
+            resize: vertical;
+            transition: all 0.2s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #238636;
+            box-shadow: 0 0 0 3px rgba(35, 134, 54, 0.3);
+        }
+        
+        .commit-message {
+            height: 80px;
+        }
+        
+        .extended-description {
+            height: 60px;
+        }
+        
+        .dialog-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+        
+        .btn-secondary {
+            background-color: #21262d;
+            color: #f0f6fc;
+            border-color: #30363d;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #30363d;
+        }
+        
+        .btn-primary {
+            background-color: #238636;
+            color: white;
+            border-color: #238636;
+            position: relative;
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            background-color: #2ea043;
+            border-color: #2ea043;
+        }
+        
+        .btn-primary:disabled {
+            background-color: #6e7681;
+            border-color: #6e7681;
+            cursor: not-allowed;
+        }
+        
+        .processing-indicator {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            background-color: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 6px;
+            padding: 8px 12px;
+            margin-left: auto;
+        }
+        
+        .processing-indicator.show {
+            display: flex;
+        }
+        
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #6e7681;
+            border-top: 2px solid #238636;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .processing-text {
+            color: #7d8590;
+            font-size: 12px;
+        }
+        
+        .info-section {
+            background-color: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 6px;
+            padding: 16px;
+            margin-top: 20px;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .info-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        
+        .info-icon {
+            color: #fbbf24;
+            font-size: 16px;
+        }
+        
+        .info-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fbbf24;
+        }
+        
+        .info-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .info-list li {
+            color: #f0f6fc;
+            font-size: 12px;
+            line-height: 1.5;
+            margin-bottom: 4px;
+            padding-left: 16px;
+            position: relative;
+        }
+        
+        .info-list li::before {
+            content: '•';
+            color: #7d8590;
+            position: absolute;
+            left: 0;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .success-animation {
+            animation: successPulse 0.6s ease-out;
+        }
+        
+        @keyframes successPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .typing-animation {
+            overflow: hidden;
+            border-right: 2px solid #238636;
+            white-space: nowrap;
+            animation: typing 2s steps(40, end), blink-caret 0.5s step-end 4;
+        }
+        
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        
+        @keyframes blink-caret {
+            from, to { border-color: transparent; }
+            50% { border-color: #238636; }
+        }
+    </style>
+</head>
+<body>
+    <div class="github-header">
+        <div class="header-content">
+            <div class="github-logo">GitHub</div>
+            <div class="repo-path">/ fork-practice-upstream</div>
+        </div>
+    </div>
+    
+    <div class="backdrop">
+        <div class="merge-dialog">
+            <div class="dialog-header">
+                <h2 class="dialog-title">Merge pull request</h2>
+                <button class="close-button" onclick="closeDialog()">&times;</button>
+            </div>
+            
+            <div class="dialog-content">
+                <div class="form-group">
+                    <label for="commit-message" class="form-label">Merge commit message:</label>
+                    <textarea 
+                        id="commit-message" 
+                        class="form-input commit-message"
+                        placeholder="Merge pull request #1 from username/feature/add-basic-operations"
+                    >Merge pull request #1 from username/feature/add-basic-operations
+
+feat: 四則演算機能を追加（Calculator v2.0）</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="extended-description" class="form-label">Extended description (optional):</label>
+                    <textarea 
+                        id="extended-description" 
+                        class="form-input extended-description"
+                        placeholder="Add additional details about this merge"
+                    >四則演算機能を追加し、Calculatorクラスをv2.0に更新
+- ゼロ除算エラーハンドリングを含む
+- Javadocコメントの追加</textarea>
+                </div>
+                
+                <div class="dialog-actions">
+                    <button class="btn btn-secondary" onclick="closeDialog()">Cancel</button>
+                    <button class="btn btn-primary" id="confirm-merge-btn" onclick="confirmMerge()">
+                        Confirm merge
+                    </button>
+                    <div class="processing-indicator" id="processing-indicator">
+                        <div class="spinner"></div>
+                        <div class="processing-text">Processing...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="content">
+        <div class="info-section">
+            <div class="info-header">
+                <div class="info-icon">🔄</div>
+                <div class="info-title typing-animation">マージ実行中...</div>
+            </div>
+            <ul class="info-list">
+                <li>コミットメッセージを確認し、「Confirm merge」ボタンでマージを実行します</li>
+                <li>マージ後は元のPull Requestは自動的にクローズされます</li>
+                <li>ブランチの削除は任意で選択可能です</li>
+                <li>マージコミットがmainブランチに追加されます</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        function closeDialog() {
+            const backdrop = document.querySelector('.backdrop');
+            backdrop.style.animation = 'backdropFadeIn 0.3s ease-out reverse';
+            
+            const dialog = document.querySelector('.merge-dialog');
+            dialog.style.animation = 'dialogSlideIn 0.3s ease-out reverse';
+            
+            setTimeout(() => {
+                backdrop.remove();
+            }, 300);
+        }
+        
+        function confirmMerge() {
+            const confirmBtn = document.getElementById('confirm-merge-btn');
+            const processingIndicator = document.getElementById('processing-indicator');
+            
+            // Disable button and show processing
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = 'Merging...';
+            processingIndicator.classList.add('show');
+            
+            // Simulate merge process
+            setTimeout(() => {
+                // Add success animation
+                const dialog = document.querySelector('.merge-dialog');
+                dialog.classList.add('success-animation');
+                
+                // Show success message
+                confirmBtn.style.backgroundColor = '#238636';
+                confirmBtn.textContent = '✓ Merge completed!';
+                processingIndicator.classList.remove('show');
+                
+                // Automatically close after success
+                setTimeout(() => {
+                    alert('🎉 Pull Requestのマージが完了しました！\n次の画面（マージ完了画面）に遷移します。');
+                    closeDialog();
+                }, 1500);
+            }, 2500);
+        }
+        
+        // Auto-resize textareas
+        document.querySelectorAll('textarea').forEach(textarea => {
+            textarea.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = Math.max(this.scrollHeight, 60) + 'px';
+            });
+        });
+        
+        // Focus on first input when dialog opens
+        window.addEventListener('load', function() {
+            document.getElementById('commit-message').focus();
+            
+            // Add typing animation delay
+            setTimeout(() => {
+                document.querySelector('.typing-animation').style.animation = 
+                    'typing 3s steps(20, end), blink-caret 0.5s step-end infinite 3s';
+            }, 500);
+        });
+        
+        // Escape key to close dialog
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeDialog();
+            }
+        });
+    </script>
+</body>
+</html>
