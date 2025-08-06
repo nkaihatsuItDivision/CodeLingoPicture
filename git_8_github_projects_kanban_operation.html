@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Projects かんばんボード運用画面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif;
+            background: #f6f8fa;
+            color: #24292f;
+            line-height: 1.5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: #f6f8fa;
+            padding: 16px 24px;
+            border-bottom: 1px solid #d0d7de;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .header h2 {
+            color: #24292f;
+            font-size: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .project-icon {
+            width: 24px;
+            height: 24px;
+            background: #0969da;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+        }
+        
+        .status-indicator {
+            background: #238636;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .kanban-board {
+            display: flex;
+            gap: 16px;
+            padding: 24px;
+            overflow-x: auto;
+        }
+        
+        .column {
+            flex: 1;
+            min-width: 280px;
+            background: #f6f8fa;
+            border-radius: 8px;
+            border: 1px solid #d0d7de;
+        }
+        
+        .column-header {
+            padding: 16px;
+            border-bottom: 1px solid #d0d7de;
+            background: white;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .column-title {
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .column-count {
+            background: #656d76;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .todo-header { border-left: 4px solid #656d76; }
+        .progress-header { border-left: 4px solid #fb8500; }
+        .done-header { border-left: 4px solid #238636; }
+        
+        .column-body {
+            padding: 16px;
+            min-height: 400px;
+        }
+        
+        .card {
+            background: white;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 12px;
+            cursor: grab;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px);
+        }
+        
+        .card-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: #0969da;
+        }
+        
+        .card-labels {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+        
+        .label {
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 500;
+            color: white;
+        }
+        
+        .label-bug { background: #da3633; }
+        .label-feature { background: #7c3aed; }
+        .label-question { background: #0969da; }
+        .label-priority-high { background: #fb8500; }
+        .label-priority-medium { background: #57636c; }
+        
+        .card-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #656d76;
+            margin-top: 8px;
+        }
+        
+        .issue-number {
+            font-weight: 500;
+        }
+        
+        .assignee {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #0969da, #2196F3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+        }
+        
+        .progress-indicator {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 12px;
+            height: 12px;
+            background: #fb8500;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        .done-indicator {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 16px;
+            height: 16px;
+            background: #238636;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+        
+
+        
+        .arrow {
+            position: absolute;
+            color: #fb8500;
+            font-size: 24px;
+            font-weight: bold;
+            animation: bounce 1s infinite;
+        }
+        
+        .arrow-1 {
+            top: 200px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .arrow-2 {
+            top: 200px;
+            left: 75%;
+            transform: translateX(-50%);
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-5px); }
+        }
+        
+        .workflow-text {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #656d76;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>
+                <div class="project-icon">📋</div>
+                学生管理システム開発進捗
+            </h2>
+            <div class="status-indicator">Active Project</div>
+        </div>
+        
+        <div style="background: #e7f3ff; border: 1px solid #b6d8ff; border-radius: 6px; padding: 16px; margin: 0 24px 16px 24px;">
+            <p style="margin: 0; font-size: 14px; color: #0969da; font-weight: 500;">
+                💡 <strong>このかんばんボードの効果：</strong> 3つのIssueの進捗状況が一目で分かり、どこにボトルネックがあるかすぐに特定できます。企業開発では、チーム全体の作業効率向上に直結する重要な管理手法です。
+            </p>
+        </div>
+        
+        <div class="kanban-board">
+            <!-- To do Column -->
+            <div class="column">
+                <div class="column-header todo-header">
+                    <div class="column-title">
+                        📝 To do
+                        <span class="column-count">1</span>
+                    </div>
+                </div>
+                <div class="column-body">
+                    <div class="card">
+                        <div class="card-title">[FEATURE] 学生データのCSV出力機能を追加</div>
+                        <div class="card-labels">
+                            <span class="label label-feature">enhancement</span>
+                            <span class="label label-priority-medium">priority: medium</span>
+                        </div>
+                        <div class="card-meta">
+                            <span class="issue-number">#2</span>
+                            <div class="assignee">Y</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- In Progress Column -->
+            <div class="column">
+                <div class="column-header progress-header">
+                    <div class="column-title">
+                        🚧 In progress
+                        <span class="column-count">1</span>
+                    </div>
+                </div>
+                <div class="column-body">
+                    <div class="card">
+                        <div class="progress-indicator"></div>
+                        <div class="card-title">[BUG] 学生削除時の確認メッセージが表示されない</div>
+                        <div class="card-labels">
+                            <span class="label label-bug">bug</span>
+                            <span class="label label-priority-high">priority: high</span>
+                        </div>
+                        <div class="card-meta">
+                            <span class="issue-number">#1</span>
+                            <div class="assignee">Y</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Done Column -->
+            <div class="column">
+                <div class="column-header done-header">
+                    <div class="column-title">
+                        ✅ Done
+                        <span class="column-count">1</span>
+                    </div>
+                </div>
+                <div class="column-body">
+                    <div class="card">
+                        <div class="done-indicator">✓</div>
+                        <div class="card-title">[QUESTION] Week 5システムのテスト方法について</div>
+                        <div class="card-labels">
+                            <span class="label label-question">question</span>
+                        </div>
+                        <div class="card-meta">
+                            <span class="issue-number">#3</span>
+                            <div class="assignee">Y</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="workflow-text">
+            🚀 <strong>実際の効果：</strong> バグ修正（高優先度）が進行中、機能追加が待機中、質問対応が完了済み → 次はバグ修正完了後にCSV機能開発に着手
+        </div>
+    </div>
+    
+    <div class="arrow arrow-1">→</div>
+    <div class="arrow arrow-2">→</div>
+</body>
+</html>

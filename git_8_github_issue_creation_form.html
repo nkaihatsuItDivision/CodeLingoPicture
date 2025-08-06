@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Issue作成画面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif;
+            background: #f6f8fa;
+            color: #24292f;
+            line-height: 1.5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: #f6f8fa;
+            padding: 16px 24px;
+            border-bottom: 1px solid #d0d7de;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .header h2 {
+            color: #24292f;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .step-indicator {
+            background: #0969da;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .form-container {
+            padding: 24px;
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            font-size: 14px;
+            background: #ffffff;
+        }
+        
+        .form-group textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 8px 12px;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace;
+            background: #ffffff;
+            resize: vertical;
+        }
+        
+        .labels-section {
+            background: #f6f8fa;
+            padding: 16px;
+            border-radius: 6px;
+            margin-bottom: 24px;
+        }
+        
+        .labels-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+        
+        .label-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .label-item {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+        
+        .label-bug {
+            background: #da3633;
+            color: white;
+            border: 2px solid #0969da;
+        }
+        
+        .label-priority {
+            background: #fb8500;
+            color: white;
+        }
+        
+        .assignees-section {
+            background: #f6f8fa;
+            padding: 16px;
+            border-radius: 6px;
+            margin-bottom: 24px;
+        }
+        
+        .assignee-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #d0d7de;
+        }
+        
+        .avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #0969da, #2196F3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .create-button {
+            background: #238636;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .create-button:hover {
+            background: #2ea043;
+        }
+        
+
+        
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>New issue</h2>
+            <div class="step-indicator">ステップ1: Issue作成</div>
+        </div>
+        
+        <div class="form-container">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" value="[BUG] 学生削除時の確認メッセージが表示されない" readonly>
+            </div>
+            
+            <div class="form-group">
+                <label for="content">Write</label>
+                <textarea id="content" readonly>## 🐛 バグの概要
+学生データを削除する際に、確認メッセージが表示されずに即座に削除されてしまいます。
+
+## 📋 再現手順
+1. 学生管理システムを起動
+2. メニューで「4. 学生を削除」を選択
+3. 学生IDを入力
+4. 確認なしで即座に削除される
+
+## 🎯 期待される動作
+削除前に「本当に削除しますか？(y/n)」のような確認メッセージを表示
+
+## 🔧 提案する修正
+StudentManager.javaの削除メソッドに確認処理を追加
+
+## 📝 備考
+- 重要なデータを誤って削除する危険性があります
+- ユーザビリティの向上が期待できます</textarea>
+            </div>
+            
+            <div class="labels-section">
+                <div class="labels-title">Labels</div>
+                <div class="label-group">
+                    <span class="label-item label-bug">🐛 bug</span>
+                    <span class="label-item label-priority">🔥 priority: high</span>
+                </div>
+            </div>
+            
+            <div class="assignees-section">
+                <div class="labels-title">Assignees</div>
+                <div class="assignee-item">
+                    <div class="avatar">Y</div>
+                    <span>あなた (学習者)</span>
+                </div>
+            </div>
+            
+            <button class="create-button">Create issue</button>
+        </div>
+    </div>
+</body>
+</html>

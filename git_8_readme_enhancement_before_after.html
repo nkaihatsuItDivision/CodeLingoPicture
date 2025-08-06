@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>README拡張前後比較</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif;
+            background: #f6f8fa;
+            color: #24292f;
+            line-height: 1.5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .title {
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(90deg, #0969da, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .side {
+            background: white;
+            border: 1px solid #d0d7de;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .side-header {
+            padding: 16px;
+            font-weight: 600;
+            font-size: 16px;
+            text-align: center;
+            color: white;
+        }
+        
+        .before-header {
+            background: linear-gradient(135deg, #656d76, #8b949e);
+        }
+        
+        .after-header {
+            background: linear-gradient(135deg, #238636, #2ea043);
+        }
+        
+        .readme-content {
+            padding: 20px;
+            font-family: ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            background: #f6f8fa;
+            min-height: 500px;
+        }
+        
+        .before-content {
+            color: #656d76;
+        }
+        
+        .after-content {
+            color: #24292f;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 500;
+            margin: 2px;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .badge-java { background: #007396; }
+        .badge-oop { background: #238636; }
+        .badge-week { background: #2ea043; }
+        .badge-license { background: #fb8500; }
+        .badge-lines { background: #ff6b35; }
+        
+        h1 {
+            color: #24292f;
+            font-size: 24px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid #d0d7de;
+            padding-bottom: 8px;
+        }
+        
+        h2 {
+            color: #24292f;
+            font-size: 18px;
+            margin-top: 24px;
+            margin-bottom: 12px;
+        }
+        
+        h3 {
+            color: #24292f;
+            font-size: 16px;
+            margin-top: 20px;
+            margin-bottom: 8px;
+        }
+        
+        .tech-list {
+            background: #f6f8fa;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 12px 0;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin: 16px 0;
+        }
+        
+        .feature-item {
+            background: #e7f3ff;
+            border: 1px solid #b6d8ff;
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 12px;
+        }
+        
+        .improvement-box {
+            background: linear-gradient(135deg, #238636, #2ea043);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .improvement-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .improvement-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+        
+        .stat-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 16px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .arrow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 48px;
+            color: #238636;
+            z-index: 10;
+            background: white;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+        }
+        
+        .highlight {
+            background: linear-gradient(90deg, transparent, #fff3cd, transparent);
+            animation: highlight 3s infinite;
+        }
+        
+        @keyframes highlight {
+            0%, 100% { background: transparent; }
+            50% { background: linear-gradient(90deg, transparent, #fff3cd, transparent); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">📄 README.md 拡張効果の比較</h1>
+        
+        <div class="comparison">
+            <!-- Before -->
+            <div class="side">
+                <div class="side-header before-header">
+                    📝 Before（レッスン6.7時点）
+                </div>
+                <div class="readme-content before-content">
+# 学生管理システム
+
+Week 5で作成した学生管理システムです。
+
+## 概要
+オブジェクト指向プログラミングを学ぶために作成したシステムです。
+
+## 機能
+- 学生の登録
+- 学生の一覧表示
+- 学生の検索
+- 学生の削除
+
+## 使用技術
+- Java
+- Lombok
+
+## 実行方法
+```bash
+java StudentManagementSystemMain
+```
+
+## 学習内容
+- 継承
+- ポリモーフィズム
+- 抽象クラス
+- インターフェース
+- 例外処理
+
+このシステムでOOPの基本を学習しました。
+                </div>
+            </div>
+            
+            <!-- After -->
+            <div class="side">
+                <div class="side-header after-header">
+                    ✨ After（レッスン6.8完了後）
+                </div>
+                <div class="readme-content after-content">
+# 学生管理システム（OOP応用版）
+
+<span class="badge badge-java">Java 17+</span>
+<span class="badge badge-oop">OOP 応用</span>
+<span class="badge badge-week">Week 5完成</span>
+<span class="badge badge-license">MIT License</span>
+<span class="badge badge-lines">600-700行</span>
+
+**Week 5: Java応用・オブジェクト指向応用 完成版**
+
+継承・ポリモーフィズム・抽象化・例外処理・Lombokを統合した
+エンタープライズレベル学生管理システム
+
+## 📋 目次
+- [概要](#概要)
+- [技術スタック](#技術スタック)
+- [主要機能](#主要機能)
+- [OOP設計](#oop設計)
+
+## 🎯 概要
+このプロジェクトは、Java学習プログラムWeek 5の集大成として開発された、
+オブジェクト指向プログラミングの高度な概念を統合した学生管理システムです。
+
+### ✨ 特徴
+<div class="features-grid">
+  <div class="feature-item">🏗️ 継承階層<br>明確な親子関係</div>
+  <div class="feature-item">🔄 ポリモーフィズム<br>統一インターフェース</div>
+  <div class="feature-item">📐 抽象化<br>設計品質確保</div>
+  <div class="feature-item">⚠️ 例外処理<br>堅牢なシステム</div>
+</div>
+
+## 🛠️ 技術スタック
+<div class="tech-list">
+<strong>Java 17+</strong> - 主要開発言語<br>
+<strong>Lombok</strong> - 86%コード削減<br>
+<strong>Maven</strong> - 依存関係管理<br>
+<strong>JUnit 5+</strong> - 単体テスト（拡張予定）
+</div>
+
+## 🎓 学習成果
+<span class="highlight">**到達レベル**: エンタープライズJavaアーキテクト</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="arrow">→</div>
+        
+        <div class="improvement-box">
+            <div class="improvement-title">🚀 劇的な改善効果</div>
+            <p>基本的なREADMEから採用担当者に強くアピールするプロフェッショナル文書へ</p>
+            
+            <div class="improvement-stats">
+                <div class="stat-item">
+                    <div class="stat-value">5倍</div>
+                    <div class="stat-label">視覚的魅力</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">10倍</div>
+                    <div class="stat-label">情報量</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">∞</div>
+                    <div class="stat-label">プロフェッショナル度</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">100%</div>
+                    <div class="stat-label">採用担当者への印象</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
