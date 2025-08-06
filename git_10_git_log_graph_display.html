@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git Log Graph - 美しいブランチ履歴</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            background-color: #0d1117;
+            color: #e6edf3;
+            line-height: 1.4;
+        }
+        .terminal {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 1100px;
+            margin: 0 auto;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #30363d;
+        }
+        .terminal-title {
+            color: #f0f6fc;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .dots {
+            display: flex;
+            gap: 6px;
+        }
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .dot.red { background-color: #ff5f56; }
+        .dot.yellow { background-color: #ffbd2e; }
+        .dot.green { background-color: #27ca3f; }
+        .command-line {
+            margin: 12px 0;
+            border-bottom: 1px solid #30363d;
+            padding-bottom: 15px;
+        }
+        .prompt {
+            color: #7dd3fc;
+            font-weight: bold;
+        }
+        .command {
+            color: #e6edf3;
+            margin-left: 5px;
+        }
+        .git-log {
+            background-color: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 20px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+        }
+        .log-line {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+            min-height: 20px;
+        }
+        .graph-part {
+            font-family: monospace;
+            color: #7dd3fc;
+            font-weight: bold;
+            margin-right: 8px;
+            white-space: pre;
+            min-width: 60px;
+        }
+        .commit-hash {
+            color: #f9826c;
+            font-family: monospace;
+            margin-right: 8px;
+            min-width: 70px;
+        }
+        .commit-message {
+            color: #e6edf3;
+            flex: 1;
+        }
+        .branch-labels {
+            margin-left: 8px;
+            font-size: 11px;
+        }
+        .branch-label {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin: 0 2px;
+            font-weight: bold;
+        }
+        .label-main {
+            background-color: #7dd3fc;
+            color: #0d1117;
+        }
+        .label-feature {
+            background-color: #2ea043;
+            color: #ffffff;
+        }
+        .label-origin {
+            background-color: #f85149;
+            color: #ffffff;
+        }
+        .graph-explanation {
+            background-color: #0d2117;
+            border: 1px solid #2ea043;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .explanation-title {
+            color: #2ea043;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .explanation-icon {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+        .graph-elements {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .element-item {
+            padding: 12px;
+            background-color: #161b22;
+            border-radius: 6px;
+            border: 1px solid #30363d;
+        }
+        .element-title {
+            font-weight: bold;
+            color: #f0f6fc;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        .element-icon {
+            margin-right: 6px;
+            font-size: 14px;
+        }
+        .element-desc {
+            color: #8b949e;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+        .history-flow {
+            background-color: rgba(125, 211, 252, 0.1);
+            border: 1px solid #7dd3fc;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .flow-title {
+            color: #7dd3fc;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .flow-steps {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+        .flow-step {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            background-color: #161b22;
+            border-radius: 4px;
+            border: 1px solid #30363d;
+        }
+        .step-number {
+            background-color: #7dd3fc;
+            color: #0d1117;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 11px;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        .step-description {
+            color: #e6edf3;
+            font-size: 13px;
+        }
+        .merge-highlight {
+            color: #f9826c;
+            font-weight: bold;
+        }
+        .feature-highlight {
+            color: #2ea043;
+            font-weight: bold;
+        }
+        .main-highlight {
+            color: #7dd3fc;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal">
+        <div class="terminal-header">
+            <div class="dots">
+                <div class="dot red"></div>
+                <div class="dot yellow"></div>
+                <div class="dot green"></div>
+            </div>
+            <div class="terminal-title">Git Log Graph - 美しいブランチ統合履歴</div>
+        </div>
+        
+        <!-- git log コマンド実行 -->
+        <div class="command-line">
+            <span class="prompt">student@PC:</span>
+            <span class="command">git log --oneline --graph --all</span>
+        </div>
+        
+        <!-- 美しいグラフ表示 -->
+        <div class="git-log">
+            <div class="log-line">
+                <div class="graph-part">*   </div>
+                <div class="commit-hash">8d2f5a9</div>
+                <div class="commit-message">Merge feature/issue-2-add-csv-export into main</div>
+                <div class="branch-labels">
+                    <span class="branch-label label-main">HEAD -> main</span>
+                </div>
+            </div>
+            
+            <div class="log-line">
+                <div class="graph-part">|\  </div>
+                <div class="commit-hash"></div>
+                <div class="commit-message"></div>
+            </div>
+            
+            <div class="log-line">
+                <div class="graph-part">| * </div>
+                <div class="commit-hash">5c9a7e3</div>
+                <div class="commit-message">Add #2: CSV出力機能を実装</div>
+                <div class="branch-labels">
+                    <span class="branch-label label-feature">feature/issue-2-add-csv-export</span>
+                </div>
+            </div>
+            
+            <div class="log-line">
+                <div class="graph-part">* | </div>
+                <div class="commit-hash">7f1b8c4</div>
+                <div class="commit-message">Improve main menu UI with emojis and better formatting</div>
+            </div>
+            
+            <div class="log-line">
+                <div class="graph-part">|/  </div>
+                <div class="commit-hash"></div>
+                <div class="commit-message"></div>
+            </div>
+            
+            <div class="log-line">
+                <div class="graph-part">*   </div>
+                <div class="commit-hash">3a8f2b1</div>
+                <div class="commit-message">Fix #1: 削除確認機能の入力判定を改善</div>
+                <div class="branch-labels">
+                    <span class="branch-label label-feature">feature/issue-1-fix-deletion-confirmation</span>
+                </div>
+            </div>
+            
+            <div class="log-line">
+                <div class="graph-part">*   </div>
+                <div class="commit-hash">2f4e8d9</div>
+                <div class="commit-message">Add MIT License and improve README with badges</div>
+                <div class="branch-labels">
+                    <span class="branch-label label-origin">origin/main</span>
+                </div>
+            </div>
+            
+            <div class="log-line">
+                <div class="graph-part">*   </div>
+                <div class="commit-hash">1a3c5e7</div>
+                <div class="commit-message">Add comprehensive Issue management system</div>
+            </div>
+            
+            <div class="log-line">
+                <div class="graph-part">*   </div>
+                <div class="commit-hash">9b2d4f6</div>
+                <div class="commit-message">Initial commit: Week 5 OOP student management system</div>
+            </div>
+        </div>
+        
+        <!-- グラフ要素の説明 -->
+        <div class="graph-explanation">
+            <div class="explanation-title">
+                <span class="explanation-icon">📊</span>
+                グラフ要素の読み方
+            </div>
+            
+            <div class="graph-elements">
+                <div class="element-item">
+                    <div class="element-title">
+                        <span class="element-icon">*</span>
+                        コミットポイント
+                    </div>
+                    <div class="element-desc">
+                        各 * が一つのコミット<br>
+                        時系列で上から新しい順に表示<br>
+                        ハッシュ値で一意に識別
+                    </div>
+                </div>
+                
+                <div class="element-item">
+                    <div class="element-title">
+                        <span class="element-icon">|</span>
+                        ブランチライン
+                    </div>
+                    <div class="element-desc">
+                        縦線がブランチの流れ<br>
+                        | = 直線的な継続<br>
+                        \ / = 分岐と統合
+                    </div>
+                </div>
+                
+                <div class="element-item">
+                    <div class="element-title">
+                        <span class="element-icon">🔀</span>
+                        マージポイント
+                    </div>
+                    <div class="element-desc">
+                        * と |\ の組み合わせ<br>
+                        複数ブランチの統合地点<br>
+                        2つの親コミットを持つ
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 開発フローの可視化 -->
+        <div class="history-flow">
+            <div class="flow-title">
+                <span class="explanation-icon">🎯</span>
+                開発フローの時系列
+            </div>
+            
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-description">
+                        <span class="main-highlight">9b2d4f6</span> - 初期コミット：Week 5システム作成
+                    </div>
+                </div>
+                
+                <div class="flow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-description">
+                        <span class="main-highlight">1a3c5e7</span> - Issue管理システム追加
+                    </div>
+                </div>
+                
+                <div class="flow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-description">
+                        <span class="main-highlight">2f4e8d9</span> - MIT License & README改善（GitHub高度活用）
+                    </div>
+                </div>
+                
+                <div class="flow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-description">
+                        <span class="feature-highlight">3a8f2b1</span> - feature/issue-1: 削除確認機能バグ修正（Fast-forward merge）
+                    </div>
+                </div>
+                
+                <div class="flow-step">
+                    <div class="step-number">5</div>
+                    <div class="step-description">
+                        <span class="main-highlight">7f1b8c4</span> - mainでUI改修（絵文字追加）<br>
+                        <span class="feature-highlight">5c9a7e3</span> - feature/issue-2: CSV出力機能実装
+                    </div>
+                </div>
+                
+                <div class="flow-step">
+                    <div class="step-number">6</div>
+                    <div class="step-description">
+                        <span class="merge-highlight">8d2f5a9</span> - <strong>3-way merge</strong>：コンフリクト解決後の統合コミット
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 学習成果のハイライト -->
+        <div style="margin-top: 20px; padding: 15px; background-color: rgba(125, 211, 252, 0.1); border-radius: 6px; border-left: 4px solid #7dd3fc;">
+            <strong style="color: #7dd3fc;">🏆 完璧なブランチ戦略の実践履歴</strong><br>
+            <span style="color: #e6edf3; font-size: 14px;">
+                • <strong>並行開発</strong>：複数機能の同時開発成功<br>
+                • <strong>Fast-forward merge</strong>：シンプルな統合（Issue #1）<br>
+                • <strong>3-way merge</strong>：コンフリクト解決と統合（Issue #2）<br>
+                • <strong>チーム開発対応力</strong>：企業レベルの開発フロー完全習得
+            </span>
+        </div>
+    </div>
+</body>
+</html>
