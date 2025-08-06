@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Web編集画面</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f6f8fa;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            border: 1px solid #d1d9e0;
+            border-radius: 8px;
+            max-width: 1000px;
+            margin: 0 auto;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .github-header {
+            background: #24292f;
+            color: white;
+            padding: 16px 20px;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .github-logo {
+            width: 32px;
+            height: 32px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #24292f;
+        }
+
+        .edit-header {
+            padding: 20px;
+            border-bottom: 1px solid #d1d9e0;
+            background: #f6f8fa;
+        }
+
+        .edit-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .edit-title h1 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 600;
+            color: #24292f;
+        }
+
+        .breadcrumb {
+            font-size: 14px;
+            color: #656d76;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .breadcrumb a {
+            color: #0969da;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .edit-tabs {
+            display: flex;
+            background: #f6f8fa;
+            border-bottom: 1px solid #d1d9e0;
+        }
+
+        .tab {
+            padding: 12px 16px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 14px;
+            color: #656d76;
+            border-bottom: 2px solid transparent;
+            transition: all 0.1s ease;
+        }
+
+        .tab.active {
+            color: #24292f;
+            border-bottom-color: #fd7e14;
+            background: white;
+        }
+
+        .tab:hover:not(.active) {
+            color: #24292f;
+        }
+
+        .edit-interface {
+            padding: 20px;
+        }
+
+        .file-path {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+            padding: 8px 12px;
+            background: #f6f8fa;
+            border: 1px solid #d1d9e0;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .edit-area {
+            position: relative;
+        }
+
+        .editor {
+            width: 100%;
+            min-height: 400px;
+            padding: 16px;
+            border: 1px solid #d1d9e0;
+            border-radius: 6px;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            resize: vertical;
+            background: white;
+            color: #24292f;
+        }
+
+        .editor:focus {
+            outline: none;
+            border-color: #0969da;
+            box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.1);
+        }
+
+        .commit-section {
+            margin-top: 24px;
+            padding: 20px;
+            background: #f6f8fa;
+            border: 1px solid #d1d9e0;
+            border-radius: 6px;
+        }
+
+        .commit-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #24292f;
+        }
+
+        .commit-message-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d1d9e0;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-family: inherit;
+        }
+
+        .commit-description {
+            width: 100%;
+            min-height: 80px;
+            padding: 8px 12px;
+            border: 1px solid #d1d9e0;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-bottom: 16px;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .commit-options {
+            margin-bottom: 16px;
+        }
+
+        .radio-group {
+            margin-bottom: 12px;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .radio-item input[type="radio"] {
+            margin-top: 2px;
+        }
+
+        .radio-item label {
+            color: #24292f;
+            cursor: pointer;
+        }
+
+        .radio-description {
+            color: #656d76;
+            font-size: 12px;
+            margin-left: 20px;
+            margin-top: 4px;
+        }
+
+        .commit-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid;
+            transition: all 0.1s ease;
+        }
+
+        .btn-primary {
+            background: #2da44e;
+            color: white;
+            border-color: #2da44e;
+        }
+
+        .btn-primary:hover {
+            background: #2c974b;
+            border-color: #2c974b;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #24292f;
+            border-color: #d1d9e0;
+        }
+
+        .btn-secondary:hover {
+            background: #f3f4f6;
+        }
+
+        .helper-text {
+            background: #dbeafe;
+            border: 1px solid #93c5fd;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 16px;
+            font-size: 14px;
+            color: #1e40af;
+        }
+
+        .helper-icon {
+            margin-right: 8px;
+        }
+
+        .line-numbers {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 40px;
+            background: #f6f8fa;
+            border-right: 1px solid #d1d9e0;
+            padding: 16px 8px;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 12px;
+            color: #656d76;
+            line-height: 1.5;
+            user-select: none;
+        }
+
+        .highlight-box {
+            background: #fff3cd;
+            border: 2px solid #ffd700;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 16px 0;
+            position: relative;
+        }
+
+        .highlight-box::before {
+            content: "💡";
+            position: absolute;
+            top: -10px;
+            left: 12px;
+            background: white;
+            padding: 0 8px;
+            font-size: 16px;
+        }
+
+        .highlight-text {
+            font-weight: 600;
+            color: #856404;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="github-header">
+            <div class="github-logo">GH</div>
+            <span>GitHub Web Editor</span>
+        </div>
+        
+        <div class="edit-header">
+            <div class="edit-title">
+                <h1>✏️ README.mdを編集</h1>
+            </div>
+            <div class="breadcrumb">
+                <a href="#">あなたのユーザー名</a>
+                <span>/</span>
+                <a href="#">student-management-system</a>
+                <span>/</span>
+                <span>README.md</span>
+            </div>
+        </div>
+        
+        <div class="edit-tabs">
+            <button class="tab active">✏️ Edit file</button>
+            <button class="tab">👁️ Preview changes</button>
+        </div>
+        
+        <div class="edit-interface">
+            <div class="helper-text">
+                <span class="helper-icon">💡</span>
+                <strong>リモート編集体験：</strong>GitHub上でファイルを直接編集し、git pullでローカルに同期する流れを体験しましょう！
+            </div>
+            
+            <div class="file-path">
+                <span>📁</span>
+                <span>student-management-system</span>
+                <span>/</span>
+                <span>README.md</span>
+            </div>
+            
+            <div class="edit-area">
+                <textarea class="editor" placeholder="# 学生管理システム（OOP応用版）
+
+## 📝 プロジェクト概要
+
+Java のオブジェクト指向プログラミング（OOP）の応用技術を活用して開発した、実用的な学生管理システムです。
+継承・ポリモーフィズム・抽象化・例外処理・Lombokを統合し、エンタープライズレベルの品質を目指しました。
+
+## 🛠️ 技術スタック
+
+### 言語・ライブラリ
+- **Java**: JDK 17以降
+- **Lombok**: コード生成によるボイラープレート削減（86%削減）
+
+## 🌟 追加機能アイデア
+
+### 短期目標
+- [ ] CSVインポート・エクスポート機能
+- [ ] 成績グラフ表示機能
+- [ ] 学生写真管理機能
+
+### 中期目標
+- [ ] Web化（Spring Boot + Thymeleaf）
+- [ ] データベース永続化（MySQL）
+- [ ] ユーザー認証機能
+
+### 長期目標
+- [ ] モバイルアプリ化
+- [ ] クラウドデプロイ（AWS）
+- [ ] AI成績予測機能
+
+**最終更新**: GitHub Web編集にて追加"></textarea>
+            </div>
+            
+            <div class="highlight-box">
+                <p class="highlight-text">この部分を追加して、プロジェクトの将来展望を示しましょう！</p>
+            </div>
+            
+            <div class="commit-section">
+                <div class="commit-title">📝 Commit changes</div>
+                
+                <input type="text" class="commit-message-input" 
+                       placeholder="追加機能アイデアセクション追加" 
+                       value="追加機能アイデアセクション追加">
+                
+                <textarea class="commit-description" 
+                          placeholder="Add an optional extended description...">短期・中期・長期の機能拡張計画を記載
+将来的な技術発展の方向性を明確化</textarea>
+                
+                <div class="commit-options">
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="commit-main" name="commit-option" checked>
+                            <label for="commit-main">
+                                <strong>Commit directly to the main branch.</strong>
+                            </label>
+                        </div>
+                        <div class="radio-description">
+                            変更を直接メインブランチにコミットします（今回の学習目的）
+                        </div>
+                        
+                        <div class="radio-item">
+                            <input type="radio" id="commit-branch" name="commit-option">
+                            <label for="commit-branch">
+                                <strong>Create a new branch for this commit and start a pull request.</strong>
+                            </label>
+                        </div>
+                        <div class="radio-description">
+                            新しいブランチを作成してプルリクエストを開始（チーム開発時）
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="commit-buttons">
+                    <button class="btn btn-primary">✅ Commit changes</button>
+                    <button class="btn btn-secondary">❌ Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

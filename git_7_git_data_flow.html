@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>データの流れ図 - push・pullフロー</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .flow-container {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .flow-step {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .flow-step.push-flow {
+            background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+            border-left: 5px solid #e53e3e;
+        }
+
+        .flow-step.pull-flow {
+            background: linear-gradient(135deg, #f0fff4 0%, #c6f6d5 100%);
+            border-left: 5px solid #38a169;
+        }
+
+        .step-content {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            width: 100%;
+        }
+
+        .environment-box {
+            flex: 1;
+            background: white;
+            border: 2px solid;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .local-env {
+            border-color: #3182ce;
+            background: linear-gradient(135deg, #bee3f8 0%, #90cdf4 100%);
+        }
+
+        .remote-env {
+            border-color: #38a169;
+            background: linear-gradient(135deg, #c6f6d5 0%, #9ae6b4 100%);
+        }
+
+        .env-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .env-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #2d3748;
+        }
+
+        .env-content {
+            font-size: 12px;
+            color: #4a5568;
+            line-height: 1.4;
+        }
+
+        .flow-arrow {
+            position: relative;
+            margin: 0 20px;
+        }
+
+        .arrow-line {
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #e53e3e, #fc8181);
+            border-radius: 2px;
+            position: relative;
+        }
+
+        .pull-flow .arrow-line {
+            background: linear-gradient(90deg, #38a169, #68d391);
+            transform: scaleX(-1);
+        }
+
+        .arrow-head {
+            position: absolute;
+            right: -8px;
+            top: -6px;
+            width: 0;
+            height: 0;
+            border-left: 12px solid #e53e3e;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+        }
+
+        .pull-flow .arrow-head {
+            border-left-color: #38a169;
+            right: 76px;
+        }
+
+        .arrow-label {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            white-space: nowrap;
+        }
+
+        .push-flow .arrow-label {
+            color: #e53e3e;
+        }
+
+        .pull-flow .arrow-label {
+            color: #38a169;
+        }
+
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: #3182ce;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .step-description {
+            margin-top: 15px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 6px;
+            font-size: 14px;
+            color: #2d3748;
+        }
+
+        .command-box {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 12px;
+            margin: 8px 0;
+            display: inline-block;
+        }
+
+        .timing-info {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .timing-box {
+            background: #f7fafc;
+            border: 2px solid;
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .push-timing {
+            border-color: #e53e3e;
+        }
+
+        .pull-timing {
+            border-color: #38a169;
+        }
+
+        .timing-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .timing-list {
+            font-size: 14px;
+            color: #4a5568;
+            margin: 0;
+            padding-left: 16px;
+        }
+
+        .timing-list li {
+            margin-bottom: 4px;
+        }
+
+        .workflow-summary {
+            background: #edf2f7;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .workflow-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 16px;
+        }
+
+        .workflow-cycle {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .cycle-step {
+            background: white;
+            border: 2px solid #cbd5e0;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            min-width: 120px;
+            position: relative;
+        }
+
+        .cycle-step::after {
+            content: "→";
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            color: #a0aec0;
+            font-weight: bold;
+        }
+
+        .cycle-step:last-child::after {
+            content: "🔄";
+        }
+
+        .cycle-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .cycle-text {
+            font-size: 12px;
+            font-weight: 500;
+            color: #2d3748;
+        }
+
+        .highlight-note {
+            background: #fff5cd;
+            border: 2px solid #f6e05e;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 20px;
+            position: relative;
+        }
+
+        .highlight-note::before {
+            content: "💡";
+            position: absolute;
+            top: -12px;
+            left: 16px;
+            background: white;
+            padding: 0 8px;
+            font-size: 16px;
+        }
+
+        .note-title {
+            font-weight: bold;
+            color: #744210;
+            margin-bottom: 8px;
+        }
+
+        .note-content {
+            color: #744210;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">📊 Git Push・Pullによるデータフロー図解</div>
+        
+        <div class="flow-container">
+            <!-- Push フロー -->
+            <div class="flow-step push-flow">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <div class="environment-box local-env">
+                        <div class="env-icon">🖥️</div>
+                        <div class="env-title">ローカル環境</div>
+                        <div class="env-content">
+                            README.md作成済み<br>
+                            git commit完了<br>
+                            充実したコミット履歴
+                        </div>
+                    </div>
+                    
+                    <div class="flow-arrow">
+                        <div class="arrow-line"></div>
+                        <div class="arrow-head"></div>
+                        <div class="arrow-label">git push</div>
+                    </div>
+                    
+                    <div class="environment-box remote-env">
+                        <div class="env-icon">🌐</div>
+                        <div class="env-title">GitHub（リモート）</div>
+                        <div class="env-content">
+                            ローカルの変更を受信<br>
+                            世界中からアクセス可能<br>
+                            ポートフォリオ化完了
+                        </div>
+                    </div>
+                </div>
+                <div class="step-description">
+                    <strong>📤 Push フロー：</strong>ローカルで作成・コミットした変更をGitHubに送信し、世界に公開
+                    <div class="command-box">git push origin main</div>
+                </div>
+            </div>
+            
+            <!-- Pull フロー -->
+            <div class="flow-step pull-flow">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <div class="environment-box local-env">
+                        <div class="env-icon">🖥️</div>
+                        <div class="env-title">ローカル環境</div>
+                        <div class="env-content">
+                            リモートの変更を取得<br>
+                            最新状態に同期<br>
+                            他者の変更も反映
+                        </div>
+                    </div>
+                    
+                    <div class="flow-arrow">
+                        <div class="arrow-line"></div>
+                        <div class="arrow-head"></div>
+                        <div class="arrow-label">git pull</div>
+                    </div>
+                    
+                    <div class="environment-box remote-env">
+                        <div class="env-icon">🌐</div>
+                        <div class="env-title">GitHub（リモート）</div>
+                        <div class="env-content">
+                            Web編集で変更追加<br>
+                            追加機能アイデア記載<br>
+                            新しいコミット履歴
+                        </div>
+                    </div>
+                </div>
+                <div class="step-description">
+                    <strong>📥 Pull フロー：</strong>GitHub上での変更（Web編集・他者の変更）をローカルに取得し、同期
+                    <div class="command-box">git pull origin main</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="timing-info">
+            <div class="timing-box push-timing">
+                <div class="timing-title">
+                    <span>📤</span>
+                    pushのタイミング
+                </div>
+                <ul class="timing-list">
+                    <li>ローカルでコミット完了後</li>
+                    <li>他者に変更を共有したいとき</li>
+                    <li>作業終了時のバックアップ</li>
+                    <li>機能完成時の公開</li>
+                    <li>ポートフォリオ更新時</li>
+                </ul>
+            </div>
+            
+            <div class="timing-box pull-timing">
+                <div class="timing-title">
+                    <span>📥</span>
+                    pullのタイミング
+                </div>
+                <ul class="timing-list">
+                    <li>作業開始時の最新化</li>
+                    <li>push前の同期確認</li>
+                    <li>他者の変更確認時</li>
+                    <li>GitHub Web編集後</li>
+                    <li>定期的な同期作業</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="workflow-summary">
+            <div class="workflow-title">🔄 実際の協業ワークフローサイクル</div>
+            <div class="workflow-cycle">
+                <div class="cycle-step">
+                    <div class="cycle-icon">📥</div>
+                    <div class="cycle-text">作業開始<br>git pull</div>
+                </div>
+                <div class="cycle-step">
+                    <div class="cycle-icon">💻</div>
+                    <div class="cycle-text">ローカル開発<br>コード修正</div>
+                </div>
+                <div class="cycle-step">
+                    <div class="cycle-icon">💾</div>
+                    <div class="cycle-text">変更保存<br>git commit</div>
+                </div>
+                <div class="cycle-step">
+                    <div class="cycle-icon">📤</div>
+                    <div class="cycle-text">変更公開<br>git push</div>
+                </div>
+                <div class="cycle-step">
+                    <div class="cycle-icon">🔄</div>
+                    <div class="cycle-text">継続的同期<br>繰り返し</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="highlight-note">
+            <div class="note-title">🎯 重要なルール：push前のpull習慣</div>
+            <div class="note-content">
+                チーム開発では、pushする前に必ずpullして最新状態にすることが重要です。
+                これにより競合（conflict）を事前に防ぎ、スムーズな協業が実現できます。
+                <br><br>
+                <strong>推奨パターン：</strong>
+                <div class="command-box">git pull && git push</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

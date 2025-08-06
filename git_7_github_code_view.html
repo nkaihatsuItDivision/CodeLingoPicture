@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub上でのコード確認画面</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f6f8fa;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            border: 1px solid #d1d9e0;
+            border-radius: 8px;
+            max-width: 1000px;
+            margin: 0 auto;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .github-header {
+            background: #24292f;
+            color: white;
+            padding: 16px 20px;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .github-logo {
+            width: 32px;
+            height: 32px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #24292f;
+        }
+
+        .repo-navigation {
+            background: #f6f8fa;
+            padding: 16px 20px;
+            border-bottom: 1px solid #d1d9e0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .repo-navigation a {
+            color: #0969da;
+            text-decoration: none;
+        }
+
+        .repo-navigation a:hover {
+            text-decoration: underline;
+        }
+
+        .repo-header {
+            padding: 20px;
+            border-bottom: 1px solid #d1d9e0;
+        }
+
+        .repo-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .repo-title h1 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 600;
+            color: #0969da;
+        }
+
+        .repo-stats {
+            display: flex;
+            gap: 16px;
+            font-size: 14px;
+            color: #656d76;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .commit-info {
+            background: #f6f8fa;
+            padding: 12px 20px;
+            border-bottom: 1px solid #d1d9e0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+
+        .commit-message {
+            color: #24292f;
+            font-weight: 500;
+        }
+
+        .commit-meta {
+            color: #656d76;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .file-list {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 20px;
+            border-bottom: 1px solid #d1d9e0;
+            font-size: 14px;
+            transition: background-color 0.1s ease;
+        }
+
+        .file-item:hover {
+            background: #f6f8fa;
+        }
+
+        .file-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .file-name {
+            flex: 1;
+            color: #0969da;
+            text-decoration: none;
+        }
+
+        .file-name:hover {
+            text-decoration: underline;
+        }
+
+        .file-commit {
+            color: #656d76;
+            margin-right: 12px;
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .file-date {
+            color: #656d76;
+            min-width: 80px;
+            text-align: right;
+        }
+
+        .readme-section {
+            padding: 20px;
+            border-top: 1px solid #d1d9e0;
+            background: #f6f8fa;
+        }
+
+        .readme-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .readme-content {
+            background: white;
+            border: 1px solid #d1d9e0;
+            border-radius: 6px;
+            padding: 16px;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #24292f;
+        }
+
+        .success-badge {
+            background: #2da44e;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .language-indicator {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 12px;
+        }
+
+        .language-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #f1e05a;
+        }
+
+        .achievement-banner {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 16px 20px;
+            margin: -20px -20px 20px -20px;
+            border-radius: 8px 8px 0 0;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="achievement-banner pulse">
+            🎉 初回push成功！Week 5システムが世界に公開されました！ 🎉
+        </div>
+        
+        <div class="github-header">
+            <div class="github-logo">GH</div>
+            <span>GitHub Repository</span>
+        </div>
+        
+        <div class="repo-navigation">
+            <a href="#">あなたのユーザー名</a>
+            <span>/</span>
+            <a href="#"><strong>student-management-system</strong></a>
+        </div>
+        
+        <div class="repo-header">
+            <div class="repo-title">
+                <h1>📚 student-management-system</h1>
+                <span class="success-badge">Public</span>
+            </div>
+            <div class="repo-stats">
+                <div class="stat-item">
+                    <span>⭐</span>
+                    <span>0 stars</span>
+                </div>
+                <div class="stat-item">
+                    <span>👀</span>
+                    <span>1 watching</span>
+                </div>
+                <div class="stat-item">
+                    <span>🍴</span>
+                    <span>0 forks</span>
+                </div>
+            </div>
+            <div class="language-indicator">
+                <div class="language-dot"></div>
+                <span>Java 100%</span>
+            </div>
+        </div>
+        
+        <div class="commit-info">
+            <div class="commit-message">
+                Week 5システム完成：OOP応用版学生管理システム
+            </div>
+            <div class="commit-meta">
+                <span>15 commits</span>
+                <span>•</span>
+                <span>main</span>
+                <span>•</span>
+                <span>2 minutes ago</span>
+            </div>
+        </div>
+        
+        <ul class="file-list">
+            <li class="file-item">
+                <div class="file-icon">📁</div>
+                <a href="#" class="file-name">src/</a>
+                <div class="file-commit">Week 5システム完成：OOP応用版学生管理システム</div>
+                <div class="file-date">2分前</div>
+            </li>
+            <li class="file-item">
+                <div class="file-icon">📄</div>
+                <a href="#" class="file-name">Person.java</a>
+                <div class="file-commit">継承・ポリモーフィズムの実装</div>
+                <div class="file-date">1時間前</div>
+            </li>
+            <li class="file-item">
+                <div class="file-icon">📄</div>
+                <a href="#" class="file-name">Student.java</a>
+                <div class="file-commit">継承・ポリモーフィズムの実装</div>
+                <div class="file-date">1時間前</div>
+            </li>
+            <li class="file-item">
+                <div class="file-icon">📄</div>
+                <a href="#" class="file-name">StudentManager.java</a>
+                <div class="file-commit">Lombok導入によるコード効率化</div>
+                <div class="file-date">2時間前</div>
+            </li>
+            <li class="file-item">
+                <div class="file-icon">📄</div>
+                <a href="#" class="file-name">Grade.java</a>
+                <div class="file-commit">例外処理の実装：堅牢性向上</div>
+                <div class="file-date">3時間前</div>
+            </li>
+            <li class="file-item">
+                <div class="file-icon">📄</div>
+                <a href="#" class="file-name">GradeCalculator.java</a>
+                <div class="file-commit">例外処理の実装：堅牢性向上</div>
+                <div class="file-date">3時間前</div>
+            </li>
+            <li class="file-item">
+                <div class="file-icon">📄</div>
+                <a href="#" class="file-name">ReportGenerator.java</a>
+                <div class="file-commit">例外処理の実装：堅牢性向上</div>
+                <div class="file-date">3時間前</div>
+            </li>
+            <li class="file-item">
+                <div class="file-icon">📄</div>
+                <a href="#" class="file-name">DataValidator.java</a>
+                <div class="file-commit">例外処理の実装：堅牢性向上</div>
+                <div class="file-date">3時間前</div>
+            </li>
+            <li class="file-item">
+                <div class="file-icon">📄</div>
+                <a href="#" class="file-name">CustomExceptions.java</a>
+                <div class="file-commit">例外処理の実装：堅牢性向上</div>
+                <div class="file-date">3時間前</div>
+            </li>
+            <li class="file-item">
+                <div class="file-icon">📄</div>
+                <a href="#" class="file-name">Main.java</a>
+                <div class="file-commit">初期実装：基本クラス設計</div>
+                <div class="file-date">1日前</div>
+            </li>
+        </ul>
+        
+        <div class="readme-section">
+            <div class="readme-title">
+                <span>📖</span>
+                README.md (準備中...)
+            </div>
+            <div class="readme-content">
+                <p><strong>🎯 次のステップ：</strong></p>
+                <p>1. README.mdファイルを作成</p>
+                <p>2. プロジェクト概要・技術スタック・使用方法を記載</p>
+                <p>3. git add → git commit → git push</p>
+                <br>
+                <p><strong>🌟 現在の成果：</strong></p>
+                <p>✅ 600-700行のOOP応用システムが世界中からアクセス可能！</p>
+                <p>✅ 継承・ポリモーフィズム・例外処理・Lombokを統合</p>
+                <p>✅ エンタープライズレベルの技術力を証明</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

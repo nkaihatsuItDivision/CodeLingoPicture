@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHubコミット完了画面</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f6f8fa;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            border: 1px solid #d1d9e0;
+            border-radius: 8px;
+            max-width: 1000px;
+            margin: 0 auto;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .github-header {
+            background: #24292f;
+            color: white;
+            padding: 16px 20px;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .github-logo {
+            width: 32px;
+            height: 32px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #24292f;
+        }
+
+        .success-banner {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .success-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .repo-navigation {
+            background: #f6f8fa;
+            padding: 16px 20px;
+            border-bottom: 1px solid #d1d9e0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .repo-navigation a {
+            color: #0969da;
+            text-decoration: none;
+        }
+
+        .repo-navigation a:hover {
+            text-decoration: underline;
+        }
+
+        .commit-header {
+            padding: 20px;
+            border-bottom: 1px solid #d1d9e0;
+        }
+
+        .commit-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .commit-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .commit-info {
+            flex: 1;
+        }
+
+        .commit-author {
+            font-weight: 600;
+            color: #24292f;
+            margin-bottom: 4px;
+        }
+
+        .commit-message {
+            font-size: 18px;
+            font-weight: 600;
+            color: #24292f;
+            margin-bottom: 8px;
+        }
+
+        .commit-details {
+            font-size: 14px;
+            color: #656d76;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .commit-sha {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            background: #f6f8fa;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .file-changes {
+            padding: 20px;
+        }
+
+        .changes-summary {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+            padding: 12px;
+            background: #f6f8fa;
+            border-radius: 6px;
+        }
+
+        .changes-stat {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .additions {
+            color: #2da44e;
+        }
+
+        .deletions {
+            color: #d1242f;
+        }
+
+        .file-diff {
+            border: 1px solid #d1d9e0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .file-header {
+            background: #f6f8fa;
+            padding: 12px 16px;
+            border-bottom: 1px solid #d1d9e0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .file-icon {
+            color: #656d76;
+        }
+
+        .file-name {
+            font-weight: 500;
+            color: #24292f;
+        }
+
+        .diff-content {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .diff-line {
+            padding: 2px 8px;
+            border-left: 4px solid transparent;
+        }
+
+        .diff-added {
+            background: #d4eda6;
+            border-left-color: #2da44e;
+        }
+
+        .diff-removed {
+            background: #ffdcd7;
+            border-left-color: #d1242f;
+        }
+
+        .diff-context {
+            background: #f6f8fa;
+            color: #656d76;
+        }
+
+        .action-buttons {
+            padding: 20px;
+            background: #f6f8fa;
+            border-top: 1px solid #d1d9e0;
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid;
+            transition: all 0.1s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: #2da44e;
+            color: white;
+            border-color: #2da44e;
+        }
+
+        .btn-primary:hover {
+            background: #2c974b;
+            border-color: #2c974b;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #24292f;
+            border-color: #d1d9e0;
+        }
+
+        .btn-secondary:hover {
+            background: #f3f4f6;
+        }
+
+        .next-steps {
+            background: #e7f3ff;
+            border: 1px solid #b6d7ff;
+            border-radius: 6px;
+            padding: 16px;
+            margin: 20px;
+        }
+
+        .next-steps-title {
+            font-weight: 600;
+            color: #0969da;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .next-steps-list {
+            color: #24292f;
+            font-size: 14px;
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .next-steps-list li {
+            margin-bottom: 4px;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="github-header">
+            <div class="github-logo">GH</div>
+            <span>GitHub Commit Successful</span>
+        </div>
+        
+        <div class="success-banner pulse">
+            ✅ コミット成功！README.mdがGitHub上で更新されました ✅
+        </div>
+        
+        <div class="repo-navigation">
+            <a href="#">あなたのユーザー名</a>
+            <span>/</span>
+            <a href="#"><strong>student-management-system</strong></a>
+            <span>/</span>
+            <span>commit</span>
+            <span>/</span>
+            <span>b4c5d6e</span>
+        </div>
+        
+        <div class="commit-header">
+            <div class="commit-meta">
+                <div class="commit-avatar">You</div>
+                <div class="commit-info">
+                    <div class="commit-author">あなたのユーザー名</div>
+                    <div class="commit-message">追加機能アイデアセクション追加</div>
+                    <div class="commit-details">
+                        <span>📅 2 minutes ago</span>
+                        <span>•</span>
+                        <span class="commit-sha">b4c5d6e</span>
+                        <span>•</span>
+                        <span>1 parent e7f8g9h</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="file-changes">
+            <div class="changes-summary">
+                <div class="changes-stat">
+                    <span>📄</span>
+                    <span>1 file changed</span>
+                </div>
+                <div class="changes-stat additions">
+                    <span>+</span>
+                    <span>23 additions</span>
+                </div>
+                <div class="changes-stat deletions">
+                    <span>-</span>
+                    <span>0 deletions</span>
+                </div>
+            </div>
+            
+            <div class="file-diff">
+                <div class="file-header">
+                    <span class="file-icon">📄</span>
+                    <span class="file-name">README.md</span>
+                </div>
+                <div class="diff-content">
+                    <div class="diff-line diff-context">@@ -95,3 +95,26 @@ **作成者**: あなたの名前</div>
+                    <div class="diff-line diff-context"> **作成日**: 2025年8月  </div>
+                    <div class="diff-line diff-context"> **最終更新**: 2025年8月</div>
+                    <div class="diff-line diff-context"> </div>
+                    <div class="diff-line diff-added">+## 🌟 追加機能アイデア</div>
+                    <div class="diff-line diff-added">+</div>
+                    <div class="diff-line diff-added">+### 短期目標</div>
+                    <div class="diff-line diff-added">+- [ ] CSVインポート・エクスポート機能</div>
+                    <div class="diff-line diff-added">+- [ ] 成績グラフ表示機能</div>
+                    <div class="diff-line diff-added">+- [ ] 学生写真管理機能</div>
+                    <div class="diff-line diff-added">+</div>
+                    <div class="diff-line diff-added">+### 中期目標</div>
+                    <div class="diff-line diff-added">+- [ ] Web化（Spring Boot + Thymeleaf）</div>
+                    <div class="diff-line diff-added">+- [ ] データベース永続化（MySQL）</div>
+                    <div class="diff-line diff-added">+- [ ] ユーザー認証機能</div>
+                    <div class="diff-line diff-added">+</div>
+                    <div class="diff-line diff-added">+### 長期目標</div>
+                    <div class="diff-line diff-added">+- [ ] モバイルアプリ化</div>
+                    <div class="diff-line diff-added">+- [ ] クラウドデプロイ（AWS）</div>
+                    <div class="diff-line diff-added">+- [ ] AI成績予測機能</div>
+                    <div class="diff-line diff-added">+</div>
+                    <div class="diff-line diff-added">+**最終更新**: GitHub Web編集にて追加</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="next-steps">
+            <div class="next-steps-title">
+                <span>🎯</span>
+                次のステップ：git pullでローカルに同期
+            </div>
+            <ol class="next-steps-list">
+                <li>ローカルのターミナル（Git Bash）を開く</li>
+                <li><code>cd ~/JavaProjects/student-management-system</code> でプロジェクトに移動</li>
+                <li><code>git pull</code> を実行してリモートの変更をローカルに取得</li>
+                <li>ローカルのREADME.mdファイルに変更が反映されることを確認</li>
+                <li>これで双方向同期が完了！</li>
+            </ol>
+        </div>
+        
+        <div class="action-buttons">
+            <a href="#" class="btn btn-primary">
+                <span>🏠</span>
+                リポジトリに戻る
+            </a>
+            <a href="#" class="btn btn-secondary">
+                <span>📁</span>
+                ファイルを表示
+            </a>
+            <a href="#" class="btn btn-secondary">
+                <span>📋</span>
+                変更履歴を表示
+            </a>
+        </div>
+    </div>
+</body>
+</html>
