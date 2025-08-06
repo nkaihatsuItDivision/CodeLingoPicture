@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHubサインアップ画面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #24292e 0%, #0d1117 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .header {
+            background: #24292e;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .github-logo {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .github-logo::before {
+            content: "🐙";
+            font-size: 24px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        .left-panel {
+            background: #f6f8fa;
+            padding: 40px 30px;
+            border-right: 1px solid #e1e4e8;
+        }
+
+        .right-panel {
+            padding: 40px 30px;
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 16px;
+            color: #586069;
+        }
+
+        .feature-icon {
+            width: 24px;
+            height: 24px;
+            background: #28a745;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .form-section {
+            margin-bottom: 20px;
+        }
+
+        .form-section h2 {
+            font-size: 20px;
+            color: #24292e;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #24292e;
+            margin-bottom: 8px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e4e8;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #0366d6;
+            box-shadow: 0 0 0 3px rgba(3, 102, 214, 0.1);
+        }
+
+        .signup-btn {
+            width: 100%;
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .signup-btn:hover {
+            background: #22863a;
+        }
+
+        .arrow-indicator {
+            position: absolute;
+            right: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #ff6b6b;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+            z-index: 10;
+            animation: pulse 2s infinite;
+        }
+
+        .arrow-indicator::after {
+            content: "";
+            position: absolute;
+            left: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+            border-right: 8px solid #ff6b6b;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translateY(-50%) scale(1); }
+            50% { transform: translateY(-50%) scale(1.05); }
+        }
+
+        .highlight-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 20px;
+        }
+
+        .highlight-box h3 {
+            color: #856404;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .highlight-box p {
+            color: #856404;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            
+            .left-panel {
+                border-right: none;
+                border-bottom: 1px solid #e1e4e8;
+            }
+            
+            .arrow-indicator {
+                position: relative;
+                right: auto;
+                top: auto;
+                transform: none;
+                display: inline-block;
+                margin-top: 10px;
+            }
+            
+            .arrow-indicator::after {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="github-logo"></div>
+            <h1>GitHub - 世界最大の開発者プラットフォーム</h1>
+        </div>
+        
+        <div class="content">
+            <div class="left-panel">
+                <h2 style="color: #24292e; margin-bottom: 24px;">GitHubの価値</h2>
+                <ul class="feature-list">
+                    <li class="feature-item">
+                        <div class="feature-icon">✓</div>
+                        無料でプライベート・パブリックリポジトリ
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-icon">✓</div>
+                        世界中の9000万人の開発者コミュニティ
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-icon">✓</div>
+                        企業での採用時のポートフォリオ
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-icon">✓</div>
+                        チーム開発・コラボレーション機能
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-icon">✓</div>
+                        Issue管理・プロジェクト管理
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-icon">✓</div>
+                        オープンソースプロジェクトへの参加
+                    </li>
+                </ul>
+                
+                <div class="highlight-box">
+                    <h3>💡 プロフェッショナルなアカウント作成のコツ</h3>
+                    <p>ユーザー名は後から変更困難です。プロフェッショナルで覚えやすい名前を選択しましょう。</p>
+                </div>
+            </div>
+            
+            <div class="right-panel" style="position: relative;">
+                <div class="form-section">
+                    <h2>アカウント作成</h2>
+                    
+                    <div class="input-group">
+                        <label for="username">ユーザー名</label>
+                        <input type="text" id="username" placeholder="例: yamada-dev, your-name-2024">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="email">メールアドレス</label>
+                        <input type="email" id="email" placeholder="your-email@example.com">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="password">パスワード</label>
+                        <input type="password" id="password" placeholder="強力なパスワード（8文字以上）">
+                    </div>
+                    
+                    <button class="signup-btn">
+                        Sign up for GitHub
+                    </button>
+                </div>
+                
+                <div class="arrow-indicator">
+                    ここをクリック！
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

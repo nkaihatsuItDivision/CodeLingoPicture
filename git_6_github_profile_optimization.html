@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHubプロフィール最適化ガイド</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #24292e 0%, #0d1117 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        .profile-section {
+            padding: 40px 30px;
+        }
+
+        .bad-profile {
+            background: #fff5f5;
+            border-right: 2px solid #fed7d7;
+        }
+
+        .good-profile {
+            background: #f0fff4;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .bad-profile .section-title {
+            color: #e53e3e;
+        }
+
+        .good-profile .section-title {
+            color: #38a169;
+        }
+
+        .icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 16px;
+        }
+
+        .bad-profile .icon {
+            background: #fed7d7;
+        }
+
+        .good-profile .icon {
+            background: #c6f6d5;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-right: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .bad-profile .avatar {
+            background: #e53e3e;
+        }
+
+        .good-profile .avatar {
+            background: #38a169;
+        }
+
+        .profile-info h3 {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .profile-info .username {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .profile-info .bio {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .bad-profile .bio {
+            color: #999;
+            font-style: italic;
+        }
+
+        .good-profile .bio {
+            color: #2d3748;
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 20px;
+            margin-top: 16px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 18px;
+            font-weight: 600;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+        }
+
+        .repos-section {
+            margin-top: 20px;
+        }
+
+        .repos-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #2d3748;
+        }
+
+        .repo-item {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-left: 4px solid #e2e8f0;
+        }
+
+        .good-profile .repo-item {
+            border-left-color: #38a169;
+        }
+
+        .repo-name {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .repo-desc {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 6px;
+        }
+
+        .repo-tech {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tech-tag {
+            background: #edf2f7;
+            color: #4a5568;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .good-profile .tech-tag {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .tips-section {
+            background: #f7fafc;
+            padding: 30px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .tips-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 30px;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .tip-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .tip-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .tip-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+
+        .tip-content {
+            font-size: 14px;
+            color: #4a5568;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+            
+            .bad-profile {
+                border-right: none;
+                border-bottom: 2px solid #fed7d7;
+            }
+            
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .avatar {
+                margin-right: 0;
+                margin-bottom: 16px;
+            }
+            
+            .stats-row {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>GitHubプロフィール最適化ガイド</h1>
+            <p>ポートフォリオとしての価値を最大化するプロフィール設定</p>
+        </div>
+        
+        <div class="comparison">
+            <div class="profile-section bad-profile">
+                <div class="section-title">
+                    <div class="icon">❌</div>
+                    避けるべきプロフィール例
+                </div>
+                
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <div class="avatar">?</div>
+                        <div class="profile-info">
+                            <h3>未設定</h3>
+                            <div class="username">@user123456789</div>
+                            <div class="bio">（Bio未記入）</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-row">
+                        <div class="stat">
+                            <span class="stat-number">0</span>
+                            <span class="stat-label">Repositories</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">0</span>
+                            <span class="stat-label">Followers</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">0</span>
+                            <span class="stat-label">Following</span>
+                        </div>
+                    </div>
+                    
+                    <div class="repos-section">
+                        <div class="repos-title">リポジトリ</div>
+                        <div style="text-align: center; color: #999; padding: 20px;">
+                            リポジトリがありません
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="profile-section good-profile">
+                <div class="section-title">
+                    <div class="icon">✅</div>
+                    理想的なプロフィール例
+                </div>
+                
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <div class="avatar">Y</div>
+                        <div class="profile-info">
+                            <h3>山田 太郎</h3>
+                            <div class="username">@yamada-dev</div>
+                            <div class="bio">Java学習中のエンジニア志望 | OOP応用システム開発経験あり | 東京在住</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-row">
+                        <div class="stat">
+                            <span class="stat-number">3</span>
+                            <span class="stat-label">Repositories</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">12</span>
+                            <span class="stat-label">Followers</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">25</span>
+                            <span class="stat-label">Following</span>
+                        </div>
+                    </div>
+                    
+                    <div class="repos-section">
+                        <div class="repos-title">主要リポジトリ</div>
+                        
+                        <div class="repo-item">
+                            <div class="repo-name">student-management-system</div>
+                            <div class="repo-desc">OOP応用版学生管理システム - 継承・ポリモーフィズム・例外処理統合</div>
+                            <div class="repo-tech">
+                                <span class="tech-tag">Java</span>
+                                <span class="tech-tag">OOP</span>
+                                <span class="tech-tag">Lombok</span>
+                            </div>
+                        </div>
+                        
+                        <div class="repo-item">
+                            <div class="repo-name">java-learning-progress</div>
+                            <div class="repo-desc">Java学習の記録とサンプルコード集</div>
+                            <div class="repo-tech">
+                                <span class="tech-tag">Java</span>
+                                <span class="tech-tag">Learning</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tips-section">
+            <h2 class="tips-title">プロフィール最適化のコツ</h2>
+            
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <div class="tip-icon">👤</div>
+                    <div class="tip-title">プロフェッショナルなユーザー名</div>
+                    <div class="tip-content">
+                        real-name-dev、yourname-coding など、覚えやすく仕事でも使えるユーザー名を選択。数字の羅列は避ける。
+                    </div>
+                </div>
+                
+                <div class="tip-card">
+                    <div class="tip-icon">📝</div>
+                    <div class="tip-title">効果的なBio（自己紹介）</div>
+                    <div class="tip-content">
+                        「Java学習中」「エンジニア志望」「○○経験あり」など、現在の状況と目標を簡潔に。地域も記載すると良い。
+                    </div>
+                </div>
+                
+                <div class="tip-card">
+                    <div class="tip-icon">🗂️</div>
+                    <div class="tip-title">質の高いリポジトリ</div>
+                    <div class="tip-content">
+                        少数でも完成度の高いプロジェクトを公開。READMEを充実させ、何を作ったかを明確に説明する。
+                    </div>
+                </div>
+                
+                <div class="tip-card">
+                    <div class="tip-icon">📊</div>
+                    <div class="tip-title">継続的なコミット</div>
+                    <div class="tip-content">
+                        緑のコミット履歴で学習継続をアピール。毎日少しずつでも学習を続ける姿勢を可視化。
+                    </div>
+                </div>
+                
+                <div class="tip-card">
+                    <div class="tip-icon">🏷️</div>
+                    <div class="tip-title">適切なタグ付け</div>
+                    <div class="tip-content">
+                        リポジトリには使用技術のタグを付ける。Java、OOP、Spring Boot等、技術スタックを明確に。
+                    </div>
+                </div>
+                
+                <div class="tip-card">
+                    <div class="tip-icon">🌐</div>
+                    <div class="tip-title">オープンな姿勢</div>
+                    <div class="tip-content">
+                        パブリックリポジトリで技術力を公開。他の開発者をフォローし、コミュニティに参加する。
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

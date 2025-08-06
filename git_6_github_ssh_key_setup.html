@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub SSH鍵設定ガイド</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #24292e 0%, #0d1117 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .step-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 24px;
+            border-left: 4px solid #007bff;
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .step-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -12px;
+            left: -12px;
+            width: 32px;
+            height: 32px;
+            background: #007bff;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .step-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 12px;
+            margin-left: 12px;
+        }
+
+        .terminal-window {
+            background: #1e1e1e;
+            border-radius: 8px;
+            margin: 16px 0;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .terminal-header {
+            background: #333;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .terminal-button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .red { background: #ff5f56; }
+        .yellow { background: #ffbd2e; }
+        .green { background: #27ca3f; }
+
+        .terminal-title {
+            color: #c9c9c9;
+            font-size: 12px;
+            margin-left: 8px;
+        }
+
+        .terminal-content {
+            padding: 16px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .command {
+            color: #50fa7b;
+        }
+
+        .comment {
+            color: #6272a4;
+        }
+
+        .output {
+            color: #f8f8f2;
+            margin: 8px 0;
+        }
+
+        .github-interface {
+            background: white;
+            border: 2px solid #e1e4e8;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 16px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .github-header {
+            background: #f6f8fa;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e1e4e8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .github-icon {
+            width: 20px;
+            height: 20px;
+            background: #24292e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+        }
+
+        .github-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #24292e;
+        }
+
+        .github-content {
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #24292e;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d1d5da;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            background: #f6f8fa;
+        }
+
+        .key-preview {
+            background: #f6f8fa;
+            border: 1px solid #d1d5da;
+            border-radius: 6px;
+            padding: 12px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 12px;
+            color: #586069;
+            word-break: break-all;
+            line-height: 1.4;
+        }
+
+        .github-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 12px;
+        }
+
+        .github-btn:hover {
+            background: #22863a;
+        }
+
+        .flow-diagram {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .flow-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 30px;
+        }
+
+        .flow-steps {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .flow-step {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            min-width: 120px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .flow-icon {
+            width: 40px;
+            height: 40px;
+            background: #007bff;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+            font-size: 18px;
+        }
+
+        .flow-text {
+            font-size: 12px;
+            color: #4a5568;
+            font-weight: 600;
+        }
+
+        .flow-arrow {
+            font-size: 24px;
+            color: #007bff;
+        }
+
+        .security-note {
+            background: #e7f3ff;
+            border: 1px solid #0366d6;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 20px 0;
+        }
+
+        .security-note h4 {
+            color: #0366d6;
+            font-size: 16px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .security-note p {
+            color: #0366d6;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .steps-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .flow-steps {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .flow-arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>GitHub SSH鍵設定ガイド</h1>
+            <p>安全で効率的なGit認証システムの構築</p>
+        </div>
+        
+        <div class="content">
+            <div class="flow-diagram">
+                <div class="flow-title">SSH認証の仕組み</div>
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="flow-icon">🔑</div>
+                        <div class="flow-text">SSH鍵生成<br>（ローカル）</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="flow-icon">📤</div>
+                        <div class="flow-text">公開鍵登録<br>（GitHub）</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="flow-icon">🔒</div>
+                        <div class="flow-text">暗号化通信<br>（安全な接続）</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="flow-icon">✅</div>
+                        <div class="flow-text">自動認証<br>（パスワード不要）</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="steps-container">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-title">SSH鍵の生成</div>
+                    
+                    <div class="terminal-window">
+                        <div class="terminal-header">
+                            <div class="terminal-button red"></div>
+                            <div class="terminal-button yellow"></div>
+                            <div class="terminal-button green"></div>
+                            <div class="terminal-title">Terminal</div>
+                        </div>
+                        <div class="terminal-content">
+                            <div class="command">$ ssh-keygen -t rsa -b 4096 -C "your_email@example.com"</div>
+                            <div class="output">Generating public/private rsa key pair.</div>
+                            <div class="output">Enter file in which to save the key (/home/user/.ssh/id_rsa): </div>
+                            <div class="comment"># Enterキーを押してデフォルトを使用</div>
+                            <div class="output">Enter passphrase (empty for no passphrase): </div>
+                            <div class="comment"># 強いパスフレーズを入力（推奨）</div>
+                            <div class="output">Your identification has been saved in /home/user/.ssh/id_rsa</div>
+                            <div class="output">Your public key has been saved in /home/user/.ssh/id_rsa.pub</div>
+                        </div>
+                    </div>
+                    
+                    <div class="security-note">
+                        <h4>🔒 セキュリティポイント</h4>
+                        <p>4096ビットのRSA鍵は現在最高レベルのセキュリティを提供します。パスフレーズ設定でさらに安全性が向上します。</p>
+                    </div>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-title">公開鍵の確認・コピー</div>
+                    
+                    <div class="terminal-window">
+                        <div class="terminal-header">
+                            <div class="terminal-button red"></div>
+                            <div class="terminal-button yellow"></div>
+                            <div class="terminal-button green"></div>
+                            <div class="terminal-title">Terminal</div>
+                        </div>
+                        <div class="terminal-content">
+                            <div class="command">$ cat ~/.ssh/id_rsa.pub</div>
+                            <div class="output">ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCxxxxx...</div>
+                            <div class="comment"># この全体をコピー（ssh-rsaから最後まで）</div>
+                        </div>
+                    </div>
+                    
+                    <div class="key-preview">
+                        ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCxxxxxxxxxxxxxxxxx
+                        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                        xxxxxxxxxxxxxxxxxxxxxxx your_email@example.com
+                    </div>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-title">GitHub SSH設定画面</div>
+                    
+                    <div class="github-interface">
+                        <div class="github-header">
+                            <div class="github-icon">🐙</div>
+                            <div class="github-title">Settings > SSH and GPG keys</div>
+                        </div>
+                        <div class="github-content">
+                            <div class="form-group">
+                                <label class="form-label">Title</label>
+                                <input type="text" class="form-input" value="My Development PC" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Key</label>
+                                <textarea class="form-input" rows="6" readonly>ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxx your_email@example.com</textarea>
+                            </div>
+                            <button class="github-btn">Add SSH key</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <div class="step-title">接続テスト</div>
+                    
+                    <div class="terminal-window">
+                        <div class="terminal-header">
+                            <div class="terminal-button red"></div>
+                            <div class="terminal-button yellow"></div>
+                            <div class="terminal-button green"></div>
+                            <div class="terminal-title">Terminal</div>
+                        </div>
+                        <div class="terminal-content">
+                            <div class="command">$ ssh -T git@github.com</div>
+                            <div class="output">The authenticity of host 'github.com' can't be established.</div>
+                            <div class="output">Are you sure you want to continue connecting (yes/no)? </div>
+                            <div class="command">yes</div>
+                            <div class="output">Warning: Permanently added 'github.com' to known hosts.</div>
+                            <div class="output" style="color: #50fa7b;">Hi username! You've successfully authenticated, but GitHub does not provide shell access.</div>
+                            <div class="comment"># 成功メッセージ！</div>
+                        </div>
+                    </div>
+                    
+                    <div class="security-note">
+                        <h4>✅ 設定完了</h4>
+                        <p>このメッセージが表示されれば、SSH認証の設定は完了です。今後はパスワード入力なしでGitHubにアクセスできます。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

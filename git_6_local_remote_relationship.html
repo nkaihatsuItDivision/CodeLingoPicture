@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ローカル・リモートリポジトリ関係図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #24292e 0%, #0d1117 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .diagram-container {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .repositories {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            margin: 40px 0;
+        }
+
+        .repository {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .local-repo {
+            border-left: 4px solid #28a745;
+        }
+
+        .remote-repo {
+            border-left: 4px solid #0366d6;
+        }
+
+        .repo-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .repo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .local-repo .repo-icon {
+            background: #28a745;
+        }
+
+        .remote-repo .repo-icon {
+            background: #0366d6;
+        }
+
+        .repo-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .repo-subtitle {
+            font-size: 14px;
+            color: #6a737d;
+        }
+
+        .file-structure {
+            background: #f6f8fa;
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 4px 0;
+            color: #24292e;
+        }
+
+        .file-icon {
+            width: 16px;
+            text-align: center;
+        }
+
+        .git-commands {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        .command-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #856404;
+            margin-bottom: 6px;
+        }
+
+        .command {
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 11px;
+            color: #856404;
+            background: rgba(255, 193, 7, 0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin: 2px 0;
+        }
+
+        .connection-arrows {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        .arrow-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .arrow {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border: 2px solid #e1e4e8;
+        }
+
+        .arrow-push {
+            border-color: #28a745;
+        }
+
+        .arrow-pull {
+            border-color: #0366d6;
+        }
+
+        .arrow-icon {
+            font-size: 20px;
+        }
+
+        .arrow-text {
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .arrow-push .arrow-text {
+            color: #28a745;
+        }
+
+        .arrow-pull .arrow-text {
+            color: #0366d6;
+        }
+
+        .ssh-indicator {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #ff6b6b;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+        }
+
+        .concepts-section {
+            margin-top: 40px;
+        }
+
+        .concepts-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2d3748;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .concepts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .concept-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #667eea;
+        }
+
+        .concept-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            margin-bottom: 16px;
+        }
+
+        .concept-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 12px;
+        }
+
+        .concept-description {
+            color: #4a5568;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .concept-example {
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 12px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 12px;
+            color: #24292e;
+        }
+
+        .workflow-section {
+            background: linear-gradient(135deg, #e7f3ff 0%, #f0f8ff 100%);
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .workflow-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #0366d6;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .workflow-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .workflow-step {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            min-width: 120px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            flex: 1;
+        }
+
+        .workflow-step-icon {
+            width: 40px;
+            height: 40px;
+            background: #0366d6;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+            font-size: 18px;
+        }
+
+        .workflow-step-text {
+            font-size: 12px;
+            color: #24292e;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .workflow-arrow {
+            font-size: 24px;
+            color: #0366d6;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 768px) {
+            .repositories {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            .connection-arrows {
+                position: relative;
+                transform: none;
+                top: auto;
+                left: auto;
+                margin: 20px 0;
+            }
+            
+            .arrow-group {
+                flex-direction: row;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .workflow-steps {
+                flex-direction: column;
+            }
+            
+            .workflow-arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>ローカル・リモートリポジトリ関係図</h1>
+            <p>GitとGitHubの連携メカニズムの理解</p>
+        </div>
+        
+        <div class="content">
+            <div class="diagram-container">
+                <div class="repositories">
+                    <div class="repository local-repo">
+                        <div class="ssh-indicator">SSH接続</div>
+                        <div class="repo-header">
+                            <div class="repo-icon">💻</div>
+                            <div>
+                                <div class="repo-title">ローカルリポジトリ</div>
+                                <div class="repo-subtitle">あなたのPC内</div>
+                            </div>
+                        </div>
+                        
+                        <div class="file-structure">
+                            <div class="file-item">
+                                <span class="file-icon">📁</span>
+                                <span>StudentManagementSystem/</span>
+                            </div>
+                            <div class="file-item">
+                                <span class="file-icon">├──</span>
+                                <span>.git/ (Git管理データ)</span>
+                            </div>
+                            <div class="file-item">
+                                <span class="file-icon">├──</span>
+                                <span>src/</span>
+                            </div>
+                            <div class="file-item">
+                                <span class="file-icon">│   ├──</span>
+                                <span>Student.java</span>
+                            </div>
+                            <div class="file-item">
+                                <span class="file-icon">│   ├──</span>
+                                <span>Grade.java</span>
+                            </div>
+                            <div class="file-item">
+                                <span class="file-icon">│   └──</span>
+                                <span>StudentManagementSystem.java</span>
+                            </div>
+                            <div class="file-item">
+                                <span class="file-icon">└──</span>
+                                <span>README.md</span>
+                            </div>
+                        </div>
+                        
+                        <div class="git-commands">
+                            <div class="command-title">主要コマンド</div>
+                            <div class="command">git add .</div>
+                            <div class="command">git commit -m "メッセージ"</div>
+                            <div class="command">git push origin main</div>
+                        </div>
+                    </div>
+                    
+                    <div class="repository remote-repo">
+                        <div class="repo-header">
+                            <div class="repo-icon">🐙</div>
+                            <div>
+                                <div class="repo-title">リモートリポジトリ</div>
+                                <div class="repo-subtitle">GitHub上</div>
+                            </div>
+                        </div>
+                        
+                        <div class="file-structure">
+                            <div class="file-item">
+                                <span class="file-icon">📁</span>
+                                <span>student-management-system/</span>
+                            </div>
+                            <div class="file-item">
+                                <span class="file-icon">├──</span>
+                                <span>.git/ (同期されたGit管理データ)</span>
+                            </div>
+                            <div class="file-item">
+                                <span class="file-icon">├──</span>
+                                <span>src/</span>
+                            </div>
+                            <div class="file-item">
+                                <span class="file-icon">│   ├──</span>
+                                <span>Student.java</span>
+                            </div>
+                            <div class="file-item">
+                                <span class="file-icon">│   ├──</span>
+                                <span>Grade.java</span>
+                            </div>
+                            <div class="file-item">
+                                <span class="file-icon">│   └──</span>
+                                <span>StudentManagementSystem.java</span>
+                            </div>
+                            <div class="file-item">
+                                <span class="file-icon">└──</span>
+                                <span>README.md</span>
+                            </div>
+                        </div>
+                        
+                        <div class="git-commands">
+                            <div class="command-title">提供機能</div>
+                            <div class="command">Web UI でのコード閲覧</div>
+                            <div class="command">Issue・PR管理</div>
+                            <div class="command">協業・共有機能</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="connection-arrows">
+                    <div class="arrow-group">
+                        <div class="arrow arrow-push">
+                            <span class="arrow-icon">📤</span>
+                            <span class="arrow-text">git push</span>
+                            <span class="arrow-icon">➡️</span>
+                        </div>
+                        <div class="arrow arrow-pull">
+                            <span class="arrow-icon">⬅️</span>
+                            <span class="arrow-text">git pull</span>
+                            <span class="arrow-icon">📥</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="workflow-section">
+                <div class="workflow-title">典型的な開発ワークフロー</div>
+                <div class="workflow-steps">
+                    <div class="workflow-step">
+                        <div class="workflow-step-icon">✏️</div>
+                        <div class="workflow-step-text">コード<br>編集</div>
+                    </div>
+                    <div class="workflow-arrow">→</div>
+                    <div class="workflow-step">
+                        <div class="workflow-step-icon">➕</div>
+                        <div class="workflow-step-text">git add<br>ステージング</div>
+                    </div>
+                    <div class="workflow-arrow">→</div>
+                    <div class="workflow-step">
+                        <div class="workflow-step-icon">💾</div>
+                        <div class="workflow-step-text">git commit<br>保存</div>
+                    </div>
+                    <div class="workflow-arrow">→</div>
+                    <div class="workflow-step">
+                        <div class="workflow-step-icon">📤</div>
+                        <div class="workflow-step-text">git push<br>GitHub送信</div>
+                    </div>
+                    <div class="workflow-arrow">→</div>
+                    <div class="workflow-step">
+                        <div class="workflow-step-icon">🌐</div>
+                        <div class="workflow-step-text">世界中で<br>アクセス可能</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concepts-section">
+                <div class="concepts-title">重要な概念の理解</div>
+                
+                <div class="concepts-grid">
+                    <div class="concept-card">
+                        <div class="concept-icon">🏠</div>
+                        <div class="concept-title">origin（オリジン）</div>
+                        <div class="concept-description">
+                            リモートリポジトリの別名。毎回長いURLを入力する代わりに「origin」という短い名前でGitHubリポジトリを参照できます。
+                        </div>
+                        <div class="concept-example">
+git remote add origin git@github.com:user/repo.git
+# 以降は "origin" で参照可能
+git push origin main</div>
+                    </div>
+                    
+                    <div class="concept-card">
+                        <div class="concept-icon">🔄</div>
+                        <div class="concept-title">同期（Synchronization）</div>
+                        <div class="concept-description">
+                            ローカルとリモートの変更を一致させること。pushで送信、pullで取得し、両方のリポジトリを最新状態に保ちます。
+                        </div>
+                        <div class="concept-example">
+git push origin main  # ローカル → リモート
+git pull origin main  # リモート → ローカル</div>
+                    </div>
+                    
+                    <div class="concept-card">
+                        <div class="concept-icon">🔒</div>
+                        <div class="concept-title">SSH認証</div>
+                        <div class="concept-description">
+                            公開鍵暗号を使った安全な通信方法。一度設定すれば、パスワード入力なしでGitHubにアクセスできます。
+                        </div>
+                        <div class="concept-example">
+ssh-keygen -t rsa -b 4096
+# 公開鍵をGitHubに登録
+# 自動認証でセキュア通信</div>
+                    </div>
+                    
+                    <div class="concept-card">
+                        <div class="concept-icon">🌍</div>
+                        <div class="concept-title">分散バージョン管理</div>
+                        <div class="concept-description">
+                            複数の場所（ローカル、GitHub、他の開発者のPC）で同じプロジェクトを管理できる仕組み。データの冗長性と協業が可能です。
+                        </div>
+                        <div class="concept-example">
+ローカル ⟷ GitHub ⟷ チームメンバー
+全ての場所で完全な履歴を保持</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
