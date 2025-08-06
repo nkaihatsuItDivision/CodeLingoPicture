@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>コンフリクト発生時のgit status</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            background-color: #0d1117;
+            color: #e6edf3;
+            line-height: 1.4;
+        }
+        .terminal {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 950px;
+            margin: 0 auto;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #30363d;
+        }
+        .terminal-title {
+            color: #f0f6fc;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .dots {
+            display: flex;
+            gap: 6px;
+        }
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .dot.red { background-color: #ff5f56; }
+        .dot.yellow { background-color: #ffbd2e; }
+        .dot.green { background-color: #27ca3f; }
+        .command-line {
+            margin: 12px 0;
+        }
+        .prompt {
+            color: #7dd3fc;
+            font-weight: bold;
+        }
+        .command {
+            color: #e6edf3;
+            margin-left: 5px;
+        }
+        .merge-output {
+            color: #f85149;
+            margin: 8px 0;
+            padding: 10px;
+            background-color: rgba(248, 81, 73, 0.1);
+            border-radius: 4px;
+            border-left: 3px solid #f85149;
+        }
+        .merge-success {
+            color: #7dd3fc;
+        }
+        .merge-error {
+            color: #f85149;
+            font-weight: bold;
+        }
+        .status-output {
+            color: #e6edf3;
+            margin: 8px 0;
+        }
+        .status-branch {
+            color: #7dd3fc;
+            font-weight: bold;
+        }
+        .status-warning {
+            color: #ffc107;
+            font-weight: bold;
+        }
+        .unmerged-files {
+            color: #f85149;
+            font-weight: bold;
+        }
+        .file-name {
+            color: #7dd3fc;
+        }
+        .conflict-explanation {
+            background-color: rgba(248, 81, 73, 0.1);
+            border: 1px solid #f85149;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .explanation-title {
+            color: #f85149;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .explanation-icon {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+        .conflict-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .detail-item {
+            padding: 12px;
+            background-color: #161b22;
+            border-radius: 6px;
+            border: 1px solid #30363d;
+        }
+        .detail-item.conflict {
+            border-color: #f85149;
+            background-color: rgba(248, 81, 73, 0.05);
+        }
+        .detail-title {
+            font-weight: bold;
+            color: #f0f6fc;
+            margin-bottom: 8px;
+        }
+        .detail-desc {
+            color: #8b949e;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+        .resolution-steps {
+            background-color: #0d2117;
+            border: 1px solid #2ea043;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .steps-title {
+            color: #2ea043;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .step {
+            display: flex;
+            align-items: flex-start;
+            margin: 10px 0;
+        }
+        .step-number {
+            background-color: #2ea043;
+            color: #ffffff;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 11px;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        .step-text {
+            color: #e6edf3;
+            font-size: 13px;
+        }
+        .command-examples {
+            background-color: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 12px;
+        }
+        .command-comment {
+            color: #8b949e;
+            font-style: italic;
+        }
+        .command-syntax {
+            color: #7dd3fc;
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal">
+        <div class="terminal-header">
+            <div class="dots">
+                <div class="dot red"></div>
+                <div class="dot yellow"></div>
+                <div class="dot green"></div>
+            </div>
+            <div class="terminal-title">Git Bash - コンフリクト発生！</div>
+        </div>
+        
+        <!-- マージコマンド実行 -->
+        <div class="command-line">
+            <span class="prompt">student@PC:</span>
+            <span class="command">git merge feature/issue-2-add-csv-export</span>
+        </div>
+        
+        <!-- マージ結果（コンフリクト発生） -->
+        <div class="merge-output">
+            <div class="merge-success">Auto-merging StudentCrudSystem.java</div>
+            <div class="merge-error">CONFLICT (content): Merge conflict in StudentCrudSystem.java</div>
+            <div class="merge-error">Automatic merge failed; fix conflicts and then commit the result.</div>
+        </div>
+        
+        <!-- git status でコンフリクト状態確認 -->
+        <div class="command-line">
+            <span class="prompt">student@PC:</span>
+            <span class="command">git status</span>
+        </div>
+        
+        <div class="status-output">
+            On branch <span class="status-branch">main</span><br>
+            <span class="status-warning">You have unmerged paths.</span><br>
+            <span style="color: #8b949e;">  (fix conflicts and run "git commit")</span><br>
+            <span style="color: #8b949e;">  (use "git merge --abort" to abort the merge)</span><br>
+            <br>
+            <span class="unmerged-files">Unmerged paths:</span><br>
+            <span style="color: #8b949e;">  (use "git add &lt;file&gt;..." to mark resolution)</span><br>
+            <span style="color: #f85149;">        both modified:   </span><span class="file-name">StudentCrudSystem.java</span>
+        </div>
+        
+        <!-- コンフリクトの詳細説明 -->
+        <div class="conflict-explanation">
+            <div class="explanation-title">
+                <span class="explanation-icon">⚡</span>
+                コンフリクト（競合）が発生しました！
+            </div>
+            <div style="color: #e6edf3; font-size: 14px; margin-bottom: 15px;">
+                Gitが自動でマージできない変更が見つかりました。手動で解決する必要があります。
+            </div>
+            
+            <div class="conflict-details">
+                <div class="detail-item conflict">
+                    <div class="detail-title">🔍 競合ファイル</div>
+                    <div class="detail-desc">
+                        <strong>StudentCrudSystem.java</strong><br>
+                        • both modified: 両方のブランチで変更<br>
+                        • showMenu()メソッドが競合地点
+                    </div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="detail-title">⚠️ 競合の原因</div>
+                    <div class="detail-desc">
+                        <strong>main:</strong> 絵文字付きUI改修<br>
+                        <strong>feature:</strong> CSV選択肢追加<br>
+                        → 同じ箇所を別々に変更
+                    </div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="detail-title">📊 現在の状態</div>
+                    <div class="detail-desc">
+                        • マージ処理が中断状態<br>
+                        • ファイルに競合マーカーが挿入<br>
+                        • 手動解決が必要
+                    </div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="detail-title">🛠️ 解決後の処理</div>
+                    <div class="detail-desc">
+                        • 競合解決後にgit add<br>
+                        • git commit でマージ完了<br>
+                        • 統合履歴が作成される
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 解決手順の説明 -->
+        <div class="resolution-steps">
+            <div class="steps-title">
+                <span class="explanation-icon">🔧</span>
+                コンフリクト解決の手順
+            </div>
+            
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-text">
+                    <strong>ファイルを開いて競合マーカーを確認</strong><br>
+                    StudentCrudSystem.java を エディタで開く
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-text">
+                    <strong>競合部分を手動で統合</strong><br>
+                    &lt;&lt;&lt;&lt;&lt;&lt;&lt; と &gt;&gt;&gt;&gt;&gt;&gt;&gt; の間を編集
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-text">
+                    <strong>解決済みファイルをステージング</strong><br>
+                    <div class="command-examples">
+                        <span class="command-syntax">git add StudentCrudSystem.java</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-text">
+                    <strong>マージコミットを作成</strong><br>
+                    <div class="command-examples">
+                        <span class="command-syntax">git commit -m "Merge feature/issue-2-add-csv-export"</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 緊急回避方法 -->
+        <div style="margin-top: 20px; padding: 12px; background-color: rgba(255, 193, 7, 0.1); border-radius: 6px; border-left: 4px solid #ffc107;">
+            <strong style="color: #ffc107;">🚨 緊急回避オプション</strong><br>
+            <span style="color: #e6edf3; font-size: 13px;">
+                解決が困難な場合：<span style="color: #7dd3fc;">git merge --abort</span> でマージを中止<br>
+                → 元の状態に戻ります（学習なので解決にチャレンジしてみましょう！）
+            </span>
+        </div>
+    </div>
+</body>
+</html>
