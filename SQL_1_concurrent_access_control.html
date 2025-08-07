@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>同時アクセス制御の概念図</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1500px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #6c5ce7;
+            margin-bottom: 40px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .scenario-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            border: 2px solid #6c5ce7;
+            margin-bottom: 40px;
+        }
+        
+        .scenario-title {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .users-row {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 20px 0;
+        }
+        
+        .user-card {
+            background: white;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            min-width: 150px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .user-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        
+        .user-name {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .user-action {
+            font-size: 12px;
+            color: #7f8c8d;
+            background: #ecf0f1;
+            padding: 5px;
+            border-radius: 4px;
+        }
+        
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin: 40px 0;
+        }
+        
+        .problem-section {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            border: 3px solid #e74c3c;
+            border-radius: 12px;
+            padding: 25px;
+        }
+        
+        .solution-section {
+            background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+            border: 3px solid #27ae60;
+            border-radius: 12px;
+            padding: 25px;
+        }
+        
+        .section-header {
+            text-align: center;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .problem-header { background: #e74c3c; }
+        .solution-header { background: #27ae60; }
+        
+        .timeline {
+            position: relative;
+            margin: 20px 0;
+        }
+        
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            position: relative;
+        }
+        
+        .timeline-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #3498db;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            font-size: 14px;
+        }
+        
+        .timeline-content {
+            flex-grow: 1;
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            font-size: 13px;
+        }
+        
+        .conflict-timeline .timeline-number { background: #e74c3c; }
+        .safe-timeline .timeline-number { background: #27ae60; }
+        
+        .file-visualization {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+        
+        .file-header {
+            color: #3498db;
+            font-weight: bold;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #34495e;
+            padding-bottom: 5px;
+        }
+        
+        .file-content {
+            line-height: 1.6;
+        }
+        
+        .corrupted-data {
+            background: rgba(231, 76, 60, 0.3);
+            color: #e74c3c;
+            padding: 3px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        
+        .database-visualization {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+        
+        .db-operation {
+            background: rgba(39, 174, 96, 0.3);
+            color: #2ecc71;
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 4px;
+            border-left: 4px solid #27ae60;
+        }
+        
+        .sql-command {
+            color: #3498db;
+            font-weight: bold;
+        }
+        
+        .transaction-log {
+            background: #34495e;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            border-left: 4px solid #f39c12;
+        }
+        
+        .result-comparison {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .result-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            border: 3px solid;
+        }
+        
+        .problem-result { border-color: #e74c3c; }
+        .solution-result { border-color: #27ae60; }
+        
+        .result-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+        
+        .result-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .problem-result .result-title { color: #e74c3c; }
+        .solution-result .result-title { color: #27ae60; }
+        
+        .result-description {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #2c3e50;
+        }
+        
+        .technical-details {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 40px;
+        }
+        
+        .technical-title {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .detail-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            border: 2px solid #ffc107;
+        }
+        
+        .detail-header {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .detail-list {
+            font-size: 13px;
+            line-height: 1.8;
+        }
+        
+        .detail-list li {
+            margin: 8px 0;
+        }
+        
+        .code-example {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            overflow-x: auto;
+        }
+        
+        .keyword { color: #569cd6; }
+        .string { color: #ce9178; }
+        .comment { color: #6a9955; }
+        
+        .performance-impact {
+            background: #e8f5e8;
+            border-radius: 12px;
+            padding: 25px;
+            border: 2px solid #27ae60;
+            margin-top: 40px;
+        }
+        
+        .performance-title {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            border: 2px solid #27ae60;
+        }
+        
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">同時アクセス制御の概念図</div>
+        <div class="subtitle">複数ユーザーが同時にデータ操作する場合の問題と解決策</div>
+        
+        <!-- シナリオ設定 -->
+        <div class="scenario-section">
+            <div class="scenario-title">📚 学校現場での実際のシナリオ</div>
+            <div style="text-align: center; margin: 20px 0; font-size: 16px; color: #2c3e50;">
+                同じ時刻に複数の教員がWeek 5学生管理システムで新入生を登録する場合
+            </div>
+            
+            <div class="users-row">
+                <div class="user-card">
+                    <div class="user-icon">👨‍🏫</div>
+                    <div class="user-name">田中先生</div>
+                    <div class="user-action">情報工学科 新入生を登録</div>
+                </div>
+                
+                <div style="font-size: 30px; color: #6c5ce7;">⚡</div>
+                
+                <div class="user-card">
+                    <div class="user-icon">👩‍🏫</div>
+                    <div class="user-name">佐藤先生</div>
+                    <div class="user-action">機械工学科 新入生を登録</div>
+                </div>
+                
+                <div style="font-size: 30px; color: #6c5ce7;">⚡</div>
+                
+                <div class="user-card">
+                    <div class="user-icon">👨‍💼</div>
+                    <div class="user-name">山田事務員</div>
+                    <div class="user-action">奨学金情報を更新</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 問題と解決策の比較 -->
+        <div class="comparison-container">
+            <!-- ファイル管理での問題 -->
+            <div class="problem-section">
+                <div class="section-header problem-header">❌ ファイル管理での同時アクセス問題</div>
+                
+                <div class="timeline conflict-timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-number">1</div>
+                        <div class="timeline-content">
+                            <strong>田中先生</strong>: students.txt を読み込み<br>
+                            <em>ファイル内容を取得</em>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-number">2</div>
+                        <div class="timeline-content">
+                            <strong>佐藤先生</strong>: 同じファイルを読み込み<br>
+                            <em>同じ内容を取得（競合開始）</em>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-number">3</div>
+                        <div class="timeline-content">
+                            <strong>田中先生</strong>: 新入生追加してファイル保存<br>
+                            <em>S100,新入生A,18,情報工学</em>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-number">4</div>
+                        <div class="timeline-content">
+                            <strong>佐藤先生</strong>: 新入生追加してファイル保存<br>
+                            <em>田中先生の変更を上書き！</em>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="file-visualization">
+                    <div class="file-header">📄 students.txt の状態変化</div>
+                    <div class="file-content">
+                        初期状態:<br>
+                        S001,田中太郎,20,CS<br>
+                        S002,山田花子,24,ML<br><br>
+                        
+                        田中先生の保存後:<br>
+                        S001,田中太郎,20,CS<br>
+                        S002,山田花子,24,ML<br>
+                        S100,新入生A,18,情報工学<br><br>
+                        
+                        佐藤先生の保存後（上書き）:<br>
+                        S001,田中太郎,20,CS<br>
+                        S002,山田花子,24,ML<br>
+                        <span class="corrupted-data">S101,新入生B,19,機械工学</span><br>
+                        <strong style="color: #e74c3c;">※ 新入生Aのデータが消失！</strong>
+                    </div>
+                </div>
+                
+                <div style="background: #ffebee; padding: 15px; border-radius: 8px; border: 1px solid #e74c3c;">
+                    <strong style="color: #e74c3c;">🚨 発生する問題</strong>
+                    <ul style="margin: 10px 0; padding-left: 20px; font-size: 13px;">
+                        <li>田中先生の登録データが失われる</li>
+                        <li>ファイルロックエラーが発生する可能性</li>
+                        <li>データの不整合・破損リスク</li>
+                        <li>手動での復旧作業が必要</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- データベースでの解決 -->
+            <div class="solution-section">
+                <div class="section-header solution-header">✅ データベースでの安全な同時アクセス</div>
+                
+                <div class="timeline safe-timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-number">1</div>
+                        <div class="timeline-content">
+                            <strong>田中先生</strong>: INSERT文を実行<br>
+                            <em>トランザクション開始</em>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-number">2</div>
+                        <div class="timeline-content">
+                            <strong>佐藤先生</strong>: 並行してINSERT文を実行<br>
+                            <em>別トランザクションで安全に処理</em>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-number">3</div>
+                        <div class="timeline-content">
+                            <strong>DBMS</strong>: 両方のトランザクションを調整<br>
+                            <em>ロック制御・整合性チェック</em>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-number">4</div>
+                        <div class="timeline-content">
+                            <strong>完了</strong>: 両方のデータが安全に保存<br>
+                            <em>データ損失なし</em>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="database-visualization">
+                    <div class="file-header">🗄️ データベーストランザクション</div>
+                    <div class="db-operation">
+                        <span class="sql-command">BEGIN TRANSACTION;</span><br>
+                        <span class="sql-command">INSERT INTO</span> students VALUES ('S100', '新入生A', 18, '情報工学');<br>
+                        <span class="sql-command">COMMIT;</span> -- 田中先生の処理
+                    </div>
+                    <div class="db-operation">
+                        <span class="sql-command">BEGIN TRANSACTION;</span><br>
+                        <span class="sql-command">INSERT INTO</span> students VALUES ('S101', '新入生B', 19, '機械工学');<br>
+                        <span class="sql-command">COMMIT;</span> -- 佐藤先生の処理
+                    </div>
+                    
+                    <div class="transaction-log">
+                        ✅ Transaction 1: 成功 (S100追加)<br>
+                        ✅ Transaction 2: 成功 (S101追加)<br>
+                        🔒 自動ロック制御により競合回避<br>
+                        📋 両方のデータが確実に保存
+                    </div>
+                </div>
+                
+                <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; border: 1px solid #27ae60;">
+                    <strong style="color: #27ae60;">✅ データベースの利点</strong>
+                    <ul style="margin: 10px 0; padding-left: 20px; font-size: 13px;">
+                        <li>ACID特性による完全なデータ保護</li>
+                        <li>自動的な同時アクセス制御</li>
+                        <li>トランザクション分離による安全性</li>
+                        <li>デッドロック検出・解決機能</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 結果の比較 -->
+        <div class="result-comparison">
+            <div class="result-card problem-result">
+                <div class="result-icon">💥</div>
+                <div class="result-title">ファイル管理の結果</div>
+                <div class="result-description">
+                    田中先生の登録データが消失。<br>
+                    1時間の作業が無駄になり、<br>
+                    手動でデータ復旧が必要。<br>
+                    <strong>信頼性に重大な問題。</strong>
+                </div>
+            </div>
+            
+            <div class="result-card solution-result">
+                <div class="result-icon">🎉</div>
+                <div class="result-title">データベースの結果</div>
+                <div class="result-description">
+                    両方のデータが完全に保存。<br>
+                    データ損失は一切なし。<br>
+                    自動的な整合性チェック。<br>
+                    <strong>100%の信頼性を実現。</strong>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 技術的詳細 -->
+        <div class="technical-details">
+            <div class="technical-title">🔧 データベースの同時アクセス制御技術</div>
+            
+            <div class="details-grid">
+                <div class="detail-card">
+                    <div class="detail-header">🔒 ロック機能</div>
+                    <div class="detail-list">
+                        <li><strong>行レベルロック</strong>: 特定のレコードのみロック</li>
+                        <li><strong>テーブルレベルロック</strong>: テーブル全体をロック</li>
+                        <li><strong>読み取りロック</strong>: 読み取り専用アクセス許可</li>
+                        <li><strong>書き込みロック</strong>: 排他的な更新アクセス</li>
+                    </div>
+                    
+                    <div class="code-example">
+<span class="comment">-- 自動的なロック制御</span>
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> students 
+<span class="keyword">WHERE</span> student_id = <span class="string">'S100'</span> 
+<span class="keyword">FOR UPDATE</span>; <span class="comment">-- 排他ロック</span>
+                    </div>
+                </div>
+                
+                <div class="detail-card">
+                    <div class="detail-header">⚡ トランザクション</div>
+                    <div class="detail-list">
+                        <li><strong>原子性</strong>: 全て成功または全て失敗</li>
+                        <li><strong>一貫性</strong>: データの整合性を保証</li>
+                        <li><strong>独立性</strong>: 他の処理に影響されない</li>
+                        <li><strong>永続性</strong>: 確定後は永続的に保存</li>
+                    </div>
+                    
+                    <div class="code-example">
+<span class="keyword">BEGIN TRANSACTION;</span>
+<span class="keyword">INSERT INTO</span> students <span class="keyword">VALUES</span> (...);
+<span class="keyword">INSERT INTO</span> grades <span class="keyword">VALUES</span> (...);
+<span class="keyword">COMMIT;</span> <span class="comment">-- 両方成功時のみ確定</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- パフォーマンス効果 -->
+        <div class="performance-impact">
+            <div class="performance-title">📈 実際の現場での効果</div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">データ保全性</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-number">0件</div>
+                    <div class="stat-label">同時アクセスエラー</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-number">95%</div>
+                    <div class="stat-label">作業効率向上</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">安定稼働</div>
+                </div>
+            </div>
+            
+            <div style="background: white; padding: 20px; border-radius: 8px; margin-top: 20px; border: 2px solid #27ae60;">
+                <h3 style="text-align: center; color: #2c3e50; margin-bottom: 15px;">💼 企業での実際の活用例</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 14px;">
+                    <div>
+                        <strong style="color: #27ae60;">金融システム</strong>
+                        <ul style="margin: 5px 0; padding-left: 20px;">
+                            <li>数千件/秒の取引処理</li>
+                            <li>残高の完全整合性保証</li>
+                            <li>24時間無停止稼働</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <strong style="color: #27ae60;">ECサイト</strong>
+                        <ul style="margin: 5px 0; padding-left: 20px;">
+                            <li>在庫の正確な管理</li>
+                            <li>注文処理の完全性</li>
+                            <li>ピーク時の安定処理</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

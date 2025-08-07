@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>データ消失問題の具体例図</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #ff7675 0%, #d63031 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #e74c3c;
+            margin-bottom: 40px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .timeline-container {
+            position: relative;
+            margin: 40px 0;
+        }
+        
+        .timeline {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            position: relative;
+            margin: 50px 0;
+        }
+        
+        .timeline-line {
+            position: absolute;
+            top: 80px;
+            left: 12%;
+            right: 12%;
+            height: 4px;
+            background: linear-gradient(to right, #2ecc71, #f39c12, #e74c3c);
+            border-radius: 2px;
+            z-index: 1;
+        }
+        
+        .timeline-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .step-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        
+        .step1 { background: #2ecc71; }
+        .step2 { background: #f39c12; }
+        .step3 { background: #e74c3c; }
+        
+        .step-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .step-content {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            border: 3px solid;
+            min-height: 400px;
+            position: relative;
+        }
+        
+        .step1-content { border-color: #2ecc71; }
+        .step2-content { border-color: #f39c12; }
+        .step3-content { border-color: #e74c3c; }
+        
+        .memory-visualization {
+            background: #2c3e50;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            color: #ecf0f1;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+        
+        .data-item {
+            background: rgba(46, 204, 113, 0.3);
+            border: 1px solid #2ecc71;
+            border-radius: 4px;
+            padding: 8px;
+            margin: 5px 0;
+            font-size: 11px;
+        }
+        
+        .empty-memory {
+            background: rgba(231, 76, 60, 0.3);
+            border: 1px solid #e74c3c;
+            border-radius: 4px;
+            padding: 20px;
+            text-align: center;
+            color: #e74c3c;
+            font-weight: bold;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        
+        .code-snippet {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            overflow-x: auto;
+        }
+        
+        .keyword { color: #569cd6; }
+        .string { color: #ce9178; }
+        .comment { color: #6a9955; }
+        
+        .status-indicator {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .status-running { background: #2ecc71; }
+        .status-terminating { background: #f39c12; }
+        .status-stopped { background: #e74c3c; }
+        
+        .problem-highlight {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            border: 2px solid #e74c3c;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .problem-title {
+            color: #e74c3c;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .problem-description {
+            font-size: 12px;
+            line-height: 1.6;
+            color: #2c3e50;
+        }
+        
+        .console-output {
+            background: #000;
+            color: #00ff00;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            border: 1px solid #333;
+        }
+        
+        .error-output {
+            color: #ff6b6b;
+        }
+        
+        .comparison-section {
+            margin-top: 50px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 30px;
+            border: 2px solid #3498db;
+        }
+        
+        .comparison-title {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 22px;
+            font-weight: bold;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .solution-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            border: 3px solid #27ae60;
+            text-align: center;
+        }
+        
+        .solution-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+        
+        .solution-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 15px;
+        }
+        
+        .solution-description {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #2c3e50;
+        }
+        
+        .sql-preview {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+        }
+        
+        .impact-section {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 40px;
+        }
+        
+        .impact-title {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .impact-items {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .impact-item {
+            display: flex;
+            align-items: center;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ffc107;
+        }
+        
+        .impact-icon {
+            font-size: 24px;
+            margin-right: 15px;
+        }
+        
+        .impact-text {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .impact-text strong {
+            color: #d63031;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Week 5システムのデータ消失問題</div>
+        <div class="subtitle">プログラム実行サイクルで見るデータの一時性</div>
+        
+        <!-- タイムライン表示 -->
+        <div class="timeline-container">
+            <div class="timeline">
+                <div class="timeline-line"></div>
+                
+                <!-- ステップ1: プログラム実行中 -->
+                <div class="timeline-step">
+                    <div class="step-circle step1">1</div>
+                    <div class="step-title">プログラム実行中</div>
+                    <div class="step-content step1-content">
+                        <div class="status-indicator status-running">🟢 実行中</div>
+                        
+                        <div class="code-snippet">
+<span class="comment">// Week 5システムの起動</span>
+<span class="keyword">public static void</span> main(String[] args) {
+    StudentManagementSystem system = <span class="keyword">new</span> StudentManagementSystem();
+    
+    <span class="comment">// 新規学生登録</span>
+    system.addStudent(<span class="string">"S010"</span>, <span class="string">"新入生太郎"</span>, 18, <span class="string">"情報工学"</span>);
+    system.addGrade(<span class="string">"S010"</span>, <span class="string">"数学"</span>, 95);
+    system.addGrade(<span class="string">"S010"</span>, <span class="string">"プログラミング"</span>, 88);
+}
+                        </div>
+                        
+                        <div class="memory-visualization">
+                            <div style="color: #2ecc71; font-weight: bold; margin-bottom: 10px;">📋 メモリ内データ状態</div>
+                            <div class="data-item">
+                                Map&lt;String, Student&gt; students:<br>
+                                "S001" → 田中太郎 (CS)<br>
+                                "S002" → 山田花子 (ML)<br>
+                                "S010" → 新入生太郎 (情報工学) ✨新規追加
+                            </div>
+                            <div class="data-item">
+                                List&lt;Grade&gt; gradeHistory:<br>
+                                Grade(S010, 数学, 95) ✨新規追加<br>
+                                Grade(S010, プログラミング, 88) ✨新規追加
+                            </div>
+                        </div>
+                        
+                        <div class="console-output">
+                            > 学生を追加しました: 新入生太郎<br>
+                            > 成績を追加しました: 数学 95点<br>
+                            > 成績を追加しました: プログラミング 88点<br>
+                            > 学生情報: 新入生太郎 (18歳) - 情報工学科<br>
+                            > 平均点: 91.5点
+                        </div>
+                        
+                        <div style="background: #d5f4e6; padding: 10px; border-radius: 6px; margin-top: 10px;">
+                            <strong style="color: #27ae60;">✅ 正常状態:</strong> 
+                            <span style="font-size: 12px;">すべてのデータが正常に動作</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ステップ2: プログラム終了 -->
+                <div class="timeline-step">
+                    <div class="step-circle step2">2</div>
+                    <div class="step-title">プログラム終了</div>
+                    <div class="step-content step2-content">
+                        <div class="status-indicator status-terminating">🟡 終了中</div>
+                        
+                        <div class="code-snippet">
+<span class="comment">// プログラム終了処理</span>
+System.out.println(<span class="string">"システムを終了します..."</span>);
+scanner.close();
+<span class="comment">// main()メソッド終了</span>
+} <span class="comment">// ← ここでプログラム完全終了</span>
+                        </div>
+                        
+                        <div class="memory-visualization">
+                            <div style="color: #f39c12; font-weight: bold; margin-bottom: 10px;">⚠️ メモリクリア処理</div>
+                            <div style="background: rgba(243, 156, 18, 0.3); border: 1px solid #f39c12; border-radius: 4px; padding: 15px; text-align: center;">
+                                <div style="font-size: 14px; margin-bottom: 10px;">🧹 JVMガベージコレクション実行</div>
+                                <div style="font-size: 12px; line-height: 1.6;">
+                                    students Map → 🗑️ 解放<br>
+                                    gradeHistory List → 🗑️ 解放<br>
+                                    scholarships List → 🗑️ 解放<br>
+                                    すべてのオブジェクト → 🗑️ 解放
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="console-output">
+                            > システムを終了します...<br>
+                            <span style="color: #ffaa00;">JVM終了中...</span><br>
+                            <span style="color: #ff6b6b;">プロセス終了</span>
+                        </div>
+                        
+                        <div class="problem-highlight">
+                            <div class="problem-title">⚠️ 重要な問題</div>
+                            <div class="problem-description">
+                                ここで<strong>「新入生太郎」のデータが完全に失われます</strong>。<br>
+                                配列・ArrayListは一時的なメモリ領域にのみ存在するため、<br>
+                                プログラム終了と同時にすべてのデータが消失します。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ステップ3: 再実行 -->
+                <div class="timeline-step">
+                    <div class="step-circle step3">3</div>
+                    <div class="step-title">プログラム再実行</div>
+                    <div class="step-content step3-content">
+                        <div class="status-indicator status-stopped">🔴 データなし</div>
+                        
+                        <div class="code-snippet">
+<span class="comment">// 翌日、プログラムを再実行</span>
+<span class="keyword">public static void</span> main(String[] args) {
+    StudentManagementSystem system = <span class="keyword">new</span> StudentManagementSystem();
+    
+    <span class="comment">// 昨日登録した学生を検索</span>
+    system.displayStudentReport(<span class="string">"S010"</span>);
+}
+                        </div>
+                        
+                        <div class="memory-visualization">
+                            <div style="color: #e74c3c; font-weight: bold; margin-bottom: 10px;">❌ 初期状態にリセット</div>
+                            <div class="empty-memory">
+                                初期データのみ復元<br>
+                                (initializeData()で設定されたデータ)
+                            </div>
+                            <div class="data-item" style="background: rgba(231, 76, 60, 0.1); border-color: #e74c3c;">
+                                Map&lt;String, Student&gt; students:<br>
+                                "S001" → 田中太郎 (CS)<br>
+                                "S002" → 山田花子 (ML)<br>
+                                "S010" → ❌ <strong>存在しない！</strong>
+                            </div>
+                        </div>
+                        
+                        <div class="console-output error-output">
+                            > 学生 S010 は見つかりません。<br>
+                            > エラー: 指定された学生IDが存在しません<br>
+                            > 昨日登録したデータが全て消失！
+                        </div>
+                        
+                        <div class="problem-highlight">
+                            <div class="problem-title">🚨 深刻な問題の発生</div>
+                            <div class="problem-description">
+                                <strong>1時間かけて入力したデータが完全に失われました。</strong><br>
+                                実用的なシステムとしては致命的な問題です。<br>
+                                毎回初期データから開始するため、継続的な利用ができません。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- データベースとの比較 -->
+        <div class="comparison-section">
+            <div class="comparison-title">📊 データベース方式なら？</div>
+            
+            <div class="comparison-grid">
+                <div class="solution-card">
+                    <div class="solution-icon">💾</div>
+                    <div class="solution-title">永続的なデータ保存</div>
+                    <div class="solution-description">
+                        データはハードディスクに安全に保存され、プログラム終了後も保持されます。
+                    </div>
+                    <div class="sql-preview">
+<span class="keyword">INSERT INTO</span> students 
+<span class="keyword">VALUES</span> (<span class="string">'S010'</span>, <span class="string">'新入生太郎'</span>, <span class="number">18</span>, <span class="string">'情報工学'</span>);
+
+<span class="comment">-- プログラム終了後も安全に保存</span>
+                    </div>
+                </div>
+                
+                <div class="solution-card">
+                    <div class="solution-icon">🔄</div>
+                    <div class="solution-title">自動データ復元</div>
+                    <div class="solution-description">
+                        次回起動時に自動的にすべてのデータが利用可能になります。
+                    </div>
+                    <div class="sql-preview">
+<span class="comment">-- 次回起動時に自動的に取得</span>
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> students 
+<span class="keyword">WHERE</span> student_id = <span class="string">'S010'</span>;
+
+<span class="comment">-- 結果: 新入生太郎のデータが取得できる</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 実際の影響 -->
+        <div class="impact-section">
+            <div class="impact-title">🏢 実際の現場での深刻な影響</div>
+            
+            <div class="impact-items">
+                <div class="impact-item">
+                    <div class="impact-icon">⏰</div>
+                    <div class="impact-text">
+                        <strong>作業時間の損失:</strong> 数時間〜数日分のデータ入力作業が無駄になる
+                    </div>
+                </div>
+                
+                <div class="impact-item">
+                    <div class="impact-icon">💸</div>
+                    <div class="impact-text">
+                        <strong>経済的損失:</strong> 人件費・機会損失・信頼回復コストが発生
+                    </div>
+                </div>
+                
+                <div class="impact-item">
+                    <div class="impact-icon">😫</div>
+                    <div class="impact-text">
+                        <strong>利用者のストレス:</strong> 同じ作業の繰り返しによる業務効率の大幅低下
+                    </div>
+                </div>
+                
+                <div class="impact-item">
+                    <div class="impact-icon">📉</div>
+                    <div class="impact-text">
+                        <strong>信頼性の失墜:</strong> システムへの信頼が失われ、利用停止に追い込まれる
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
