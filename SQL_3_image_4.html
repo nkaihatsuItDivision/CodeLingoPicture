@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>実践的SQL検索フロー</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .title {
+            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 40px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .scenario {
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        .scenario-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .scenario-desc {
+            font-size: 16px;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+        .flow-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        .flow-step {
+            display: flex;
+            align-items: center;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 5px solid #4299e1;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .flow-step:hover {
+            transform: translateX(10px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-right: 30px;
+            flex-shrink: 0;
+        }
+        .step-content {
+            flex-grow: 1;
+        }
+        .step-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+        .step-desc {
+            font-size: 16px;
+            color: #4a5568;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        .step-code {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+        .keyword {
+            color: #81c784;
+            font-weight: bold;
+        }
+        .string {
+            color: #f06292;
+        }
+        .comment {
+            color: #90a4ae;
+            font-style: italic;
+        }
+        .thinking-bubble {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 20px;
+            padding: 10px 15px;
+            font-size: 14px;
+            color: #856404;
+            max-width: 200px;
+            text-align: center;
+        }
+        .result-section {
+            margin-top: 40px;
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+        }
+        .result-title {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .final-query {
+            background: rgba(0,0,0,0.2);
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        .result-data {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        .table-header {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr 2fr;
+            gap: 15px;
+            font-weight: bold;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            margin-bottom: 15px;
+        }
+        .table-row {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr 2fr;
+            gap: 15px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        .complexity-analysis {
+            margin-top: 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        .analysis-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-top: 5px solid #667eea;
+        }
+        .analysis-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .analysis-icon {
+            width: 30px;
+            height: 30px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+        .analysis-content {
+            color: #4a5568;
+            line-height: 1.5;
+        }
+        .pattern-variations {
+            margin-top: 40px;
+            background: #f0f4f8;
+            padding: 30px;
+            border-radius: 15px;
+        }
+        .variations-title {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 25px;
+        }
+        .variations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .variation-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        .variation-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+        .variation-code {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+        .variation-note {
+            font-size: 14px;
+            color: #4a5568;
+            font-style: italic;
+        }
+        .arrow-down {
+            text-align: center;
+            font-size: 24px;
+            color: #4299e1;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">🧠 実践的SQL検索フロー：複合条件検索の思考プロセス</div>
+        
+        <div class="scenario">
+            <div class="scenario-title">🎯 実際のビジネスシナリオ</div>
+            <div class="scenario-desc">
+                「20歳以上で工学系学部に所属する学生から、年齢が若い順に上位3名を抽出して、
+                就職支援プログラムの対象者を選定したい」<br>
+                このような複雑な要求を、段階的にSQLで実現していきましょう！
+            </div>
+        </div>
+
+        <div class="flow-container">
+            <div class="flow-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <div class="step-title">要件分析と条件整理</div>
+                    <div class="step-desc">
+                        まず、検索要件を明確に分析し、必要な条件を整理します。
+                    </div>
+                    <div class="step-code">
+<span class="comment">-- 要求分析結果：</span><br>
+<span class="comment">-- ✓ 年齢条件: 20歳以上 (age >= 20)</span><br>
+<span class="comment">-- ✓ 学部条件: 工学系学部 (department LIKE '%工学%')</span><br>
+<span class="comment">-- ✓ 並び順: 年齢の昇順 (ORDER BY age ASC)</span><br>
+<span class="comment">-- ✓ 件数制限: 上位3名 (LIMIT 3)</span>
+                    </div>
+                </div>
+                <div class="thinking-bubble">何を検索したいか<br>明確にしよう！</div>
+            </div>
+
+            <div class="flow-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <div class="step-title">基本SELECT文の構築</div>
+                    <div class="step-desc">
+                        まずは最もシンプルな形から始めて、必要なフィールドを取得します。
+                    </div>
+                    <div class="step-code">
+<span class="comment">-- 基本のSELECT文</span><br>
+<span class="keyword">SELECT</span> student_id, name, age, department<br>
+<span class="keyword">FROM</span> student;<br><br>
+
+<span class="comment">-- すべてのフィールドを確認</span><br>
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> student;
+                    </div>
+                </div>
+                <div class="thinking-bubble">まずは全体を<br>確認しよう！</div>
+            </div>
+
+            <div class="flow-step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <div class="step-title">年齢条件の追加</div>
+                    <div class="step-desc">
+                        WHERE句を使って、20歳以上の学生に絞り込みます。
+                    </div>
+                    <div class="step-code">
+<span class="comment">-- 年齢条件を追加</span><br>
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> student<br>
+<span class="keyword">WHERE</span> age >= <span class="string">20</span>;<br><br>
+
+<span class="comment">-- この時点での結果件数を確認</span><br>
+<span class="keyword">SELECT</span> <span class="keyword">COUNT</span>(*) <span class="keyword">FROM</span> student <span class="keyword">WHERE</span> age >= <span class="string">20</span>;
+                    </div>
+                </div>
+                <div class="thinking-bubble">条件を一つずつ<br>追加していこう！</div>
+            </div>
+
+            <div class="flow-step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <div class="step-title">学部条件の追加（AND演算子）</div>
+                    <div class="step-desc">
+                        既存の条件にAND演算子で工学系学部の条件を追加します。
+                    </div>
+                    <div class="step-code">
+<span class="comment">-- 複合条件：年齢 AND 学部</span><br>
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> student<br>
+<span class="keyword">WHERE</span> age >= <span class="string">20</span> <br>
+<span class="keyword">AND</span> department <span class="keyword">LIKE</span> <span class="string">'%工学%'</span>;<br><br>
+
+<span class="comment">-- 条件の確認</span><br>
+<span class="keyword">SELECT</span> name, age, department <span class="keyword">FROM</span> student<br>
+<span class="keyword">WHERE</span> age >= <span class="string">20</span> <span class="keyword">AND</span> department <span class="keyword">LIKE</span> <span class="string">'%工学%'</span>;
+                    </div>
+                </div>
+                <div class="thinking-bubble">複合条件で<br>絞り込み完了！</div>
+            </div>
+
+            <div class="flow-step">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                    <div class="step-title">並び替えの実装（ORDER BY）</div>
+                    <div class="step-desc">
+                        年齢の昇順（若い順）で並び替えを行います。
+                    </div>
+                    <div class="step-code">
+<span class="comment">-- 年齢順（昇順）で並び替え</span><br>
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> student<br>
+<span class="keyword">WHERE</span> age >= <span class="string">20</span> <br>
+<span class="keyword">AND</span> department <span class="keyword">LIKE</span> <span class="string">'%工学%'</span><br>
+<span class="keyword">ORDER BY</span> age <span class="keyword">ASC</span>;<br><br>
+
+<span class="comment">-- 同じ年齢の場合は名前順でも並べる</span><br>
+<span class="keyword">ORDER BY</span> age <span class="keyword">ASC</span>, name <span class="keyword">ASC</span>;
+                    </div>
+                </div>
+                <div class="thinking-bubble">若い順に<br>並び替え！</div>
+            </div>
+
+            <div class="flow-step">
+                <div class="step-number">6</div>
+                <div class="step-content">
+                    <div class="step-title">件数制限の適用（LIMIT）</div>
+                    <div class="step-desc">
+                        上位3名のみを取得するために、LIMIT句を追加します。
+                    </div>
+                    <div class="step-code">
+<span class="comment">-- 最終的な完成クエリ</span><br>
+<span class="keyword">SELECT</span> student_id, name, age, department<br>
+<span class="keyword">FROM</span> student<br>
+<span class="keyword">WHERE</span> age >= <span class="string">20</span> <br>
+<span class="keyword">AND</span> department <span class="keyword">LIKE</span> <span class="string">'%工学%'</span><br>
+<span class="keyword">ORDER BY</span> age <span class="keyword">ASC</span>, name <span class="keyword">ASC</span><br>
+<span class="keyword">LIMIT</span> <span class="string">3</span>;
+                    </div>
+                </div>
+                <div class="thinking-bubble">上位3名に<br>絞り込み！</div>
+            </div>
+        </div>
+
+        <div class="arrow-down">⬇️ 実行結果</div>
+
+        <div class="result-section">
+            <div class="result-title">🎉 完成したSQLクエリと実行結果</div>
+            <div class="final-query">
+<span class="keyword">SELECT</span> student_id, name, age, department<br>
+<span class="keyword">FROM</span> student<br>
+<span class="keyword">WHERE</span> age >= 20 <br>
+<span class="keyword">AND</span> department <span class="keyword">LIKE</span> '%工学%'<br>
+<span class="keyword">ORDER BY</span> age <span class="keyword">ASC</span>, name <span class="keyword">ASC</span><br>
+<span class="keyword">LIMIT</span> 3;
+            </div>
+            <div class="result-data">
+                <div class="table-header">
+                    <div>ID</div>
+                    <div>名前</div>
+                    <div>年齢</div>
+                    <div>学部</div>
+                </div>
+                <div class="table-row">
+                    <div>S001</div>
+                    <div>田中太郎</div>
+                    <div>20</div>
+                    <div>情報工学部</div>
+                </div>
+                <div class="table-row">
+                    <div>S005</div>
+                    <div>山田美咲</div>
+                    <div>20</div>
+                    <div>工学部</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="complexity-analysis">
+            <div class="analysis-card">
+                <div class="analysis-title">
+                    <div class="analysis-icon">💡</div>
+                    思考プロセスの重要性
+                </div>
+                <div class="analysis-content">
+                    複雑な検索要求を段階的に分析し、一つずつ条件を追加することで、
+                    確実で理解しやすいSQLを構築できます。急がば回れのアプローチが重要です。
+                </div>
+            </div>
+            
+            <div class="analysis-card">
+                <div class="analysis-title">
+                    <div class="analysis-icon">⚡</div>
+                    実行効率の考慮
+                </div>
+                <div class="analysis-content">
+                    WHERE句での絞り込み → ORDER BYでの並び替え → LIMITでの制限の順序で、
+                    データベースが最も効率的に処理できるクエリを作成しています。
+                </div>
+            </div>
+            
+            <div class="analysis-card">
+                <div class="analysis-title">
+                    <div class="analysis-icon">🔧</div>
+                    保守性の確保
+                </div>
+                <div class="analysis-content">
+                    各句を明確に分離し、コメントを適切に付けることで、
+                    後から条件を変更したり、他の人が理解したりしやすくなります。
+                </div>
+            </div>
+            
+            <div class="analysis-card">
+                <div class="analysis-title">
+                    <div class="analysis-icon">🎯</div>
+                    ビジネス要求への対応
+                </div>
+                <div class="analysis-content">
+                    実際のビジネスシーンでは、このような複合的な条件での検索が頻繁に要求されます。
+                    この思考プロセスをマスターすることで、現場で即戦力となります。
+                </div>
+            </div>
+        </div>
+
+        <div class="pattern-variations">
+            <div class="variations-title">🔄 応用パターンバリエーション</div>
+            <div class="variations-grid">
+                <div class="variation-card">
+                    <div class="variation-title">OR条件での複合検索</div>
+                    <div class="variation-code">
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> student<br>
+<span class="keyword">WHERE</span> (age >= 20 <span class="keyword">AND</span> department <span class="keyword">LIKE</span> '%工学%')<br>
+<span class="keyword">OR</span> (age >= 22 <span class="keyword">AND</span> department = '理学部');
+                    </div>
+                    <div class="variation-note">異なる条件群をORで組み合わせた検索</div>
+                </div>
+                
+                <div class="variation-card">
+                    <div class="variation-title">範囲指定での検索</div>
+                    <div class="variation-code">
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> student<br>
+<span class="keyword">WHERE</span> age <span class="keyword">BETWEEN</span> 19 <span class="keyword">AND</span> 21<br>
+<span class="keyword">AND</span> department <span class="keyword">LIKE</span> '%学%'<br>
+<span class="keyword">ORDER BY</span> age DESC;
+                    </div>
+                    <div class="variation-note">BETWEEN演算子による年齢範囲指定</div>
+                </div>
+                
+                <div class="variation-card">
+                    <div class="variation-title">除外条件での検索</div>
+                    <div class="variation-code">
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> student<br>
+<span class="keyword">WHERE</span> age >= 20<br>
+<span class="keyword">AND</span> department <span class="keyword">NOT LIKE</span> '%経済%'<br>
+<span class="keyword">AND</span> department <span class="keyword">NOT LIKE</span> '%文%';
+                    </div>
+                    <div class="variation-note">NOT演算子による除外条件の活用</div>
+                </div>
+                
+                <div class="variation-card">
+                    <div class="variation-title">ページング処理</div>
+                    <div class="variation-code">
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> student<br>
+<span class="keyword">WHERE</span> age >= 20<br>
+<span class="keyword">ORDER BY</span> age ASC<br>
+<span class="keyword">LIMIT</span> 5, 3; <span class="comment">-- 6番目から3件</span>
+                    </div>
+                    <div class="variation-note">オフセット指定による分割表示</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

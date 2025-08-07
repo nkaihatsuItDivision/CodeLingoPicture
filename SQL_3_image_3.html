@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIKE演算子パターンマッチングガイド</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .title {
+            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 40px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .wildcard-intro {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .wildcard-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            min-width: 200px;
+            position: relative;
+            overflow: hidden;
+        }
+        .wildcard-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1), transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+        @keyframes shimmer {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .wildcard-symbol {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: block;
+        }
+        .wildcard-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .wildcard-desc {
+            font-size: 14px;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+        .pattern-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+        .pattern-example {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 5px solid #4ecdc4;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+        .pattern-example:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .pattern-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .pattern-icon {
+            width: 25px;
+            height: 25px;
+            background: #4ecdc4;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .pattern-query {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+        .keyword {
+            color: #81c784;
+            font-weight: bold;
+        }
+        .string {
+            color: #f06292;
+        }
+        .match-examples {
+            margin-top: 15px;
+        }
+        .match-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #4a5568;
+            margin-bottom: 8px;
+        }
+        .match-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .match-item {
+            background: #e6fffa;
+            color: #065f46;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 13px;
+            border: 1px solid #4ecdc4;
+        }
+        .no-match-item {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #f87171;
+        }
+        .visual-demo {
+            margin-top: 40px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+        }
+        .demo-title {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .demo-pattern {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        .demo-pattern-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .demo-visual {
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            text-align: center;
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 5px;
+        }
+        .highlight {
+            background: #ffeb3b;
+            color: #000;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        .practical-tips {
+            margin-top: 40px;
+            background: #f0f4f8;
+            padding: 30px;
+            border-radius: 15px;
+            border-left: 5px solid #4299e1;
+        }
+        .tips-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .tip-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        .tip-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .tip-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+        .tip-desc {
+            font-size: 14px;
+            color: #4a5568;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">🔍 LIKE演算子パターンマッチング完全ガイド</div>
+        
+        <div class="wildcard-intro">
+            <div class="wildcard-card">
+                <span class="wildcard-symbol">%</span>
+                <div class="wildcard-name">パーセント</div>
+                <div class="wildcard-desc">任意の0文字以上の文字列<br>何にでもマッチ</div>
+            </div>
+            <div class="wildcard-card">
+                <span class="wildcard-symbol">_</span>
+                <div class="wildcard-name">アンダースコア</div>
+                <div class="wildcard-desc">任意の1文字<br>必ず1文字にマッチ</div>
+            </div>
+        </div>
+
+        <div class="pattern-grid">
+            <div class="pattern-example">
+                <div class="pattern-title">
+                    <div class="pattern-icon">1</div>
+                    前方一致検索
+                </div>
+                <div class="pattern-query">
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> student <br>
+<span class="keyword">WHERE</span> name <span class="keyword">LIKE</span> <span class="string">'田%'</span>;
+                </div>
+                <div class="match-examples">
+                    <div class="match-title">✅ マッチする例：</div>
+                    <div class="match-list">
+                        <div class="match-item">田中太郎</div>
+                        <div class="match-item">田村花子</div>
+                        <div class="match-item">田</div>
+                        <div class="match-item">田口一郎</div>
+                    </div>
+                    <div class="match-title">❌ マッチしない例：</div>
+                    <div class="match-list">
+                        <div class="no-match-item">佐田太郎</div>
+                        <div class="no-match-item">山田美咲</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pattern-example">
+                <div class="pattern-title">
+                    <div class="pattern-icon">2</div>
+                    後方一致検索
+                </div>
+                <div class="pattern-query">
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> student <br>
+<span class="keyword">WHERE</span> name <span class="keyword">LIKE</span> <span class="string">'%子'</span>;
+                </div>
+                <div class="match-examples">
+                    <div class="match-title">✅ マッチする例：</div>
+                    <div class="match-list">
+                        <div class="match-item">佐藤花子</div>
+                        <div class="match-item">田村美子</div>
+                        <div class="match-item">子</div>
+                        <div class="match-item">山本良子</div>
+                    </div>
+                    <div class="match-title">❌ マッチしない例：</div>
+                    <div class="match-list">
+                        <div class="no-match-item">子供太郎</div>
+                        <div class="no-match-item">田中太郎</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pattern-example">
+                <div class="pattern-title">
+                    <div class="pattern-icon">3</div>
+                    部分一致検索
+                </div>
+                <div class="pattern-query">
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> student <br>
+<span class="keyword">WHERE</span> department <span class="keyword">LIKE</span> <span class="string">'%工学%'</span>;
+                </div>
+                <div class="match-examples">
+                    <div class="match-title">✅ マッチする例：</div>
+                    <div class="match-list">
+                        <div class="match-item">情報工学部</div>
+                        <div class="match-item">工学部</div>
+                        <div class="match-item">機械工学科</div>
+                        <div class="match-item">電気工学専攻</div>
+                    </div>
+                    <div class="match-title">❌ マッチしない例：</div>
+                    <div class="match-list">
+                        <div class="no-match-item">経済学部</div>
+                        <div class="no-match-item">文学部</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pattern-example">
+                <div class="pattern-title">
+                    <div class="pattern-icon">4</div>
+                    1文字指定検索
+                </div>
+                <div class="pattern-query">
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> student <br>
+<span class="keyword">WHERE</span> student_id <span class="keyword">LIKE</span> <span class="string">'S00_'</span>;
+                </div>
+                <div class="match-examples">
+                    <div class="match-title">✅ マッチする例：</div>
+                    <div class="match-list">
+                        <div class="match-item">S001</div>
+                        <div class="match-item">S002</div>
+                        <div class="match-item">S009</div>
+                        <div class="match-item">S00A</div>
+                    </div>
+                    <div class="match-title">❌ マッチしない例：</div>
+                    <div class="match-list">
+                        <div class="no-match-item">S0001</div>
+                        <div class="no-match-item">S01</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pattern-example">
+                <div class="pattern-title">
+                    <div class="pattern-icon">5</div>
+                    複合パターン検索
+                </div>
+                <div class="pattern-query">
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> student <br>
+<span class="keyword">WHERE</span> name <span class="keyword">LIKE</span> <span class="string">'田_太郎'</span>;
+                </div>
+                <div class="match-examples">
+                    <div class="match-title">✅ マッチする例：</div>
+                    <div class="match-list">
+                        <div class="match-item">田中太郎</div>
+                        <div class="match-item">田村太郎</div>
+                        <div class="match-item">田口太郎</div>
+                    </div>
+                    <div class="match-title">❌ マッチしない例：</div>
+                    <div class="match-list">
+                        <div class="no-match-item">田太郎</div>
+                        <div class="no-match-item">田代一太郎</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pattern-example">
+                <div class="pattern-title">
+                    <div class="pattern-icon">6</div>
+                    否定検索
+                </div>
+                <div class="pattern-query">
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> student <br>
+<span class="keyword">WHERE</span> department <span class="keyword">NOT LIKE</span> <span class="string">'%経済%'</span>;
+                </div>
+                <div class="match-examples">
+                    <div class="match-title">✅ マッチする例：</div>
+                    <div class="match-list">
+                        <div class="match-item">情報工学部</div>
+                        <div class="match-item">文学部</div>
+                        <div class="match-item">理学部</div>
+                    </div>
+                    <div class="match-title">❌ マッチしない例：</div>
+                    <div class="match-list">
+                        <div class="no-match-item">経済学部</div>
+                        <div class="no-match-item">国際経済学部</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="visual-demo">
+            <div class="demo-title">🎯 パターンマッチング視覚デモ</div>
+            <div class="demo-grid">
+                <div class="demo-pattern">
+                    <div class="demo-pattern-title">パターン: '田%'</div>
+                    <div class="demo-visual">
+                        <span class="highlight">田</span>中太郎 → ✅<br>
+                        <span class="highlight">田</span>村花子 → ✅<br>
+                        佐<span style="color: #ff5252;">田</span>太郎 → ❌
+                    </div>
+                </div>
+                
+                <div class="demo-pattern">
+                    <div class="demo-pattern-title">パターン: '%工学%'</div>
+                    <div class="demo-visual">
+                        情報<span class="highlight">工学</span>部 → ✅<br>
+                        <span class="highlight">工学</span>部 → ✅<br>
+                        経済学部 → ❌
+                    </div>
+                </div>
+                
+                <div class="demo-pattern">
+                    <div class="demo-pattern-title">パターン: 'S00_'</div>
+                    <div class="demo-visual">
+                        S00<span class="highlight">1</span> → ✅<br>
+                        S00<span class="highlight">5</span> → ✅<br>
+                        S<span style="color: #ff5252;">0001</span> → ❌
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="practical-tips">
+            <div class="tips-title">💡 実践的な活用テクニック</div>
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <div class="tip-icon">🔍</div>
+                    <div class="tip-title">柔軟な検索</div>
+                    <div class="tip-desc">ユーザーが部分的な情報しか覚えていない場合でも、適切にデータを検索できます</div>
+                </div>
+                
+                <div class="tip-card">
+                    <div class="tip-icon">⚡</div>
+                    <div class="tip-title">効率的な絞り込み</div>
+                    <div class="tip-desc">WHERE句との組み合わせで、大量のデータから必要な情報だけを高速抽出</div>
+                </div>
+                
+                <div class="tip-card">
+                    <div class="tip-icon">🎯</div>
+                    <div class="tip-title">パフォーマンス考慮</div>
+                    <div class="tip-desc">前方一致（'田%'）はインデックスが効くため、部分一致より高速</div>
+                </div>
+                
+                <div class="tip-card">
+                    <div class="tip-icon">🔒</div>
+                    <div class="tip-title">大文字小文字</div>
+                    <div class="tip-desc">MySQLでは通常大文字小文字を区別しませんが、設定により異なる場合があります</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
