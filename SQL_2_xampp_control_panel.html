@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XAMPPコントロールパネル画面</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .xampp-window {
+            background: #f0f0f0;
+            border: 2px solid #333;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            width: 720px;
+            overflow: hidden;
+        }
+
+        .title-bar {
+            background: linear-gradient(to bottom, #4a90e2, #357abd);
+            color: white;
+            padding: 8px 12px;
+            font-size: 14px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 4px;
+        }
+
+        .control-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+        }
+
+        .minimize { background: #ffbd2e; }
+        .maximize { background: #28ca42; }
+        .close { background: #ff5f56; }
+
+        .header {
+            background: #e8e8e8;
+            padding: 15px;
+            border-bottom: 1px solid #ccc;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .version {
+            color: #666;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .main-content {
+            padding: 20px;
+            background: white;
+        }
+
+        .control-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .control-table th {
+            background: #4a90e2;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .control-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+        }
+
+        .module-name {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .status-running {
+            background: #27ae60;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+            display: inline-block;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .status-stopped {
+            background: #e74c3c;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+            display: inline-block;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .port-info {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .action-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 6px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            margin-right: 5px;
+            transition: background 0.3s;
+        }
+
+        .action-btn:hover {
+            background: #2980b9;
+        }
+
+        .action-btn.stop {
+            background: #e74c3c;
+        }
+
+        .action-btn.stop:hover {
+            background: #c0392b;
+        }
+
+        .pid-info {
+            color: #27ae60;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .highlight-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .highlight-title {
+            color: #856404;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .highlight-text {
+            color: #856404;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .success-icon {
+            color: #27ae60;
+            font-size: 16px;
+        }
+
+        .status-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 4px solid #27ae60;
+        }
+
+        .status-title {
+            color: #27ae60;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="xampp-window">
+        <div class="title-bar">
+            <span>XAMPP Control Panel</span>
+            <div class="window-controls">
+                <button class="control-btn minimize"></button>
+                <button class="control-btn maximize"></button>
+                <button class="control-btn close"></button>
+            </div>
+        </div>
+        
+        <div class="header">
+            <h1>XAMPP Control Panel</h1>
+            <div class="version">Version 8.2.12 [Compiled: Oct 19 2023]</div>
+        </div>
+        
+        <div class="main-content">
+            <table class="control-table">
+                <thead>
+                    <tr>
+                        <th>Module</th>
+                        <th>PID(s)</th>
+                        <th>Port(s)</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="module-name">Apache</td>
+                        <td class="pid-info">1234</td>
+                        <td class="port-info">80, 443</td>
+                        <td><span class="status-running">Running</span></td>
+                        <td>
+                            <button class="action-btn stop">Stop</button>
+                            <button class="action-btn">Admin</button>
+                            <button class="action-btn">Config</button>
+                            <button class="action-btn">Logs</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="module-name">MySQL</td>
+                        <td class="pid-info">5678</td>
+                        <td class="port-info">3306</td>
+                        <td><span class="status-running">Running</span></td>
+                        <td>
+                            <button class="action-btn stop">Stop</button>
+                            <button class="action-btn">Admin</button>
+                            <button class="action-btn">Config</button>
+                            <button class="action-btn">Logs</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="module-name">FileZilla</td>
+                        <td>-</td>
+                        <td class="port-info">21, 990</td>
+                        <td><span class="status-stopped">Stopped</span></td>
+                        <td>
+                            <button class="action-btn">Start</button>
+                            <button class="action-btn">Admin</button>
+                            <button class="action-btn">Config</button>
+                            <button class="action-btn">Logs</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="module-name">Mercury</td>
+                        <td>-</td>
+                        <td class="port-info">25, 79, 105, 106, 110, 143, 993, 995</td>
+                        <td><span class="status-stopped">Stopped</span></td>
+                        <td>
+                            <button class="action-btn">Start</button>
+                            <button class="action-btn">Admin</button>
+                            <button class="action-btn">Config</button>
+                            <button class="action-btn">Logs</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="module-name">Tomcat</td>
+                        <td>-</td>
+                        <td class="port-info">8005, 8009, 8080</td>
+                        <td><span class="status-stopped">Stopped</span></td>
+                        <td>
+                            <button class="action-btn">Start</button>
+                            <button class="action-btn">Admin</button>
+                            <button class="action-btn">Config</button>
+                            <button class="action-btn">Logs</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="status-section">
+                <div class="status-title">✅ 正常起動完了</div>
+                <div class="highlight-text">
+                    <strong>Apache</strong> と <strong>MySQL</strong> が緑色で「Running」になっていることを確認してください。<br>
+                    この状態になれば、phpMyAdminにアクセス可能です。
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <div class="highlight-title">
+                    <span class="success-icon">🎯</span>
+                    レッスン7.2 確認ポイント
+                </div>
+                <div class="highlight-text">
+                    <strong>Apache:</strong> 緑色「Running」← Webサーバー起動中<br>
+                    <strong>MySQL:</strong> 緑色「Running」← データベース起動中<br>
+                    この2つが起動していれば環境構築成功です！
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

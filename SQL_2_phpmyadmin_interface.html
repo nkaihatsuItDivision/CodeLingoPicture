@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>phpMyAdmin 管理画面構成</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .browser-container {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            width: 1200px;
+            overflow: hidden;
+        }
+
+        .browser-header {
+            background: #f1f3f4;
+            padding: 12px 16px;
+            border-bottom: 1px solid #dadce0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .browser-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .control-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .control-close { background: #ff5f57; }
+        .control-minimize { background: #ffbd2e; }
+        .control-maximize { background: #28ca42; }
+
+        .address-bar {
+            flex: 1;
+            background: white;
+            border: 1px solid #dadce0;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 14px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ssl-icon {
+            color: #34a853;
+            font-size: 16px;
+        }
+
+        .phpmyadmin-interface {
+            background: #ffffff;
+            height: 700px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .header-section {
+            background: #2c3e50;
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 10;
+            position: relative;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #3498db;
+        }
+
+        .version {
+            font-size: 12px;
+            color: #bdc3c7;
+        }
+
+        .user-info {
+            font-size: 12px;
+            color: #ecf0f1;
+        }
+
+        .main-layout {
+            display: flex;
+            flex: 1;
+            height: 600px;
+            position: relative;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #f8f9fa;
+            border-right: 1px solid #dee2e6;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .sidebar-title {
+            background: #495057;
+            color: white;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .database-list {
+            padding: 10px 0;
+        }
+
+        .database-item {
+            padding: 8px 16px;
+            border-bottom: 1px solid #e9ecef;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-size: 13px;
+        }
+
+        .database-item:hover {
+            background: #e9ecef;
+        }
+
+        .database-item.active {
+            background: #3498db;
+            color: white;
+        }
+
+        .database-icon {
+            margin-right: 8px;
+            color: #6c757d;
+        }
+
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .tab-navigation {
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            padding: 0;
+            position: relative;
+        }
+
+        .nav-tab {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 13px;
+            color: #495057;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .nav-tab:hover {
+            background: #e9ecef;
+        }
+
+        .nav-tab.active {
+            background: white;
+            border-bottom-color: #3498db;
+            color: #3498db;
+            font-weight: bold;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            background: white;
+            overflow-y: auto;
+        }
+
+        .welcome-message {
+            background: #e8f4ff;
+            border: 1px solid #bee5eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .welcome-title {
+            color: #0c5460;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .welcome-text {
+            color: #0c5460;
+            line-height: 1.5;
+        }
+
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .info-card {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .card-title {
+            color: #495057;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .card-value {
+            color: #3498db;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        /* 説明用のオーバーレイとアノテーション */
+        .annotation {
+            position: absolute;
+            z-index: 20;
+            pointer-events: none;
+        }
+
+        .annotation-box {
+            background: rgba(231, 76, 60, 0.95);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            max-width: 200px;
+            line-height: 1.4;
+        }
+
+        .annotation-arrow {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-style: solid;
+        }
+
+        .arrow-left {
+            border-left: 8px solid rgba(231, 76, 60, 0.95);
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+            right: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .arrow-top {
+            border-top: 8px solid rgba(231, 76, 60, 0.95);
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .sidebar-annotation {
+            top: 120px;
+            left: -220px;
+        }
+
+        .tabs-annotation {
+            top: -60px;
+            right: 200px;
+        }
+
+        .content-annotation {
+            bottom: 50px;
+            right: -250px;
+        }
+
+        .highlight-overlay {
+            position: absolute;
+            border: 3px dashed #e74c3c;
+            background: rgba(231, 76, 60, 0.1);
+            pointer-events: none;
+            z-index: 15;
+            border-radius: 4px;
+        }
+
+        .highlight-sidebar {
+            top: 60px;
+            left: 0;
+            width: 250px;
+            height: calc(100% - 60px);
+        }
+
+        .highlight-tabs {
+            top: 60px;
+            left: 250px;
+            width: calc(100% - 250px);
+            height: 50px;
+        }
+
+        .highlight-content {
+            top: 110px;
+            left: 250px;
+            width: calc(100% - 250px);
+            height: calc(100% - 110px);
+        }
+
+        .legend {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(52, 73, 94, 0.95);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            z-index: 25;
+        }
+
+        .legend-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #3498db;
+        }
+
+        .legend-item {
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border: 2px dashed #e74c3c;
+            background: rgba(231, 76, 60, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="browser-container">
+        <div class="browser-header">
+            <div class="browser-controls">
+                <div class="control-circle control-close"></div>
+                <div class="control-circle control-minimize"></div>
+                <div class="control-circle control-maximize"></div>
+            </div>
+            <div class="address-bar">
+                <span class="ssl-icon">🔒</span>
+                <span>http://localhost/phpmyadmin/</span>
+            </div>
+        </div>
+
+        <div class="phpmyadmin-interface">
+            <div class="header-section">
+                <div class="logo-section">
+                    <div class="logo">phpMyAdmin</div>
+                    <div class="version">5.2.1</div>
+                </div>
+                <div class="user-info">サーバー: localhost | ユーザー: root</div>
+            </div>
+
+            <div class="main-layout">
+                <!-- サイドバー（データベース一覧） -->
+                <div class="sidebar">
+                    <div class="sidebar-title">🗂️ データベース</div>
+                    <div class="database-list">
+                        <div class="database-item">
+                            <span class="database-icon">📁</span>information_schema
+                        </div>
+                        <div class="database-item">
+                            <span class="database-icon">📁</span>mysql
+                        </div>
+                        <div class="database-item">
+                            <span class="database-icon">📁</span>performance_schema
+                        </div>
+                        <div class="database-item active">
+                            <span class="database-icon">📁</span>sampledb
+                        </div>
+                        <div class="database-item">
+                            <span class="database-icon">📁</span>test
+                        </div>
+                        <div class="database-item">
+                            <span class="database-icon">📁</span>week5_system
+                        </div>
+                    </div>
+                </div>
+
+                <!-- メインコンテンツエリア -->
+                <div class="content-area">
+                    <!-- 上部タブナビゲーション -->
+                    <div class="tab-navigation">
+                        <button class="nav-tab">構造</button>
+                        <button class="nav-tab active">SQL</button>
+                        <button class="nav-tab">検索</button>
+                        <button class="nav-tab">挿入</button>
+                        <button class="nav-tab">エクスポート</button>
+                        <button class="nav-tab">インポート</button>
+                        <button class="nav-tab">操作</button>
+                        <button class="nav-tab">権限</button>
+                    </div>
+
+                    <!-- 中央表示エリア -->
+                    <div class="main-content">
+                        <div class="welcome-message">
+                            <div class="welcome-title">🎯 phpMyAdmin 画面構成の理解</div>
+                            <div class="welcome-text">
+                                この画面では、データベースの作成・テーブル操作・SQL実行などの全ての操作を行います。<br>
+                                各エリアの役割を理解して、効率的にデータベース操作を行いましょう。
+                            </div>
+                        </div>
+
+                        <div class="info-cards">
+                            <div class="info-card">
+                                <div class="card-title">総データベース数</div>
+                                <div class="card-value">6</div>
+                            </div>
+                            <div class="info-card">
+                                <div class="card-title">選択中のDB</div>
+                                <div class="card-value">sampledb</div>
+                            </div>
+                            <div class="info-card">
+                                <div class="card-title">アクティブタブ</div>
+                                <div class="card-value">SQL</div>
+                            </div>
+                            <div class="info-card">
+                                <div class="card-title">ユーザー権限</div>
+                                <div class="card-value">管理者</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ハイライトオーバーレイ -->
+            <div class="highlight-overlay highlight-sidebar"></div>
+            <div class="highlight-overlay highlight-tabs"></div>
+            <div class="highlight-overlay highlight-content"></div>
+
+            <!-- 説明アノテーション -->
+            <div class="annotation sidebar-annotation">
+                <div class="annotation-box">
+                    ① 左サイドバー<br>
+                    データベース一覧を表示<br>
+                    クリックで選択・切り替え
+                    <div class="annotation-arrow arrow-left"></div>
+                </div>
+            </div>
+
+            <div class="annotation tabs-annotation">
+                <div class="annotation-box">
+                    ② 上部タブ<br>
+                    操作メニュー（SQL実行、データ挿入等）
+                    <div class="annotation-arrow arrow-top"></div>
+                </div>
+            </div>
+
+            <div class="annotation content-annotation">
+                <div class="annotation-box">
+                    ③ 中央エリア<br>
+                    実際の作業画面<br>
+                    SQL実行・データ表示・編集
+                    <div class="annotation-arrow arrow-left"></div>
+                </div>
+            </div>
+
+            <!-- 凡例 -->
+            <div class="legend">
+                <div class="legend-title">📘 画面構成の説明</div>
+                <div class="legend-item">
+                    <div class="legend-color"></div>
+                    <span>赤い破線: 各エリアの境界</span>
+                </div>
+                <div class="legend-item">
+                    <span style="margin-left: 20px;">• 左: データベース選択</span>
+                </div>
+                <div class="legend-item">
+                    <span style="margin-left: 20px;">• 上: 操作メニュー</span>
+                </div>
+                <div class="legend-item">
+                    <span style="margin-left: 20px;">• 中央: 作業エリア</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
