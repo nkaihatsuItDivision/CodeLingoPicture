@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 5システム→データベース移行図</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 1200px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .migration-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+        
+        .system-side {
+            flex: 1;
+            max-width: 400px;
+        }
+        
+        .arrow {
+            flex: 0 0 100px;
+            text-align: center;
+            font-size: 40px;
+            color: #e74c3c;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .week5-system {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            border-radius: 15px;
+            padding: 25px;
+            border: 3px solid #e91e63;
+        }
+        
+        .database-system {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border-radius: 15px;
+            padding: 25px;
+            border: 3px solid #00bcd4;
+        }
+        
+        .system-title {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        .java-class {
+            background: #fff;
+            border-radius: 10px;
+            margin: 10px 0;
+            padding: 15px;
+            border-left: 5px solid #ff6b6b;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .class-name {
+            font-weight: bold;
+            color: #e74c3c;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        
+        .class-fields {
+            font-size: 14px;
+            color: #7f8c8d;
+            line-height: 1.4;
+        }
+        
+        .sql-table {
+            background: #fff;
+            border-radius: 10px;
+            margin: 10px 0;
+            padding: 15px;
+            border-left: 5px solid #4ecdc4;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .table-name {
+            font-weight: bold;
+            color: #00bcd4;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        
+        .table-fields {
+            font-size: 14px;
+            color: #7f8c8d;
+            line-height: 1.4;
+        }
+        
+        .benefits {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            border: 3px solid #ff9800;
+        }
+        
+        .benefits-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #e65100;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .benefit-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .benefit-item {
+            background: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 5px solid #ff9800;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .benefit-icon {
+            color: #ff9800;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .data-flow {
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .flow-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .flow-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .flow-step {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            flex: 1;
+            margin: 0 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .flow-arrow {
+            color: #7f8c8d;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Week 5システム → データベース完全移行</div>
+        
+        <div class="migration-flow">
+            <div class="system-side">
+                <div class="week5-system">
+                    <div class="system-title">Week 5: Java配列管理</div>
+                    
+                    <div class="java-class">
+                        <div class="class-name">Student.java</div>
+                        <div class="class-fields">
+                            • String studentId<br>
+                            • String name<br>
+                            • int age<br>
+                            • String department<br>
+                            • List&lt;Grade&gt; grades
+                        </div>
+                    </div>
+                    
+                    <div class="java-class">
+                        <div class="class-name">Grade.java</div>
+                        <div class="class-fields">
+                            • String subject<br>
+                            • int score<br>
+                            • String semester<br>
+                            • LocalDate examDate
+                        </div>
+                    </div>
+                    
+                    <div class="java-class">
+                        <div class="class-name">ArrayList&lt;Student&gt;</div>
+                        <div class="class-fields">
+                            • メモリ上の一時的なデータ<br>
+                            • プログラム終了で消失<br>
+                            • 線形検索のみ
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="arrow">🔄</div>
+            
+            <div class="system-side">
+                <div class="database-system">
+                    <div class="system-title">Week 7.5: MySQL管理</div>
+                    
+                    <div class="sql-table">
+                        <div class="table-name">student テーブル</div>
+                        <div class="table-fields">
+                            • id (AUTO_INCREMENT)<br>
+                            • student_id (UNIQUE)<br>
+                            • name, age, department<br>
+                            • email, phone, address<br>
+                            • created_at, updated_at
+                        </div>
+                    </div>
+                    
+                    <div class="sql-table">
+                        <div class="table-name">score テーブル</div>
+                        <div class="table-fields">
+                            • student_id (外部キー)<br>
+                            • subject_code (外部キー)<br>
+                            • score (制約: 0-100)<br>
+                            • semester, exam_date<br>
+                            • grade_letter (自動計算)
+                        </div>
+                    </div>
+                    
+                    <div class="sql-table">
+                        <div class="table-name">subject テーブル</div>
+                        <div class="table-fields">
+                            • subject_code (PRIMARY KEY)<br>
+                            • subject_name, credits<br>
+                            • department, description
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="benefits">
+            <div class="benefits-title">🚀 データベース化で実現する圧倒的価値</div>
+            <div class="benefit-list">
+                <div class="benefit-item">
+                    <span class="benefit-icon">💾</span>
+                    <strong>データ永続化</strong><br>
+                    プログラム終了後もデータ保持
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">⚡</span>
+                    <strong>高速検索</strong><br>
+                    インデックスによる瞬時の検索
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">👥</span>
+                    <strong>同時アクセス</strong><br>
+                    複数ユーザーでの同時利用
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">🔒</span>
+                    <strong>データ整合性</strong><br>
+                    制約による自動品質保証
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">📊</span>
+                    <strong>高度な統計</strong><br>
+                    SQL集約関数による分析
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">🔧</span>
+                    <strong>拡張性</strong><br>
+                    将来の機能追加に柔軟対応
+                </div>
+            </div>
+        </div>
+        
+        <div class="data-flow">
+            <div class="flow-title">🔄 移行プロセス</div>
+            <div class="flow-steps">
+                <div class="flow-step">1. テーブル設計</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">2. データ移行</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">3. 機能実装</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">4. 性能最適化</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
