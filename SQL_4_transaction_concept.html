@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>トランザクション概念図：ACID特性と処理フロー</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #3742fa 0%, #2f3542 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #3742fa 0%, #2f3542 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+        }
+        .header::before {
+            content: "🔒";
+            font-size: 48px;
+            position: absolute;
+            top: 15px;
+            left: 30px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+            margin-left: 60px;
+        }
+        .content {
+            padding: 30px;
+        }
+        .definition-section {
+            background: linear-gradient(135deg, #5352ed 0%, #3742fa 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .definition-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .definition-text {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        .acid-section {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .acid-card {
+            background: linear-gradient(135deg, #00d2d3 0%, #54a0ff 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            position: relative;
+            min-height: 180px;
+        }
+        .acid-letter {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            background: rgba(255,255,255,0.2);
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px auto;
+        }
+        .acid-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .acid-subtitle {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+        .acid-description {
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        .flow-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        .flow-title {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 25px;
+            color: #2d3436;
+        }
+        .transaction-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+        }
+        .flow-step {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            flex: 1;
+            margin: 0 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        .flow-step:not(:last-child)::after {
+            content: "→";
+            position: absolute;
+            right: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            color: #3742fa;
+            font-weight: bold;
+        }
+        .step-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .step-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #2d3436;
+        }
+        .step-code {
+            background: #2d3436;
+            color: white;
+            padding: 8px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin: 8px 0;
+        }
+        .keyword {
+            color: #ffd93d;
+            font-weight: bold;
+        }
+        .success-path, .error-path {
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 12px;
+        }
+        .success-path {
+            background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+            color: white;
+        }
+        .error-path {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+        }
+        .path-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .path-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .path-step {
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            flex: 1;
+            margin: 0 5px;
+            font-size: 14px;
+        }
+        .path-step:not(:last-child)::after {
+            content: "→";
+            position: absolute;
+            margin-left: 10px;
+            font-size: 18px;
+        }
+        .practical-example {
+            background: #e8f4f8;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+            border-left: 5px solid #00b894;
+        }
+        .example-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2d3436;
+        }
+        .example-code {
+            background: #2d3436;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.4;
+            margin: 15px 0;
+        }
+        .string {
+            color: #6c5ce7;
+        }
+        .number {
+            color: #e17055;
+        }
+        .comment {
+            color: #74b9ff;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>トランザクション概念図：ACID特性と処理フロー</h1>
+        </div>
+        
+        <div class="content">
+            <div class="definition-section">
+                <div class="definition-title">トランザクションとは？</div>
+                <div class="definition-text">
+                    複数のSQL操作をひとまとまりとして扱い、<br>
+                    <strong>「全て成功」または「全て失敗」</strong>を保証する仕組み
+                </div>
+            </div>
+            
+            <div class="acid-section">
+                <div class="acid-card">
+                    <div class="acid-letter">A</div>
+                    <div class="acid-title">Atomicity</div>
+                    <div class="acid-subtitle">原子性</div>
+                    <div class="acid-description">
+                        操作は分割不可能。全て成功するか、全て失敗するかのどちらか。
+                    </div>
+                </div>
+                
+                <div class="acid-card">
+                    <div class="acid-letter">C</div>
+                    <div class="acid-title">Consistency</div>
+                    <div class="acid-subtitle">一貫性</div>
+                    <div class="acid-description">
+                        データの整合性が保たれ、矛盾のない状態を維持する。
+                    </div>
+                </div>
+                
+                <div class="acid-card">
+                    <div class="acid-letter">I</div>
+                    <div class="acid-title">Isolation</div>
+                    <div class="acid-subtitle">分離性</div>
+                    <div class="acid-description">
+                        他のトランザクションと独立して実行され、互いに影響しない。
+                    </div>
+                </div>
+                
+                <div class="acid-card">
+                    <div class="acid-letter">D</div>
+                    <div class="acid-title">Durability</div>
+                    <div class="acid-subtitle">永続性</div>
+                    <div class="acid-description">
+                        確定した変更は永続化され、システム障害でも失われない。
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flow-section">
+                <div class="flow-title">🔄 トランザクションの基本処理フロー</div>
+                <div class="transaction-flow">
+                    <div class="flow-step">
+                        <div class="step-icon">🚀</div>
+                        <div class="step-title">開始</div>
+                        <div class="step-code"><span class="keyword">BEGIN;</span></div>
+                    </div>
+                    
+                    <div class="flow-step">
+                        <div class="step-icon">⚙️</div>
+                        <div class="step-title">SQL実行</div>
+                        <div class="step-code">
+                            <span class="keyword">INSERT</span><br>
+                            <span class="keyword">UPDATE</span><br>
+                            <span class="keyword">DELETE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-step">
+                        <div class="step-icon">❓</div>
+                        <div class="step-title">判定</div>
+                        <div class="step-code">
+                            成功？<br>
+                            エラー？
+                        </div>
+                    </div>
+                    
+                    <div class="flow-step">
+                        <div class="step-icon">✅</div>
+                        <div class="step-title">確定/取消</div>
+                        <div class="step-code">
+                            <span class="keyword">COMMIT;</span><br>
+                            <span class="keyword">ROLLBACK;</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="success-path">
+                <div class="path-title">
+                    ✅ 成功パターン：全ての操作が成功した場合
+                </div>
+                <div class="path-steps">
+                    <div class="path-step">BEGIN</div>
+                    <div class="path-step">INSERT成功</div>
+                    <div class="path-step">UPDATE成功</div>
+                    <div class="path-step">DELETE成功</div>
+                    <div class="path-step">COMMIT<br>確定</div>
+                </div>
+            </div>
+            
+            <div class="error-path">
+                <div class="path-title">
+                    ❌ エラーパターン：途中で操作が失敗した場合
+                </div>
+                <div class="path-steps">
+                    <div class="path-step">BEGIN</div>
+                    <div class="path-step">INSERT成功</div>
+                    <div class="path-step">UPDATE失敗<br>❌ERROR</div>
+                    <div class="path-step">ROLLBACK<br>全て取消</div>
+                    <div class="path-step">元の状態<br>に復旧</div>
+                </div>
+            </div>
+            
+            <div class="practical-example">
+                <div class="example-title">💡 実践例：学生情報の一括更新</div>
+                <div class="example-code">
+                    <span class="comment">-- トランザクション開始</span><br>
+                    <span class="keyword">BEGIN;</span><br><br>
+                    
+                    <span class="comment">-- 学生の年齢を更新</span><br>
+                    <span class="keyword">UPDATE</span> student <br>
+                    <span class="keyword">SET</span> age = <span class="number">21</span> <br>
+                    <span class="keyword">WHERE</span> student_id = <span class="string">'S001'</span>;<br><br>
+                    
+                    <span class="comment">-- 学部も同時に更新</span><br>
+                    <span class="keyword">UPDATE</span> student <br>
+                    <span class="keyword">SET</span> department = <span class="string">'情報工学部'</span> <br>
+                    <span class="keyword">WHERE</span> student_id = <span class="string">'S001'</span>;<br><br>
+                    
+                    <span class="comment">-- 全て成功したら確定</span><br>
+                    <span class="keyword">COMMIT;</span><br><br>
+                    
+                    <span class="comment">-- エラーが発生した場合は取り消し</span><br>
+                    <span class="comment">-- ROLLBACK;</span>
+                </div>
+                <p style="margin-top: 15px; color: #2d3436;">
+                    <strong>メリット：</strong>年齢と学部の更新が両方成功するか、両方失敗するかが保証される
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

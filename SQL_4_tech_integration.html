@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 5→Week 7→Week 8 技術連携マップ</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+        }
+        .header::before {
+            content: "🔗";
+            font-size: 48px;
+            position: absolute;
+            top: 15px;
+            left: 30px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+            margin-left: 60px;
+        }
+        .header-subtitle {
+            margin-top: 10px;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 30px;
+        }
+        .evolution-overview {
+            background: linear-gradient(135deg, #5f27cd 0%, #341f97 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .evolution-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .evolution-subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        .weeks-timeline {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin: 30px 0;
+            position: relative;
+        }
+        .week-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            position: relative;
+            border-top: 5px solid;
+            min-height: 400px;
+        }
+        .week5-card {
+            border-top-color: #e17055;
+            background: linear-gradient(135deg, #fff5f0 0%, #ffe8e1 100%);
+        }
+        .week7-card {
+            border-top-color: #00b894;
+            background: linear-gradient(135deg, #f0fff4 0%, #e6fffa 100%);
+        }
+        .week8-card {
+            border-top-color: #6c5ce7;
+            background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+        }
+        .week-number {
+            background: #2d3436;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            margin: 0 auto 15px auto;
+        }
+        .week5-card .week-number { background: #e17055; }
+        .week7-card .week-number { background: #00b894; }
+        .week8-card .week-number { background: #6c5ce7; }
+        .week-title {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+            color: #2d3436;
+        }
+        .week-tech {
+            font-size: 16px;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #636e72;
+            font-weight: 500;
+        }
+        .tech-features {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+        .tech-features li {
+            background: rgba(255,255,255,0.7);
+            margin: 8px 0;
+            padding: 10px;
+            border-radius: 6px;
+            color: #2d3436;
+            font-size: 14px;
+            border-left: 3px solid;
+        }
+        .week5-card .tech-features li { border-left-color: #e17055; }
+        .week7-card .tech-features li { border-left-color: #00b894; }
+        .week8-card .tech-features li { border-left-color: #6c5ce7; }
+        .code-sample {
+            background: #2d3436;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin-top: 15px;
+            line-height: 1.4;
+        }
+        .keyword { color: #ffd93d; font-weight: bold; }
+        .string { color: #6c5ce7; }
+        .number { color: #e17055; }
+        .comment { color: #74b9ff; font-style: italic; }
+        .crud-comparison {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        .comparison-title {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 25px;
+            color: #2d3436;
+        }
+        .crud-operations {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        .crud-operation {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .operation-title {
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+            color: #2d3436;
+        }
+        .operation-examples {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .example-item {
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+        }
+        .week5-example {
+            background: #ffe8e1;
+            color: #e17055;
+            border: 1px solid #e17055;
+        }
+        .week7-example {
+            background: #e6fffa;
+            color: #00b894;
+            border: 1px solid #00b894;
+        }
+        .week8-example {
+            background: #ede9fe;
+            color: #6c5ce7;
+            border: 1px solid #6c5ce7;
+        }
+        .progression-arrows {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            height: 100px;
+            pointer-events: none;
+        }
+        .arrow {
+            position: absolute;
+            font-size: 48px;
+            color: #667eea;
+            font-weight: bold;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .arrow1 {
+            left: 28%;
+        }
+        .arrow2 {
+            right: 28%;
+        }
+        .learning-path {
+            background: linear-gradient(135deg, #00cec9 0%, #00b894 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        .path-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .path-steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .path-step {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .step-phase {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .step-focus {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .benefits-section {
+            background: #e8f4f8;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+            border-left: 5px solid #00b894;
+        }
+        .benefits-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2d3436;
+        }
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        .benefit-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #00b894;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .benefit-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #2d3436;
+        }
+        .benefit-desc {
+            font-size: 13px;
+            color: #636e72;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Week 5→Week 7→Week 8 技術連携マップ</h1>
+            <div class="header-subtitle">Java思考 → SQL思考 → フレームワーク思考への段階的発展</div>
+        </div>
+        
+        <div class="content">
+            <div class="evolution-overview">
+                <div class="evolution-title">同じ「学生管理システム」の3段階進化</div>
+                <div class="evolution-subtitle">
+                    配列操作 → データベース操作 → Webフレームワーク統合
+                </div>
+            </div>
+            
+            <div class="weeks-timeline">
+                <div class="progression-arrows">
+                    <div class="arrow arrow1">→</div>
+                    <div class="arrow arrow2">→</div>
+                </div>
+                
+                <div class="week-card week5-card">
+                    <div class="week-number">5</div>
+                    <div class="week-title">Java配列操作</div>
+                    <div class="week-tech">ArrayList + オブジェクト指向</div>
+                    
+                    <ul class="tech-features">
+                        <li>ArrayListによる動的管理</li>
+                        <li>Studentクラス設計</li>
+                        <li>継承・ポリモーフィズム</li>
+                        <li>例外処理・Lombok</li>
+                        <li>メモリ上でのCRUD操作</li>
+                    </ul>
+                    
+                    <div class="code-sample">
+                        <span class="comment">// メモリ上でのデータ管理</span><br>
+                        ArrayList&lt;Student&gt; students = <br>
+                        &nbsp;&nbsp;new ArrayList&lt;&gt;();<br><br>
+                        <span class="comment">// 追加</span><br>
+                        students.add(newStudent);<br>
+                        <span class="comment">// 更新</span><br>
+                        student.setAge(<span class="number">21</span>);<br>
+                        <span class="comment">// 削除</span><br>
+                        students.remove(index);
+                    </div>
+                </div>
+                
+                <div class="week-card week7-card">
+                    <div class="week-number">7</div>
+                    <div class="week-title">SQL操作</div>
+                    <div class="week-tech">MySQL + phpMyAdmin</div>
+                    
+                    <ul class="tech-features">
+                        <li>データベース設計・正規化</li>
+                        <li>SQL基本文（CRUD操作）</li>
+                        <li>トランザクション処理</li>
+                        <li>高度な検索・集計</li>
+                        <li>永続化によるデータ保護</li>
+                    </ul>
+                    
+                    <div class="code-sample">
+                        <span class="comment">-- データベースでの永続化</span><br>
+                        <span class="keyword">CREATE TABLE</span> student (...); <br><br>
+                        <span class="comment">-- 追加</span><br>
+                        <span class="keyword">INSERT INTO</span> student <span class="keyword">VALUES</span>...; <br>
+                        <span class="comment">-- 更新</span><br>
+                        <span class="keyword">UPDATE</span> student <span class="keyword">SET</span> age = <span class="number">21</span>; <br>
+                        <span class="comment">-- 削除</span><br>
+                        <span class="keyword">DELETE FROM</span> student...;
+                    </div>
+                </div>
+                
+                <div class="week-card week8-card">
+                    <div class="week-number">8</div>
+                    <div class="week-title">Spring Boot統合</div>
+                    <div class="week-tech">フレームワーク + MyBatis</div>
+                    
+                    <ul class="tech-features">
+                        <li>MVCアーキテクチャ</li>
+                        <li>@Mapperアノテーション</li>
+                        <li>Thymeleafテンプレート</li>
+                        <li>Bean Validation</li>
+                        <li>Webアプリケーション完成</li>
+                    </ul>
+                    
+                    <div class="code-sample">
+                        <span class="comment">// フレームワーク統合</span><br>
+                        <span class="keyword">@Mapper</span> <br>
+                        <span class="keyword">public interface</span> StudentMapper { <br><br>
+                        &nbsp;&nbsp;<span class="keyword">@Insert</span>(<span class="string">"INSERT INTO..."</span>) <br>
+                        &nbsp;&nbsp;<span class="keyword">void</span> insertStudent(Student s); <br><br>
+                        &nbsp;&nbsp;<span class="keyword">@Update</span>(<span class="string">"UPDATE..."</span>) <br>
+                        &nbsp;&nbsp;<span class="keyword">void</span> updateStudent(Student s); <br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="crud-comparison">
+                <div class="comparison-title">🔄 CRUD操作の3段階進化</div>
+                <div class="crud-operations">
+                    <div class="crud-operation">
+                        <div class="operation-title">CREATE (追加)</div>
+                        <div class="operation-examples">
+                            <div class="example-item week5-example">list.add(student)</div>
+                            <div class="example-item week7-example">INSERT INTO student</div>
+                            <div class="example-item week8-example">@Insert mapper</div>
+                        </div>
+                    </div>
+                    
+                    <div class="crud-operation">
+                        <div class="operation-title">READ (読取)</div>
+                        <div class="operation-examples">
+                            <div class="example-item week5-example">list.get(index)</div>
+                            <div class="example-item week7-example">SELECT * FROM</div>
+                            <div class="example-item week8-example">@Select mapper</div>
+                        </div>
+                    </div>
+                    
+                    <div class="crud-operation">
+                        <div class="operation-title">UPDATE (更新)</div>
+                        <div class="operation-examples">
+                            <div class="example-item week5-example">student.setAge()</div>
+                            <div class="example-item week7-example">UPDATE SET WHERE</div>
+                            <div class="example-item week8-example">@Update mapper</div>
+                        </div>
+                    </div>
+                    
+                    <div class="crud-operation">
+                        <div class="operation-title">DELETE (削除)</div>
+                        <div class="operation-examples">
+                            <div class="example-item week5-example">list.remove()</div>
+                            <div class="example-item week7-example">DELETE FROM WHERE</div>
+                            <div class="example-item week8-example">@Delete mapper</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="learning-path">
+                <div class="path-title">📈 段階的学習アプローチの効果</div>
+                <div class="path-steps">
+                    <div class="path-step">
+                        <div class="step-phase">第1段階：Java思考</div>
+                        <div class="step-focus">
+                            オブジェクト指向の基礎固め<br>
+                            データ操作の基本概念理解<br>
+                            プログラミング思考の確立
+                        </div>
+                    </div>
+                    
+                    <div class="path-step">
+                        <div class="step-phase">第2段階：SQL思考</div>
+                        <div class="step-focus">
+                            データベース設計思考<br>
+                            永続化の重要性理解<br>
+                            データ整合性の概念習得
+                        </div>
+                    </div>
+                    
+                    <div class="path-step">
+                        <div class="step-phase">第3段階：統合思考</div>
+                        <div class="step-focus">
+                            フレームワーク活用<br>
+                            実用システム開発<br>
+                            エンタープライズ対応
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="benefits-section">
+                <div class="benefits-title">✨ 段階的連携学習の強力なメリット</div>
+                <div class="benefits-grid">
+                    <div class="benefit-item">
+                        <div class="benefit-title">🧠 理解の深化</div>
+                        <div class="benefit-desc">同じ概念を異なる技術で実装することで、本質的理解が深まる</div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-title">🔗 技術の繋がり実感</div>
+                        <div class="benefit-desc">各技術がどのように連携するかを実践的に体験できる</div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-title">💪 応用力の向上</div>
+                        <div class="benefit-desc">基礎から応用まで一貫した学習で実務対応力が身につく</div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-title">🚀 自信の構築</div>
+                        <div class="benefit-desc">段階的成功体験により確実なスキルアップを実感</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPDATE文の安全性：WHERE句の重要性</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+        }
+        .header::before {
+            content: "⚠️";
+            font-size: 48px;
+            position: absolute;
+            top: 15px;
+            left: 30px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+            margin-left: 60px;
+        }
+        .content {
+            padding: 30px;
+        }
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        .danger-box, .safe-box {
+            padding: 25px;
+            border-radius: 12px;
+            position: relative;
+            min-height: 250px;
+        }
+        .danger-box {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            border: 3px solid #c0392b;
+        }
+        .safe-box {
+            background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+            color: white;
+            border: 3px solid #27ae60;
+        }
+        .box-header {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .code-block {
+            background: rgba(0,0,0,0.2);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .keyword {
+            color: #ffd93d;
+            font-weight: bold;
+        }
+        .string {
+            color: #6c5ce7;
+        }
+        .number {
+            color: #e17055;
+        }
+        .comment {
+            color: #74b9ff;
+            font-style: italic;
+        }
+        .result-box {
+            background: rgba(255,255,255,0.1);
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+        .impact-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 20px;
+            border-left: 5px solid #e74c3c;
+        }
+        .impact-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2d3436;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .impact-list {
+            list-style: none;
+            padding: 0;
+        }
+        .impact-list li {
+            background: white;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #e74c3c;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .best-practices {
+            background: #e8f5e8;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 20px;
+            border-left: 5px solid #27ae60;
+        }
+        .practices-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2d3436;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .practices-list {
+            list-style: none;
+            padding: 0;
+        }
+        .practices-list li {
+            background: white;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #27ae60;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .step-number {
+            background: #3742fa;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>UPDATE文の安全性：WHERE句の重要性</h1>
+        </div>
+        
+        <div class="content">
+            <div class="comparison">
+                <div class="danger-box">
+                    <div class="box-header">
+                        ❌ 危険な操作：WHERE句なし
+                    </div>
+                    <div class="code-block">
+                        <span class="comment">-- 全学生の年齢が25歳に変更される！</span><br>
+                        <span class="keyword">UPDATE</span> student <br>
+                        <span class="keyword">SET</span> age = <span class="number">25</span>;
+                    </div>
+                    <div class="result-box">
+                        <strong>影響範囲：</strong>全レコード (8件すべて)<br>
+                        <strong>結果：</strong>すべての学生が25歳に！<br>
+                        <strong>復旧：</strong>不可能（元データ失われる）
+                    </div>
+                </div>
+                
+                <div class="safe-box">
+                    <div class="box-header">
+                        ✅ 安全な操作：WHERE句あり
+                    </div>
+                    <div class="code-block">
+                        <span class="comment">-- 田中太郎のみ年齢変更</span><br>
+                        <span class="keyword">UPDATE</span> student <br>
+                        <span class="keyword">SET</span> age = <span class="number">25</span> <br>
+                        <span class="keyword">WHERE</span> student_id = <span class="string">'S001'</span>;
+                    </div>
+                    <div class="result-box">
+                        <strong>影響範囲：</strong>1レコードのみ<br>
+                        <strong>結果：</strong>田中太郎のみ25歳に変更<br>
+                        <strong>復旧：</strong>特定レコードなので対応可能
+                    </div>
+                </div>
+            </div>
+            
+            <div class="impact-section">
+                <div class="impact-title">
+                    💀 WHERE句なし操作の深刻な影響
+                </div>
+                <ul class="impact-list">
+                    <li><strong>データ損失リスク：</strong>元の年齢データが完全に失われ、復旧不可能</li>
+                    <li><strong>業務への影響：</strong>学生管理システム全体が使用不能になる</li>
+                    <li><strong>信頼性の失墜：</strong>データの整合性が崩れ、システムへの信頼が失われる</li>
+                    <li><strong>経済的損失：</strong>データ復旧作業、業務停止による損失が発生</li>
+                </ul>
+            </div>
+            
+            <div class="best-practices">
+                <div class="practices-title">
+                    ✅ UPDATE文の安全な実行手順
+                </div>
+                <ul class="practices-list">
+                    <li><span class="step-number">1</span><strong>事前確認：</strong>SELECT文で更新対象レコードを確認</li>
+                    <li><span class="step-number">2</span><strong>WHERE句必須：</strong>必ず条件を指定して対象を限定</li>
+                    <li><span class="step-number">3</span><strong>トランザクション：</strong>BEGIN～COMMITで安全性を確保</li>
+                    <li><span class="step-number">4</span><strong>事後確認：</strong>更新後にSELECTで結果を検証</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

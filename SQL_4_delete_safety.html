@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DELETE文の危険性と安全な操作手順</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #ff7675 0%, #d63031 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #d63031 0%, #a4161a 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+        }
+        .header::before {
+            content: "🚨";
+            font-size: 48px;
+            position: absolute;
+            top: 15px;
+            left: 30px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+            margin-left: 60px;
+        }
+        .content {
+            padding: 30px;
+        }
+        .warning-section {
+            background: linear-gradient(135deg, #ff4757 0%, #ff3838 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+        }
+        .warning-section::before {
+            content: "💀";
+            font-size: 36px;
+            position: absolute;
+            top: 20px;
+            left: 25px;
+        }
+        .warning-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            margin-left: 50px;
+        }
+        .dangerous-code {
+            background: rgba(0,0,0,0.2);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            text-align: left;
+        }
+        .keyword {
+            color: #ffd93d;
+            font-weight: bold;
+        }
+        .safe-process {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .step-card {
+            background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            position: relative;
+            min-height: 200px;
+        }
+        .step-number {
+            background: #2d3436;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            margin: 0 auto 15px auto;
+        }
+        .step-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .step-code {
+            background: rgba(0,0,0,0.2);
+            padding: 10px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin: 10px 0;
+            text-align: left;
+        }
+        .comparison-table {
+            background: #f8f9fa;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 30px 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .table-header {
+            background: #2d3436;
+            color: white;
+            padding: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .table-content {
+            padding: 20px;
+        }
+        .comparison-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .danger-item, .safe-item {
+            padding: 15px;
+            border-radius: 8px;
+            min-height: 60px;
+        }
+        .danger-item {
+            background: linear-gradient(135deg, #ff7675 0%, #d63031 100%);
+            color: white;
+            border-left: 5px solid #a4161a;
+        }
+        .safe-item {
+            background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+            color: white;
+            border-left: 5px solid #27ae60;
+        }
+        .item-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .real-world-impact {
+            background: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+        .impact-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .impact-examples {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .impact-case {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .case-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>DELETE文の危険性と安全な操作手順</h1>
+        </div>
+        
+        <div class="content">
+            <div class="warning-section">
+                <div class="warning-title">超危険：WHERE句なしのDELETE文</div>
+                <div class="dangerous-code">
+                    <span class="keyword">DELETE FROM</span> student;
+                </div>
+                <p style="font-size: 18px; margin: 15px 0;">
+                    <strong>この1行で全データが完全に消去されます！</strong><br>
+                    復旧不可能・システム停止・企業存続の危機
+                </p>
+            </div>
+            
+            <div class="safe-process">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-title">事前確認</div>
+                    <p>削除対象を必ず確認</p>
+                    <div class="step-code">
+                        <span class="keyword">SELECT</span> * <br>
+                        <span class="keyword">FROM</span> student <br>
+                        <span class="keyword">WHERE</span> age &lt; 18;
+                    </div>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-title">件数確認</div>
+                    <p>削除される件数を確認</p>
+                    <div class="step-code">
+                        <span class="keyword">SELECT COUNT</span>(*) <br>
+                        <span class="keyword">FROM</span> student <br>
+                        <span class="keyword">WHERE</span> age &lt; 18;
+                    </div>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-title">安全な削除実行</div>
+                    <p>WHERE句付きで実行</p>
+                    <div class="step-code">
+                        <span class="keyword">DELETE FROM</span> student <br>
+                        <span class="keyword">WHERE</span> age &lt; 18;
+                    </div>
+                </div>
+            </div>
+            
+            <div class="comparison-table">
+                <div class="table-header">
+                    ❌ 危険な操作 vs ✅ 安全な操作
+                </div>
+                <div class="table-content">
+                    <div class="comparison-row">
+                        <div class="danger-item">
+                            <div class="item-title">❌ WHERE句なし</div>
+                            全レコード削除・データ完全消失
+                        </div>
+                        <div class="safe-item">
+                            <div class="item-title">✅ WHERE句あり</div>
+                            条件に合致するレコードのみ削除
+                        </div>
+                    </div>
+                    
+                    <div class="comparison-row">
+                        <div class="danger-item">
+                            <div class="item-title">❌ 事前確認なし</div>
+                            何が削除されるか不明・予期しない削除
+                        </div>
+                        <div class="safe-item">
+                            <div class="item-title">✅ SELECT で事前確認</div>
+                            削除対象を事前に把握・安心して実行
+                        </div>
+                    </div>
+                    
+                    <div class="comparison-row">
+                        <div class="danger-item">
+                            <div class="item-title">❌ トランザクションなし</div>
+                            即座に削除確定・取り消し不可
+                        </div>
+                        <div class="safe-item">
+                            <div class="item-title">✅ BEGIN～COMMIT</div>
+                            問題があればROLLBACKで取り消し可能
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="real-world-impact">
+                <div class="impact-title">🏢 実際の企業で発生した DELETE 事故例</div>
+                <div class="impact-examples">
+                    <div class="impact-case">
+                        <div class="case-title">🔥 ECサイト事故例</div>
+                        <p>顧客データ全削除で3日間サービス停止。売上損失2億円、復旧作業に1ヶ月。顧客の信頼失墜で売上30%減少。</p>
+                    </div>
+                    <div class="impact-case">
+                        <div class="case-title">🔥 銀行システム事故例</div>
+                        <p>取引履歴の一部削除で監査対応不可。金融庁からの業務改善命令。システム再構築で50億円の損失。</p>
+                    </div>
+                </div>
+                <p style="text-align: center; margin-top: 20px; font-size: 18px; font-weight: bold;">
+                    たった1行のSQLが企業の存続を脅かす！
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

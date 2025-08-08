@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 7学習進捗マップ</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+        }
+        .header::before {
+            content: "📊";
+            font-size: 48px;
+            position: absolute;
+            top: 15px;
+            left: 30px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+            margin-left: 60px;
+        }
+        .header-subtitle {
+            margin-top: 10px;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 30px;
+        }
+        .progress-overview {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .current-level {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .level-description {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        .lessons-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin: 30px 0;
+        }
+        .lesson-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #2d3436;
+            text-align: center;
+        }
+        .lesson-item {
+            background: white;
+            margin: 12px 0;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 5px solid;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .lesson-completed {
+            border-left-color: #00b894;
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        }
+        .lesson-current {
+            border-left-color: #e17055;
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            animation: pulse 2s infinite;
+        }
+        .lesson-upcoming {
+            border-left-color: #74b9ff;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+            50% { box-shadow: 0 4px 15px rgba(225, 112, 85, 0.3); }
+            100% { box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        }
+        .lesson-number {
+            background: #2d3436;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            font-size: 14px;
+        }
+        .lesson-completed .lesson-number {
+            background: #00b894;
+        }
+        .lesson-current .lesson-number {
+            background: #e17055;
+        }
+        .lesson-upcoming .lesson-number {
+            background: #74b9ff;
+        }
+        .lesson-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #2d3436;
+            margin-left: 25px;
+        }
+        .lesson-subtitle {
+            font-size: 13px;
+            color: #636e72;
+            margin-left: 25px;
+            line-height: 1.4;
+        }
+        .lesson-status {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+        }
+        .status-complete::before { content: "✅"; }
+        .status-current::before { content: "🔥"; }
+        .status-upcoming::before { content: "📋"; }
+        .skills-acquired {
+            background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        .skills-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        .skill-item {
+            background: rgba(255,255,255,0.1);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 14px;
+        }
+        .current-focus {
+            background: linear-gradient(135deg, #e17055 0%, #d63031 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        .focus-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .focus-objectives {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .objective-item {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+        .next-steps {
+            background: #e8f4f8;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+            border-left: 5px solid #00b894;
+        }
+        .next-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2d3436;
+        }
+        .next-lessons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .next-lesson {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #74b9ff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .next-lesson-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #2d3436;
+        }
+        .next-lesson-desc {
+            font-size: 13px;
+            color: #636e72;
+        }
+        .progress-bar {
+            background: #ddd;
+            border-radius: 10px;
+            height: 20px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+            height: 100%;
+            width: 40%;
+            border-radius: 10px;
+            position: relative;
+        }
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Week 7 学習進捗マップ</h1>
+            <div class="header-subtitle">SQL・データベース設計（10レッスン構成）</div>
+        </div>
+        
+        <div class="content">
+            <div class="progress-overview">
+                <div class="current-level">
+                    高度なデータ抽出技術をマスターした実践的SQLエンジニア
+                </div>
+                <div class="level-description">
+                    レッスン7.3完了時点での到達レベル
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill">
+                        <div class="progress-text">4/10 レッスン完了</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="lessons-grid">
+                <div class="lesson-section">
+                    <div class="section-title">📚 基礎理解（完了済み）</div>
+                    
+                    <div class="lesson-item lesson-completed">
+                        <div class="lesson-number">7.1</div>
+                        <div class="lesson-status status-complete"></div>
+                        <div class="lesson-title">なぜデータベースが必要なのか</div>
+                        <div class="lesson-subtitle">ファイル管理の限界、データベースの価値、企業での重要性を理解</div>
+                    </div>
+                    
+                    <div class="lesson-item lesson-completed">
+                        <div class="lesson-number">7.2</div>
+                        <div class="lesson-status status-complete"></div>
+                        <div class="lesson-title">MySQLとSQL基本概念</div>
+                        <div class="lesson-subtitle">MySQL環境構築、phpMyAdmin活用、SQLの基本文法を習得</div>
+                    </div>
+                    
+                    <div class="lesson-item lesson-completed">
+                        <div class="lesson-number">7.3</div>
+                        <div class="lesson-status status-complete"></div>
+                        <div class="lesson-title">データ取得の基本</div>
+                        <div class="lesson-subtitle">SELECT、WHERE、ORDER BY、LIMIT による高度なデータ抽出技術</div>
+                    </div>
+                </div>
+                
+                <div class="lesson-section">
+                    <div class="section-title">🔧 実践操作（進行中）</div>
+                    
+                    <div class="lesson-item lesson-current">
+                        <div class="lesson-number">7.4</div>
+                        <div class="lesson-status status-current"></div>
+                        <div class="lesson-title">データ操作の実践</div>
+                        <div class="lesson-subtitle">INSERT・UPDATE・DELETEによるデータ管理、トランザクション</div>
+                    </div>
+                    
+                    <div class="lesson-item lesson-upcoming">
+                        <div class="lesson-number">7.5</div>
+                        <div class="lesson-status status-upcoming"></div>
+                        <div class="lesson-title">Week 5システムのDB化</div>
+                        <div class="lesson-subtitle">Java配列データをMySQLテーブルに移行、CRUD操作の実装</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="skills-acquired">
+                <div class="skills-title">✅ 7.1-7.3で習得済みスキル</div>
+                <div class="skills-grid">
+                    <div class="skill-item">データベース必要性理解</div>
+                    <div class="skill-item">MySQL環境構築</div>
+                    <div class="skill-item">phpMyAdmin操作</div>
+                    <div class="skill-item">CREATE TABLE文</div>
+                    <div class="skill-item">基本INSERT文</div>
+                    <div class="skill-item">高度なSELECT文</div>
+                    <div class="skill-item">WHERE句条件指定</div>
+                    <div class="skill-item">比較・論理演算子</div>
+                    <div class="skill-item">LIKE演算子</div>
+                    <div class="skill-item">ORDER BY並び替え</div>
+                    <div class="skill-item">LIMIT制限処理</div>
+                    <div class="skill-item">複合条件検索</div>
+                </div>
+            </div>
+            
+            <div class="current-focus">
+                <div class="focus-title">🔥 レッスン7.4：現在の学習目標</div>
+                <p>CRUD操作を完全にマスターしたデータベース管理エキスパートを目指す</p>
+                <div class="focus-objectives">
+                    <div class="objective-item">
+                        <strong>INSERT応用</strong><br>
+                        複数データ一括挿入
+                    </div>
+                    <div class="objective-item">
+                        <strong>UPDATE実践</strong><br>
+                        安全な条件指定更新
+                    </div>
+                    <div class="objective-item">
+                        <strong>DELETE安全活用</strong><br>
+                        危険性理解と回避
+                    </div>
+                    <div class="objective-item">
+                        <strong>トランザクション</strong><br>
+                        データ整合性確保
+                    </div>
+                </div>
+            </div>
+            
+            <div class="next-steps">
+                <div class="next-title">🎯 レッスン7.4完了後の展開</div>
+                <div class="next-lessons">
+                    <div class="next-lesson">
+                        <div class="next-lesson-title">7.5 Week 5システムDB化</div>
+                        <div class="next-lesson-desc">Java配列→SQLテーブル移行の実践体験</div>
+                    </div>
+                    <div class="next-lesson">
+                        <div class="next-lesson-title">7.6-7.7 高度SQL操作</div>
+                        <div class="next-lesson-desc">結合・サブクエリ・集約関数の習得</div>
+                    </div>
+                    <div class="next-lesson">
+                        <div class="next-lesson-title">7.8-7.9 DB設計基礎</div>
+                        <div class="next-lesson-desc">正規化・ER図・テーブル設計の理解</div>
+                    </div>
+                    <div class="next-lesson">
+                        <div class="next-lesson-title">Week 8 Spring Boot連携</div>
+                        <div class="next-lesson-desc">MyBatis統合による実用システム開発</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
