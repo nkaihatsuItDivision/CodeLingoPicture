@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INNER JOINとLEFT JOINの違い図解</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 26px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #74b9ff;
+        }
+        .comparison-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            gap: 20px;
+        }
+        .join-section {
+            flex: 1;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            border: 2px solid #e9ecef;
+        }
+        .inner-join {
+            border-color: #e74c3c;
+            background: linear-gradient(145deg, #ffeaea, #ffffff);
+        }
+        .left-join {
+            border-color: #27ae60;
+            background: linear-gradient(145deg, #eafaf1, #ffffff);
+        }
+        .join-title {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .inner-join .join-title {
+            background: #e74c3c;
+            color: white;
+        }
+        .left-join .join-title {
+            background: #27ae60;
+            color: white;
+        }
+        .venn-diagram {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+            height: 150px;
+            position: relative;
+        }
+        .circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            position: absolute;
+            opacity: 0.7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 12px;
+        }
+        .circle-left {
+            left: 20px;
+            background: #3498db;
+        }
+        .circle-right {
+            right: 20px;
+            background: #f39c12;
+        }
+        .intersection {
+            background: #9b59b6;
+            width: 60px;
+            height: 60px;
+            z-index: 10;
+        }
+        .concept-box {
+            background: #ecf0f1;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid;
+        }
+        .inner-join .concept-box {
+            border-color: #e74c3c;
+        }
+        .left-join .concept-box {
+            border-color: #27ae60;
+        }
+        .sql-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin: 15px 0;
+            border-left: 4px solid;
+        }
+        .inner-join .sql-example {
+            border-color: #e74c3c;
+        }
+        .left-join .sql-example {
+            border-color: #27ae60;
+        }
+        .result-section {
+            margin-top: 40px;
+        }
+        .result-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+            background: #ecf0f1;
+            padding: 12px;
+            border-radius: 8px;
+        }
+        .results-comparison {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .result-box {
+            flex: 1;
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid;
+        }
+        .inner-result {
+            border-color: #e74c3c;
+            background: #ffeaea;
+        }
+        .left-result {
+            border-color: #27ae60;
+            background: #eafaf1;
+        }
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+        .result-table th, .result-table td {
+            border: 1px solid #bdc3c7;
+            padding: 6px;
+            text-align: center;
+        }
+        .result-table th {
+            color: white;
+            font-size: 11px;
+        }
+        .inner-result .result-table th {
+            background: #e74c3c;
+        }
+        .left-result .result-table th {
+            background: #27ae60;
+        }
+        .null-cell {
+            background: #f8d7da;
+            font-style: italic;
+            color: #721c24;
+        }
+        .usage-section {
+            margin-top: 30px;
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .usage-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .usage-comparison {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .usage-box {
+            flex: 1;
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            border: 2px solid;
+        }
+        .inner-usage {
+            border-color: #e74c3c;
+        }
+        .left-usage {
+            border-color: #27ae60;
+        }
+        .use-case {
+            margin: 10px 0;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border-left: 3px solid;
+        }
+        .inner-usage .use-case {
+            border-color: #e74c3c;
+        }
+        .left-usage .use-case {
+            border-color: #27ae60;
+        }
+        .highlight-point {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">INNER JOIN vs LEFT JOIN：結合方式の違いと使い分け</div>
+
+        <div class="comparison-container">
+            <!-- INNER JOIN Section -->
+            <div class="join-section inner-join">
+                <div class="join-title">INNER JOIN（内部結合）</div>
+                
+                <div class="venn-diagram">
+                    <div class="circle circle-left">student<br>テーブル</div>
+                    <div class="circle circle-right">score<br>テーブル</div>
+                    <div class="circle intersection">両方に<br>存在</div>
+                </div>
+
+                <div class="concept-box">
+                    <strong>基本概念：</strong><br>
+                    両方のテーブルに<strong>対応するデータが存在</strong>する行のみを取得
+                </div>
+
+                <div class="sql-example">
+                    SELECT s.name, sc.score <br>
+                    FROM student s <br>
+                    INNER JOIN score sc <br>
+                    &nbsp;&nbsp;ON s.student_id = sc.student_id;
+                </div>
+
+                <div class="concept-box">
+                    <strong>特徴：</strong><br>
+                    • 成績データがない学生は表示されない<br>
+                    • 学生データがない成績は表示されない<br>
+                    • <strong>確実にデータがある情報のみ</strong>取得
+                </div>
+            </div>
+
+            <!-- LEFT JOIN Section -->
+            <div class="join-section left-join">
+                <div class="join-title">LEFT JOIN（左外部結合）</div>
+                
+                <div class="venn-diagram">
+                    <div class="circle circle-left">student<br>テーブル</div>
+                    <div class="circle circle-right">score<br>テーブル</div>
+                    <div class="circle intersection" style="left: 10px; width: 120px;">左側テーブル<br>すべて + 右側</div>
+                </div>
+
+                <div class="concept-box">
+                    <strong>基本概念：</strong><br>
+                    左側テーブル（FROM句）の<strong>すべての行</strong>を取得し、右側テーブルから対応データがあれば結合
+                </div>
+
+                <div class="sql-example">
+                    SELECT s.name, sc.score <br>
+                    FROM student s <br>
+                    LEFT JOIN score sc <br>
+                    &nbsp;&nbsp;ON s.student_id = sc.student_id;
+                </div>
+
+                <div class="concept-box">
+                    <strong>特徴：</strong><br>
+                    • 成績データがない学生も表示される<br>
+                    • 対応データがない場合は<strong>NULL</strong>で表示<br>
+                    • <strong>全体的な状況</strong>を把握可能
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Comparison -->
+        <div class="result-section">
+            <div class="result-title">📊 実際のデータでの結果比較</div>
+            
+            <div class="results-comparison">
+                <div class="result-box inner-result">
+                    <strong>INNER JOIN結果</strong>
+                    <div style="font-size: 12px; color: #e74c3c; margin: 5px 0;">
+                        ※ 成績があるデータのみ表示
+                    </div>
+                    <table class="result-table">
+                        <tr>
+                            <th>name</th>
+                            <th>score</th>
+                        </tr>
+                        <tr>
+                            <td>田中太郎</td>
+                            <td>88</td>
+                        </tr>
+                        <tr>
+                            <td>佐藤花子</td>
+                            <td>95</td>
+                        </tr>
+                        <tr>
+                            <td>山田次郎</td>
+                            <td>94</td>
+                        </tr>
+                        <tr>
+                            <td>高橋健太</td>
+                            <td>86</td>
+                        </tr>
+                        <tr>
+                            <td>中村優子</td>
+                            <td>96</td>
+                        </tr>
+                    </table>
+                    <div style="font-size: 11px; color: #666; margin-top: 8px;">
+                        結果：5件（成績がある学生のみ）
+                    </div>
+                </div>
+
+                <div class="result-box left-result">
+                    <strong>LEFT JOIN結果</strong>
+                    <div style="font-size: 12px; color: #27ae60; margin: 5px 0;">
+                        ※ 全学生を表示（成績なしはNULL）
+                    </div>
+                    <table class="result-table">
+                        <tr>
+                            <th>name</th>
+                            <th>score</th>
+                        </tr>
+                        <tr>
+                            <td>田中太郎</td>
+                            <td>88</td>
+                        </tr>
+                        <tr>
+                            <td>佐藤花子</td>
+                            <td>95</td>
+                        </tr>
+                        <tr>
+                            <td>山田次郎</td>
+                            <td>94</td>
+                        </tr>
+                        <tr>
+                            <td class="null-cell">鈴木美咲</td>
+                            <td class="null-cell">NULL</td>
+                        </tr>
+                        <tr>
+                            <td>高橋健太</td>
+                            <td>86</td>
+                        </tr>
+                        <tr>
+                            <td>中村優子</td>
+                            <td>96</td>
+                        </tr>
+                    </table>
+                    <div style="font-size: 11px; color: #666; margin-top: 8px;">
+                        結果：6件（全学生 + 成績状況）
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Usage Guidelines -->
+        <div class="usage-section">
+            <div class="usage-title">🎯 使い分けのガイドライン</div>
+            
+            <div class="usage-comparison">
+                <div class="usage-box inner-usage">
+                    <strong style="color: #e74c3c;">INNER JOINを使用する場面</strong>
+                    
+                    <div class="use-case">
+                        <strong>確実なデータ分析</strong><br>
+                        成績がある学生の平均点計算
+                    </div>
+                    
+                    <div class="use-case">
+                        <strong>業績レポート作成</strong><br>
+                        履修完了者の成績分布
+                    </div>
+                    
+                    <div class="use-case">
+                        <strong>データの整合性確認</strong><br>
+                        両方のテーブルに存在するデータのみ処理
+                    </div>
+                    
+                    <div class="use-case">
+                        <strong>高速処理が必要</strong><br>
+                        結果件数が少なく、処理が軽い
+                    </div>
+                </div>
+
+                <div class="usage-box left-usage">
+                    <strong style="color: #27ae60;">LEFT JOINを使用する場面</strong>
+                    
+                    <div class="use-case">
+                        <strong>全体状況の把握</strong><br>
+                        未履修者も含む学生一覧
+                    </div>
+                    
+                    <div class="use-case">
+                        <strong>欠席・未提出者の抽出</strong><br>
+                        成績がNULLの学生を特定
+                    </div>
+                    
+                    <div class="use-case">
+                        <strong>統計レポート作成</strong><br>
+                        学部別の履修率計算
+                    </div>
+                    
+                    <div class="use-case">
+                        <strong>データ補完処理</strong><br>
+                        NULL値に初期値を設定
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="highlight-point">
+            <strong>💡 重要ポイント</strong><br>
+            <strong>INNER JOIN</strong>：「確実にあるデータだけ欲しい」場合<br>
+            <strong>LEFT JOIN</strong>：「全体像を把握したい」場合<br>
+            <br>
+            Week 8のSpring Boot開発では、両方のJOINを場面に応じて使い分けます！
+        </div>
+    </div>
+</body>
+</html>

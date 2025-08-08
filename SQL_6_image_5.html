@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>企業レベルレポートの可視化</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background: linear-gradient(135deg, #ff7675 0%, #fd79a8 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1500px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #fd79a8;
+        }
+        .report-container {
+            margin-bottom: 40px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid #e9ecef;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .report-header {
+            background: linear-gradient(135deg, #ff7675, #fd79a8);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .report-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .report-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .sql-query-section {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 5px solid #ff7675;
+        }
+        .query-title {
+            color: #ff7675;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .sql-code {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 13px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .report-table th {
+            background: linear-gradient(135deg, #636e72, #2d3436);
+            color: white;
+            padding: 12px 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 11px;
+        }
+        .report-table td {
+            padding: 10px 8px;
+            text-align: center;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .report-table tr:hover {
+            background: #f8f9fa;
+        }
+        .excellent {
+            background: #d4edda !important;
+            color: #155724;
+            font-weight: bold;
+        }
+        .good {
+            background: #d1ecf1 !important;
+            color: #0c5460;
+            font-weight: bold;
+        }
+        .normal {
+            background: #fff3cd !important;
+            color: #856404;
+            font-weight: bold;
+        }
+        .needs-improvement {
+            background: #f8d7da !important;
+            color: #721c24;
+            font-weight: bold;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stats-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-top: 5px solid;
+        }
+        .stats-card-1 { border-color: #00b894; }
+        .stats-card-2 { border-color: #0984e3; }
+        .stats-card-3 { border-color: #fdcb6e; }
+        .stats-card-4 { border-color: #e17055; }
+        .stats-number {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .stats-card-1 .stats-number { color: #00b894; }
+        .stats-card-2 .stats-number { color: #0984e3; }
+        .stats-card-3 .stats-number { color: #fdcb6e; }
+        .stats-card-4 .stats-number { color: #e17055; }
+        .stats-label {
+            font-size: 14px;
+            color: #666;
+            font-weight: bold;
+        }
+        .chart-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid #e9ecef;
+        }
+        .chart-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 16px;
+        }
+        .bar-chart {
+            display: flex;
+            justify-content: space-around;
+            align-items: end;
+            height: 200px;
+            margin: 20px 0;
+            padding: 0 20px;
+        }
+        .bar {
+            width: 60px;
+            background: linear-gradient(to top, #ff7675, #fd79a8);
+            border-radius: 5px 5px 0 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: end;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            padding: 10px 5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .bar-label {
+            color: #333;
+            font-size: 11px;
+            margin-top: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .trend-analysis {
+            background: #e8f4fd;
+            border: 1px solid #bee5eb;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .trend-title {
+            font-weight: bold;
+            color: #0c5460;
+            margin-bottom: 15px;
+            font-size: 18px;
+            text-align: center;
+        }
+        .trend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .trend-box {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            border-left: 4px solid #0984e3;
+        }
+        .process-flow {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 2px solid #e9ecef;
+        }
+        .process-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .flow-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .flow-step {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            flex: 1;
+            margin: 5px;
+            min-width: 150px;
+            border-top: 4px solid #fd79a8;
+        }
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #fd79a8;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-weight: bold;
+        }
+        .step-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        .step-desc {
+            font-size: 12px;
+            color: #666;
+        }
+        .flow-arrow {
+            font-size: 20px;
+            color: #fd79a8;
+            font-weight: bold;
+            margin: 0 10px;
+        }
+        .business-value {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        .business-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #155724;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .value-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        .value-list li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+        .value-list li::before {
+            content: "💼";
+            position: absolute;
+            left: 0;
+            font-size: 16px;
+        }
+        .performance-gauge {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+        }
+        .gauge {
+            width: 100px;
+            height: 50px;
+            border: 8px solid #e9ecef;
+            border-bottom: 8px solid #00b894;
+            border-radius: 100px 100px 0 0;
+            position: relative;
+        }
+        .gauge::after {
+            content: '91.7';
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: bold;
+            color: #00b894;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">企業レベル分析レポート：JOIN・サブクエリ活用実例</div>
+
+        <!-- Report 1: 総合成績レポート -->
+        <div class="report-container">
+            <div class="report-header">
+                <div class="report-title">📊 学生別総合成績レポート</div>
+                <div class="report-subtitle">複数テーブル結合による詳細パフォーマンス分析</div>
+            </div>
+
+            <div class="sql-query-section">
+                <div class="query-title">🔧 使用したJOIN技術：</div>
+                <div class="sql-code">
+                    SELECT <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;s.student_id, s.name, s.department, <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;COUNT(sc.id) as subjects_taken, <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;ROUND(AVG(sc.score), 1) as avg_score, <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;MAX(sc.score) as highest_score, <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;MIN(sc.score) as lowest_score, <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;SUM(CASE WHEN sc.score >= 90 THEN 1 ELSE 0 END) as excellent_count, <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;CASE WHEN AVG(sc.score) >= 90 THEN '優秀' <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WHEN AVG(sc.score) >= 80 THEN '良好' <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ELSE '要改善' END as performance_level <br>
+                    FROM student s <br>
+                    LEFT JOIN score sc ON s.student_id = sc.student_id <br>
+                    GROUP BY s.student_id, s.name, s.department <br>
+                    ORDER BY avg_score DESC;
+                </div>
+            </div>
+
+            <table class="report-table">
+                <tr>
+                    <th>学生ID</th>
+                    <th>氏名</th>
+                    <th>学部</th>
+                    <th>履修科目数</th>
+                    <th>平均点</th>
+                    <th>最高点</th>
+                    <th>最低点</th>
+                    <th>優秀評価数</th>
+                    <th>パフォーマンス</th>
+                </tr>
+                <tr>
+                    <td>S008</td>
+                    <td>中村優子</td>
+                    <td>情報工学部</td>
+                    <td>3</td>
+                    <td class="excellent">91.7</td>
+                    <td>96</td>
+                    <td>88</td>
+                    <td>2</td>
+                    <td class="excellent">優秀</td>
+                </tr>
+                <tr>
+                    <td>S003</td>
+                    <td>山田次郎</td>
+                    <td>情報工学部</td>
+                    <td>2</td>
+                    <td class="excellent">91.0</td>
+                    <td>94</td>
+                    <td>88</td>
+                    <td>1</td>
+                    <td class="excellent">優秀</td>
+                </tr>
+                <tr>
+                    <td>S002</td>
+                    <td>佐藤花子</td>
+                    <td>経営学部</td>
+                    <td>3</td>
+                    <td class="good">89.0</td>
+                    <td>95</td>
+                    <td>82</td>
+                    <td>1</td>
+                    <td class="good">良好</td>
+                </tr>
+                <tr>
+                    <td>S001</td>
+                    <td>田中太郎</td>
+                    <td>情報工学部</td>
+                    <td>3</td>
+                    <td class="good">88.3</td>
+                    <td>92</td>
+                    <td>85</td>
+                    <td>0</td>
+                    <td class="good">良好</td>
+                </tr>
+                <tr>
+                    <td>S005</td>
+                    <td>高橋健太</td>
+                    <td>情報工学部</td>
+                    <td>3</td>
+                    <td class="good">86.7</td>
+                    <td>91</td>
+                    <td>80</td>
+                    <td>0</td>
+                    <td class="good">良好</td>
+                </tr>
+                <tr>
+                    <td>S007</td>
+                    <td>渡辺博之</td>
+                    <td>文学部</td>
+                    <td>1</td>
+                    <td class="normal">78.0</td>
+                    <td>78</td>
+                    <td>78</td>
+                    <td>0</td>
+                    <td class="normal">普通</td>
+                </tr>
+                <tr>
+                    <td>S004</td>
+                    <td>鈴木美咲</td>
+                    <td>文学部</td>
+                    <td>0</td>
+                    <td class="needs-improvement">-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>0</td>
+                    <td class="needs-improvement">要改善</td>
+                </tr>
+            </table>
+
+            <div class="stats-grid">
+                <div class="stats-card stats-card-1">
+                    <div class="stats-number">2</div>
+                    <div class="stats-label">優秀レベル<br>学生数</div>
+                </div>
+                <div class="stats-card stats-card-2">
+                    <div class="stats-number">4</div>
+                    <div class="stats-label">良好レベル<br>学生数</div>
+                </div>
+                <div class="stats-card stats-card-3">
+                    <div class="stats-number">1</div>
+                    <div class="stats-label">普通レベル<br>学生数</div>
+                </div>
+                <div class="stats-card stats-card-4">
+                    <div class="stats-number">1</div>
+                    <div class="stats-label">要改善<br>学生数</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Report 2: 科目別詳細分析 -->
+        <div class="report-container">
+            <div class="report-header">
+                <div class="report-title">📈 科目別詳細分析レポート</div>
+                <div class="report-subtitle">成績分布・合格率・統計分析</div>
+            </div>
+
+            <div class="sql-query-section">
+                <div class="query-title">🔧 使用したサブクエリ＆統計関数：</div>
+                <div class="sql-code">
+                    SELECT <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;sub.subject_name, sub.credits, <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;COUNT(sc.id) as students_enrolled, <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;ROUND(AVG(sc.score), 1) as avg_score, <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;MAX(sc.score) as max_score, MIN(sc.score) as min_score, <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;SUM(CASE WHEN sc.grade_letter = 'A' THEN 1 ELSE 0 END) as grade_a_count, <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;ROUND(AVG(CASE WHEN sc.score >= 60 THEN 1.0 ELSE 0.0 END) * 100, 1) as pass_rate <br>
+                    FROM subject sub <br>
+                    LEFT JOIN score sc ON sub.subject_code = sc.subject_code <br>
+                    GROUP BY sub.subject_code, sub.subject_name, sub.credits <br>
+                    ORDER BY avg_score DESC;
+                </div>
+            </div>
+
+            <table class="report-table">
+                <tr>
+                    <th>科目名</th>
+                    <th>単位数</th>
+                    <th>履修者数</th>
+                    <th>平均点</th>
+                    <th>最高点</th>
+                    <th>最低点</th>
+                    <th>A評価数</th>
+                    <th>合格率(%)</th>
+                </tr>
+                <tr>
+                    <td>プログラミング</td>
+                    <td>3</td>
+                    <td>8</td>
+                    <td class="excellent">89.1</td>
+                    <td>96</td>
+                    <td>78</td>
+                    <td>2</td>
+                    <td class="excellent">100.0</td>
+                </tr>
+                <tr>
+                    <td>ビジネス基礎</td>
+                    <td>2</td>
+                    <td>5</td>
+                    <td class="excellent">88.8</td>
+                    <td>95</td>
+                    <td>80</td>
+                    <td>2</td>
+                    <td class="excellent">100.0</td>
+                </tr>
+                <tr>
+                    <td>文学概論</td>
+                    <td>2</td>
+                    <td>6</td>
+                    <td class="good">86.8</td>
+                    <td>91</td>
+                    <td>78</td>
+                    <td>0</td>
+                    <td class="excellent">100.0</td>
+                </tr>
+            </table>
+
+            <div class="chart-container">
+                <div class="chart-title">科目別平均点比較</div>
+                <div class="bar-chart">
+                    <div>
+                        <div class="bar" style="height: 110px;">89.1</div>
+                        <div class="bar-label">プログラミング</div>
+                    </div>
+                    <div>
+                        <div class="bar" style="height: 105px;">88.8</div>
+                        <div class="bar-label">ビジネス基礎</div>
+                    </div>
+                    <div>
+                        <div class="bar" style="height: 95px;">86.8</div>
+                        <div class="bar-label">文学概論</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trend Analysis -->
+        <div class="trend-analysis">
+            <div class="trend-title">📊 学期別成績推移分析</div>
+            
+            <div class="sql-query-section">
+                <div class="query-title">🔧 使用したウィンドウ関数＆LAG：</div>
+                <div class="sql-code">
+                    SELECT s.name, sc.semester, <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;ROUND(AVG(sc.score), 1) as semester_avg, <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;LAG(ROUND(AVG(sc.score), 1), 1) OVER ( <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PARTITION BY s.student_id ORDER BY sc.semester <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;) as previous_avg, <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;ROUND(AVG(sc.score), 1) - LAG(ROUND(AVG(sc.score), 1), 1) OVER ( <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PARTITION BY s.student_id ORDER BY sc.semester <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;) as improvement <br>
+                    FROM student s INNER JOIN score sc ON s.student_id = sc.student_id <br>
+                    GROUP BY s.student_id, s.name, sc.semester;
+                </div>
+            </div>
+
+            <div class="trend-grid">
+                <div class="trend-box">
+                    <strong>佐藤花子さん</strong><br>
+                    2024前期: 88.5点 → 2024後期: 95.0点<br>
+                    <span style="color: #00b894; font-weight: bold;">改善度: +6.5点 ⬆️</span>
+                </div>
+                <div class="trend-box">
+                    <strong>山田次郎さん</strong><br>
+                    2024前期: 94.0点 → 2024後期: 88.0点<br>
+                    <span style="color: #e17055; font-weight: bold;">変化: -6.0点 ⬇️</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Process Flow -->
+        <div class="process-flow">
+            <div class="process-title">🔄 企業レベルレポート生成プロセス</div>
+            
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-title">データ結合</div>
+                    <div class="step-desc">LEFT JOIN で全学生データを取得</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-title">集約計算</div>
+                    <div class="step-desc">AVG, COUNT, MAX等で統計算出</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-title">条件分岐</div>
+                    <div class="step-desc">CASE文でパフォーマンス分類</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-title">可視化</div>
+                    <div class="step-desc">グラフ・表形式で結果表示</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Business Value -->
+        <div class="business-value">
+            <div class="business-title">💼 企業における活用価値</div>
+            
+            <ul class="value-list">
+                <li><strong>意思決定支援：</strong> データに基づく教育方針・人事判断</li>
+                <li><strong>パフォーマンス管理：</strong> 個人・部門・プロジェクトの評価</li>
+                <li><strong>リスク管理：</strong> 早期アラート・改善対象の特定</li>
+                <li><strong>戦略立案：</strong> 長期トレンド分析・リソース配分</li>
+                <li><strong>レポート自動化：</strong> 定期レポートの効率化</li>
+                <li><strong>顧客満足度向上：</strong> データ駆動型サービス改善</li>
+            </ul>
+
+            <div style="background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 8px; margin: 15px 0; font-family: 'Courier New', monospace; font-size: 12px;">
+                // Week 8 Spring Boot での活用例 <br>
+                @Service <br>
+                public class ReportService { <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;@Autowired <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;private StudentMapper studentMapper; <br><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;public List&lt;StudentPerformance&gt; generatePerformanceReport() { <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return studentMapper.findStudentPerformanceSummary(); <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;} <br>
+                }
+            </div>
+
+            <p style="text-align: center; font-weight: bold; color: #fd79a8; font-size: 16px;">
+                JOIN・サブクエリで企業レベルの分析力を身につけ、Week 8のSpring Boot開発で活用しましょう！
+            </p>
+        </div>
+    </div>
+</body>
+</html>
