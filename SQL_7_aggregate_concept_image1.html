@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>集約関数の基本概念図</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 30px;
+            max-width: 900px;
+            width: 100%;
+        }
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .data-section {
+            margin-bottom: 30px;
+        }
+        .section-title {
+            font-size: 18px;
+            color: #34495e;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        th {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #ecf0f1;
+            font-size: 13px;
+        }
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        tr:hover {
+            background-color: #e3f2fd;
+            transition: background-color 0.3s;
+        }
+        .function-box {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .function-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .function-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .function-name {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .function-result {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        .arrow {
+            text-align: center;
+            font-size: 24px;
+            color: #e74c3c;
+            margin: 15px 0;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        .highlight {
+            background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">🔢 集約関数の基本概念</div>
+        
+        <div class="data-section">
+            <div class="section-title">📊 元データ（studentテーブル）</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>student_id</th>
+                        <th>name</th>
+                        <th>age</th>
+                        <th>department</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>S001</td><td>田中太郎</td><td>20</td><td>情報工学部</td></tr>
+                    <tr><td>S002</td><td>佐藤花子</td><td>19</td><td>経済学部</td></tr>
+                    <tr><td>S003</td><td>鈴木次郎</td><td>21</td><td>情報工学部</td></tr>
+                    <tr><td>S004</td><td>高橋美咲</td><td>18</td><td>文学部</td></tr>
+                    <tr><td>S005</td><td>山田健一</td><td>22</td><td>理学部</td></tr>
+                    <tr><td>S006</td><td>渡辺麻衣</td><td>20</td><td>経済学部</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="arrow">⬇️ 集約関数で統計を計算</div>
+
+        <div class="highlight">
+            <strong>SQL:</strong> SELECT COUNT(*), MIN(age), MAX(age), AVG(age) FROM student;
+        </div>
+
+        <div class="function-box">
+            <div class="function-card">
+                <div class="function-name">COUNT(*)</div>
+                <div>全レコード数</div>
+                <div class="function-result">6名</div>
+            </div>
+            <div class="function-card">
+                <div class="function-name">MIN(age)</div>
+                <div>最小値</div>
+                <div class="function-result">18歳</div>
+            </div>
+            <div class="function-card">
+                <div class="function-name">MAX(age)</div>
+                <div>最大値</div>
+                <div class="function-result">22歳</div>
+            </div>
+            <div class="function-card">
+                <div class="function-name">AVG(age)</div>
+                <div>平均値</div>
+                <div class="function-result">20.0歳</div>
+            </div>
+        </div>
+
+        <div class="highlight" style="margin-top: 25px;">
+            <strong>🎯 ポイント：</strong>集約関数は複数行のデータを<strong>1つの値</strong>にまとめる関数です。<br>
+            6行のデータ → 4つの統計値として集約
+        </div>
+    </div>
+</body>
+</html>
