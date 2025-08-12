@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>改善された5テーブル構造とリレーション図</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #9c88ff;
+        }
+        
+        .er-diagram {
+            display: grid;
+            grid-template-areas: 
+                "departments . teachers"
+                ". grades ."
+                "students . subjects";
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: auto auto auto;
+            gap: 30px;
+            margin: 30px 0;
+            position: relative;
+            min-height: 600px;
+        }
+        
+        .table-card {
+            background: white;
+            border-radius: 15px;
+            border: 3px solid #ddd;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+        
+        .table-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+        }
+        
+        .departments-card { 
+            grid-area: departments; 
+            border-color: #e74c3c;
+        }
+        .students-card { 
+            grid-area: students; 
+            border-color: #3498db;
+        }
+        .subjects-card { 
+            grid-area: subjects; 
+            border-color: #27ae60;
+        }
+        .teachers-card { 
+            grid-area: teachers; 
+            border-color: #f39c12;
+        }
+        .grades-card { 
+            grid-area: grades; 
+            border-color: #9b59b6;
+        }
+        
+        .table-header {
+            padding: 15px;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .departments-header { background: #e74c3c; }
+        .students-header { background: #3498db; }
+        .subjects-header { background: #27ae60; }
+        .teachers-header { background: #f39c12; }
+        .grades-header { background: #9b59b6; }
+        
+        .table-icon {
+            font-size: 20px;
+            margin-right: 8px;
+        }
+        
+        .table-body {
+            padding: 0;
+        }
+        
+        .field-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .field-item {
+            padding: 8px 15px;
+            border-bottom: 1px solid #f1f2f6;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .field-item:last-child {
+            border-bottom: none;
+        }
+        
+        .field-name {
+            font-family: 'Courier New', monospace;
+            color: #2c3e50;
+        }
+        
+        .field-type {
+            color: #7f8c8d;
+            font-size: 10px;
+        }
+        
+        .primary-key {
+            background: #fff2e6;
+            border-left: 4px solid #f39c12;
+        }
+        
+        .foreign-key {
+            background: #e8f4fd;
+            border-left: 4px solid #3498db;
+        }
+        
+        .unique-key {
+            background: #f0fff4;
+            border-left: 4px solid #27ae60;
+        }
+        
+        .key-badge {
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .pk-badge { background: #f39c12; }
+        .fk-badge { background: #3498db; }
+        .uk-badge { background: #27ae60; }
+        
+        /* Relations - 改善されたリレーション線 */
+        .relation-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .relation-line {
+            stroke: #3498db;
+            stroke-width: 2;
+            fill: none;
+            marker-end: url(#arrowhead);
+        }
+        
+        .relation-label {
+            position: absolute;
+            background: #3498db;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+            z-index: 3;
+        }
+        
+        .constraints-summary {
+            margin: 30px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .constraint-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            border-left: 5px solid #17a2b8;
+        }
+        
+        .constraint-title {
+            font-weight: bold;
+            color: #17a2b8;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .constraint-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .constraint-list li {
+            padding: 5px 0;
+            font-size: 12px;
+            color: #495057;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .constraint-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        .note {
+            background: #e8f5e8;
+            border: 1px solid #c3e6c3;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 14px;
+            color: #2d5a2d;
+        }
+        
+        .note-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">🗄️ 改善された学生管理システム：5テーブル構造とリレーション</div>
+        
+
+        
+        <div class="er-diagram">
+            <!-- Departments Table -->
+            <div class="table-card departments-card">
+                <div class="table-header departments-header">
+                    <span class="table-icon">🏫</span>departments
+                </div>
+                <div class="table-body">
+                    <ul class="field-list">
+                        <li class="field-item primary-key">
+                            <span class="field-name">department_id</span>
+                            <span class="key-badge pk-badge">PK</span>
+                        </li>
+                        <li class="field-item unique-key">
+                            <span class="field-name">department_code</span>
+                            <span class="key-badge uk-badge">UK</span>
+                        </li>
+                        <li class="field-item">
+                            <span class="field-name">department_name</span>
+                            <span class="field-type">VARCHAR(100)</span>
+                        </li>
+                        <li class="field-item">
+                            <span class="field-name">capacity</span>
+                            <span class="field-type">INT</span>
+                        </li>
+                        <li class="field-item">
+                            <span class="field-name">established_date</span>
+                            <span class="field-type">DATE</span>
+                        </li>
+                        <li class="field-item">
+                            <span class="field-name">created_at</span>
+                            <span class="field-type">TIMESTAMP</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Teachers Table -->
+            <div class="table-card teachers-card">
+                <div class="table-header teachers-header">
+                    <span class="table-icon">👨‍🏫</span>teachers
+                </div>
+                <div class="table-body">
+                    <ul class="field-list">
+                        <li class="field-item primary-key">
+                            <span class="field-name">teacher_id</span>
+                            <span class="key-badge pk-badge">PK</span>
+                        </li>
+                        <li class="field-item unique-key">
+                            <span class="field-name">teacher_code</span>
+                            <span class="key-badge uk-badge">UK</span>
+                        </li>
+                        <li class="field-item">
+                            <span class="field-name">last_name</span>
+                            <span class="field-type">VARCHAR(50)</span>
+                        </li>
+                        <li class="field-item">
+                            <span class="field-name">first_name</span>
+                            <span class="field-type">VARCHAR(50)</span>
+                        </li>
+                        <li class="field-item unique-key">
+                            <span class="field-name">email</span>
+                            <span class="key-badge uk-badge">UK</span>
+                        </li>
+                        <li class="field-item foreign-key">
+                            <span class="field-name">department_id</span>
+                            <span class="key-badge fk-badge">FK</span>
+                        </li>
+                        <li class="field-item">
+                            <span class="field-name">position</span>
+                            <span class="field-type">ENUM</span>
+                        </li>
+                        <li class="field-item">
+                            <span class="field-name">hire_date</span>
+                            <span class="field-type">DATE</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Students Table -->
+            <div class="table-card students-card">
+                <div class="table-header students-header">
+                    <span class="table-icon">👥</span>students
+                </div>
+                <div class="table-body">
+                    <ul class="field-list">
+                        <li class="field-item primary-key">
+                            <span class="field-name">student_id</span>
+                            <span class="key-badge pk-badge">PK</span>
+                        </li>
+                        <li class="field-item unique-key">
+                            <span class="field-name">student_number</span>
+                            <span class="key-badge uk-badge">UK</span>
+                        </li>
+                        <li class="field-item">
+                            <span class="field-name">last_name</span>
+                            <span class="field-type">VARCHAR(50)</span>
+                        </li>
+                        <li class="field-item">
+                            <span class="field-name">first_name</span>
+                            <span class="field-type">VARCHAR(50)</span>
+                        </li>
+                        <li class="field-item">
+                            <span class="field-name">birth_date</span>
+                            <span class="field-type">DATE</span>
+                        </li>
+                        <li class="field-item foreign-key">
+                            <span class="field-name">department_id</span>
+                            <span class="key-badge fk-badge">FK</span>
+                        </li>
+                        <li class="field-item">
+                            <span class="field-name">status</span>
+                            <span class="field-type">ENUM</span>
+                        </li>
+                        <li class="field-item">
+                            <span class="field-name">gpa</span>
+                            <span class="field-type">DECIMAL(3,2)</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Subjects Table -->
+            <div class="table-card subjects-card">
+                <div class="table-header subjects-header">
+                    <span class="table-icon">📚</span>subjects
+                </div>
+                <div class="table-body">
+                    <ul class="field-list">
+                        <li class="field-item primary-key">
+                            <span class="field-name">subject_id</span>
+                            <span class="key-badge pk-badge">PK</span>
+                        </li>
+                        <li class="field-item unique-key">
+                            <span class="field-name">subject_code</span>
+                            <span class="key-badge uk-badge">UK</span>
+                        </li>
+                        <li class="field-item">
+                            <span class="field-name">subject_name</span>
+                            <span class="field-type">VARCHAR(100)</span>
+                        </li>
+                        <li class="field-item">
+                            <span class="field-name">credits</span>
+                            <span class="field-type">INT</span>
+                        </li>
+                        <li class="field-item">
+                            <span class="field-name">semester</span>
+                            <span class="field-type">ENUM</span>
+                        </li>
+                        <li class="field-item foreign-key">
+                            <span class="field-name">department_id</span>
+                            <span class="key-badge fk-badge">FK</span>
+                        </li>
+                        <li class="field-item">
+                            <span class="field-name">required_flag</span>
+                            <span class="field-type">BOOLEAN</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Grades Table -->
+            <div class="table-card grades-card">
+                <div class="table-header grades-header">
+                    <span class="table-icon">📝</span>grades
+                </div>
+                <div class="table-body">
+                    <ul class="field-list">
+                        <li class="field-item primary-key">
+                            <span class="field-name">grade_id</span>
+                            <span class="key-badge pk-badge">PK</span>
+                        </li>
+                        <li class="field-item foreign-key">
+                            <span class="field-name">student_id</span>
+                            <span class="key-badge fk-badge">FK</span>
+                        </li>
+                        <li class="field-item foreign-key">
+                            <span class="field-name">subject_id</span>
+                            <span class="key-badge fk-badge">FK</span>
+                        </li>
+                        <li class="field-item">
+                            <span class="field-name">academic_year</span>
+                            <span class="field-type">YEAR</span>
+                        </li>
+                        <li class="field-item">
+                            <span class="field-name">grade_value</span>
+                            <span class="field-type">ENUM</span>
+                        </li>
+                        <li class="field-item">
+                            <span class="field-name">score</span>
+                            <span class="field-type">INT</span>
+                        </li>
+                        <li class="field-item foreign-key">
+                            <span class="field-name">teacher_id</span>
+                            <span class="key-badge fk-badge">FK</span>
+                        </li>
+                        <li class="field-item">
+                            <span class="field-name">evaluation_date</span>
+                            <span class="field-type">DATE</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Statistics -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-number">5</div>
+                <div class="stat-label">テーブル</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">6</div>
+                <div class="stat-label">外部キー関係</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">40+</div>
+                <div class="stat-label">フィールド</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">15+</div>
+                <div class="stat-label">制約</div>
+            </div>
+        </div>
+        
+        <!-- Constraints Summary -->
+        <div class="constraints-summary">
+            <div class="constraint-card">
+                <div class="constraint-title">🔑 主キー制約</div>
+                <ul class="constraint-list">
+                    <li>departments.department_id (AUTO_INCREMENT)</li>
+                    <li>students.student_id (AUTO_INCREMENT)</li>
+                    <li>teachers.teacher_id (AUTO_INCREMENT)</li>
+                    <li>subjects.subject_id (AUTO_INCREMENT)</li>
+                    <li>grades.grade_id (AUTO_INCREMENT)</li>
+                </ul>
+            </div>
+            
+            <div class="constraint-card">
+                <div class="constraint-title">🔗 外部キー制約</div>
+                <ul class="constraint-list">
+                    <li>students.department_id → departments.department_id</li>
+                    <li>teachers.department_id → departments.department_id</li>
+                    <li>subjects.department_id → departments.department_id</li>
+                    <li>grades.student_id → students.student_id</li>
+                    <li>grades.subject_id → subjects.subject_id</li>
+                    <li>grades.teacher_id → teachers.teacher_id</li>
+                </ul>
+            </div>
+            
+            <div class="constraint-card">
+                <div class="constraint-title">🎯 UNIQUE制約</div>
+                <ul class="constraint-list">
+                    <li>departments.department_code</li>
+                    <li>students.student_number</li>
+                    <li>students.email</li>
+                    <li>teachers.teacher_code</li>
+                    <li>teachers.email</li>
+                    <li>subjects.subject_code</li>
+                </ul>
+            </div>
+            
+            <div class="constraint-card">
+                <div class="constraint-title">✅ CHECK制約</div>
+                <ul class="constraint-list">
+                    <li>departments.capacity (0 < capacity <= 200)</li>
+                    <li>students.gpa (0.00 <= gpa <= 4.00)</li>
+                    <li>students.birth_date (合理的な日付範囲)</li>
+                    <li>subjects.credits (0 < credits <= 10)</li>
+                    <li>grades.score (0 <= score <= 100)</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="note">
+            <div class="note-title">🎯 完璧なER図レイアウトの利点</div>
+            この**完全対称的**なレイアウトにより、テーブル間のリレーションが最も自然に表現されます。<br>
+            <strong>gradesテーブル</strong>が完全な中央に配置され、4つのテーブルが四隅に配置されることで、<br>
+            <strong>全てのリレーション線</strong>が美しく、理解しやすいER図となりました。
+        </div>
+    </div>
+</body>
+</html>

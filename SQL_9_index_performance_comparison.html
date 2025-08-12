@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>インデックス設計によるパフォーマンス向上図</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #fd79a8 0%, #fdcb6e 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #fd79a8;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .performance-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border: 3px solid #dee2e6;
+        }
+        
+        .without-index {
+            border-color: #e74c3c;
+            background: linear-gradient(135deg, #fff5f5, #ffe6e6);
+        }
+        
+        .with-index {
+            border-color: #27ae60;
+            background: linear-gradient(135deg, #f0fff4, #e6ffe6);
+        }
+        
+        .section-header {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding: 12px;
+            border-radius: 10px;
+            color: white;
+        }
+        
+        .slow-header {
+            background: #e74c3c;
+        }
+        
+        .fast-header {
+            background: #27ae60;
+        }
+        
+        .query-example {
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin: 15px 0;
+            position: relative;
+        }
+        
+        .query-example::before {
+            content: "SQL";
+            position: absolute;
+            top: -8px;
+            left: 15px;
+            background: #34495e;
+            color: white;
+            padding: 2px 8px;
+            font-size: 10px;
+            border-radius: 3px;
+        }
+        
+        .execution-plan {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .plan-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .plan-details {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            white-space: pre-line;
+        }
+        
+        .performance-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .metric-card {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            border: 2px solid #ddd;
+        }
+        
+        .slow-metric {
+            border-color: #e74c3c;
+            background: linear-gradient(135deg, #fff2f2, #ffe6e6);
+        }
+        
+        .fast-metric {
+            border-color: #27ae60;
+            background: linear-gradient(135deg, #f0fff4, #e6ffe6);
+        }
+        
+        .metric-value {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .slow-value { color: #e74c3c; }
+        .fast-value { color: #27ae60; }
+        
+        .metric-label {
+            font-size: 11px;
+            color: #666;
+        }
+        
+        .index-strategy {
+            margin: 30px 0;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+        }
+        
+        .strategy-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .index-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .index-type {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            border-left: 5px solid #3498db;
+        }
+        
+        .type-title {
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .type-description {
+            font-size: 12px;
+            color: #5a6c7d;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+        
+        .index-example {
+            background: #f8f9fa;
+            padding: 8px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            color: #2c3e50;
+        }
+        
+        .performance-chart {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #ddd;
+        }
+        
+        .chart-title {
+            text-align: center;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .chart-bars {
+            display: flex;
+            align-items: end;
+            justify-content: space-around;
+            height: 150px;
+            margin: 20px 0;
+        }
+        
+        .bar-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .bar {
+            width: 40px;
+            border-radius: 5px 5px 0 0;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+        
+        .bar:hover {
+            transform: scale(1.1);
+        }
+        
+        .slow-bar {
+            background: linear-gradient(to top, #e74c3c, #c0392b);
+            height: 120px;
+        }
+        
+        .fast-bar {
+            background: linear-gradient(to top, #27ae60, #229954);
+            height: 20px;
+        }
+        
+        .bar-label {
+            font-size: 11px;
+            font-weight: bold;
+            text-align: center;
+            color: #2c3e50;
+        }
+        
+        .bar-value {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            font-weight: bold;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            white-space: nowrap;
+        }
+        
+        .optimization-tips {
+            background: #e8f5e8;
+            border: 2px solid #c3e6c3;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .tips-title {
+            font-weight: bold;
+            color: #2d5a2d;
+            margin-bottom: 15px;
+            font-size: 16px;
+            text-align: center;
+        }
+        
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .tip-item {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            border-left: 4px solid #27ae60;
+        }
+        
+        .tip-title {
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 5px;
+            font-size: 12px;
+        }
+        
+        .tip-content {
+            font-size: 11px;
+            color: #495057;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">⚡ インデックス設計によるパフォーマンス向上効果</div>
+        
+        <div class="comparison-grid">
+            <!-- Without Index -->
+            <div class="performance-section without-index">
+                <div class="section-header slow-header">
+                    🐢 インデックスなし（フルテーブルスキャン）
+                </div>
+                
+                <div class="query-example">
+SELECT * FROM students 
+WHERE last_name = '田中';
+                </div>
+                
+                <div class="execution-plan">
+                    <div class="plan-title">📊 実行計画</div>
+                    <div class="plan-details">
+Type: ALL (フルテーブルスキャン)
+Rows examined: 10,000
+Key: NULL
+Extra: Using where
+                    </div>
+                </div>
+                
+                <div class="performance-metrics">
+                    <div class="metric-card slow-metric">
+                        <div class="metric-value slow-value">0.25秒</div>
+                        <div class="metric-label">実行時間</div>
+                    </div>
+                    <div class="metric-card slow-metric">
+                        <div class="metric-value slow-value">10,000</div>
+                        <div class="metric-label">検索行数</div>
+                    </div>
+                    <div class="metric-card slow-metric">
+                        <div class="metric-value slow-value">高</div>
+                        <div class="metric-label">CPU使用率</div>
+                    </div>
+                    <div class="metric-card slow-metric">
+                        <div class="metric-value slow-value">大</div>
+                        <div class="metric-label">I/O負荷</div>
+                    </div>
+                </div>
+                
+                <div style="background: #fff2f2; padding: 10px; border-radius: 8px; margin-top: 15px;">
+                    <strong style="color: #e74c3c;">❌ 問題点</strong>
+                    <ul style="margin: 5px 0; padding-left: 20px; font-size: 12px; color: #c0392b;">
+                        <li>全レコードを順次検索</li>
+                        <li>データ量に比例して性能劣化</li>
+                        <li>同時アクセス時のボトルネック</li>
+                        <li>システム全体のレスポンス低下</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- With Index -->
+            <div class="performance-section with-index">
+                <div class="section-header fast-header">
+                    🚀 インデックスあり（高速検索）
+                </div>
+                
+                <div class="query-example">
+SELECT * FROM students 
+WHERE last_name = '田中';
+-- インデックス: idx_last_name
+                </div>
+                
+                <div class="execution-plan">
+                    <div class="plan-title">📊 実行計画</div>
+                    <div class="plan-details">
+Type: ref (インデックス参照)
+Rows examined: 5
+Key: idx_last_name
+Extra: Using index condition
+                    </div>
+                </div>
+                
+                <div class="performance-metrics">
+                    <div class="metric-card fast-metric">
+                        <div class="metric-value fast-value">0.002秒</div>
+                        <div class="metric-label">実行時間</div>
+                    </div>
+                    <div class="metric-card fast-metric">
+                        <div class="metric-value fast-value">5</div>
+                        <div class="metric-label">検索行数</div>
+                    </div>
+                    <div class="metric-card fast-metric">
+                        <div class="metric-value fast-value">低</div>
+                        <div class="metric-label">CPU使用率</div>
+                    </div>
+                    <div class="metric-card fast-metric">
+                        <div class="metric-value fast-value">小</div>
+                        <div class="metric-label">I/O負荷</div>
+                    </div>
+                </div>
+                
+                <div style="background: #f0fff4; padding: 10px; border-radius: 8px; margin-top: 15px;">
+                    <strong style="color: #27ae60;">✅ 改善効果</strong>
+                    <ul style="margin: 5px 0; padding-left: 20px; font-size: 12px; color: #229954;">
+                        <li>100倍以上の高速化</li>
+                        <li>必要な行のみ効率的に取得</li>
+                        <li>同時アクセス性能の向上</li>
+                        <li>システム全体の安定性向上</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Performance Chart -->
+        <div class="performance-chart">
+            <div class="chart-title">📈 パフォーマンス比較（実行時間）</div>
+            <div class="chart-bars">
+                <div class="bar-group">
+                    <div class="bar slow-bar">
+                        <div class="bar-value">0.25秒</div>
+                    </div>
+                    <div class="bar-label">インデックス<br>なし</div>
+                </div>
+                <div class="bar-group">
+                    <div class="bar fast-bar">
+                        <div class="bar-value">0.002秒</div>
+                    </div>
+                    <div class="bar-label">インデックス<br>あり</div>
+                </div>
+            </div>
+            <div style="text-align: center; font-size: 14px; color: #2c3e50; font-weight: bold;">
+                約125倍の高速化を実現！
+            </div>
+        </div>
+        
+        <!-- Index Strategy -->
+        <div class="index-strategy">
+            <div class="strategy-title">🎯 インデックス設計戦略</div>
+            <div class="index-types">
+                <div class="index-type">
+                    <div class="type-title">📝 単一カラムインデックス</div>
+                    <div class="type-description">
+                        頻繁に検索条件として使用される単一カラムに対するインデックス
+                    </div>
+                    <div class="index-example">
+CREATE INDEX idx_last_name ON students(last_name);
+CREATE INDEX idx_email ON students(email);
+CREATE INDEX idx_status ON students(status);
+                    </div>
+                </div>
+                
+                <div class="index-type">
+                    <div class="type-title">🔄 複合インデックス</div>
+                    <div class="type-description">
+                        複数カラムを組み合わせた検索で効果を発揮するインデックス
+                    </div>
+                    <div class="index-example">
+CREATE INDEX idx_name_full 
+ON students(last_name, first_name);
+
+CREATE INDEX idx_dept_status 
+ON students(department_id, status);
+                    </div>
+                </div>
+                
+                <div class="index-type">
+                    <div class="type-title">🎯 用途特化インデックス</div>
+                    <div class="type-description">
+                        特定の業務パターンに最適化されたインデックス設計
+                    </div>
+                    <div class="index-example">
+-- 成績管理用
+CREATE INDEX idx_grade_lookup 
+ON grades(student_id, academic_year, semester);
+
+-- 統計レポート用
+CREATE INDEX idx_statistics 
+ON grades(department_id, grade_value, academic_year);
+                    </div>
+                </div>
+                
+                <div class="index-type">
+                    <div class="type-title">⚡ JOIN最適化インデックス</div>
+                    <div class="type-description">
+                        テーブル結合処理を高速化するためのインデックス
+                    </div>
+                    <div class="index-example">
+-- 外部キーに対するインデックス
+CREATE INDEX idx_student_department 
+ON students(department_id);
+
+CREATE INDEX idx_grade_student 
+ON grades(student_id);
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Optimization Tips -->
+        <div class="optimization-tips">
+            <div class="tips-title">💡 インデックス設計のベストプラクティス</div>
+            <div class="tips-grid">
+                <div class="tip-item">
+                    <div class="tip-title">🎯 WHERE句分析</div>
+                    <div class="tip-content">
+                        実際のクエリでWHERE句に頻繁に使用されるカラムを特定し、優先的にインデックスを作成
+                    </div>
+                </div>
+                
+                <div class="tip-item">
+                    <div class="tip-title">📊 選択性重視</div>
+                    <div class="tip-content">
+                        値の種類が多い（選択性が高い）カラムほどインデックス効果が大きい
+                    </div>
+                </div>
+                
+                <div class="tip-item">
+                    <div class="tip-title">🔄 複合インデックス順序</div>
+                    <div class="tip-content">
+                        複合インデックスでは選択性の高いカラムを先頭に配置
+                    </div>
+                </div>
+                
+                <div class="tip-item">
+                    <div class="tip-title">⚖️ 更新コスト考慮</div>
+                    <div class="tip-content">
+                        読み取り性能向上と更新コスト増加のバランスを考慮した設計
+                    </div>
+                </div>
+                
+                <div class="tip-item">
+                    <div class="tip-title">📈 EXPLAIN活用</div>
+                    <div class="tip-content">
+                        EXPLAIN文で実行計画を確認し、インデックス効果を定量的に評価
+                    </div>
+                </div>
+                
+                <div class="tip-item">
+                    <div class="tip-title">🎛️ 定期的見直し</div>
+                    <div class="tip-content">
+                        アクセスパターンの変化に合わせてインデックス設計を定期的に見直し
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

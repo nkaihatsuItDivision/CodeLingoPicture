@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>システム要件分析フロー図</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #3498db;
+        }
+        
+        .flow-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .phase {
+            display: flex;
+            align-items: center;
+            background: linear-gradient(90deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 20px;
+            border-left: 5px solid #3498db;
+            transition: transform 0.3s ease;
+        }
+        
+        .phase:hover {
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .phase-number {
+            background: #3498db;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        
+        .phase-content {
+            flex: 1;
+        }
+        
+        .phase-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        .phase-description {
+            color: #5a6c7d;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .phase-items {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0 0 0;
+        }
+        
+        .phase-items li {
+            background: #fff;
+            margin: 5px 0;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #495057;
+            border-left: 3px solid #17a2b8;
+        }
+        
+        .arrow {
+            text-align: center;
+            color: #3498db;
+            font-size: 24px;
+            margin: 10px 0;
+        }
+        
+        .entities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .entity-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 14px;
+            transition: transform 0.3s ease;
+        }
+        
+        .entity-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .note {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 14px;
+            color: #856404;
+        }
+        
+        .note-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">🎯 学生管理システム要件分析フロー</div>
+        
+        <div class="flow-container">
+            <div class="phase">
+                <div class="phase-number">1</div>
+                <div class="phase-content">
+                    <div class="phase-title">📋 システム概要の定義</div>
+                    <div class="phase-description">教育機関における学生情報・成績情報の包括的管理システム</div>
+                    <ul class="phase-items">
+                        <li>利用者：教員、事務職員、システム管理者</li>
+                        <li>規模：最大1,000名の学生、20学科、100科目</li>
+                        <li>目的：情報の一元管理と効率的な業務運用</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="arrow">⬇️</div>
+            
+            <div class="phase">
+                <div class="phase-number">2</div>
+                <div class="phase-content">
+                    <div class="phase-title">🔧 機能要件の詳細分析</div>
+                    <div class="phase-description">システムが提供すべき具体的な機能を特定</div>
+                    <ul class="phase-items">
+                        <li>学生管理：登録・更新・検索・削除機能</li>
+                        <li>学科管理：学科情報・責任者管理</li>
+                        <li>科目管理：科目情報・開講学期管理</li>
+                        <li>成績管理：評価登録・GPA計算</li>
+                        <li>統計機能：レポート生成・分析機能</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="arrow">⬇️</div>
+            
+            <div class="phase">
+                <div class="phase-number">3</div>
+                <div class="phase-content">
+                    <div class="phase-title">⚡ 非機能要件の設定</div>
+                    <div class="phase-description">システムの品質・性能面での要求事項</div>
+                    <ul class="phase-items">
+                        <li>パフォーマンス：学生検索1秒以内、成績登録0.5秒以内</li>
+                        <li>データ整合性：不正データの登録防止</li>
+                        <li>拡張性：新学科・科目の追加対応</li>
+                        <li>保守性：データ構造変更に強い設計</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="arrow">⬇️</div>
+            
+            <div class="phase">
+                <div class="phase-number">4</div>
+                <div class="phase-content">
+                    <div class="phase-title">📊 エンティティ（テーブル）抽出</div>
+                    <div class="phase-description">要件から必要なデータ構造を特定</div>
+                    <div class="entities-grid">
+                        <div class="entity-card">👥 students<br>学生情報</div>
+                        <div class="entity-card">🏫 departments<br>学科情報</div>
+                        <div class="entity-card">📚 subjects<br>科目情報</div>
+                        <div class="entity-card">👨‍🏫 teachers<br>教員情報</div>
+                        <div class="entity-card">📝 grades<br>成績情報</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="arrow">⬇️</div>
+            
+            <div class="phase">
+                <div class="phase-number">5</div>
+                <div class="phase-content">
+                    <div class="phase-title">🏗️ データベース設計実装</div>
+                    <div class="phase-description">抽出したエンティティを実際のテーブル設計に変換</div>
+                    <ul class="phase-items">
+                        <li>正規化適用：第1〜第3正規形による最適化</li>
+                        <li>制約設計：CHECK・外部キー・UNIQUE制約</li>
+                        <li>インデックス設計：検索パフォーマンス最適化</li>
+                        <li>Spring Boot連携：JPA/MyBatis対応設計</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="note">
+            <div class="note-title">💡 設計のポイント</div>
+            要件分析 → エンティティ抽出 → DB設計の段階的アプローチにより、<br>
+            実際のビジネス要件を満たす実用的なデータベースシステムを構築できます。
+        </div>
+    </div>
+</body>
+</html>
