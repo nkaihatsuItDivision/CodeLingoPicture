@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View層（画面表示）の詳細図</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 1100px;
+            width: 100%;
+        }
+        
+        .title {
+            text-align: center;
+            color: #20bf6b;
+            margin-bottom: 30px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .evolution-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .before-after {
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .before {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            border: 3px solid #fdcb6e;
+        }
+        
+        .after {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border: 3px solid #20bf6b;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .section-icon {
+            font-size: 36px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.5;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        
+        .html-tag {
+            color: #e74c3c;
+        }
+        
+        .attribute {
+            color: #3498db;
+        }
+        
+        .string {
+            color: #e67e22;
+        }
+        
+        .comment {
+            color: #95a5a6;
+            font-style: italic;
+        }
+        
+        .thymeleaf {
+            color: #2ecc71;
+        }
+        
+        .thymeleaf-features {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        
+        .features-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .feature-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 15px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .feature-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .feature-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .feature-desc {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .template-example {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 30px 0;
+            border: 2px solid #e9ecef;
+        }
+        
+        .template-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .template-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .template-side {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .template-side-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+            color: #2c3e50;
+        }
+        
+        .output-preview {
+            background: linear-gradient(135deg, #20bf6b 0%, #01a3a4 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        
+        .preview-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .browser-mockup {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            color: #2c3e50;
+            font-family: inherit;
+        }
+        
+        .browser-bar {
+            background: #f1f2f6;
+            border-radius: 6px 6px 0 0;
+            padding: 8px;
+            margin: -15px -15px 15px -15px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .table-demo {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        
+        .table-demo th,
+        .table-demo td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        .table-demo th {
+            background: #f8f9fa;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .evolution-section,
+            .template-comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">
+            🎨 View層（画面表示）の詳細図
+        </div>
+        
+        <div class="evolution-section">
+            <div class="before-after before">
+                <div class="section-icon">📄</div>
+                <div class="section-title">Week 1: 静的HTML</div>
+                <div class="code-example">
+<span class="comment">&lt;!-- 固定されたHTMLコンテンツ --&gt;</span><br>
+<span class="html-tag">&lt;table&gt;</span><br>
+  <span class="html-tag">&lt;tr&gt;</span><br>
+    <span class="html-tag">&lt;td&gt;</span><span class="string">田中太郎</span><span class="html-tag">&lt;/td&gt;</span><br>
+    <span class="html-tag">&lt;td&gt;</span><span class="string">tanaka@example.com</span><span class="html-tag">&lt;/td&gt;</span><br>
+    <span class="html-tag">&lt;td&gt;</span><span class="string">3.5</span><span class="html-tag">&lt;/td&gt;</span><br>
+  <span class="html-tag">&lt;/tr&gt;</span><br>
+  <span class="html-tag">&lt;tr&gt;</span><br>
+    <span class="html-tag">&lt;td&gt;</span><span class="string">佐藤花子</span><span class="html-tag">&lt;/td&gt;</span><br>
+    <span class="html-tag">&lt;td&gt;</span><span class="string">sato@example.com</span><span class="html-tag">&lt;/td&gt;</span><br>
+    <span class="html-tag">&lt;td&gt;</span><span class="string">3.8</span><span class="html-tag">&lt;/td&gt;</span><br>
+  <span class="html-tag">&lt;/tr&gt;</span><br>
+<span class="html-tag">&lt;/table&gt;</span><br>
+
+<span class="comment"><!-- データは手動で記述 --></span>
+                </div>
+                <div style="text-align: center; color: #d63031; font-weight: bold;">
+                    ❌ データが固定、変更は手動
+                </div>
+            </div>
+            
+            <div class="before-after after">
+                <div class="section-icon">⚡</div>
+                <div class="section-title">Week 8: 動的HTML（Thymeleaf）</div>
+                <div class="code-example">
+<span class="comment">&lt;!-- データベース連携の動的HTML --&gt;</span><br>
+<span class="html-tag">&lt;table&gt;</span><br>
+  <span class="html-tag">&lt;tr</span> <span class="thymeleaf">th:each=</span><span class="string">"student : ${students}"</span><span class="html-tag">&gt;</span><br>
+    <span class="html-tag">&lt;td</span> <span class="thymeleaf">th:text=</span><span class="string">"${student.name}"</span><span class="html-tag">&gt;&lt;/td&gt;</span><br>
+    <span class="html-tag">&lt;td</span> <span class="thymeleaf">th:text=</span><span class="string">"${student.email}"</span><span class="html-tag">&gt;&lt;/td&gt;</span><br>
+    <span class="html-tag">&lt;td</span> <span class="thymeleaf">th:text=</span><span class="string">"${student.gpa}"</span><span class="html-tag">&gt;&lt;/td&gt;</span><br>
+  <span class="html-tag">&lt;/tr&gt;</span><br>
+<span class="html-tag">&lt;/table&gt;</span><br>
+
+<span class="comment">&lt;!-- Week 7のDBデータが自動表示 --&gt;</span>
+                </div>
+                <div style="text-align: center; color: #00b894; font-weight: bold;">
+                    ✅ データベースと自動連携
+                </div>
+            </div>
+        </div>
+        
+        <div class="thymeleaf-features">
+            <div class="features-title">🌟 Thymeleafの強力な機能</div>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">🔄</div>
+                    <div class="feature-title">th:each（ループ表示）</div>
+                    <div class="feature-desc">
+                        リストデータを自動的に繰り返し表示<br>
+                        Week 7のDB結果を一覧表示
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">📝</div>
+                    <div class="feature-title">th:text（テキスト表示）</div>
+                    <div class="feature-desc">
+                        オブジェクトのプロパティを安全に表示<br>
+                        HTMLエスケープも自動
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🔗</div>
+                    <div class="feature-title">th:href（リンク生成）</div>
+                    <div class="feature-desc">
+                        動的なURLを自動生成<br>
+                        パラメータ付きリンクも簡単
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">❓</div>
+                    <div class="feature-title">th:if（条件分岐）</div>
+                    <div class="feature-desc">
+                        条件に応じて表示内容を変更<br>
+                        Week 2の条件分岐がHTML内で実現
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="template-example">
+            <div class="template-title">📋 テンプレートとデータの連携例</div>
+            <div class="template-comparison">
+                <div class="template-side">
+                    <div class="template-side-title">🎨 Thymeleafテンプレート</div>
+                    <div class="code-example">
+<span class="html-tag">&lt;div</span> <span class="thymeleaf">th:each=</span><span class="string">"student : ${students}"</span><span class="html-tag">&gt;</span><br>
+  <span class="html-tag">&lt;h3</span> <span class="thymeleaf">th:text=</span><span class="string">"${student.name}"</span><span class="html-tag">&gt;&lt;/h3&gt;</span><br>
+  <span class="html-tag">&lt;p&gt;</span>メール: <br>
+    <span class="html-tag">&lt;span</span> <span class="thymeleaf">th:text=</span><span class="string">"${student.email}"</span><span class="html-tag">&gt;&lt;/span&gt;</span><br>
+  <span class="html-tag">&lt;/p&gt;</span><br>
+  <span class="html-tag">&lt;p&gt;</span>GPA: <br>
+    <span class="html-tag">&lt;span</span> <span class="thymeleaf">th:text=</span><span class="string">"${student.gpa}"</span><span class="html-tag">&gt;&lt;/span&gt;</span><br>
+  <span class="html-tag">&lt;/p&gt;</span><br>
+  <span class="html-tag">&lt;div</span> <span class="thymeleaf">th:if=</span><span class="string">"${student.gpa >= 3.5}"</span><span class="html-tag">&gt;</span><br>
+    <span class="html-tag">&lt;span</span> <span class="attribute">style=</span><span class="string">"color: gold;"</span><span class="html-tag">&gt;</span>🌟 優秀<span class="html-tag">&lt;/span&gt;</span><br>
+  <span class="html-tag">&lt;/div&gt;</span><br>
+<span class="html-tag">&lt;/div&gt;</span><br>
+                    </div>
+                </div>
+                
+                <div class="template-side">
+                    <div class="template-side-title">📊 Controller提供データ</div>
+                    <div class="code-example">
+<span class="comment">// Week 7のDBデータ</span><br>
+List&lt;Student&gt; students = [<br>
+  {<br>
+    name: <span class="string">"田中太郎"</span>,<br>
+    email: <span class="string">"tanaka@example.com"</span>,<br>
+    gpa: <span class="string">3.5</span><br>
+  },<br>
+  {<br>
+    name: <span class="string">"佐藤花子"</span>,<br>
+    email: <span class="string">"sato@example.com"</span>,<br>
+    gpa: <span class="string">3.8</span><br>
+  },<br>
+  {<br>
+    name: <span class="string">"鈴木次郎"</span>,<br>
+    email: <span class="string">"suzuki@example.com"</span>,<br>
+    gpa: <span class="string">3.2</span><br>
+  }<br>
+];<br>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="output-preview">
+            <div class="preview-title">🌐 ブラウザ表示結果</div>
+            <div class="browser-mockup">
+                <div class="browser-bar">
+                    🌐 http://localhost:8080/students
+                </div>
+                
+                <div style="margin: 20px 0;">
+                    <h3 style="margin: 10px 0; color: #2c3e50;">田中太郎</h3>
+                    <p style="margin: 5px 0;">メール: tanaka@example.com</p>
+                    <p style="margin: 5px 0;">GPA: 3.5</p>
+                    <div style="color: gold;">🌟 優秀</div>
+                </div>
+                
+                <div style="margin: 20px 0;">
+                    <h3 style="margin: 10px 0; color: #2c3e50;">佐藤花子</h3>
+                    <p style="margin: 5px 0;">メール: sato@example.com</p>
+                    <p style="margin: 5px 0;">GPA: 3.8</p>
+                    <div style="color: gold;">🌟 優秀</div>
+                </div>
+                
+                <div style="margin: 20px 0;">
+                    <h3 style="margin: 10px 0; color: #2c3e50;">鈴木次郎</h3>
+                    <p style="margin: 5px 0;">メール: suzuki@example.com</p>
+                    <p style="margin: 5px 0;">GPA: 3.2</p>
+                </div>
+                
+                <table class="table-demo" style="margin-top: 20px;">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>名前</th>
+                            <th>メール</th>
+                            <th>GPA</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>田中太郎</td>
+                            <td>tanaka@example.com</td>
+                            <td>3.5</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>佐藤花子</td>
+                            <td>sato@example.com</td>
+                            <td>3.8</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>鈴木次郎</td>
+                            <td>suzuki@example.com</td>
+                            <td>3.2</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
