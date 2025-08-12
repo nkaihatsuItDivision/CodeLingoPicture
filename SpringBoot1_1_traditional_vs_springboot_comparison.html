@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>従来開発 vs Spring Boot比較</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(45deg, #f1bb7e, #ee5a52);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 700;
+        }
+        
+        .header p {
+            margin: 15px 0 0 0;
+            font-size: 1.3em;
+            opacity: 0.9;
+        }
+        
+        .comparison-container {
+            display: flex;
+            min-height: 600px;
+        }
+        
+        .traditional-side {
+            flex: 1;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .springboot-side {
+            flex: 1;
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            color: white;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .side-title {
+            font-size: 2em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid rgba(255,255,255,0.3);
+        }
+        
+        .side-subtitle {
+            text-align: center;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .config-section {
+            margin-bottom: 25px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .config-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .config-content {
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            line-height: 1.4;
+            overflow-x: auto;
+        }
+        
+        .time-section {
+            background: rgba(255,255,255,0.15);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .time-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .time-breakdown {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .time-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+        
+        .total-time {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 8px;
+        }
+        
+        .vs-divider {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 50%;
+            font-size: 2em;
+            font-weight: bold;
+            z-index: 10;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .benefits-section {
+            background: #f8f9fa;
+            padding: 40px;
+        }
+        
+        .benefits-title {
+            text-align: center;
+            font-size: 2.2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .benefit-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+            border-left: 5px solid #4ecdc4;
+        }
+        
+        .benefit-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+        
+        .benefit-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .benefit-desc {
+            color: #6c757d;
+            line-height: 1.5;
+        }
+        
+        .stats-section {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .stats-title {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+        }
+        
+        .stat-item {
+            background: rgba(255,255,255,0.15);
+            border-radius: 12px;
+            padding: 25px;
+        }
+        
+        .stat-number {
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .migration-section {
+            background: #2c3e50;
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .migration-title {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .migration-subtitle {
+            font-size: 1.2em;
+            opacity: 0.8;
+            margin-bottom: 30px;
+        }
+        
+        .migration-flow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .migration-step {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 20px;
+            min-width: 150px;
+        }
+        
+        .step-number {
+            background: #4ecdc4;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 auto 15px auto;
+        }
+        
+        .step-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .step-desc {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison-container {
+                flex-direction: column;
+            }
+            
+            .vs-divider {
+                position: relative;
+                left: auto;
+                top: auto;
+                transform: none;
+                margin: 20px auto;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .migration-flow {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚡ Java Web開発の革命</h1>
+            <p>従来開発の複雑さ vs Spring Bootの簡潔さ</p>
+        </div>
+        
+        <div class="comparison-container">
+            <div class="traditional-side">
+                <div class="side-title">😰 従来のJava Web開発</div>
+                <div class="side-subtitle">設定地獄・複雑な手順・非効率</div>
+                
+                <div class="config-section">
+                    <div class="config-title">📄 web.xml (数百行)</div>
+                    <div class="config-content">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br>
+&lt;web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;version="4.0"&gt;<br>
+&nbsp;&nbsp;&lt;servlet&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;servlet-name&gt;StudentServlet&lt;/servlet-name&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;servlet-class&gt;com.example.servlet&lt;/servlet-class&gt;<br>
+&nbsp;&nbsp;&lt;/servlet&gt;<br>
+&nbsp;&nbsp;&lt;servlet-mapping&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;servlet-name&gt;StudentServlet&lt;/servlet-name&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;url-pattern&gt;/students&lt;/url-pattern&gt;<br>
+&nbsp;&nbsp;&lt;/servlet-mapping&gt;<br>
+&nbsp;&nbsp;&lt;!-- さらに数百行の設定... --&gt;
+                    </div>
+                </div>
+                
+                <div class="config-section">
+                    <div class="config-title">⚙️ applicationContext.xml</div>
+                    <div class="config-content">
+&lt;beans xmlns="http://www.springframework.org/schema/beans"&gt;<br>
+&nbsp;&nbsp;&lt;bean id="dataSource" <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;class="org.apache.commons.dbcp2.BasicDataSource"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;property name="driverClassName" <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value="com.mysql.cj.jdbc.Driver"/&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;property name="url" <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value="jdbc:mysql://localhost:3306/db"/&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;!-- さらに数十のBean定義... --&gt;
+                    </div>
+                </div>
+                
+                <div class="config-section">
+                    <div class="config-title">🖥️ サーバー構築作業</div>
+                    <div class="config-content">
+1. Tomcatサーバーダウンロード・インストール<br>
+2. 複雑なサーバー設定ファイルの編集<br>
+3. JDBCドライバの手動配置<br>
+4. メモリ設定・ポート設定の調整<br>
+5. WARファイルの手動作成<br>
+6. サーバーへの手動デプロイ<br>
+7. サーバー再起動と動作確認<br>
+8. エラー発生時の複雑なログ調査
+                    </div>
+                </div>
+                
+                <div class="time-section">
+                    <div class="time-title">⏰ 開発時間の配分</div>
+                    <div class="time-breakdown">
+                        <div class="time-item">
+                            <span>実際のコーディング</span>
+                            <span>20%</span>
+                        </div>
+                        <div class="time-item">
+                            <span>設定・環境構築</span>
+                            <span>40%</span>
+                        </div>
+                        <div class="time-item">
+                            <span>エラー調査・修正</span>
+                            <span>30%</span>
+                        </div>
+                        <div class="time-item">
+                            <span>デプロイ・テスト</span>
+                            <span>10%</span>
+                        </div>
+                    </div>
+                    <div class="total-time">😱 開発効率: 極めて低い</div>
+                </div>
+            </div>
+            
+            <div class="springboot-side">
+                <div class="side-title">🚀 Spring Boot</div>
+                <div class="side-subtitle">設定自動化・シンプル・高効率</div>
+                
+                <div class="config-section">
+                    <div class="config-title">📝 application.properties (3行)</div>
+                    <div class="config-content">
+spring.datasource.url=jdbc:mysql://localhost:3306/sampledb<br>
+spring.datasource.username=root<br>
+spring.datasource.password=password<br>
+<br>
+# これだけで完了！自動設定が全て処理
+                    </div>
+                </div>
+                
+                <div class="config-section">
+                    <div class="config-title">📦 依存関係管理 (1行)</div>
+                    <div class="config-content">
+&lt;dependency&gt;<br>
+&nbsp;&nbsp;&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;<br>
+&nbsp;&nbsp;&lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;<br>
+&lt;/dependency&gt;<br>
+<br>
+# 必要なライブラリが自動的に全て含まれる！
+                    </div>
+                </div>
+                
+                <div class="config-section">
+                    <div class="config-title">▶️ 実行方法</div>
+                    <div class="config-content">
+@SpringBootApplication<br>
+public class StudentManagementApplication {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public static void main(String[] args) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SpringApplication.run(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;StudentManagementApplication.class, args);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}<br>
+<br>
+# ボタン1つでWebアプリケーション起動！
+                    </div>
+                </div>
+                
+                <div class="config-section">
+                    <div class="config-title">🎯 コントローラー作成</div>
+                    <div class="config-content">
+@Controller<br>
+public class StudentController {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@GetMapping("/students")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public String showStudents(Model model) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;List&lt;Student&gt; students = service.findAll();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;model.addAttribute("students", students);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return "students/index";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}<br>
+<br>
+# 美しいコードで機能実装完了！
+                    </div>
+                </div>
+                
+                <div class="time-section">
+                    <div class="time-title">⚡ 開発時間の配分</div>
+                    <div class="time-breakdown">
+                        <div class="time-item">
+                            <span>実際のコーディング</span>
+                            <span>70%</span>
+                        </div>
+                        <div class="time-item">
+                            <span>設定・環境構築</span>
+                            <span>10%</span>
+                        </div>
+                        <div class="time-item">
+                            <span>エラー調査・修正</span>
+                            <span>15%</span>
+                        </div>
+                        <div class="time-item">
+                            <span>デプロイ・テスト</span>
+                            <span>5%</span>
+                        </div>
+                    </div>
+                    <div class="total-time">🎉 開発効率: 劇的に向上</div>
+                </div>
+            </div>
+            
+
+        </div>
+        
+        <div class="benefits-section">
+            <div class="benefits-title">🌟 Spring Bootの革命的メリット</div>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">⚡</div>
+                    <div class="benefit-title">開発速度 10倍向上</div>
+                    <div class="benefit-desc">複雑な設定が自動化され、本質的なコーディングに集中できる</div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🎯</div>
+                    <div class="benefit-title">学習コスト 大幅削減</div>
+                    <div class="benefit-desc">最小限の知識でWebアプリケーション開発を開始可能</div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🛡️</div>
+                    <div class="benefit-title">安定性・保守性</div>
+                    <div class="benefit-desc">ベストプラクティスが自動適用され、品質の高いコードを実現</div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🚀</div>
+                    <div class="benefit-title">即座のデプロイ</div>
+                    <div class="benefit-desc">組み込みサーバーにより、どこでも即座に動作確認可能</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="stats-section">
+            <div class="stats-title">📊 数字で見るSpring Bootの影響</div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">90%</div>
+                    <div class="stat-label">設定コード削減</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">10倍</div>
+                    <div class="stat-label">開発速度向上</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">80%</div>
+                    <div class="stat-label">学習時間短縮</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">70%</div>
+                    <div class="stat-label">Java案件での採用率</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="migration-section">
+            <div class="migration-title">🎯 Week 8〜10での学習フロー</div>
+            <div class="migration-subtitle">複雑さゼロ、最短距離でWeb開発者へ</div>
+            <div class="migration-flow">
+                <div class="migration-step">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Week 8</div>
+                    <div class="step-desc">Spring Boot基礎<br>表示機能実装</div>
+                </div>
+                <div class="migration-step">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Week 9</div>
+                    <div class="step-desc">フォーム処理<br>CRUD操作</div>
+                </div>
+                <div class="migration-step">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Week 10</div>
+                    <div class="step-desc">高度機能<br>システム完成</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

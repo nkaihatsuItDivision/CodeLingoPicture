@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>スキル別年収比較</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 700;
+        }
+        
+        .header p {
+            margin: 15px 0 0 0;
+            font-size: 1.3em;
+            opacity: 0.9;
+        }
+        
+        .highlight-stats {
+            background: #f8f9fa;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .highlight-title {
+            font-size: 2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        
+        .highlight-comparison {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .before-after {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            text-align: center;
+            min-width: 200px;
+        }
+        
+        .before {
+            border-left: 5px solid #e74c3c;
+        }
+        
+        .after {
+            border-left: 5px solid #27ae60;
+        }
+        
+        .comparison-label {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .salary-amount {
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .before .salary-amount {
+            color: #e74c3c;
+        }
+        
+        .after .salary-amount {
+            color: #27ae60;
+        }
+        
+        .skill-description {
+            font-size: 0.9em;
+            color: #6c757d;
+            line-height: 1.4;
+        }
+        
+        .salary-chart {
+            padding: 40px;
+            background: white;
+        }
+        
+        .chart-title {
+            text-align: center;
+            font-size: 2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        
+        .skill-bars {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .skill-item {
+            margin-bottom: 25px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .skill-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .skill-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .salary-range {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #27ae60;
+        }
+        
+        .skill-bar-container {
+            height: 25px;
+            background: #e9ecef;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .skill-bar {
+            height: 100%;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        
+        .springboot-full { 
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            width: 95%; 
+        }
+        .java-springboot { 
+            background: linear-gradient(45deg, #6c5ce7, #a29bfe);
+            width: 85%; 
+        }
+        .java-basic { 
+            background: linear-gradient(45deg, #fd79a8, #fdcb6e);
+            width: 65%; 
+        }
+        .web-basic { 
+            background: linear-gradient(45deg, #fab1a0, #e17055);
+            width: 45%; 
+        }
+        .no-programming { 
+            background: linear-gradient(45deg, #ddd, #bbb);
+            width: 25%; 
+        }
+        
+        .skill-description-detail {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #6c757d;
+            line-height: 1.4;
+        }
+        
+        .experience-levels {
+            background: #2c3e50;
+            color: white;
+            padding: 40px;
+        }
+        
+        .experience-title {
+            text-align: center;
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+        
+        .experience-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        
+        .experience-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+        
+        .experience-level {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #4ecdc4;
+        }
+        
+        .experience-salary {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .experience-skills {
+            font-size: 0.9em;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+        
+        .market-data {
+            background: #f8f9fa;
+            padding: 40px;
+        }
+        
+        .market-title {
+            text-align: center;
+            font-size: 2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        
+        .market-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .market-stat {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-left: 5px solid #4ecdc4;
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #4ecdc4;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 1.1em;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+        
+        .career-path {
+            background: white;
+            padding: 40px;
+        }
+        
+        .career-title {
+            text-align: center;
+            font-size: 2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        
+        .career-timeline {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .career-step {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            min-width: 180px;
+            border-left: 5px solid #4ecdc4;
+            position: relative;
+        }
+        
+        .career-step:not(:last-child):after {
+            content: '→';
+            position: absolute;
+            right: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2em;
+            color: #4ecdc4;
+            font-weight: bold;
+        }
+        
+        .career-period {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #4ecdc4;
+            margin-bottom: 10px;
+        }
+        
+        .career-position {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .career-salary {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 8px;
+        }
+        
+        .career-skills {
+            font-size: 0.85em;
+            color: #6c757d;
+            line-height: 1.3;
+        }
+        
+        .freelance-section {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 40px;
+        }
+        
+        .freelance-title {
+            text-align: center;
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+        
+        .freelance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        
+        .freelance-card {
+            background: rgba(255,255,255,0.15);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .freelance-type {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #4ecdc4;
+        }
+        
+        .freelance-rate {
+            font-size: 2.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .freelance-desc {
+            font-size: 0.9em;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+        
+        .conclusion {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .conclusion-title {
+            font-size: 2.2em;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .conclusion-text {
+            font-size: 1.3em;
+            line-height: 1.6;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+        
+        .roi-highlight {
+            background: rgba(255,255,255,0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .highlight-comparison {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .career-timeline {
+                flex-direction: column;
+            }
+            
+            .career-step:not(:last-child):after {
+                content: '↓';
+                right: 50%;
+                top: auto;
+                bottom: -25px;
+                transform: translateX(50%);
+            }
+            
+            .experience-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💰 スキル別年収比較</h1>
+            <p>Spring Boot習得による収入アップの具体的な数値</p>
+        </div>
+        
+        <div class="highlight-stats">
+            <div class="highlight-title">🚀 Spring Boot習得による年収アップ効果</div>
+            <div class="highlight-comparison">
+                <div class="before-after before">
+                    <div class="comparison-label">📚 習得前</div>
+                    <div class="salary-amount">380万</div>
+                    <div class="skill-description">Java基礎のみ<br>一般的なプログラマー</div>
+                </div>
+                <div class="before-after after">
+                    <div class="comparison-label">🎯 Spring Boot習得後</div>
+                    <div class="salary-amount">650万</div>
+                    <div class="skill-description">フルスタック開発者<br>現代的Web技術</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="salary-chart">
+            <div class="chart-title">📊 スキルレベル別年収レンジ（2024年市場データ）</div>
+            <div class="skill-bars">
+                <div class="skill-item">
+                    <div class="skill-header">
+                        <div class="skill-name">🌟 Spring Boot + フルスタック</div>
+                        <div class="salary-range">600万 ～ 1200万円</div>
+                    </div>
+                    <div class="skill-bar-container">
+                        <div class="skill-bar springboot-full">週8〜10技術習得</div>
+                    </div>
+                    <div class="skill-description-detail">
+                        Spring Boot + Thymeleaf + MyBatis + SQL + Git/GitHub<br>
+                        実用Webアプリケーション開発可能
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <div class="skill-header">
+                        <div class="skill-name">⭐ Java + Spring Boot基礎</div>
+                        <div class="salary-range">500万 ～ 900万円</div>
+                    </div>
+                    <div class="skill-bar-container">
+                        <div class="skill-bar java-springboot">Java + Spring Boot</div>
+                    </div>
+                    <div class="skill-description-detail">
+                        Java応用 + Spring Boot基礎<br>
+                        バックエンド開発に特化
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <div class="skill-header">
+                        <div class="skill-name">📝 Java基礎のみ</div>
+                        <div class="salary-range">350万 ～ 600万円</div>
+                    </div>
+                    <div class="skill-bar-container">
+                        <div class="skill-bar java-basic">Java基本構文</div>
+                    </div>
+                    <div class="skill-description-detail">
+                        Java基本構文 + OOP基礎<br>
+                        一般的なプログラマー
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <div class="skill-header">
+                        <div class="skill-name">🌐 HTML/CSS のみ</div>
+                        <div class="salary-range">250万 ～ 450万円</div>
+                    </div>
+                    <div class="skill-bar-container">
+                        <div class="skill-bar web-basic">Web制作スキル</div>
+                    </div>
+                    <div class="skill-description-detail">
+                        HTML/CSS + JavaScript基礎<br>
+                        Webデザイナー・コーダー
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <div class="skill-header">
+                        <div class="skill-name">❌ プログラミング未経験</div>
+                        <div class="salary-range">200万 ～ 350万円</div>
+                    </div>
+                    <div class="skill-bar-container">
+                        <div class="skill-bar no-programming">IT業界未経験</div>
+                    </div>
+                    <div class="skill-description-detail">
+                        一般事務・営業・サービス業<br>
+                        IT関連スキルなし
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="experience-levels">
+            <div class="experience-title">📈 経験年数別Spring Boot開発者年収</div>
+            <div class="experience-grid">
+                <div class="experience-card">
+                    <div class="experience-level">未経験 ～ 1年</div>
+                    <div class="experience-salary">450万</div>
+                    <div class="experience-skills">
+                        Spring Boot基礎<br>
+                        CRUD操作<br>
+                        基本的なWeb開発
+                    </div>
+                </div>
+                <div class="experience-card">
+                    <div class="experience-level">1年 ～ 3年</div>
+                    <div class="experience-salary">650万</div>
+                    <div class="experience-skills">
+                        フルスタック開発<br>
+                        DB設計<br>
+                        チーム開発経験
+                    </div>
+                </div>
+                <div class="experience-card">
+                    <div class="experience-level">3年 ～ 5年</div>
+                    <div class="experience-salary">850万</div>
+                    <div class="experience-skills">
+                        アーキテクチャ設計<br>
+                        パフォーマンス最適化<br>
+                        チームリード経験
+                    </div>
+                </div>
+                <div class="experience-card">
+                    <div class="experience-level">5年以上</div>
+                    <div class="experience-salary">1200万</div>
+                    <div class="experience-skills">
+                        システム全体設計<br>
+                        技術選定・マネジメント<br>
+                        コンサルティング
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="market-data">
+            <div class="market-title">📊 Spring Boot市場データ</div>
+            <div class="market-stats">
+                <div class="market-stat">
+                    <div class="stat-number">+38%</div>
+                    <div class="stat-label">従来Java案件との<br>年収差</div>
+                </div>
+                <div class="market-stat">
+                    <div class="stat-number">2.3倍</div>
+                    <div class="stat-label">求人案件数<br>（対従来Java）</div>
+                </div>
+                <div class="market-stat">
+                    <div class="stat-number">85%</div>
+                    <div class="stat-label">リモートワーク<br>対応案件率</div>
+                </div>
+                <div class="market-stat">
+                    <div class="stat-number">92%</div>
+                    <div class="stat-label">企業での<br>継続採用意向</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="career-path">
+            <div class="career-title">🛤️ キャリアパスと年収推移</div>
+            <div class="career-timeline">
+                <div class="career-step">
+                    <div class="career-period">Week 8〜10完了</div>
+                    <div class="career-position">ジュニア開発者</div>
+                    <div class="career-salary">450万円</div>
+                    <div class="career-skills">Spring Boot基礎<br>Web開発経験</div>
+                </div>
+                <div class="career-step">
+                    <div class="career-period">1年後</div>
+                    <div class="career-position">中級開発者</div>
+                    <div class="career-salary">650万円</div>
+                    <div class="career-skills">フルスタック開発<br>チーム開発経験</div>
+                </div>
+                <div class="career-step">
+                    <div class="career-period">3年後</div>
+                    <div class="career-position">シニア開発者</div>
+                    <div class="career-salary">850万円</div>
+                    <div class="career-skills">アーキテクト設計<br>技術リード</div>
+                </div>
+                <div class="career-step">
+                    <div class="career-period">5年後</div>
+                    <div class="career-position">テックリード</div>
+                    <div class="career-salary">1200万円</div>
+                    <div class="career-skills">システム設計<br>技術マネジメント</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="freelance-section">
+            <div class="freelance-title">💼 フリーランス・業務委託での単価</div>
+            <div class="freelance-grid">
+                <div class="freelance-card">
+                    <div class="freelance-type">初級レベル</div>
+                    <div class="freelance-rate">50万円/月</div>
+                    <div class="freelance-desc">Spring Boot基礎<br>Web開発1年程度</div>
+                </div>
+                <div class="freelance-card">
+                    <div class="freelance-type">中級レベル</div>
+                    <div class="freelance-rate">75万円/月</div>
+                    <div class="freelance-desc">フルスタック開発<br>設計経験あり</div>
+                </div>
+                <div class="freelance-card">
+                    <div class="freelance-type">上級レベル</div>
+                    <div class="freelance-rate">100万円/月</div>
+                    <div class="freelance-desc">アーキテクト設計<br>技術リード経験</div>
+                </div>
+                <div class="freelance-card">
+                    <div class="freelance-type">エキスパート</div>
+                    <div class="freelance-rate">150万円/月</div>
+                    <div class="freelance-desc">システム全体設計<br>コンサルティング</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="conclusion">
+            <div class="conclusion-title">💎 Spring Boot習得の投資対効果</div>
+            <div class="conclusion-text">
+                Week 8〜10の3週間学習により、年収+270万円の向上が期待できます。<br>
+                学習投資に対するリターンは極めて高く、技術者としての市場価値を劇的に向上させます。
+            </div>
+            <div class="roi-highlight">
+                📊 投資対効果：3週間の学習で生涯年収+5000万円以上の向上！
+            </div>
+        </div>
+    </div>
+</body>
+</html>
