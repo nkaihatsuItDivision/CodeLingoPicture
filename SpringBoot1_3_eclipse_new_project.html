@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eclipse新規プロジェクト作成画面</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .eclipse-window {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+            width: 900px;
+            max-width: 95vw;
+        }
+
+        .window-header {
+            background: linear-gradient(to bottom, #f0f0f0, #d0d0d0);
+            padding: 10px 15px;
+            border-bottom: 1px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .window-title {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 5px;
+        }
+
+        .control-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .close { background: #ff5f56; }
+        .minimize { background: #ffbd2e; }
+        .maximize { background: #27ca3f; }
+
+        .dialog-content {
+            padding: 30px;
+        }
+
+        .dialog-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dialog-subtitle {
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .project-tree {
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            background: #f8f9fa;
+            padding: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .tree-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 5px;
+            margin: 2px 0;
+        }
+
+        .tree-item:hover {
+            background: #e8f4f8;
+        }
+
+        .tree-item.selected {
+            background: #3498db;
+            color: white;
+            font-weight: bold;
+            transform: scale(1.02);
+            box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+        }
+
+        .tree-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .indent-1 { margin-left: 20px; }
+        .indent-2 { margin-left: 40px; }
+        .indent-3 { margin-left: 60px; }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .step-indicator {
+            background: #27ae60;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .dialog-buttons {
+            margin-top: 30px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+
+        .spring-icon {
+            background: linear-gradient(135deg, #6db33f, #4e8b3b);
+            color: white;
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="eclipse-window">
+        <div class="window-header">
+            <div class="window-title">🌙 Eclipse IDE - New Project</div>
+            <div class="window-controls">
+                <div class="control-btn minimize"></div>
+                <div class="control-btn maximize"></div>
+                <div class="control-btn close"></div>
+            </div>
+        </div>
+        
+        <div class="dialog-content">
+            <div class="dialog-title">
+                <div class="step-indicator">1</div>
+                新規プロジェクト作成
+            </div>
+            <div class="dialog-subtitle">
+                プロジェクトタイプを選択してください
+            </div>
+
+            <div class="highlight-box">
+                💡 Spring Boot → Spring Starter Project を選択します
+            </div>
+
+            <div class="project-tree">
+                <div class="tree-item">
+                    <div class="tree-icon">📁</div>
+                    General
+                </div>
+                <div class="tree-item indent-1">
+                    <div class="tree-icon">📄</div>
+                    File
+                </div>
+                <div class="tree-item indent-1">
+                    <div class="tree-icon">📁</div>
+                    Folder
+                </div>
+                <div class="tree-item indent-1">
+                    <div class="tree-icon">📋</div>
+                    Project
+                </div>
+
+                <div class="tree-item">
+                    <div class="tree-icon">📁</div>
+                    Java
+                </div>
+                <div class="tree-item indent-1">
+                    <div class="tree-icon">☕</div>
+                    Java Project
+                </div>
+                <div class="tree-item indent-1">
+                    <div class="tree-icon">🌐</div>
+                    Maven Project
+                </div>
+
+                <div class="tree-item">
+                    <div class="tree-icon">📁</div>
+                    <span class="spring-icon">SPRING</span>
+                    Spring Boot
+                </div>
+                <div class="tree-item indent-1 selected">
+                    <div class="tree-icon">🚀</div>
+                    Spring Starter Project
+                </div>
+                <div class="tree-item indent-1">
+                    <div class="tree-icon">🏗️</div>
+                    Spring Legacy Project
+                </div>
+
+                <div class="tree-item">
+                    <div class="tree-icon">📁</div>
+                    Web
+                </div>
+                <div class="tree-item indent-1">
+                    <div class="tree-icon">🌐</div>
+                    Dynamic Web Project
+                </div>
+                <div class="tree-item indent-1">
+                    <div class="tree-icon">📱</div>
+                    Static Web Project
+                </div>
+
+                <div class="tree-item">
+                    <div class="tree-icon">📁</div>
+                    Git
+                </div>
+                <div class="tree-item indent-1">
+                    <div class="tree-icon">🔗</div>
+                    Projects from Git
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                ✅ 「Spring Starter Project」が選択されています<br>
+                このオプションで、Spring Bootプロジェクトの基本構造が自動生成されます
+            </div>
+
+            <div class="dialog-buttons">
+                <button class="btn btn-secondary">← Back</button>
+                <button class="btn btn-primary">Next →</button>
+                <button class="btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

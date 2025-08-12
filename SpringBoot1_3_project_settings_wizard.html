@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>プロジェクト設定ウィザード画面</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .eclipse-window {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+            width: 1000px;
+            max-width: 95vw;
+        }
+
+        .window-header {
+            background: linear-gradient(to bottom, #f0f0f0, #d0d0d0);
+            padding: 10px 15px;
+            border-bottom: 1px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .window-title {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 5px;
+        }
+
+        .control-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .close { background: #ff5f56; }
+        .minimize { background: #ffbd2e; }
+        .maximize { background: #27ca3f; }
+
+        .dialog-content {
+            padding: 30px;
+        }
+
+        .dialog-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dialog-subtitle {
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .form-container {
+            background: #f8f9fa;
+            border: 2px solid #3498db;
+            border-radius: 12px;
+            padding: 30px;
+        }
+
+        .form-row {
+            display: flex;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .form-label {
+            width: 200px;
+            font-weight: bold;
+            color: #2c3e50;
+            flex-shrink: 0;
+        }
+
+        .form-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #bdc3c7;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.3);
+        }
+
+        .form-input.filled {
+            background: linear-gradient(135deg, #e8f5e8, #f0f8f0);
+            border-color: #27ae60;
+            font-weight: bold;
+        }
+
+        .form-select {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #bdc3c7;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .form-select.filled {
+            background: linear-gradient(135deg, #e8f5e8, #f0f8f0);
+            border-color: #27ae60;
+            font-weight: bold;
+        }
+
+        .step-indicator {
+            background: #27ae60;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .highlight-section {
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 25px 0;
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.3);
+        }
+
+        .highlight-title {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .config-preview {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin-top: 15px;
+            border-left: 4px solid #3498db;
+        }
+
+        .config-line {
+            margin-bottom: 8px;
+            display: flex;
+        }
+
+        .config-key {
+            color: #f39c12;
+            font-weight: bold;
+            min-width: 120px;
+        }
+
+        .config-value {
+            color: #2ecc71;
+        }
+
+        .dialog-buttons {
+            margin-top: 30px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+
+        .important-note {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="eclipse-window">
+        <div class="window-header">
+            <div class="window-title">🌙 Eclipse IDE - New Spring Starter Project</div>
+            <div class="window-controls">
+                <div class="control-btn minimize"></div>
+                <div class="control-btn maximize"></div>
+                <div class="control-btn close"></div>
+            </div>
+        </div>
+        
+        <div class="dialog-content">
+            <div class="dialog-title">
+                <div class="step-indicator">2</div>
+                プロジェクト基本情報設定
+            </div>
+            <div class="dialog-subtitle">
+                Spring Bootプロジェクトの基本情報を入力してください
+            </div>
+
+            <div class="form-container">
+                <div class="form-row">
+                    <div class="form-label">Name:</div>
+                    <input type="text" class="form-input filled" value="StudentSpringBootMyBatisProject" readonly>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-label">Type:</div>
+                    <select class="form-select filled">
+                        <option selected>Maven</option>
+                        <option>Gradle</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-label">Language:</div>
+                    <select class="form-select filled">
+                        <option selected>Java</option>
+                        <option>Kotlin</option>
+                        <option>Groovy</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-label">Packaging:</div>
+                    <select class="form-select filled">
+                        <option selected>Jar</option>
+                        <option>War</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-label">Java Version:</div>
+                    <select class="form-select filled">
+                        <option>11</option>
+                        <option selected>17</option>
+                        <option>21</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-label">Group:</div>
+                    <input type="text" class="form-input filled" value="com.example" readonly>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-label">Artifact:</div>
+                    <input type="text" class="form-input filled" value="demo" readonly>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-label">Version:</div>
+                    <input type="text" class="form-input filled" value="0.0.1-SNAPSHOT" readonly>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-label">Description:</div>
+                    <input type="text" class="form-input filled" value="Student Management System using Spring Boot and MyBatis" readonly>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-label">Package:</div>
+                    <input type="text" class="form-input filled" value="com.example.demo" readonly>
+                </div>
+            </div>
+
+            <div class="highlight-section">
+                <div class="highlight-title">
+                    ⚡ 重要な設定ポイント
+                </div>
+                <div>
+                    • <strong>Name</strong>: Week 7.10のapplication.propertiesと一致<br>
+                    • <strong>Package</strong>: Week 7.10のクラスパッケージと一致<br>
+                    • <strong>Java Version</strong>: 17（Week 5のLombok動作確認済み）
+                </div>
+            </div>
+
+            <div class="important-note">
+                💡 これらの設定により、Week 7.10準備ファイルとの完全な統合が実現されます
+            </div>
+
+            <div class="config-preview">
+                <div class="config-line">
+                    <span class="config-key">ProjectName:</span>
+                    <span class="config-value">StudentSpringBootMyBatisProject</span>
+                </div>
+                <div class="config-line">
+                    <span class="config-key">BasePackage:</span>
+                    <span class="config-value">com.example.demo</span>
+                </div>
+                <div class="config-line">
+                    <span class="config-key">BuildTool:</span>
+                    <span class="config-value">Maven</span>
+                </div>
+                <div class="config-line">
+                    <span class="config-key">JavaVersion:</span>
+                    <span class="config-value">17</span>
+                </div>
+                <div class="config-line">
+                    <span class="config-key">Packaging:</span>
+                    <span class="config-value">Jar (Executable)</span>
+                </div>
+            </div>
+
+            <div class="dialog-buttons">
+                <button class="btn btn-secondary">← Back</button>
+                <button class="btn btn-primary">Next →</button>
+                <button class="btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

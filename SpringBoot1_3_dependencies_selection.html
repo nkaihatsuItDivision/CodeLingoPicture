@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>依存関係選択画面</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .eclipse-window {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+            width: 1100px;
+            max-width: 95vw;
+        }
+
+        .window-header {
+            background: linear-gradient(to bottom, #f0f0f0, #d0d0d0);
+            padding: 10px 15px;
+            border-bottom: 1px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .window-title {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 5px;
+        }
+
+        .control-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .close { background: #ff5f56; }
+        .minimize { background: #ffbd2e; }
+        .maximize { background: #27ca3f; }
+
+        .dialog-content {
+            padding: 30px;
+        }
+
+        .dialog-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dialog-subtitle {
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .step-indicator {
+            background: #27ae60;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .search-container {
+            margin-bottom: 25px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            font-size: 16px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%233498db"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>') no-repeat right 15px center;
+            background-size: 20px;
+        }
+
+        .dependencies-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .category {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .category-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dependency-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .dependency-item:hover {
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .dependency-item.selected {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            font-weight: bold;
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+        }
+
+        .dependency-checkbox {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            accent-color: #3498db;
+        }
+
+        .dependency-info {
+            flex: 1;
+        }
+
+        .dependency-name {
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .dependency-desc {
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+
+        .dependency-item.selected .dependency-desc {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .selected-dependencies {
+            background: linear-gradient(135deg, #27ae60, #16a085);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 25px 0;
+            box-shadow: 0 6px 20px rgba(39, 174, 96, 0.3);
+        }
+
+        .selected-title {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .selected-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .selected-tag {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .dialog-buttons {
+            margin-top: 30px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+
+        .highlight-note {
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="eclipse-window">
+        <div class="window-header">
+            <div class="window-title">🌙 Eclipse IDE - New Spring Starter Project Dependencies</div>
+            <div class="window-controls">
+                <div class="control-btn minimize"></div>
+                <div class="control-btn maximize"></div>
+                <div class="control-btn close"></div>
+            </div>
+        </div>
+        
+        <div class="dialog-content">
+            <div class="dialog-title">
+                <div class="step-indicator">3</div>
+                Spring Boot Starter依存関係選択
+            </div>
+            <div class="dialog-subtitle">
+                Week 8〜10で使用する機能を選択してください
+            </div>
+
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="依存関係を検索...">
+            </div>
+
+            <div class="dependencies-grid">
+                <div class="category">
+                    <div class="category-title">
+                        🌐 Web Development
+                    </div>
+                    
+                    <div class="dependency-item selected">
+                        <input type="checkbox" class="dependency-checkbox" checked>
+                        <div class="dependency-info">
+                            <div class="dependency-name">Spring Web</div>
+                            <div class="dependency-desc">Build web, including RESTful, applications using Spring MVC</div>
+                        </div>
+                    </div>
+
+                    <div class="dependency-item selected">
+                        <input type="checkbox" class="dependency-checkbox" checked>
+                        <div class="dependency-info">
+                            <div class="dependency-name">Thymeleaf</div>
+                            <div class="dependency-desc">A modern server-side Java template engine</div>
+                        </div>
+                    </div>
+
+                    <div class="dependency-item">
+                        <input type="checkbox" class="dependency-checkbox">
+                        <div class="dependency-info">
+                            <div class="dependency-name">Spring Security</div>
+                            <div class="dependency-desc">Highly customizable authentication and access-control</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category">
+                    <div class="category-title">
+                        🗄️ Database
+                    </div>
+                    
+                    <div class="dependency-item selected">
+                        <input type="checkbox" class="dependency-checkbox" checked>
+                        <div class="dependency-info">
+                            <div class="dependency-name">MySQL Driver</div>
+                            <div class="dependency-desc">MySQL JDBC and R2DBC driver</div>
+                        </div>
+                    </div>
+
+                    <div class="dependency-item selected">
+                        <input type="checkbox" class="dependency-checkbox" checked>
+                        <div class="dependency-info">
+                            <div class="dependency-name">MyBatis Framework</div>
+                            <div class="dependency-desc">MyBatis SQL mapper framework for Java</div>
+                        </div>
+                    </div>
+
+                    <div class="dependency-item">
+                        <input type="checkbox" class="dependency-checkbox">
+                        <div class="dependency-info">
+                            <div class="dependency-name">Spring Data JPA</div>
+                            <div class="dependency-desc">Persist data in SQL stores with Java Persistence API</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category">
+                    <div class="category-title">
+                        🔧 Developer Tools
+                    </div>
+                    
+                    <div class="dependency-item selected">
+                        <input type="checkbox" class="dependency-checkbox" checked>
+                        <div class="dependency-info">
+                            <div class="dependency-name">Spring Boot DevTools</div>
+                            <div class="dependency-desc">Provides fast application restarts, LiveReload</div>
+                        </div>
+                    </div>
+
+                    <div class="dependency-item">
+                        <input type="checkbox" class="dependency-checkbox">
+                        <div class="dependency-info">
+                            <div class="dependency-name">Spring Configuration Processor</div>
+                            <div class="dependency-desc">Generate metadata for developers to offer contextual help</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category">
+                    <div class="category-title">
+                        ✅ Testing & Validation
+                    </div>
+                    
+                    <div class="dependency-item">
+                        <input type="checkbox" class="dependency-checkbox" checked disabled>
+                        <div class="dependency-info">
+                            <div class="dependency-name">Spring Boot Starter Test</div>
+                            <div class="dependency-desc">Starter for testing Spring Boot applications (Default)</div>
+                        </div>
+                    </div>
+
+                    <div class="dependency-item">
+                        <input type="checkbox" class="dependency-checkbox">
+                        <div class="dependency-info">
+                            <div class="dependency-name">Validation</div>
+                            <div class="dependency-desc">Bean Validation with Hibernate validator</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="selected-dependencies">
+                <div class="selected-title">
+                    ✅ 選択済み依存関係（必須項目）
+                </div>
+                <div class="selected-list">
+                    <div class="selected-tag">Spring Web</div>
+                    <div class="selected-tag">Thymeleaf</div>
+                    <div class="selected-tag">MySQL Driver</div>
+                    <div class="selected-tag">MyBatis Framework</div>
+                    <div class="selected-tag">Spring Boot DevTools</div>
+                </div>
+            </div>
+
+            <div class="highlight-note">
+                💡 Lombok・Validationは後からpom.xmlで追加可能です<br>
+                これらの5つの依存関係でWeek 8の基本機能が実装できます
+            </div>
+
+            <div class="dialog-buttons">
+                <button class="btn btn-secondary">← Back</button>
+                <button class="btn btn-primary">Finish</button>
+                <button class="btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
