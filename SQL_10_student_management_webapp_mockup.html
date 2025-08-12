@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学生管理システム - Week 8〜10完成予定</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2C5F2D 0%, #97BC62 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            font-weight: 300;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        
+        .week-badges {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .week-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .search-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #97BC62;
+        }
+        
+        .search-title {
+            color: #2C5F2D;
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .search-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr auto auto;
+            gap: 15px;
+            align-items: end;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+        
+        .form-group input, .form-group select {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #97BC62;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #2C5F2D 0%, #97BC62 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(44,95,45,0.3);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+            color: white;
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545 0%, #e83e8c 100%);
+            color: white;
+        }
+        
+        .btn-sm {
+            padding: 8px 15px;
+            font-size: 0.9em;
+        }
+        
+        .actions-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .results-info {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .table-container {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead {
+            background: linear-gradient(135deg, #2C5F2D 0%, #97BC62 100%);
+            color: white;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        th {
+            font-weight: 600;
+            font-size: 1em;
+        }
+        
+        tbody tr:hover {
+            background: #f8f9fa;
+            transition: background 0.3s;
+        }
+        
+        .student-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .student-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        .student-details h4 {
+            margin: 0;
+            color: #333;
+            font-size: 1.1em;
+        }
+        
+        .student-details p {
+            margin: 0;
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .gpa-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        
+        .gpa-excellent {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .gpa-good {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .gpa-average {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .department-tag {
+            background: #e9ecef;
+            color: #495057;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .feature-callout {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .feature-callout h3 {
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .feature-item {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .feature-item h4 {
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        
+        .feature-item p {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="week-badges">
+                <span class="week-badge">Week 8</span>
+                <span class="week-badge">Week 9</span>
+                <span class="week-badge">Week 10</span>
+            </div>
+            <h1>学生管理システム</h1>
+            <p>Spring Boot + MyBatis + Thymeleaf で構築</p>
+        </div>
+        
+        <div class="content">
+            <!-- Week 10で実装予定の検索機能 -->
+            <div class="search-section">
+                <div class="search-title">🔍 学生検索 (Week 10で実装)</div>
+                <div class="search-form">
+                    <div class="form-group">
+                        <label>学生名</label>
+                        <input type="text" placeholder="名前で検索..." value="田中">
+                    </div>
+                    <div class="form-group">
+                        <label>メールアドレス</label>
+                        <input type="email" placeholder="メールで検索...">
+                    </div>
+                    <div class="form-group">
+                        <label>学科</label>
+                        <select>
+                            <option>全ての学科</option>
+                            <option>コンピュータ科学</option>
+                            <option>数学</option>
+                            <option>物理学</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary">検索</button>
+                    <button class="btn btn-primary" style="background: #6c757d;">クリア</button>
+                </div>
+            </div>
+            
+            <!-- Week 8〜9で実装予定のアクション -->
+            <div class="actions-section">
+                <div class="results-info">
+                    <strong>検索結果: 5名の学生</strong>
+                </div>
+                <a href="#" class="btn btn-success">➕ 新規学生登録 (Week 9)</a>
+            </div>
+            
+            <!-- Week 8で実装予定の学生一覧表示 -->
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>学生情報</th>
+                            <th>入学日</th>
+                            <th>GPA</th>
+                            <th>学科</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="student-info">
+                                    <div class="student-avatar">田</div>
+                                    <div class="student-details">
+                                        <h4>田中太郎</h4>
+                                        <p>tanaka@example.com</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>2024-04-01</td>
+                            <td><span class="gpa-badge gpa-excellent">3.8</span></td>
+                            <td><span class="department-tag">コンピュータ科学</span></td>
+                            <td>
+                                <div class="actions">
+                                    <button class="btn btn-warning btn-sm">編集</button>
+                                    <button class="btn btn-danger btn-sm">削除</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="student-info">
+                                    <div class="student-avatar">佐</div>
+                                    <div class="student-details">
+                                        <h4>佐藤花子</h4>
+                                        <p>sato@example.com</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>2024-04-01</td>
+                            <td><span class="gpa-badge gpa-excellent">3.9</span></td>
+                            <td><span class="department-tag">数学</span></td>
+                            <td>
+                                <div class="actions">
+                                    <button class="btn btn-warning btn-sm">編集</button>
+                                    <button class="btn btn-danger btn-sm">削除</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="student-info">
+                                    <div class="student-avatar">山</div>
+                                    <div class="student-details">
+                                        <h4>山田次郎</h4>
+                                        <p>yamada@example.com</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>2024-04-01</td>
+                            <td><span class="gpa-badge gpa-good">3.5</span></td>
+                            <td><span class="department-tag">物理学</span></td>
+                            <td>
+                                <div class="actions">
+                                    <button class="btn btn-warning btn-sm">編集</button>
+                                    <button class="btn btn-danger btn-sm">削除</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="student-info">
+                                    <div class="student-avatar">鈴</div>
+                                    <div class="student-details">
+                                        <h4>鈴木美咲</h4>
+                                        <p>suzuki@example.com</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>2024-04-01</td>
+                            <td><span class="gpa-badge gpa-good">3.2</span></td>
+                            <td><span class="department-tag">コンピュータ科学</span></td>
+                            <td>
+                                <div class="actions">
+                                    <button class="btn btn-warning btn-sm">編集</button>
+                                    <button class="btn btn-danger btn-sm">削除</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="student-info">
+                                    <div class="student-avatar">高</div>
+                                    <div class="student-details">
+                                        <h4>高橋健一</h4>
+                                        <p>takahashi@example.com</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>2024-04-01</td>
+                            <td><span class="gpa-badge gpa-average">2.8</span></td>
+                            <td><span class="department-tag">数学</span></td>
+                            <td>
+                                <div class="actions">
+                                    <button class="btn btn-warning btn-sm">編集</button>
+                                    <button class="btn btn-danger btn-sm">削除</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Week 8〜10で実装される機能説明 -->
+            <div class="feature-callout">
+                <h3>🚀 Week 8〜10で段階的に実装される機能</h3>
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <h4>📊 Week 8: 表示機能</h4>
+                        <p>学生一覧・詳細表示<br>Spring Boot + Thymeleaf</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>✏️ Week 9: 登録・更新</h4>
+                        <p>新規登録・編集機能<br>バリデーション付き</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>🔍 Week 10: 高度機能</h4>
+                        <p>動的検索・削除機能<br>本格Webアプリ完成</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
