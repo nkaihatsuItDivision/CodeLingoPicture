@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>データベース設計の良し悪し比較</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.2em;
+            font-weight: 600;
+        }
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            padding: 40px;
+        }
+        .design-box {
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .design-box:hover {
+            transform: translateY(-5px);
+        }
+        .good-design {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border: 3px solid #00b894;
+        }
+        .bad-design {
+            background: linear-gradient(135deg, #ffb3b3 0%, #ffcccc 100%);
+            border: 3px solid #e17055;
+        }
+        .design-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            color: white;
+        }
+        .good-title {
+            background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+        }
+        .bad-title {
+            background: linear-gradient(135deg, #e17055 0%, #d63031 100%);
+        }
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .feature-item {
+            background: rgba(255,255,255,0.9);
+            margin: 12px 0;
+            padding: 15px 20px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .icon {
+            font-size: 1.5em;
+            margin-right: 15px;
+            width: 30px;
+            text-align: center;
+        }
+        .good-icon {
+            color: #00b894;
+        }
+        .bad-icon {
+            color: #e17055;
+        }
+        .vs-separator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            grid-column: span 2;
+            margin: 20px 0;
+        }
+        .vs-text {
+            background: linear-gradient(135deg, #fd79a8 0%, #fdcb6e 100%);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.5em;
+            font-weight: bold;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        .diagram-section {
+            grid-column: span 2;
+            margin-top: 30px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            padding: 30px;
+        }
+        .diagram-title {
+            text-align: center;
+            font-size: 1.6em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 25px;
+        }
+        .table-example {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        .table-box {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .table-header {
+            font-weight: bold;
+            text-align: center;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            color: white;
+        }
+        .good-table .table-header {
+            background: #00b894;
+        }
+        .bad-table .table-header {
+            background: #e17055;
+        }
+        .table-content {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #ddd;
+        }
+        .good-table .table-content {
+            border-left-color: #00b894;
+        }
+        .bad-table .table-content {
+            border-left-color: #e17055;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💾 データベース設計の良し悪し比較</h1>
+        </div>
+        
+        <div class="comparison">
+            <div class="design-box good-design">
+                <div class="design-title good-title">✨ 良い設計</div>
+                <ul class="feature-list">
+                    <li class="feature-item">
+                        <span class="icon good-icon">🎯</span>
+                        <span>データ整合性：矛盾のないデータ保持</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="icon good-icon">🔧</span>
+                        <span>保守性：変更・拡張が容易</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="icon good-icon">⚡</span>
+                        <span>パフォーマンス：高速なデータ取得</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="icon good-icon">📖</span>
+                        <span>可読性：理解しやすい構造</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="icon good-icon">🛡️</span>
+                        <span>安全性：制約による品質保証</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="icon good-icon">📈</span>
+                        <span>拡張性：新機能追加が簡単</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="design-box bad-design">
+                <div class="design-title bad-title">❌ 悪い設計</div>
+                <ul class="feature-list">
+                    <li class="feature-item">
+                        <span class="icon bad-icon">🔄</span>
+                        <span>データ重複：同じ情報の重複記録</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="icon bad-icon">⚠️</span>
+                        <span>更新異常：一部データのみ更新のリスク</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="icon bad-icon">🗑️</span>
+                        <span>削除異常：必要データの意図しない削除</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="icon bad-icon">🚫</span>
+                        <span>挿入異常：関連データなしでは挿入不可</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="icon bad-icon">🐌</span>
+                        <span>性能劣化：非効率なデータアクセス</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="icon bad-icon">🔒</span>
+                        <span>保守困難：変更時の影響範囲が広い</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="diagram-section">
+                <div class="diagram-title">📊 設計例の比較</div>
+                <div class="table-example">
+                    <div class="table-box good-table">
+                        <div class="table-header">正規化済み設計</div>
+                        <div class="table-content">
+                            
+学生テーブル:<br>
+<table border="1" cellpadding="5" style="border-collapse: collapse;">
+  <tr><th>student_id</th><th>name</th><th>dept_code</th></tr>
+  <tr><td>S001</td><td>田中太郎</td><td>CS</td></tr>
+  <tr><td>S002</td><td>佐藤花子</td><td>MATH</td></tr>
+</table>
+
+学部テーブル:<br>
+<table border="1" cellpadding="5" style="border-collapse: collapse;">
+  <tr><th>dept_code</th><th>dept_name</th><th>building</th></tr>
+  <tr><td>CS</td><td>情報工学部</td><td>A棟</td></tr>
+  <tr><td>MATH</td><td>数学部</td><td>B棟</td></tr>
+</table>
+
+<strong>✅ 学部名変更は1箇所のみ更新</strong><br>
+<strong>✅ データの整合性が保証される</strong><br>
+<strong>✅ 新しい学部情報を簡単に追加</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="table-box bad-table">
+                        <div class="table-header">非正規化設計</div>
+                        <div class="table-content">
+学生テーブル:<br>
+<table border="1" cellpadding="5" style="border-collapse: collapse;">
+  <tr><th>student_id</th><th>name</th><th>dept_name</th></tr>
+  <tr><td>S001</td><td>田中太郎</td><td>情報工学部</td></tr>
+  <tr><td>S002</td><td>佐藤花子</td><td>数学部</td></tr>
+    <tr><td>S003</td><td>山田次郎</td><td>情報工学部</td></tr>
+    <tr><td>S004</td><td>鈴木一郎</td><td>情報工学部</td></tr>
+</table>
+
+
+<strong>❌ 学部名変更は複数箇所を更新</strong><br>
+<strong>❌ 入力ミスで不整合発生リスク</strong><br>
+<strong>❌ 学部情報の追加が困難</strong><br>
+<strong>❌ ストレージ容量の無駄遣い</strong><br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

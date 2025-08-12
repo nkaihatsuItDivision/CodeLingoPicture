@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ER図の記号と読み方</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #2d3436 0%, #636e72 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.2em;
+            font-weight: 600;
+        }
+        .content {
+            padding: 40px;
+        }
+        .symbols-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        .symbol-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .symbol-card:hover {
+            transform: translateY(-5px);
+        }
+        .symbol-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2d3436;
+            margin-bottom: 20px;
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            color: white;
+        }
+        .entity-title {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+        }
+        .attribute-title {
+            background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);
+        }
+        .relationship-title {
+            background: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%);
+        }
+        .cardinality-title {
+            background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+        }
+        .symbol-visual {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+        }
+        .entity-box {
+            display: inline-block;
+            padding: 15px 30px;
+            border: 3px solid #74b9ff;
+            background: #e8f4ff;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin: 10px;
+        }
+        .attribute-circle {
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+            border: 3px solid #fd79a8;
+            border-radius: 50%;
+            background: #ffe8f3;
+            line-height: 74px;
+            text-align: center;
+            font-weight: bold;
+            margin: 10px;
+        }
+        .primary-key {
+            text-decoration: underline;
+            font-weight: bold;
+        }
+        .relationship-diamond {
+            display: inline-block;
+            width: 100px;
+            height: 60px;
+            background: #fff3e0;
+            border: 3px solid #fdcb6e;
+            transform: rotate(45deg);
+            line-height: 54px;
+            text-align: center;
+            font-weight: bold;
+            margin: 20px;
+            position: relative;
+        }
+        .relationship-text {
+            transform: rotate(-45deg);
+            font-size: 0.9em;
+        }
+        .cardinality-example {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .cardinality-line {
+            width: 60px;
+            height: 3px;
+            background: #636e72;
+            position: relative;
+        }
+        .cardinality-marker {
+            position: absolute;
+            top: -10px;
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #2d3436;
+        }
+        .one { right: -5px; }
+        .many { right: -5px; }
+        .many::after {
+            content: "∞";
+        }
+        .symbol-description {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #636e72;
+            margin-bottom: 15px;
+        }
+        .symbol-examples {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            border-left: 4px solid;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+        }
+        .entity-card .symbol-examples {
+            border-left-color: #74b9ff;
+        }
+        .attribute-card .symbol-examples {
+            border-left-color: #fd79a8;
+        }
+        .relationship-card .symbol-examples {
+            border-left-color: #fdcb6e;
+        }
+        .cardinality-card .symbol-examples {
+            border-left-color: #a29bfe;
+        }
+        .er-example {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 40px;
+        }
+        .example-title {
+            text-align: center;
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #2d3436;
+            margin-bottom: 30px;
+        }
+        .er-canvas {
+            background: white;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+            position: relative;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* または flex-start */
+            gap: 120px; /* 学部と学生の間隔を広げる */
+            position: relative;
+            
+        }
+        .er-entity {
+            display: inline-block;
+            border: 3px solid #74b9ff;
+            background: #e8f4ff;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 8px;
+            vertical-align: top;
+
+            
+        }
+        .er-entity-title {
+            font-weight: bold;
+            font-size: 1.3em;
+            color: #0984e3;
+            border-bottom: 2px solid #74b9ff;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .er-attributes {
+            text-align: left;
+            font-size: 1em;
+            line-height: 1.8;
+        }
+        .er-pk {
+            text-decoration: underline;
+            font-weight: bold;
+            color: #2d3436;
+        }
+        .er-fk {
+            font-style: italic;
+            color: #636e72;
+        }
+        .connection-line {
+            position: absolute;
+            height: 3px;
+            background: #636e72;
+            top: 50%;
+            left: 23%;
+            right: 26%;
+        }
+        .relationship-label {
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #fff3e0;
+            border: 2px solid #fdcb6e;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            color: #e17055;
+        }
+        .cardinality-left {
+            position: absolute;
+            top: 42%;
+            left: 32%;
+            font-weight: bold;
+            color: #2d3436;
+        }
+        .cardinality-right {
+            position: absolute;
+            top: 42%;
+            right: 32%;
+            font-weight: bold;
+            color: #2d3436;
+        }
+        .reading-guide {
+            background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+        .guide-title {
+            font-size: 1.6em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .guide-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .guide-step {
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+        .step-number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: white;
+            color: #00b894;
+            border-radius: 50%;
+            line-height: 40px;
+            font-weight: bold;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+        .step-text {
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 ER図の記号と読み方</h1>
+        </div>
+        
+        <div class="content">
+            <div class="symbols-section">
+                <div class="symbol-card entity-card">
+                    <div class="symbol-title entity-title">📦 エンティティ（Entity）</div>
+                    <div class="symbol-description">
+                        テーブルに相当する「モノ」を表現。
+                        長方形で囲んで表示する。
+                    </div>
+                    <div class="symbol-visual">
+                        <div class="entity-box">学生</div>
+                        <div class="entity-box">科目</div>
+                        <div class="entity-box">成績</div>
+                    </div>
+                    <div class="symbol-examples">
+例：<br>
+• 学生（Student）<br>
+• 科目（Subject） <br>
+• 成績（Score）<br>
+• 学部（Department）<br>
+• 履修（Enrollment）<br>
+
+物理テーブル対応：<br>
+CREATE TABLE student (...);<br>
+CREATE TABLE subject (...);<br>
+                    </div>
+                </div>
+
+                <div class="symbol-card attribute-card">
+                    <div class="symbol-title attribute-title">🏷️ 属性（Attribute）</div>
+                    <div class="symbol-description">
+                        カラムに相当するエンティティの「性質」。
+                        楕円形で表示し、線でエンティティと接続。
+                    </div>
+                    <div class="symbol-visual">
+                        <div class="attribute-circle"><span class="primary-key">学生ID</span></div>
+                        <div class="attribute-circle">名前</div>
+                        <div class="attribute-circle">年齢</div>
+                    </div>
+                    <div class="symbol-examples">
+学生エンティティの属性：<br>
+• 学生ID（主キー：下線付き）<br>
+• 名前<br>
+• 年齢  <br>
+• メールアドレス<br>
+• 入学日<br>
+
+物理テーブル対応：<br>
+student_id VARCHAR(10) PRIMARY KEY,<br>
+name VARCHAR(100) NOT NULL,<br>
+age INT NOT NULL<br>
+                    </div>
+                </div>
+
+                <div class="symbol-card relationship-card">
+                    <div class="symbol-title relationship-title">🔗 リレーションシップ</div>
+                    <div class="symbol-description">
+                        エンティティ間の「関係」を表現。
+                        ひし形で表示し、線でエンティティと接続。
+                    </div>
+                    <div class="symbol-visual">
+                        <div class="relationship-diamond">
+                            <div class="relationship-text">所属</div>
+                        </div>
+                        <div class="relationship-diamond">
+                            <div class="relationship-text">履修</div>
+                        </div>
+                    </div>
+                    <div class="symbol-examples">
+関係の例：<br>
+• 学生 ←所属→ 学部<br>
+• 学生 ←履修→ 科目<br>
+• 学生 ←取得→ 成績<br>
+
+物理テーブル対応：<br>
+FOREIGN KEY (department_code) <br>
+REFERENCES department(department_code)<br>
+                    </div>
+                </div>
+
+                <div class="symbol-card cardinality-card">
+                    <div class="symbol-title cardinality-title">🔢 カーディナリティ</div>
+                    <div class="symbol-description">
+                        関係の「数量的制約」を表現。
+                        線の端に数字や記号で表示。
+                    </div>
+                    <div class="symbol-visual">
+                        <div class="cardinality-example">
+                            <span>1</span>
+                            <div class="cardinality-line"></div>
+                            <span>N</span>
+                        </div>
+                        <div style="margin: 10px 0; font-size: 0.9em; color: #636e72;">
+                            1対多の関係
+                        </div>
+                    </div>
+                    <div class="symbol-examples">
+カーディナリティの種類：<br>
+• 1:1（一対一）<br>
+  例：学生 ←→ 学生証<br>
+• 1:N（一対多）  <br>
+  例：学部 ←→ 学生<br>
+• M:N（多対多）<br>
+  例：学生 ←→ 科目<br>
+
+物理実装：<br>
+外部キー制約で1:N関係を実現<br>
+中間テーブルでM:N関係を実現<br>
+                    </div>
+                </div>
+            </div>
+
+            <div class="er-example">
+                <div class="example-title">📋 完整なER図の例</div>
+                <div class="er-canvas">
+                    <div class="er-entity">
+                        <div class="er-entity-title">学部</div>
+                        <div class="er-attributes">
+                            <div class="er-pk">学部コード</div>
+                            <div>学部名</div>
+                            <div>建物</div>
+                            <div>電話番号</div>
+                        </div>
+                    </div>
+
+                    <div class="er-entity">
+                        <div class="er-entity-title">学生</div>
+                        <div class="er-attributes">
+                            <div class="er-pk">学生ID</div>
+                            <div>名前</div>
+                            <div>年齢</div>
+                            <div>メール</div>
+                            <div class="er-fk">学部コード(FK)</div>
+                        </div>
+                    </div>
+
+                    <div class="connection-line"></div>
+                    <div class="relationship-label">所属</div>
+                    <div class="cardinality-left">1</div>
+                    <div class="cardinality-right">N</div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 20px; padding: 20px; background: white; border-radius: 8px; border-left: 4px solid #00b894;">
+                    <strong>読み方：</strong> 「1つの学部に、N人の学生が所属する」<br>
+                    <strong>意味：</strong> 学部テーブルと学生テーブルが1:Nの関係で結ばれている
+                </div>
+            </div>
+
+            <div class="reading-guide">
+                <div class="guide-title">📖 ER図の読み方ガイド</div>
+                <div class="guide-steps">
+                    <div class="guide-step">
+                        <div class="step-number">1</div>
+                        <div class="step-text">
+                            <strong>エンティティを確認</strong><br>
+                            どんな「モノ」があるか
+                        </div>
+                    </div>
+                    <div class="guide-step">
+                        <div class="step-number">2</div>
+                        <div class="step-text">
+                            <strong>属性を確認</strong><br>
+                            各エンティティの「性質」
+                        </div>
+                    </div>
+                    <div class="guide-step">
+                        <div class="step-number">3</div>
+                        <div class="step-text">
+                            <strong>主キーを特定</strong><br>
+                            下線付きの属性
+                        </div>
+                    </div>
+                    <div class="guide-step">
+                        <div class="step-number">4</div>
+                        <div class="step-text">
+                            <strong>関係を読む</strong><br>
+                            エンティティ間の「つながり」
+                        </div>
+                    </div>
+                    <div class="guide-step">
+                        <div class="step-number">5</div>
+                        <div class="step-text">
+                            <strong>カーディナリティ確認</strong><br>
+                            「何対何」の関係か
+                        </div>
+                    </div>
+                    <div class="guide-step">
+                        <div class="step-number">6</div>
+                        <div class="step-text">
+                            <strong>外部キーを推定</strong><br>
+                            物理テーブルでの実装方法
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
