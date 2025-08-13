@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entity概念とテーブル対応図</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+
+        .mapping-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 40px;
+            margin: 30px 0;
+        }
+
+        .database-side, .java-side {
+            flex: 1;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border: 3px solid #dee2e6;
+        }
+
+        .database-side {
+            border-color: #e74c3c;
+            background: linear-gradient(145deg, #fff5f5, #fdf2f2);
+        }
+
+        .java-side {
+            border-color: #3498db;
+            background: linear-gradient(145deg, #f0f8ff, #e6f3ff);
+        }
+
+        .side-title {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 10px;
+            color: white;
+        }
+
+        .database-side .side-title {
+            background: #e74c3c;
+        }
+
+        .java-side .side-title {
+            background: #3498db;
+        }
+
+        .table-visual, .class-visual {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .table-name, .class-name {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            padding: 8px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .table-name {
+            background: #c0392b;
+        }
+
+        .class-name {
+            background: #2980b9;
+        }
+
+        .field-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 12px;
+            margin: 5px 0;
+            border-radius: 6px;
+            font-size: 14px;
+            border-left: 4px solid #95a5a6;
+        }
+
+        .field-row:nth-child(even) {
+            background: #f1f2f6;
+        }
+
+        .field-name {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .field-type {
+            color: #7f8c8d;
+            font-style: italic;
+        }
+
+        .center-connection {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 20px;
+        }
+
+        .connection-symbol {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            color: white;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .connection-text {
+            text-align: center;
+            font-weight: bold;
+            color: #e67e22;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        .benefits {
+            margin-top: 40px;
+            background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 25px;
+        }
+
+        .benefits-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px;
+            border-radius: 10px;
+        }
+
+        .benefit-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .benefit-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #3498db;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .benefit-icon {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+
+        .benefit-title {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .benefit-desc {
+            color: #7f8c8d;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .mapping-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .center-connection {
+                flex-direction: row;
+                margin: 20px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">
+            📊 Entity概念とテーブル対応図
+        </div>
+
+        <div class="mapping-container">
+            <div class="database-side">
+                <div class="side-title">
+                    🗄️ データベース（MySQL）
+                </div>
+                
+                <div class="table-visual">
+                    <div class="table-name">
+                        students テーブル
+                    </div>
+                    
+                    <div class="field-row">
+                        <span class="field-name">student_id</span>
+                        <span class="field-type">BIGINT AUTO_INCREMENT</span>
+                    </div>
+                    <div class="field-row">
+                        <span class="field-name">student_name</span>
+                        <span class="field-type">VARCHAR(100) NOT NULL</span>
+                    </div>
+                    <div class="field-row">
+                        <span class="field-name">email</span>
+                        <span class="field-type">VARCHAR(100) UNIQUE</span>
+                    </div>
+                    <div class="field-row">
+                        <span class="field-name">birth_date</span>
+                        <span class="field-type">DATE</span>
+                    </div>
+                    <div class="field-row">
+                        <span class="field-name">department_id</span>
+                        <span class="field-type">INT</span>
+                    </div>
+                    <div class="field-row">
+                        <span class="field-name">enrollment_year</span>
+                        <span class="field-type">INT NOT NULL</span>
+                    </div>
+                    <div class="field-row">
+                        <span class="field-name">created_at</span>
+                        <span class="field-type">TIMESTAMP</span>
+                    </div>
+                    <div class="field-row">
+                        <span class="field-name">updated_at</span>
+                        <span class="field-type">TIMESTAMP</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="center-connection">
+                <div class="connection-symbol">⟷</div>
+                <div class="connection-text">完全対応<br>マッピング</div>
+            </div>
+
+            <div class="java-side">
+                <div class="side-title">
+                    ☕ Java（Entity クラス）
+                </div>
+                
+                <div class="class-visual">
+                    <div class="class-name">
+                        Student クラス
+                    </div>
+                    
+                    <div class="field-row">
+                        <span class="field-name">studentId</span>
+                        <span class="field-type">Long</span>
+                    </div>
+                    <div class="field-row">
+                        <span class="field-name">studentName</span>
+                        <span class="field-type">String</span>
+                    </div>
+                    <div class="field-row">
+                        <span class="field-name">email</span>
+                        <span class="field-type">String</span>
+                    </div>
+                    <div class="field-row">
+                        <span class="field-name">birthDate</span>
+                        <span class="field-type">LocalDate</span>
+                    </div>
+                    <div class="field-row">
+                        <span class="field-name">departmentId</span>
+                        <span class="field-type">Integer</span>
+                    </div>
+                    <div class="field-row">
+                        <span class="field-name">enrollmentYear</span>
+                        <span class="field-type">Integer</span>
+                    </div>
+                    <div class="field-row">
+                        <span class="field-name">createdAt</span>
+                        <span class="field-type">LocalDateTime</span>
+                    </div>
+                    <div class="field-row">
+                        <span class="field-name">updatedAt</span>
+                        <span class="field-type">LocalDateTime</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="benefits">
+            <div class="benefits-title">
+                🎯 Entityクラスの重要な役割
+            </div>
+            
+            <div class="benefit-grid">
+                <div class="benefit-item">
+                    <div class="benefit-title">
+                        <span class="benefit-icon">🏗️</span>データベーステーブルの表現
+                    </div>
+                    <div class="benefit-desc">
+                        1つのテーブル = 1つのEntityクラス<br>
+                        データ構造を Java オブジェクトとして表現
+                    </div>
+                </div>
+                
+                <div class="benefit-item">
+                    <div class="benefit-title">
+                        <span class="benefit-icon">🔗</span>オブジェクト指向とRDBの統合
+                    </div>
+                    <div class="benefit-desc">
+                        Java オブジェクトとDBテーブルの橋渡し<br>
+                        異なるパラダイムの完全統合
+                    </div>
+                </div>
+                
+                <div class="benefit-item">
+                    <div class="benefit-title">
+                        <span class="benefit-icon">🛡️</span>型安全性の確保
+                    </div>
+                    <div class="benefit-desc">
+                        データ型をJavaで厳密に管理<br>
+                        コンパイル時のエラー検出
+                    </div>
+                </div>
+                
+                <div class="benefit-item">
+                    <div class="benefit-title">
+                        <span class="benefit-icon">⚙️</span>ビジネスロジックの基盤
+                    </div>
+                    <div class="benefit-desc">
+                        アプリケーション処理の核となるデータ構造<br>
+                        システム全体の設計基盤
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

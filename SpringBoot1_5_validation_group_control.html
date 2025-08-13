@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>バリデーショングループ詳細制御</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #9b59b6;
+            padding-bottom: 15px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        .overview-section {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .overview-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .overview-text {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .problem-solution {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 30px;
+            margin: 40px 0;
+            align-items: center;
+        }
+
+        .problem-section, .solution-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            min-height: 400px;
+        }
+
+        .problem-section {
+            border-left: 6px solid #e74c3c;
+        }
+
+        .solution-section {
+            border-left: 6px solid #27ae60;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-icon {
+            font-size: 28px;
+            margin-right: 15px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .transformation-arrow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: #9b59b6;
+            animation: pulse 2s infinite;
+        }
+
+        .arrow-text {
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 10px;
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            margin: 15px 0;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .code-label {
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: #9b59b6;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .annotation {
+            color: #f39c12;
+            font-weight: bold;
+        }
+
+        .keyword {
+            color: #3498db;
+            font-weight: bold;
+        }
+
+        .interface-name {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .field {
+            color: #27ae60;
+        }
+
+        .group-definitions {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .definitions-title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+
+        .group-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .group-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-top: 5px solid;
+            transition: all 0.3s ease;
+        }
+
+        .group-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .create-group { border-top-color: #3498db; }
+        .update-group { border-top-color: #f39c12; }
+
+        .group-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .group-icon {
+            font-size: 24px;
+            margin-right: 15px;
+        }
+
+        .group-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .group-description {
+            color: #7f8c8d;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .scenario-examples {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .scenario-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-left: 6px solid;
+        }
+
+        .create-scenario { border-left-color: #3498db; }
+        .update-scenario { border-left-color: #f39c12; }
+
+        .scenario-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .scenario-icon {
+            font-size: 24px;
+            margin-right: 15px;
+        }
+
+        .scenario-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .scenario-description {
+            color: #7f8c8d;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .validation-rules {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .rules-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .rules-list {
+            font-size: 13px;
+            color: #6c757d;
+            line-height: 1.5;
+        }
+
+        .controller-usage {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        .usage-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+
+        .usage-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+        }
+
+        .usage-example {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .example-header {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #f39c12;
+            font-size: 16px;
+        }
+
+        .advanced-features {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .features-title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-item {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            border-top: 4px solid #9b59b6;
+        }
+
+        .feature-icon {
+            font-size: 32px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .feature-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .feature-text {
+            font-size: 14px;
+            color: #7f8c8d;
+            line-height: 1.5;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .highlight-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .highlight-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .highlight-text {
+            font-size: 16px;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .problem-solution {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .transformation-arrow {
+                transform: rotate(90deg);
+                font-size: 32px;
+            }
+            
+            .group-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .scenario-examples {
+                grid-template-columns: 1fr;
+            }
+            
+            .usage-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .float-effect {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .pulse-effect {
+            animation: pulse-bg 2s infinite;
+        }
+
+        @keyframes pulse-bg {
+            0%, 100% { background-color: rgba(155, 89, 182, 0.1); }
+            50% { background-color: rgba(155, 89, 182, 0.2); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">バリデーショングループ詳細制御</div>
+        <div class="subtitle">CreateGroup・UpdateGroupによる高度なバリデーション設定</div>
+
+        <div class="overview-section">
+            <div class="overview-title">🎯 グループバリデーションの威力</div>
+            <div class="overview-text">
+                新規登録と更新で異なるバリデーションルールを適用！<br>
+                CreateGroup・UpdateGroupで状況に応じた柔軟な検証を実現
+            </div>
+        </div>
+
+        <div class="problem-solution">
+            <div class="problem-section float-effect">
+                <div class="section-header">
+                    <div class="section-icon">😟</div>
+                    <div class="section-title">従来の課題</div>
+                </div>
+                
+                <h4 style="color: #e74c3c; margin-bottom: 15px;">🚫 一律のバリデーション</h4>
+                <div class="code-block">
+                    <div class="code-label">問題のある実装</div>
+<span class="annotation">@Entity</span><br>
+<span class="keyword">public class</span> Student {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="annotation">@NotNull</span> <span class="comment">// 常に必須</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="field">private Long studentId;</span><br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="annotation">@NotBlank</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="field">private String name;</span><br>
+}
+                </div>
+                
+                <div style="background: #fee; border: 1px solid #fcc; border-radius: 8px; padding: 15px; margin-top: 15px;">
+                    <strong style="color: #e74c3c;">問題点:</strong><br>
+                    • 新規登録時: IDは不要（自動生成）なのに必須チェック<br>
+                    • 更新時: IDは必須なのに検証が甘い<br>
+                    • 一つのルールしか設定できない制限
+                </div>
+            </div>
+
+            <div class="transformation-arrow">
+                🔄
+                <div class="arrow-text">グループ適用</div>
+            </div>
+
+            <div class="solution-section float-effect">
+                <div class="section-header">
+                    <div class="section-icon">🎉</div>
+                    <div class="section-title">グループ制御後</div>
+                </div>
+                
+                <h4 style="color: #27ae60; margin-bottom: 15px;">✅ 状況別バリデーション</h4>
+                <div class="code-block">
+                    <div class="code-label">改善後の実装</div>
+<span class="annotation">@Entity</span><br>
+<span class="keyword">public class</span> Student {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="annotation">@NotNull(groups = UpdateGroup.class)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="field">private Long studentId;</span> <span class="comment">// 更新時のみ必須</span><br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="annotation">@NotBlank(groups = {CreateGroup.class, UpdateGroup.class})</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="field">private String name;</span> <span class="comment">// 常に必須</span><br>
+}
+                </div>
+                
+                <div style="background: #e8f5e8; border: 1px solid #c3e6c3; border-radius: 8px; padding: 15px; margin-top: 15px;">
+                    <strong style="color: #27ae60;">解決効果:</strong><br>
+                    • 新規登録: IDチェックなし、名前は必須<br>
+                    • 更新: ID・名前ともに必須<br>
+                    • 柔軟で適切なバリデーション実現
+                </div>
+            </div>
+        </div>
+
+        <div class="group-definitions">
+            <div class="definitions-title">📝 バリデーショングループの定義</div>
+            <div class="group-cards">
+                <div class="group-card create-group pulse-effect">
+                    <div class="group-header">
+                        <div class="group-icon">➕</div>
+                        <div class="group-name">CreateGroup</div>
+                    </div>
+                    <div class="group-description">
+                        新規登録時に適用されるバリデーションルール。
+                        IDは不要、必要最小限の項目のみをチェック。
+                    </div>
+                    <div class="code-block">
+<span class="keyword">public interface</span> <span class="interface-name">CreateGroup</span> {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// マーカーインターフェース</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 実装内容は不要</span><br>
+}
+                    </div>
+                </div>
+
+                <div class="group-card update-group">
+                    <div class="group-header">
+                        <div class="group-icon">🔄</div>
+                        <div class="group-name">UpdateGroup</div>
+                    </div>
+                    <div class="group-description">
+                        更新時に適用されるバリデーションルール。
+                        IDは必須、既存データの整合性を重視。
+                    </div>
+                    <div class="code-block">
+<span class="keyword">public interface</span> <span class="interface-name">UpdateGroup</span> {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// マーカーインターフェース</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 実装内容は不要</span><br>
+}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="scenario-examples">
+            <div class="scenario-card create-scenario">
+                <div class="scenario-header">
+                    <div class="scenario-icon">➕</div>
+                    <div class="scenario-title">新規登録シナリオ</div>
+                </div>
+                <div class="scenario-description">
+                    学生の新規登録では、IDは自動生成されるため不要。
+                    名前やメールアドレスなど基本情報のみを検証。
+                </div>
+                <div class="code-block">
+<span class="annotation">@NotNull(groups = UpdateGroup.class)</span><br>
+<span class="field">private Long studentId;</span> <span class="comment">// 新規時はチェックなし</span><br><br>
+<span class="annotation">@NotBlank(groups = {CreateGroup.class, UpdateGroup.class})</span><br>
+<span class="field">private String name;</span> <span class="comment">// 新規時も必須</span><br><br>
+<span class="annotation">@Email(groups = {CreateGroup.class, UpdateGroup.class})</span><br>
+<span class="field">private String email;</span> <span class="comment">// 新規時も必須</span>
+                </div>
+                <div class="validation-rules">
+                    <div class="rules-title">適用されるルール:</div>
+                    <div class="rules-list">
+                        • studentId: チェックなし（自動生成のため）<br>
+                        • name: 必須チェック<br>
+                        • email: 形式チェック
+                    </div>
+                </div>
+            </div>
+
+            <div class="scenario-card update-scenario">
+                <div class="scenario-header">
+                    <div class="scenario-icon">🔄</div>
+                    <div class="scenario-title">更新シナリオ</div>
+                </div>
+                <div class="scenario-description">
+                    既存学生の情報更新では、IDは必須（どの学生かを特定するため）。
+                    全ての項目で厳密なバリデーションを実行。
+                </div>
+                <div class="code-block">
+<span class="annotation">@NotNull(groups = UpdateGroup.class)</span><br>
+<span class="field">private Long studentId;</span> <span class="comment">// 更新時は必須</span><br><br>
+<span class="annotation">@NotBlank(groups = {CreateGroup.class, UpdateGroup.class})</span><br>
+<span class="field">private String name;</span> <span class="comment">// 更新時も必須</span><br><br>
+<span class="annotation">@Email(groups = {CreateGroup.class, UpdateGroup.class})</span><br>
+<span class="field">private String email;</span> <span class="comment">// 更新時も必須</span>
+                </div>
+                <div class="validation-rules">
+                    <div class="rules-title">適用されるルール:</div>
+                    <div class="rules-list">
+                        • studentId: 必須チェック（特定のため）<br>
+                        • name: 必須チェック<br>
+                        • email: 形式チェック<br>
+                        • すべての制約が有効
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controller-usage">
+            <div class="usage-title">🎮 Controllerでのグループ指定方法</div>
+            <div class="usage-grid">
+                <div class="usage-example">
+                    <div class="example-header">➕ 新規登録メソッド</div>
+                    <div class="code-block" style="background: rgba(255,255,255,0.2);">
+<span class="annotation">@PostMapping("/students")</span><br>
+<span class="keyword">public</span> ResponseEntity&lt;Student&gt; createStudent(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="annotation">@Validated(CreateGroup.class)</span> <span class="annotation">@RequestBody</span> Student student<br>
+) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// CreateGroupのルールのみ適用</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// studentIdはチェックされない</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> studentService.save(student);<br>
+}
+                    </div>
+                </div>
+
+                <div class="usage-example">
+                    <div class="example-header">🔄 更新メソッド</div>
+                    <div class="code-block" style="background: rgba(255,255,255,0.2);">
+<span class="annotation">@PutMapping("/students/{id}")</span><br>
+<span class="keyword">public</span> ResponseEntity&lt;Student&gt; updateStudent(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="annotation">@PathVariable</span> Long id,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="annotation">@Validated(UpdateGroup.class)</span> <span class="annotation">@RequestBody</span> Student student<br>
+) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// UpdateGroupのルールが適用</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// studentIdが必須チェックされる</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> studentService.update(student);<br>
+}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="advanced-features">
+            <div class="features-title">🚀 高度なグループ機能</div>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <span class="feature-icon">🔄</span>
+                    <div class="feature-title">複数グループ指定</div>
+                    <div class="feature-text">
+                        一つのフィールドに複数の
+                        グループを同時指定可能
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <span class="feature-icon">🎯</span>
+                    <div class="feature-title">継承グループ</div>
+                    <div class="feature-text">
+                        グループ間の継承関係を
+                        定義して階層構造を構築
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <span class="feature-icon">🔧</span>
+                    <div class="feature-title">カスタムグループ</div>
+                    <div class="feature-text">
+                        独自のバリデーショングループを
+                        自由に定義・追加
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <span class="feature-icon">⚡</span>
+                    <div class="feature-title">動的切り替え</div>
+                    <div class="feature-text">
+                        実行時にバリデーション
+                        グループを動的に選択
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <span class="feature-icon">📊</span>
+                    <div class="feature-title">条件分岐</div>
+                    <div class="feature-text">
+                        業務ロジックに応じた
+                        複雑な条件制御が可能
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <span class="feature-icon">🛡️</span>
+                    <div class="feature-title">セキュリティ強化</div>
+                    <div class="feature-text">
+                        操作種別に応じた
+                        適切なセキュリティ制御
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <div class="highlight-title">🎯 Week 8.5での重要ポイント</div>
+            <div class="highlight-text">
+                バリデーショングループにより、新規登録と更新で異なるルールを適用可能！<br>
+                CreateGroup・UpdateGroupの使い分けで、より実用的で柔軟な<br>
+                データ検証システムが構築できます。Week 8.6以降で威力を発揮！
+            </div>
+        </div>
+    </div>
+</body>
+</html>

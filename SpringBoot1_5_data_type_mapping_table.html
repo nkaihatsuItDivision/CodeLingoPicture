@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>データ型マッピング表</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #f39c12;
+            padding-bottom: 15px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        .overview-section {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .overview-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .overview-text {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .mapping-table {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin: 30px 0;
+        }
+
+        .table-header {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 2fr 1.5fr;
+            gap: 20px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .table-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 2fr 1.5fr;
+            gap: 20px;
+            padding: 20px;
+            border-bottom: 1px solid #ecf0f1;
+            transition: all 0.3s ease;
+            align-items: center;
+        }
+
+        .table-row:hover {
+            background: #f8f9fa;
+            transform: translateX(5px);
+        }
+
+        .table-row:last-child {
+            border-bottom: none;
+        }
+
+        .java-type {
+            color: #3498db;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+
+        .mysql-type {
+            color: #e74c3c;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+
+        .usage-description {
+            color: #2c3e50;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .notes {
+            color: #7f8c8d;
+            font-size: 13px;
+            font-style: italic;
+        }
+
+        .category-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .category-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-top: 5px solid;
+            transition: all 0.3s ease;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .numeric-card { border-top-color: #3498db; }
+        .text-card { border-top-color: #27ae60; }
+        .datetime-card { border-top-color: #9b59b6; }
+        .boolean-card { border-top-color: #e74c3c; }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .category-icon {
+            font-size: 24px;
+            margin-right: 15px;
+        }
+
+        .category-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .type-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 3px solid #dee2e6;
+        }
+
+        .type-mapping {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .mapping-arrow {
+            color: #f39c12;
+            font-weight: bold;
+        }
+
+        .practical-examples {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .examples-title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .example-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid;
+        }
+
+        .student-example { border-left-color: #3498db; }
+        .score-example { border-left-color: #27ae60; }
+        .date-example { border-left-color: #9b59b6; }
+
+        .example-header {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin: 10px 0;
+        }
+
+        .annotation {
+            color: #f39c12;
+            font-weight: bold;
+        }
+
+        .field {
+            color: #27ae60;
+        }
+
+        .tips-section {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        .tips-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .tip-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .tip-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .tip-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #f39c12;
+        }
+
+        .tip-text {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .highlight-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .highlight-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .highlight-text {
+            font-size: 16px;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .table-header,
+            .table-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+                text-align: center;
+            }
+            
+            .table-header {
+                display: none;
+            }
+            
+            .table-row {
+                border: 1px solid #dee2e6;
+                border-radius: 8px;
+                margin: 10px 0;
+            }
+            
+            .category-sections {
+                grid-template-columns: 1fr;
+            }
+            
+            .example-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tips-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .pulse-effect {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .float-effect {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">データ型マッピング表</div>
+        <div class="subtitle">JavaとMySQLの完全型対応ガイド</div>
+
+        <div class="overview-section">
+            <div class="overview-title">🔄 データ型変換の自動化</div>
+            <div class="overview-text">
+                JPAが自動的にJavaデータ型とMySQLデータ型を<br>
+                適切にマッピングし、型安全なデータアクセスを実現します
+            </div>
+        </div>
+
+        <div class="mapping-table pulse-effect">
+            <div class="table-header">
+                <div>Java型</div>
+                <div>MySQL型</div>
+                <div>主な用途</div>
+                <div>重要な備考</div>
+            </div>
+            
+            <div class="table-row">
+                <div class="java-type">Long</div>
+                <div class="mysql-type">BIGINT</div>
+                <div class="usage-description">主キー（ID）、大きな整数値</div>
+                <div class="notes">自動採番に最適</div>
+            </div>
+            
+            <div class="table-row">
+                <div class="java-type">Integer</div>
+                <div class="mysql-type">INT</div>
+                <div class="usage-description">年齢、得点、順位など</div>
+                <div class="notes">最も一般的な整数型</div>
+            </div>
+            
+            <div class="table-row">
+                <div class="java-type">String</div>
+                <div class="mysql-type">VARCHAR</div>
+                <div class="usage-description">名前、メールアドレス、コメント</div>
+                <div class="notes">@Column(length=値)で長さ指定</div>
+            </div>
+            
+            <div class="table-row">
+                <div class="java-type">Double</div>
+                <div class="mysql-type">DOUBLE</div>
+                <div class="usage-description">GPA、価格、座標など小数値</div>
+                <div class="notes">高精度計算に使用</div>
+            </div>
+            
+            <div class="table-row">
+                <div class="java-type">Boolean</div>
+                <div class="mysql-type">BOOLEAN</div>
+                <div class="usage-description">フラグ、有効/無効の状態</div>
+                <div class="notes">true/false → 1/0</div>
+            </div>
+            
+            <div class="table-row">
+                <div class="java-type">LocalDate</div>
+                <div class="mysql-type">DATE</div>
+                <div class="usage-description">誕生日、入学日、期限日</div>
+                <div class="notes">時刻情報なしの日付</div>
+            </div>
+            
+            <div class="table-row">
+                <div class="java-type">LocalDateTime</div>
+                <div class="mysql-type">DATETIME</div>
+                <div class="usage-description">作成日時、更新日時、ログ時刻</div>
+                <div class="notes">日付+時刻の完全な情報</div>
+            </div>
+            
+            <div class="table-row">
+                <div class="java-type">BigDecimal</div>
+                <div class="mysql-type">DECIMAL</div>
+                <div class="usage-description">金額、正確な小数値計算</div>
+                <div class="notes">精度が重要な計算に必須</div>
+            </div>
+        </div>
+
+        <div class="category-sections">
+            <div class="category-card numeric-card float-effect">
+                <div class="category-header">
+                    <div class="category-icon">🔢</div>
+                    <div class="category-title">数値型</div>
+                </div>
+                
+                <div class="type-item">
+                    <div class="type-mapping">
+                        <span class="java-type">Long</span>
+                        <span class="mapping-arrow">⟷</span>
+                        <span class="mysql-type">BIGINT</span>
+                    </div>
+                    <div class="notes">学生ID、企業IDなど大きな識別子</div>
+                </div>
+                
+                <div class="type-item">
+                    <div class="type-mapping">
+                        <span class="java-type">Integer</span>
+                        <span class="mapping-arrow">⟷</span>
+                        <span class="mysql-type">INT</span>
+                    </div>
+                    <div class="notes">年齢、学年、得点など一般的な数値</div>
+                </div>
+                
+                <div class="type-item">
+                    <div class="type-mapping">
+                        <span class="java-type">Double</span>
+                        <span class="mapping-arrow">⟷</span>
+                        <span class="mysql-type">DOUBLE</span>
+                    </div>
+                    <div class="notes">GPA、身長、体重など小数値</div>
+                </div>
+            </div>
+
+            <div class="category-card text-card float-effect">
+                <div class="category-header">
+                    <div class="category-icon">📝</div>
+                    <div class="category-title">文字列型</div>
+                </div>
+                
+                <div class="type-item">
+                    <div class="type-mapping">
+                        <span class="java-type">String</span>
+                        <span class="mapping-arrow">⟷</span>
+                        <span class="mysql-type">VARCHAR</span>
+                    </div>
+                    <div class="notes">名前、メールアドレス、住所など</div>
+                </div>
+                
+                <div class="type-item">
+                    <div class="type-mapping">
+                        <span class="java-type">String</span>
+                        <span class="mapping-arrow">⟷</span>
+                        <span class="mysql-type">TEXT</span>
+                    </div>
+                    <div class="notes">コメント、説明文など長いテキスト</div>
+                </div>
+            </div>
+
+            <div class="category-card datetime-card float-effect">
+                <div class="category-header">
+                    <div class="category-icon">📅</div>
+                    <div class="category-title">日時型</div>
+                </div>
+                
+                <div class="type-item">
+                    <div class="type-mapping">
+                        <span class="java-type">LocalDate</span>
+                        <span class="mapping-arrow">⟷</span>
+                        <span class="mysql-type">DATE</span>
+                    </div>
+                    <div class="notes">誕生日、入学日など日付のみ</div>
+                </div>
+                
+                <div class="type-item">
+                    <div class="type-mapping">
+                        <span class="java-type">LocalDateTime</span>
+                        <span class="mapping-arrow">⟷</span>
+                        <span class="mysql-type">DATETIME</span>
+                    </div>
+                    <div class="notes">作成日時、更新日時など</div>
+                </div>
+            </div>
+
+            <div class="category-card boolean-card float-effect">
+                <div class="category-header">
+                    <div class="category-icon">✅</div>
+                    <div class="category-title">論理型</div>
+                </div>
+                
+                <div class="type-item">
+                    <div class="type-mapping">
+                        <span class="java-type">Boolean</span>
+                        <span class="mapping-arrow">⟷</span>
+                        <span class="mysql-type">BOOLEAN</span>
+                    </div>
+                    <div class="notes">有効/無効、完了/未完了フラグ</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="practical-examples">
+            <div class="examples-title">🚀 実践的な使用例</div>
+            <div class="example-grid">
+                <div class="example-card student-example">
+                    <div class="example-header">👤 学生情報の型設計</div>
+                    <div class="code-example">
+                        <span class="annotation">@Entity</span><br>
+                        public class Student {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="annotation">@Id</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="field">private Long studentId;</span> // BIGINT<br><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="field">private String name;</span> // VARCHAR<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="field">private Integer age;</span> // INT<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="field">private String email;</span> // VARCHAR<br>
+                        }
+                    </div>
+                </div>
+
+                <div class="example-card score-example">
+                    <div class="example-header">📊 成績情報の型設計</div>
+                    <div class="code-example">
+                        <span class="annotation">@Entity</span><br>
+                        public class Score {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="field">private Double gpa;</span> // DOUBLE<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="field">private Integer score;</span> // INT<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="field">private Boolean passed;</span> // BOOLEAN<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="field">private String grade;</span> // VARCHAR<br>
+                        }
+                    </div>
+                </div>
+
+                <div class="example-card date-example">
+                    <div class="example-header">📅 日時情報の型設計</div>
+                    <div class="code-example">
+                        <span class="annotation">@Entity</span><br>
+                        public class Enrollment {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="field">private LocalDate enrollmentDate;</span> // DATE<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="field">private LocalDateTime createdAt;</span> // DATETIME<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="field">private LocalDateTime updatedAt;</span> // DATETIME<br>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tips-section">
+            <div class="tips-title">💡 型選択のベストプラクティス</div>
+            <div class="tips-grid">
+                <div class="tip-item">
+                    <div class="tip-icon">🎯</div>
+                    <div class="tip-title">主キーはLong</div>
+                    <div class="tip-text">
+                        自動採番される主キーには必ずLong型を使用。
+                        将来のデータ増加にも対応可能。
+                    </div>
+                </div>
+
+                <div class="tip-item">
+                    <div class="tip-icon">📏</div>
+                    <div class="tip-title">String型の長さ指定</div>
+                    <div class="tip-text">
+                        @Column(length=50)で適切な長さを指定。
+                        メモリ効率と検索性能が向上。
+                    </div>
+                </div>
+
+                <div class="tip-item">
+                    <div class="tip-icon">💰</div>
+                    <div class="tip-title">金額はBigDecimal</div>
+                    <div class="tip-text">
+                        金額など精度が重要な計算には
+                        必ずBigDecimal型を使用。
+                    </div>
+                </div>
+
+                <div class="tip-item">
+                    <div class="tip-icon">📅</div>
+                    <div class="tip-title">日時型の使い分け</div>
+                    <div class="tip-text">
+                        日付のみ→LocalDate
+                        日時両方→LocalDateTime
+                        用途に応じて適切に選択。
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <div class="highlight-title">🎯 Week 8.5での重要ポイント</div>
+            <div class="highlight-text">
+                適切なデータ型選択により、型安全性とパフォーマンスが向上します。<br>
+                JPAが自動的に型変換を行うため、開発効率も大幅に向上します！
+            </div>
+        </div>
+    </div>
+</body>
+</html>

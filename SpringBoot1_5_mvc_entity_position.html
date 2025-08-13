@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MVCアーキテクチャにおけるEntityの位置づけ</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+
+        .mvc-architecture {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .mvc-layer {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            border: 3px solid #dee2e6;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .mvc-layer:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .view-layer {
+            border-color: #e74c3c;
+            background: linear-gradient(145deg, #fff5f5, #fdf2f2);
+        }
+
+        .controller-layer {
+            border-color: #f39c12;
+            background: linear-gradient(145deg, #fffbf0, #fef9e7);
+        }
+
+        .model-layer {
+            border-color: #27ae60;
+            background: linear-gradient(145deg, #f0fff4, #e8f5e8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .model-layer::before {
+            content: '⭐ Focus!';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #e74c3c;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            animation: glow 2s infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 5px rgba(231, 76, 60, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(231, 76, 60, 0.8); }
+        }
+
+        .layer-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding: 12px;
+            border-radius: 10px;
+            color: white;
+        }
+
+        .view-layer .layer-title {
+            background: #e74c3c;
+        }
+
+        .controller-layer .layer-title {
+            background: #f39c12;
+        }
+
+        .model-layer .layer-title {
+            background: #27ae60;
+        }
+
+        .layer-icon {
+            font-size: 48px;
+            margin: 15px 0;
+        }
+
+        .layer-description {
+            color: #7f8c8d;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .component-list {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .component-item {
+            padding: 8px 12px;
+            margin: 5px 0;
+            border-radius: 6px;
+            font-size: 14px;
+            border-left: 4px solid #95a5a6;
+            background: #f8f9fa;
+        }
+
+        .entity-highlight {
+            background: linear-gradient(45deg, #27ae60, #2ecc71) !important;
+            color: white !important;
+            font-weight: bold;
+            border-left-color: #fff !important;
+            animation: highlight 1s ease-in-out infinite alternate;
+        }
+
+        @keyframes highlight {
+            from { transform: scale(1); }
+            to { transform: scale(1.02); }
+        }
+
+        .data-flow {
+            margin: 40px 0;
+            background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 25px;
+        }
+
+        .flow-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 25px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px;
+            border-radius: 10px;
+        }
+
+        .flow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .flow-step {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            border: 2px solid #dee2e6;
+            position: relative;
+        }
+
+        .step-number {
+            background: #3498db;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px auto;
+            font-weight: bold;
+        }
+
+        .step-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .step-desc {
+            color: #7f8c8d;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .entity-importance {
+            margin-top: 40px;
+            background: linear-gradient(145deg, #e8f5e8, #d5edda);
+            border-radius: 15px;
+            padding: 25px;
+            border: 3px solid #27ae60;
+        }
+
+        .importance-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #27ae60;
+            text-align: center;
+            margin-bottom: 20px;
+            background: #27ae60;
+            color: white;
+            padding: 12px;
+            border-radius: 10px;
+        }
+
+        .importance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .importance-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #27ae60;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .importance-icon {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+
+        .importance-item-title {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .importance-desc {
+            color: #7f8c8d;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .mvc-architecture {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .flow-steps {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">
+            🏗️ MVCアーキテクチャにおけるEntityの位置づけ
+        </div>
+
+        <div class="mvc-architecture">
+            <div class="mvc-layer view-layer">
+                <div class="layer-title">
+                    📱 View（画面）
+                </div>
+                <div class="layer-icon">🖥️</div>
+                <div class="layer-description">
+                    ユーザーに表示される画面<br>
+                    データの可視化と入力受付
+                </div>
+                <div class="component-list">
+                    <div class="component-item">HTML テンプレート</div>
+                    <div class="component-item">CSS スタイル</div>
+                    <div class="component-item">JavaScript</div>
+                    <div class="component-item">Thymeleaf</div>
+                    <div class="component-item">フォーム画面</div>
+                </div>
+            </div>
+
+            <div class="mvc-layer controller-layer">
+                <div class="layer-title">
+                    🎮 Controller（制御）
+                </div>
+                <div class="layer-icon">⚙️</div>
+                <div class="layer-description">
+                    リクエスト処理とレスポンス制御<br>
+                    ViewとModelの仲介役
+                </div>
+                <div class="component-list">
+                    <div class="component-item">@Controller</div>
+                    <div class="component-item">@RequestMapping</div>
+                    <div class="component-item">@GetMapping</div>
+                    <div class="component-item">@PostMapping</div>
+                    <div class="component-item">リクエスト処理</div>
+                </div>
+            </div>
+
+            <div class="mvc-layer model-layer">
+                <div class="layer-title">
+                    📊 Model（データ）
+                </div>
+                <div class="layer-icon">🗄️</div>
+                <div class="layer-description">
+                    データとビジネスロジック<br>
+                    アプリケーションの核心部分
+                </div>
+                <div class="component-list">
+                    <div class="component-item entity-highlight">📋 Entity クラス ★</div>
+                    <div class="component-item">Service クラス</div>
+                    <div class="component-item">Repository</div>
+                    <div class="component-item">Mapper</div>
+                    <div class="component-item">DTO クラス</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="data-flow">
+            <div class="flow-title">
+                🔄 Entityを中心としたデータの流れ
+            </div>
+            
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-title">データベース</div>
+                    <div class="step-desc">
+                        studentsテーブルから<br>
+                        生データを取得
+                    </div>
+                </div>
+                
+                <div class="flow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Entity変換</div>
+                    <div class="step-desc">
+                        Student Entityクラスに<br>
+                        自動マッピング
+                    </div>
+                </div>
+                
+                <div class="flow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Service処理</div>
+                    <div class="step-desc">
+                        ビジネスロジックで<br>
+                        Entityを加工・検証
+                    </div>
+                </div>
+                
+                <div class="flow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Controller経由</div>
+                    <div class="step-desc">
+                        Controllerが<br>
+                        画面表示用に準備
+                    </div>
+                </div>
+                
+                <div class="flow-step">
+                    <div class="step-number">5</div>
+                    <div class="step-title">View表示</div>
+                    <div class="step-desc">
+                        Thymeleafテンプレートで<br>
+                        美しいWeb画面に
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="entity-importance">
+            <div class="importance-title">
+                ⭐ Model層におけるEntityの重要性
+            </div>
+            
+            <div class="importance-grid">
+                <div class="importance-item">
+                    <div class="importance-item-title">
+                        <span class="importance-icon">🎯</span>データ表現の中核
+                    </div>
+                    <div class="importance-desc">
+                        アプリケーションで扱う全データの設計図<br>
+                        システム全体のデータ構造を決定する基盤技術
+                    </div>
+                </div>
+                
+                <div class="importance-item">
+                    <div class="importance-item-title">
+                        <span class="importance-icon">📋</span>ビジネスルールの実装
+                    </div>
+                    <div class="importance-desc">
+                        データに関する制約やルールを定義<br>
+                        バリデーション・計算ロジック・状態管理
+                    </div>
+                </div>
+                
+                <div class="importance-item">
+                    <div class="importance-item-title">
+                        <span class="importance-icon">🔗</span>View・Controller層への影響
+                    </div>
+                    <div class="importance-desc">
+                        Entity設計がUI設計とロジック設計を左右<br>
+                        システム全体の品質を決定する重要要素
+                    </div>
+                </div>
+                
+                <div class="importance-item">
+                    <div class="importance-item-title">
+                        <span class="importance-icon">🛡️</span>データ整合性の保証
+                    </div>
+                    <div class="importance-desc">
+                        型安全性・制約・バリデーションによる堅牢性<br>
+                        不正データからシステムを保護
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

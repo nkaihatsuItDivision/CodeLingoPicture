@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@Columnの詳細オプション図</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #27ae60;
+            padding-bottom: 15px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        .overview-section {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .overview-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .basic-syntax {
+            background: #2c3e50;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .syntax-code {
+            color: #ecf0f1;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            text-align: left;
+        }
+
+        .annotation {
+            color: #f39c12;
+            font-weight: bold;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .option-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-left: 6px solid;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .name-card { border-left-color: #3498db; }
+        .nullable-card { border-left-color: #e74c3c; }
+        .length-card { border-left-color: #f39c12; }
+        .unique-card { border-left-color: #9b59b6; }
+        .insertable-card { border-left-color: #1abc9c; }
+        .updatable-card { border-left-color: #e67e22; }
+
+        .option-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .option-icon {
+            font-size: 28px;
+            margin-right: 15px;
+        }
+
+        .option-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .option-description {
+            color: #7f8c8d;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin: 15px 0;
+            position: relative;
+        }
+
+        .example-label {
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: #27ae60;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .effect-box {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .effect-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .effect-text {
+            color: #6c757d;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .comparison-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .comparison-title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .before-after {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .before {
+            border-left: 5px solid #e74c3c;
+        }
+
+        .after {
+            border-left: 5px solid #27ae60;
+        }
+
+        .vs-arrow {
+            font-size: 36px;
+            color: #f39c12;
+            text-align: center;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .practical-examples {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+
+        .practical-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .example-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .example-scenario {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #f39c12;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .highlight-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .highlight-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .highlight-text {
+            font-size: 16px;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .vs-arrow {
+                transform: rotate(90deg);
+                font-size: 24px;
+            }
+            
+            .example-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .pulse-effect {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">@Columnの詳細オプション図</div>
+        <div class="subtitle">カラムマッピングの完全制御術</div>
+
+        <div class="overview-section">
+            <div class="overview-title">📊 @Columnアノテーションの基本構文</div>
+            <div class="basic-syntax">
+                <div class="syntax-code">
+                    <span class="annotation">@Column(</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;name = "カラム名",<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;nullable = true/false,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;length = 数値,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;unique = true/false,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;insertable = true/false,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;updatable = true/false<br>
+                    <span class="annotation">)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="options-grid">
+            <div class="option-card name-card pulse-effect">
+                <div class="option-header">
+                    <div class="option-icon">🏷️</div>
+                    <div class="option-name">name</div>
+                </div>
+                <div class="option-description">
+                    データベーステーブルの実際のカラム名を指定します。
+                    Javaのフィールド名と異なる場合に使用します。
+                </div>
+                <div class="code-example">
+                    <div class="example-label">使用例</div>
+                    <span class="annotation">@Column(name = "student_id")</span><br>
+                    private Long studentId;
+                </div>
+                <div class="effect-box">
+                    <div class="effect-title">🎯 効果</div>
+                    <div class="effect-text">
+                        JavaのstudentId ⟷ DBのstudent_id<br>
+                        自動的にマッピングされます
+                    </div>
+                </div>
+            </div>
+
+            <div class="option-card nullable-card">
+                <div class="option-header">
+                    <div class="option-icon">❗</div>
+                    <div class="option-name">nullable</div>
+                </div>
+                <div class="option-description">
+                    NULL値を許可するかどうかを制御します。
+                    必須項目の設定に使用します。
+                </div>
+                <div class="code-example">
+                    <div class="example-label">使用例</div>
+                    <span class="annotation">@Column(nullable = false)</span><br>
+                    private String name;
+                </div>
+                <div class="effect-box">
+                    <div class="effect-title">🛡️ 効果</div>
+                    <div class="effect-text">
+                        false: NOT NULL制約が自動適用<br>
+                        true: NULL値許可（デフォルト）
+                    </div>
+                </div>
+            </div>
+
+            <div class="option-card length-card">
+                <div class="option-header">
+                    <div class="option-icon">📏</div>
+                    <div class="option-name">length</div>
+                </div>
+                <div class="option-description">
+                    文字列型フィールドの最大文字数を指定します。
+                    VARCHAR型の長さ制御に使用します。
+                </div>
+                <div class="code-example">
+                    <div class="example-label">使用例</div>
+                    <span class="annotation">@Column(length = 50)</span><br>
+                    private String name;
+                </div>
+                <div class="effect-box">
+                    <div class="effect-title">📊 効果</div>
+                    <div class="effect-text">
+                        VARCHAR(50)として作成<br>
+                        メモリ効率と検索性能が向上
+                    </div>
+                </div>
+            </div>
+
+            <div class="option-card unique-card">
+                <div class="option-header">
+                    <div class="option-icon">🔐</div>
+                    <div class="option-name">unique</div>
+                </div>
+                <div class="option-description">
+                    一意制約を設定します。
+                    メールアドレスなど重複不可データに使用します。
+                </div>
+                <div class="code-example">
+                    <div class="example-label">使用例</div>
+                    <span class="annotation">@Column(unique = true)</span><br>
+                    private String email;
+                </div>
+                <div class="effect-box">
+                    <div class="effect-title">🎯 効果</div>
+                    <div class="effect-text">
+                        UNIQUE制約自動適用<br>
+                        重複データの挿入を防止
+                    </div>
+                </div>
+            </div>
+
+            <div class="option-card insertable-card">
+                <div class="option-header">
+                    <div class="option-icon">➕</div>
+                    <div class="option-name">insertable</div>
+                </div>
+                <div class="option-description">
+                    INSERT時にこのカラムを含めるかを制御します。
+                    読み取り専用フィールドの作成に使用します。
+                </div>
+                <div class="code-example">
+                    <div class="example-label">使用例</div>
+                    <span class="annotation">@Column(insertable = false)</span><br>
+                    private LocalDateTime createdAt;
+                </div>
+                <div class="effect-box">
+                    <div class="effect-title">🔒 効果</div>
+                    <div class="effect-text">
+                        INSERT文に含まれない<br>
+                        DB側のDEFAULT値が使用される
+                    </div>
+                </div>
+            </div>
+
+            <div class="option-card updatable-card">
+                <div class="option-header">
+                    <div class="option-icon">🔄</div>
+                    <div class="option-name">updatable</div>
+                </div>
+                <div class="option-description">
+                    UPDATE時にこのカラムを含めるかを制御します。
+                    作成日時など不変データの保護に使用します。
+                </div>
+                <div class="code-example">
+                    <div class="example-label">使用例</div>
+                    <span class="annotation">@Column(updatable = false)</span><br>
+                    private LocalDateTime createdAt;
+                </div>
+                <div class="effect-box">
+                    <div class="effect-title">🛡️ 効果</div>
+                    <div class="effect-text">
+                        UPDATE文に含まれない<br>
+                        一度設定された値が保護される
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="comparison-section">
+            <div class="comparison-title">⚡ オプション指定前後の比較</div>
+            <div class="comparison-grid">
+                <div class="before-after before">
+                    <h4 style="color: #e74c3c; margin-bottom: 15px;">❌ オプション未指定</h4>
+                    <div class="code-example">
+                        <span class="annotation">@Column</span><br>
+                        private String email;
+                    </div>
+                    <div style="margin-top: 15px; color: #7f8c8d; font-size: 14px;">
+                        • フィールド名 = カラム名<br>
+                        • NULL許可<br>
+                        • VARCHAR(255)<br>
+                        • 重複許可<br>
+                        • 制御なし
+                    </div>
+                </div>
+
+                <div class="vs-arrow">🔄</div>
+
+                <div class="before-after after">
+                    <h4 style="color: #27ae60; margin-bottom: 15px;">✅ オプション最適化</h4>
+                    <div class="code-example">
+                        <span class="annotation">@Column(</span><br>
+                        &nbsp;&nbsp;name = "email_address",<br>
+                        &nbsp;&nbsp;nullable = false,<br>
+                        &nbsp;&nbsp;length = 100,<br>
+                        &nbsp;&nbsp;unique = true<br>
+                        <span class="annotation">)</span><br>
+                        private String email;
+                    </div>
+                    <div style="margin-top: 15px; color: #7f8c8d; font-size: 14px;">
+                        • 明確なカラム名<br>
+                        • NOT NULL制約<br>
+                        • 最適な長さ<br>
+                        • 一意性保証<br>
+                        • 完全制御
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="practical-examples">
+            <div class="practical-title">🚀 実用的な組み合わせ例</div>
+            <div class="example-grid">
+                <div class="example-item">
+                    <div class="example-scenario">📧 メールアドレス</div>
+                    <div class="code-example" style="background: rgba(255,255,255,0.2);">
+                        <span class="annotation">@Column(</span><br>
+                        &nbsp;&nbsp;name = "email",<br>
+                        &nbsp;&nbsp;nullable = false,<br>
+                        &nbsp;&nbsp;length = 100,<br>
+                        &nbsp;&nbsp;unique = true<br>
+                        <span class="annotation">)</span>
+                    </div>
+                </div>
+
+                <div class="example-item">
+                    <div class="example-scenario">👤 学生名</div>
+                    <div class="code-example" style="background: rgba(255,255,255,0.2);">
+                        <span class="annotation">@Column(</span><br>
+                        &nbsp;&nbsp;name = "student_name",<br>
+                        &nbsp;&nbsp;nullable = false,<br>
+                        &nbsp;&nbsp;length = 50<br>
+                        <span class="annotation">)</span>
+                    </div>
+                </div>
+
+                <div class="example-item">
+                    <div class="example-scenario">📅 作成日時</div>
+                    <div class="code-example" style="background: rgba(255,255,255,0.2);">
+                        <span class="annotation">@Column(</span><br>
+                        &nbsp;&nbsp;name = "created_at",<br>
+                        &nbsp;&nbsp;insertable = false,<br>
+                        &nbsp;&nbsp;updatable = false<br>
+                        <span class="annotation">)</span>
+                    </div>
+                </div>
+
+                <div class="example-item">
+                    <div class="example-scenario">🆔 学生番号</div>
+                    <div class="code-example" style="background: rgba(255,255,255,0.2);">
+                        <span class="annotation">@Column(</span><br>
+                        &nbsp;&nbsp;name = "student_number",<br>
+                        &nbsp;&nbsp;nullable = false,<br>
+                        &nbsp;&nbsp;unique = true,<br>
+                        &nbsp;&nbsp;length = 10<br>
+                        <span class="annotation">)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <div class="highlight-title">🎯 Week 8.5での実践ポイント</div>
+            <div class="highlight-text">
+                @Columnオプションの適切な設定により、データベース制約が自動適用され、<br>
+                データ品質が保証されます。Week 8.6以降で、この設計の威力を実感できます！
+            </div>
+        </div>
+    </div>
+</body>
+</html>
