@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>リクエスト・レスポンスの例</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background-color: white;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+
+        .week-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .api-examples {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .api-example {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 2px solid #dee2e6;
+        }
+
+        .example-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .example-icon {
+            font-size: 24px;
+        }
+
+        .example-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .method-label {
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: white;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .get { background: #28a745; }
+        .post { background: #007bff; }
+        .put { background: #ffc107; color: #212529; }
+        .delete { background: #dc3545; }
+
+        .request-section, .response-section {
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #6c757d;
+            margin-bottom: 8px;
+        }
+
+        .code-block {
+            background: #2c3e50;
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            overflow-x: auto;
+            border-left: 4px solid #3498db;
+        }
+
+        .json-key {
+            color: #3498db;
+        }
+
+        .json-value {
+            color: #e74c3c;
+        }
+
+        .json-string {
+            color: #27ae60;
+        }
+
+        .curl-examples {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 2px solid #3498db;
+        }
+
+        .curl-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .curl-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .curl-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .curl-description {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .curl-command {
+            background: #1e1e1e;
+            color: #ffffff;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            line-height: 1.4;
+            overflow-x: auto;
+            border-left: 4px solid #28a745;
+        }
+
+        .status-indicators {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .status-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .status-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .status-code {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .status-description {
+            font-size: 12px;
+        }
+
+        .communication-flow {
+            background: linear-gradient(135deg, #e8f5e8, #d4edda);
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid #27ae60;
+        }
+
+        .flow-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .flow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .flow-step {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #27ae60;
+            position: relative;
+        }
+
+        .step-number {
+            width: 25px;
+            height: 25px;
+            background: #27ae60;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+            margin: 0 auto 10px;
+        }
+
+        .step-text {
+            font-size: 13px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #856404;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="week-badge">Week 8.7</div>
+    
+    <div class="container">
+        <div class="title">📡 リクエスト・レスポンスの例</div>
+        
+        <div class="api-examples">
+            <div class="api-example">
+                <div class="example-header">
+                    <div class="example-icon">📖</div>
+                    <div class="example-title">学生一覧取得</div>
+                </div>
+                <div class="method-label get">GET</div>
+                
+                <div class="request-section">
+                    <div class="section-title">📤 リクエスト</div>
+                    <div class="code-block">
+GET /api/students HTTP/1.1<br>
+Host: localhost:8080<br>
+Accept: application/json
+                    </div>
+                </div>
+
+                <div class="response-section">
+                    <div class="section-title">📥 レスポンス</div>
+                    <div class="code-block">
+HTTP/1.1 200 OK<br>
+Content-Type: application/json<br>
+<br>
+{<br>
+&nbsp;&nbsp;<span class="json-key">"status"</span>: <span class="json-string">"success"</span>,<br>
+&nbsp;&nbsp;<span class="json-key">"data"</span>: [<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"id"</span>: <span class="json-value">1</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"name"</span>: <span class="json-string">"田中太郎"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"age"</span>: <span class="json-value">20</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;]<br>
+}
+                    </div>
+                </div>
+            </div>
+
+            <div class="api-example">
+                <div class="example-header">
+                    <div class="example-icon">➕</div>
+                    <div class="example-title">学生新規登録</div>
+                </div>
+                <div class="method-label post">POST</div>
+                
+                <div class="request-section">
+                    <div class="section-title">📤 リクエスト</div>
+                    <div class="code-block">
+POST /api/students HTTP/1.1<br>
+Host: localhost:8080<br>
+Content-Type: application/json<br>
+<br>
+{<br>
+&nbsp;&nbsp;<span class="json-key">"name"</span>: <span class="json-string">"佐藤花子"</span>,<br>
+&nbsp;&nbsp;<span class="json-key">"age"</span>: <span class="json-value">19</span><br>
+}
+                    </div>
+                </div>
+
+                <div class="response-section">
+                    <div class="section-title">📥 レスポンス</div>
+                    <div class="code-block">
+HTTP/1.1 201 Created<br>
+Content-Type: application/json<br>
+<br>
+{<br>
+&nbsp;&nbsp;<span class="json-key">"status"</span>: <span class="json-string">"success"</span>,<br>
+&nbsp;&nbsp;<span class="json-key">"data"</span>: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"id"</span>: <span class="json-value">2</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"name"</span>: <span class="json-string">"佐藤花子"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"age"</span>: <span class="json-value">19</span><br>
+&nbsp;&nbsp;}<br>
+}
+                    </div>
+                </div>
+            </div>
+
+            <div class="api-example">
+                <div class="example-header">
+                    <div class="example-icon">✏️</div>
+                    <div class="example-title">学生情報更新</div>
+                </div>
+                <div class="method-label put">PUT</div>
+                
+                <div class="request-section">
+                    <div class="section-title">📤 リクエスト</div>
+                    <div class="code-block">
+PUT /api/students/1 HTTP/1.1<br>
+Host: localhost:8080<br>
+Content-Type: application/json<br>
+<br>
+{<br>
+&nbsp;&nbsp;<span class="json-key">"name"</span>: <span class="json-string">"田中次郎"</span>,<br>
+&nbsp;&nbsp;<span class="json-key">"age"</span>: <span class="json-value">21</span><br>
+}
+                    </div>
+                </div>
+
+                <div class="response-section">
+                    <div class="section-title">📥 レスポンス</div>
+                    <div class="code-block">
+HTTP/1.1 200 OK<br>
+Content-Type: application/json<br>
+<br>
+{<br>
+&nbsp;&nbsp;<span class="json-key">"status"</span>: <span class="json-string">"success"</span>,<br>
+&nbsp;&nbsp;<span class="json-key">"data"</span>: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"id"</span>: <span class="json-value">1</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"name"</span>: <span class="json-string">"田中次郎"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"age"</span>: <span class="json-value">21</span><br>
+&nbsp;&nbsp;}<br>
+}
+                    </div>
+                </div>
+            </div>
+
+            <div class="api-example">
+                <div class="example-header">
+                    <div class="example-icon">⚠️</div>
+                    <div class="example-title">エラーレスポンス例</div>
+                </div>
+                <div class="method-label get">GET</div>
+                
+                <div class="request-section">
+                    <div class="section-title">📤 リクエスト</div>
+                    <div class="code-block">
+GET /api/students/999 HTTP/1.1<br>
+Host: localhost:8080<br>
+Accept: application/json
+                    </div>
+                </div>
+
+                <div class="response-section">
+                    <div class="section-title">📥 レスポンス</div>
+                    <div class="code-block">
+HTTP/1.1 404 Not Found<br>
+Content-Type: application/json<br>
+<br>
+{<br>
+&nbsp;&nbsp;<span class="json-key">"status"</span>: <span class="json-string">"error"</span>,<br>
+&nbsp;&nbsp;<span class="json-key">"message"</span>: <span class="json-string">"Student not found"</span>,<br>
+&nbsp;&nbsp;<span class="json-key">"code"</span>: <span class="json-string">"STUDENT_NOT_FOUND"</span><br>
+}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="curl-examples">
+            <div class="curl-title">🔧 cURLコマンド例</div>
+            <div class="curl-grid">
+                <div class="curl-item">
+                    <div class="curl-description">📖 学生一覧取得</div>
+                    <div class="curl-command">
+curl -X GET \<br>
+&nbsp;&nbsp;http://localhost:8080/api/students \<br>
+&nbsp;&nbsp;-H "Accept: application/json"
+                    </div>
+                </div>
+
+                <div class="curl-item">
+                    <div class="curl-description">➕ 学生新規登録</div>
+                    <div class="curl-command">
+curl -X POST \<br>
+&nbsp;&nbsp;http://localhost:8080/api/students \<br>
+&nbsp;&nbsp;-H "Content-Type: application/json" \<br>
+&nbsp;&nbsp;-d '{"name":"山田太郎","age":18}'
+                    </div>
+                </div>
+
+                <div class="curl-item">
+                    <div class="curl-description">✏️ 学生情報更新</div>
+                    <div class="curl-command">
+curl -X PUT \<br>
+&nbsp;&nbsp;http://localhost:8080/api/students/1 \<br>
+&nbsp;&nbsp;-H "Content-Type: application/json" \<br>
+&nbsp;&nbsp;-d '{"name":"山田花子","age":19}'
+                    </div>
+                </div>
+
+                <div class="curl-item">
+                    <div class="curl-description">🗑️ 学生削除</div>
+                    <div class="curl-command">
+curl -X DELETE \<br>
+&nbsp;&nbsp;http://localhost:8080/api/students/1 \<br>
+&nbsp;&nbsp;-H "Accept: application/json"
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="status-indicators">
+            <div class="status-title">📊 レスポンス状態の見方</div>
+            <div class="status-grid">
+                <div class="status-item">
+                    <div class="status-code">200 OK</div>
+                    <div class="status-description">取得・更新成功</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-code">201 Created</div>
+                    <div class="status-description">新規作成成功</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-code">400 Bad Request</div>
+                    <div class="status-description">入力データ不正</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-code">404 Not Found</div>
+                    <div class="status-description">リソース未発見</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-code">500 Server Error</div>
+                    <div class="status-description">サーバー内部エラー</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="communication-flow">
+            <div class="flow-title">🔄 API通信の流れ</div>
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-text">
+                        <span class="highlight">クライアント</span><br>
+                        HTTPリクエスト送信
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-text">
+                        <span class="highlight">Controller</span><br>
+                        リクエスト受信・解析
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-text">
+                        <span class="highlight">Service</span><br>
+                        ビジネスロジック実行
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-text">
+                        <span class="highlight">Database</span><br>
+                        データ操作実行
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">5</div>
+                    <div class="step-text">
+                        <span class="highlight">Response</span><br>
+                        JSON形式で結果返却
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

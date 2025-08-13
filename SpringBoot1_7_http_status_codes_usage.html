@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTTPステータスコードの適切な使用</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background-color: white;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+
+        .week-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .status-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .category-section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 2px solid #dee2e6;
+        }
+
+        .category-section.success {
+            border-left: 6px solid #28a745;
+        }
+
+        .category-section.redirect {
+            border-left: 6px solid #17a2b8;
+        }
+
+        .category-section.client-error {
+            border-left: 6px solid #ffc107;
+        }
+
+        .category-section.server-error {
+            border-left: 6px solid #dc3545;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .category-icon {
+            font-size: 24px;
+        }
+
+        .category-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .status-item {
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 3px solid #dee2e6;
+        }
+
+        .status-item.important {
+            border-left-color: #f39c12;
+            background: #fff8e1;
+        }
+
+        .status-code {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .status-description {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .status-usage {
+            background: #e9ecef;
+            padding: 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #495057;
+        }
+
+        .spring-boot-implementation {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .implementation-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .implementation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .implementation-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .impl-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .impl-code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .impl-description {
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .error-handling-section {
+            background: linear-gradient(135deg, #ffe6e6, #ffcccc);
+            padding: 30px;
+            border-radius: 12px;
+            border: 2px solid #dc3545;
+            margin-bottom: 30px;
+        }
+
+        .error-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #dc3545;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .error-patterns {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .error-pattern {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #dc3545;
+        }
+
+        .pattern-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #dc3545;
+            margin-bottom: 10px;
+        }
+
+        .pattern-code {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-left: 4px solid #dc3545;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+
+        .pattern-benefit {
+            color: #28a745;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .best-practices {
+            background: linear-gradient(135deg, #e8f5e8, #d4edda);
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid #28a745;
+        }
+
+        .practices-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #28a745;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .practices-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .practice-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #28a745;
+        }
+
+        .practice-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .practice-text {
+            font-size: 14px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #856404;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="week-badge">Week 8.7</div>
+    
+    <div class="container">
+        <div class="title">📊 HTTPステータスコードの適切な使用</div>
+        
+        <div class="status-categories">
+            <div class="category-section success">
+                <div class="category-header">
+                    <div class="category-icon">✅</div>
+                    <div class="category-title">2xx 成功系</div>
+                </div>
+                
+                <div class="status-item important">
+                    <div class="status-code">200 OK</div>
+                    <div class="status-description">リクエストが正常に処理された</div>
+                    <div class="status-usage">GET /api/students → 学生一覧取得成功</div>
+                </div>
+
+                <div class="status-item important">
+                    <div class="status-code">201 Created</div>
+                    <div class="status-description">新しいリソースが正常に作成された</div>
+                    <div class="status-usage">POST /api/students → 新規学生登録成功</div>
+                </div>
+
+                <div class="status-item">
+                    <div class="status-code">204 No Content</div>
+                    <div class="status-description">処理成功、レスポンスボディなし</div>
+                    <div class="status-usage">DELETE /api/students/1 → 削除成功</div>
+                </div>
+            </div>
+
+            <div class="category-section redirect">
+                <div class="category-header">
+                    <div class="category-icon">🔄</div>
+                    <div class="category-title">3xx リダイレクト系</div>
+                </div>
+                
+                <div class="status-item">
+                    <div class="status-code">301 Moved Permanently</div>
+                    <div class="status-description">リソースが恒久的に移動</div>
+                    <div class="status-usage">旧APIから新APIへの恒久移行</div>
+                </div>
+
+                <div class="status-item">
+                    <div class="status-code">304 Not Modified</div>
+                    <div class="status-description">キャッシュされた内容が最新</div>
+                    <div class="status-usage">If-Modified-Since ヘッダー使用時</div>
+                </div>
+            </div>
+
+            <div class="category-section client-error">
+                <div class="category-header">
+                    <div class="category-icon">⚠️</div>
+                    <div class="category-title">4xx クライアントエラー系</div>
+                </div>
+                
+                <div class="status-item important">
+                    <div class="status-code">400 Bad Request</div>
+                    <div class="status-description">リクエストの形式や内容が不正</div>
+                    <div class="status-usage">必須フィールドの不備、妥当性検証エラー</div>
+                </div>
+
+                <div class="status-item">
+                    <div class="status-code">401 Unauthorized</div>
+                    <div class="status-description">認証が必要または認証失敗</div>
+                    <div class="status-usage">認証トークンなし・無効</div>
+                </div>
+
+                <div class="status-item">
+                    <div class="status-code">403 Forbidden</div>
+                    <div class="status-description">認証済みだが権限不足</div>
+                    <div class="status-usage">管理者権限が必要な操作</div>
+                </div>
+
+                <div class="status-item important">
+                    <div class="status-code">404 Not Found</div>
+                    <div class="status-description">指定されたリソースが存在しない</div>
+                    <div class="status-usage">存在しない学生IDでアクセス</div>
+                </div>
+
+                <div class="status-item">
+                    <div class="status-code">409 Conflict</div>
+                    <div class="status-description">リソースの状態が競合</div>
+                    <div class="status-usage">重複する学籍番号での登録</div>
+                </div>
+            </div>
+
+            <div class="category-section server-error">
+                <div class="category-header">
+                    <div class="category-icon">💥</div>
+                    <div class="category-title">5xx サーバーエラー系</div>
+                </div>
+                
+                <div class="status-item important">
+                    <div class="status-code">500 Internal Server Error</div>
+                    <div class="status-description">サーバー内部でエラーが発生</div>
+                    <div class="status-usage">予期しない例外、システム障害</div>
+                </div>
+
+                <div class="status-item">
+                    <div class="status-code">502 Bad Gateway</div>
+                    <div class="status-description">上流サーバーからの不正応答</div>
+                    <div class="status-usage">外部API呼び出し失敗</div>
+                </div>
+
+                <div class="status-item">
+                    <div class="status-code">503 Service Unavailable</div>
+                    <div class="status-description">サーバーが一時的に利用不可</div>
+                    <div class="status-usage">メンテナンス中、過負荷状態</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="spring-boot-implementation">
+            <div class="implementation-title">🔧 Spring Boot での実装例</div>
+            <div class="implementation-grid">
+                <div class="implementation-item">
+                    <div class="impl-title">✅ 成功レスポンス</div>
+                    <div class="impl-code">
+return ResponseEntity.ok(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ApiResponse.success(studentList)<br>
+);
+                    </div>
+                    <div class="impl-description">200 OK で学生一覧を返却</div>
+                </div>
+
+                <div class="implementation-item">
+                    <div class="impl-title">➕ 作成成功</div>
+                    <div class="impl-code">
+return ResponseEntity.status(201)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.body(ApiResponse.success(newStudent)<br>
+);
+                    </div>
+                    <div class="impl-description">201 Created で新規作成を明示</div>
+                </div>
+
+                <div class="implementation-item">
+                    <div class="impl-title">⚠️ 妥当性検証エラー</div>
+                    <div class="impl-code">
+if (result.hasErrors()) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return ResponseEntity.badRequest()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.body(ApiResponse.error(msg));<br>
+}
+                    </div>
+                    <div class="impl-description">400 Bad Request で入力エラー通知</div>
+                </div>
+
+                <div class="implementation-item">
+                    <div class="impl-title">🔍 リソース未発見</div>
+                    <div class="impl-code">
+if (student == null) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return ResponseEntity.notFound()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.build();<br>
+}
+                    </div>
+                    <div class="impl-description">404 Not Found でデータなし通知</div>
+                </div>
+
+                <div class="implementation-item">
+                    <div class="impl-title">💥 システムエラー</div>
+                    <div class="impl-code">
+try {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 処理<br>
+} catch (Exception e) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return ResponseEntity.status(500)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.body(ApiResponse.error("System Error"));<br>
+}
+                    </div>
+                    <div class="impl-description">500 Internal Server Error で障害通知</div>
+                </div>
+
+                <div class="implementation-item">
+                    <div class="impl-title">🗑️ 削除成功</div>
+                    <div class="impl-code">
+studentService.delete(id);<br>
+return ResponseEntity.noContent()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.build();
+                    </div>
+                    <div class="impl-description">204 No Content で削除完了通知</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="error-handling-section">
+            <div class="error-title">🛡️ 効果的なエラーハンドリングパターン</div>
+            <div class="error-patterns">
+                <div class="error-pattern">
+                    <div class="pattern-title">統一エラーレスポンス</div>
+                    <div class="pattern-code">
+{<br>
+&nbsp;&nbsp;"status": "error",<br>
+&nbsp;&nbsp;"message": "学籍番号が重複しています",<br>
+&nbsp;&nbsp;"code": "DUPLICATE_STUDENT_ID",<br>
+&nbsp;&nbsp;"timestamp": "2024-01-15T10:30:00Z"<br>
+}
+                    </div>
+                    <div class="pattern-benefit">💡 クライアントが一貫して処理可能</div>
+                </div>
+
+                <div class="error-pattern">
+                    <div class="pattern-title">Global Exception Handler</div>
+                    <div class="pattern-code">
+@ControllerAdvice<br>
+public class GlobalExceptionHandler {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@ExceptionHandler(ValidationException.class)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public ResponseEntity handleValidation() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return ResponseEntity.badRequest();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                    </div>
+                    <div class="pattern-benefit">💡 アプリケーション全体で統一処理</div>
+                </div>
+
+                <div class="error-pattern">
+                    <div class="pattern-title">詳細なエラー情報</div>
+                    <div class="pattern-code">
+{<br>
+&nbsp;&nbsp;"status": "error",<br>
+&nbsp;&nbsp;"errors": [<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{"field": "name", "message": "名前は必須です"},<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{"field": "age", "message": "年齢は正の数です"}<br>
+&nbsp;&nbsp;]<br>
+}
+                    </div>
+                    <div class="pattern-benefit">💡 フォーム入力の具体的改善指示</div>
+                </div>
+
+                <div class="error-pattern">
+                    <div class="pattern-title">適切なログ出力</div>
+                    <div class="pattern-code">
+@ExceptionHandler(Exception.class)<br>
+public ResponseEntity handleGeneral(Exception e) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;log.error("Unexpected error", e);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return ResponseEntity.status(500)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.body("Internal Server Error");<br>
+}
+                    </div>
+                    <div class="pattern-benefit">💡 デバッグ・運用監視に活用</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="best-practices">
+            <div class="practices-title">🎯 ステータスコード使用のベストプラクティス</div>
+            <div class="practices-grid">
+                <div class="practice-item">
+                    <div class="practice-icon">🎯</div>
+                    <div class="practice-text">
+                        <span class="highlight">適切なコード選択</span><br>
+                        操作結果に最適なコード
+                    </div>
+                </div>
+                <div class="practice-item">
+                    <div class="practice-icon">📝</div>
+                    <div class="practice-text">
+                        <span class="highlight">統一されたレスポンス</span><br>
+                        エラー形式の一貫性
+                    </div>
+                </div>
+                <div class="practice-item">
+                    <div class="practice-icon">🔍</div>
+                    <div class="practice-text">
+                        <span class="highlight">詳細なエラー情報</span><br>
+                        問題解決に必要な情報
+                    </div>
+                </div>
+                <div class="practice-item">
+                    <div class="practice-icon">📊</div>
+                    <div class="practice-text">
+                        <span class="highlight">ログ記録</span><br>
+                        障害分析・監視
+                    </div>
+                </div>
+                <div class="practice-item">
+                    <div class="practice-icon">🛡️</div>
+                    <div class="practice-text">
+                        <span class="highlight">セキュリティ配慮</span><br>
+                        情報漏洩の防止
+                    </div>
+                </div>
+                <div class="practice-item">
+                    <div class="practice-icon">🎨</div>
+                    <div class="practice-text">
+                        <span class="highlight">ユーザー体験</span><br>
+                        分かりやすいメッセージ
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RESTful設計の基本原則</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background-color: white;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+
+        .week-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .principles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .principle-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 2px solid #dee2e6;
+            transition: transform 0.3s ease;
+            text-align: center;
+        }
+
+        .principle-card:hover {
+            transform: scale(1.05);
+            border-color: #3498db;
+        }
+
+        .principle-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .principle-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .principle-description {
+            color: #7f8c8d;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .principle-example {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-left: 4px solid #3498db;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            text-align: left;
+        }
+
+        .url-design-section {
+            background: linear-gradient(135deg, #e8f5e8, #d4edda);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 2px solid #27ae60;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .url-patterns {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .url-pattern {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #27ae60;
+        }
+
+        .method-label {
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: white;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .get { background: #28a745; }
+        .post { background: #007bff; }
+        .put { background: #ffc107; color: #212529; }
+        .delete { background: #dc3545; }
+
+        .url-example {
+            font-family: 'Courier New', monospace;
+            background: #f8f9fa;
+            padding: 8px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .url-description {
+            color: #6c757d;
+            font-size: 13px;
+        }
+
+        .best-practices {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .practices-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .practice-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .practice-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .practice-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .practice-description {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .anti-patterns {
+            background: linear-gradient(135deg, #ffe6e6, #ffcccc);
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid #dc3545;
+        }
+
+        .anti-pattern-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #dc3545;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .anti-patterns-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .anti-pattern-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #dc3545;
+        }
+
+        .wrong-example {
+            color: #dc3545;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        .correct-example {
+            color: #28a745;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #856404;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="week-badge">Week 8.7</div>
+    
+    <div class="container">
+        <div class="title">🎯 RESTful設計の基本原則</div>
+        
+        <div class="principles-grid">
+            <div class="principle-card">
+                <div class="principle-icon">🎯</div>
+                <div class="principle-title">リソース指向設計</div>
+                <div class="principle-description">
+                    データやサービスをリソースとして扱い<br>
+                    URLでリソースを一意に識別
+                </div>
+                <div class="principle-example">
+/api/students        ← 学生コレクション<br>
+/api/students/1      ← 個別学生<br>
+/api/students/1/courses ← 学生の履修科目
+                </div>
+            </div>
+
+            <div class="principle-card">
+                <div class="principle-icon">🔄</div>
+                <div class="principle-title">統一インターフェース</div>
+                <div class="principle-description">
+                    HTTPメソッド（GET/POST/PUT/DELETE）で<br>
+                    操作を統一的に表現
+                </div>
+                <div class="principle-example">
+GET    → 取得<br>
+POST   → 作成<br>
+PUT    → 更新<br>
+DELETE → 削除
+                </div>
+            </div>
+
+            <div class="principle-card">
+                <div class="principle-icon">📊</div>
+                <div class="principle-title">ステートレス通信</div>
+                <div class="principle-description">
+                    各リクエストは独立して処理<br>
+                    サーバーはクライアント状態を保持しない
+                </div>
+                <div class="principle-example">
+// 各リクエストに必要な情報を含める<br>
+Authorization: Bearer token<br>
+Content-Type: application/json
+                </div>
+            </div>
+
+            <div class="principle-card">
+                <div class="principle-icon">📝</div>
+                <div class="principle-title">自己記述的メッセージ</div>
+                <div class="principle-description">
+                    レスポンスにはコンテンツタイプや<br>
+                    処理結果を明確に記述
+                </div>
+                <div class="principle-example">
+HTTP/1.1 200 OK<br>
+Content-Type: application/json<br>
+<br>
+{"status": "success", "data": {...}}
+                </div>
+            </div>
+        </div>
+
+        <div class="url-design-section">
+            <div class="section-title">🌐 リソース指向URL設計パターン</div>
+            <div class="url-patterns">
+                <div class="url-pattern">
+                    <div class="method-label get">GET</div>
+                    <div class="url-example">/api/students</div>
+                    <div class="url-description">全学生の一覧取得</div>
+                </div>
+
+                <div class="url-pattern">
+                    <div class="method-label get">GET</div>
+                    <div class="url-example">/api/students/{id}</div>
+                    <div class="url-description">特定学生の詳細取得</div>
+                </div>
+
+                <div class="url-pattern">
+                    <div class="method-label post">POST</div>
+                    <div class="url-example">/api/students</div>
+                    <div class="url-description">新しい学生の登録</div>
+                </div>
+
+                <div class="url-pattern">
+                    <div class="method-label put">PUT</div>
+                    <div class="url-example">/api/students/{id}</div>
+                    <div class="url-description">学生情報の完全更新</div>
+                </div>
+
+                <div class="url-pattern">
+                    <div class="method-label delete">DELETE</div>
+                    <div class="url-example">/api/students/{id}</div>
+                    <div class="url-description">学生の削除</div>
+                </div>
+
+                <div class="url-pattern">
+                    <div class="method-label get">GET</div>
+                    <div class="url-example">/api/students?name=田中&page=1</div>
+                    <div class="url-description">検索・フィルタリング</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="best-practices">
+            <div class="section-title">✨ RESTful API設計のベストプラクティス</div>
+            <div class="practices-grid">
+                <div class="practice-item">
+                    <div class="practice-icon">📛</div>
+                    <div class="practice-title">名詞を使用</div>
+                    <div class="practice-description">
+                        URLには<span class="highlight">動詞ではなく名詞</span>を使用<br>
+                        アクションはHTTPメソッドで表現
+                    </div>
+                </div>
+
+                <div class="practice-item">
+                    <div class="practice-icon">🔤</div>
+                    <div class="practice-title">複数形を使用</div>
+                    <div class="practice-description">
+                        コレクションは<span class="highlight">複数形</span>で統一<br>
+                        /students, /courses など
+                    </div>
+                </div>
+
+                <div class="practice-item">
+                    <div class="practice-icon">🔗</div>
+                    <div class="practice-title">階層構造</div>
+                    <div class="practice-description">
+                        関係性を<span class="highlight">URL階層</span>で表現<br>
+                        /students/1/courses
+                    </div>
+                </div>
+
+                <div class="practice-item">
+                    <div class="practice-icon">🎨</div>
+                    <div class="practice-title">一貫性</div>
+                    <div class="practice-description">
+                        <span class="highlight">命名規則</span>とパターンを<br>
+                        API全体で統一
+                    </div>
+                </div>
+
+                <div class="practice-item">
+                    <div class="practice-icon">📊</div>
+                    <div class="practice-title">適切なステータス</div>
+                    <div class="practice-description">
+                        操作結果に応じた<span class="highlight">HTTPステータス</span><br>
+                        コードを返却
+                    </div>
+                </div>
+
+                <div class="practice-item">
+                    <div class="practice-icon">📖</div>
+                    <div class="practice-title">文書化</div>
+                    <div class="practice-description">
+                        APIの使用方法を<span class="highlight">明確に文書化</span><br>
+                        開発者が理解しやすく
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="anti-patterns">
+            <div class="anti-pattern-title">⚠️ 避けるべきアンチパターン</div>
+            <div class="anti-patterns-grid">
+                <div class="anti-pattern-item">
+                    <strong>動詞を含むURL</strong><br>
+                    <div class="wrong-example">❌ /api/getStudents</div>
+                    <div class="correct-example">✅ GET /api/students</div>
+                </div>
+
+                <div class="anti-pattern-item">
+                    <strong>不適切なHTTPメソッド</strong><br>
+                    <div class="wrong-example">❌ GET /api/deleteStudent/1</div>
+                    <div class="correct-example">✅ DELETE /api/students/1</div>
+                </div>
+
+                <div class="anti-pattern-item">
+                    <strong>複雑すぎるURL</strong><br>
+                    <div class="wrong-example">❌ /api/students/1/courses/2/grades/3</div>
+                    <div class="correct-example">✅ /api/grades/3</div>
+                </div>
+
+                <div class="anti-pattern-item">
+                    <strong>ステータスコード無視</strong><br>
+                    <div class="wrong-example">❌ 常に200を返す</div>
+                    <div class="correct-example">✅ 適切なコードを選択</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

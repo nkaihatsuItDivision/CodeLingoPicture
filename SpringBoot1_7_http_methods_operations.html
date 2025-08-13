@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTTPメソッドと操作の対応</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background-color: white;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+
+        .week-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .methods-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .method-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 2px solid #dee2e6;
+            transition: transform 0.3s ease;
+        }
+
+        .method-card:hover {
+            transform: scale(1.03);
+        }
+
+        .method-card.get {
+            border-left: 6px solid #28a745;
+        }
+
+        .method-card.post {
+            border-left: 6px solid #007bff;
+        }
+
+        .method-card.put {
+            border-left: 6px solid #ffc107;
+        }
+
+        .method-card.delete {
+            border-left: 6px solid #dc3545;
+        }
+
+        .method-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .method-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .method-icon {
+            font-size: 24px;
+        }
+
+        .method-description {
+            color: #7f8c8d;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .method-example {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-left: 4px solid #3498db;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .rest-principles {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+            border: 2px solid #3498db;
+        }
+
+        .rest-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .principles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .principle-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+        }
+
+        .principle-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .principle-text {
+            font-size: 14px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="week-badge">Week 8.7</div>
+    
+    <div class="container">
+        <div class="title">🌐 HTTPメソッドと操作の対応</div>
+        
+        <div class="methods-grid">
+            <div class="method-card get">
+                <div class="method-header">
+                    <div class="method-icon">📖</div>
+                    <div class="method-name">GET</div>
+                </div>
+                <div class="method-description">
+                    データの取得・読み込み専用<br>
+                    サーバーのデータを変更しない安全な操作
+                </div>
+                <div class="method-example">
+                    GET /api/students<br>
+                    GET /api/students/1<br>
+                    <br>
+                    → 学生一覧取得<br>
+                    → ID=1の学生取得
+                </div>
+            </div>
+
+            <div class="method-card post">
+                <div class="method-header">
+                    <div class="method-icon">➕</div>
+                    <div class="method-name">POST</div>
+                </div>
+                <div class="method-description">
+                    新しいデータの作成・登録<br>
+                    リクエストボディにデータを含める
+                </div>
+                <div class="method-example">
+                    POST /api/students<br>
+                    Body: {"name":"田中太郎","age":20}<br>
+                    <br>
+                    → 新しい学生を登録
+                </div>
+            </div>
+
+            <div class="method-card put">
+                <div class="method-header">
+                    <div class="method-icon">✏️</div>
+                    <div class="method-name">PUT</div>
+                </div>
+                <div class="method-description">
+                    既存データの更新・編集<br>
+                    完全なデータで置き換え
+                </div>
+                <div class="method-example">
+                    PUT /api/students/1<br>
+                    Body: {"name":"田中次郎","age":21}<br>
+                    <br>
+                    → ID=1の学生情報を更新
+                </div>
+            </div>
+
+            <div class="method-card delete">
+                <div class="method-header">
+                    <div class="method-icon">🗑️</div>
+                    <div class="method-name">DELETE</div>
+                </div>
+                <div class="method-description">
+                    データの削除・除去<br>
+                    指定されたリソースを削除
+                </div>
+                <div class="method-example">
+                    DELETE /api/students/1<br>
+                    <br>
+                    → ID=1の学生を削除
+                </div>
+            </div>
+        </div>
+
+        <div class="rest-principles">
+            <div class="rest-title">🎯 RESTful API設計の基本原則</div>
+            <div class="principles-grid">
+                <div class="principle-item">
+                    <div class="principle-icon">🎯</div>
+                    <div class="principle-text">リソース指向<br>URL設計</div>
+                </div>
+                <div class="principle-item">
+                    <div class="principle-icon">🔄</div>
+                    <div class="principle-text">統一された<br>インターフェース</div>
+                </div>
+                <div class="principle-item">
+                    <div class="principle-icon">📊</div>
+                    <div class="principle-text">ステートレス<br>通信</div>
+                </div>
+                <div class="principle-item">
+                    <div class="principle-icon">⚙️</div>
+                    <div class="principle-text">適切な<br>HTTPメソッド使用</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

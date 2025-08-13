@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基本的なController構造</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background-color: white;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+
+        .week-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .controller-code {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid #3498db;
+        }
+
+        .code-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ffffff;
+            border: 1px solid #dee2e6;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+
+        .annotation {
+            color: #f39c12;
+            font-weight: bold;
+        }
+
+        .class-name {
+            color: #3498db;
+            font-weight: bold;
+        }
+
+        .method-name {
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .string-literal {
+            color: #e74c3c;
+        }
+
+        .annotations-explanation {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid #dee2e6;
+        }
+
+        .annotation-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+
+        .annotation-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #f39c12;
+            margin-bottom: 8px;
+        }
+
+        .annotation-desc {
+            color: #2c3e50;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .structure-overview {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+
+        .overview-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .structure-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .structure-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .structure-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .structure-text {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .highlight {
+            background: rgba(243, 156, 18, 0.2);
+            padding: 2px 4px;
+            border-radius: 4px;
+            color: #f39c12;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="week-badge">Week 8.7</div>
+    
+    <div class="container">
+        <div class="title">🏗️ 基本的なController構造</div>
+        
+        <div class="main-layout">
+            <div class="controller-code">
+                <div class="code-title">📄 StudentController.java</div>
+                <div class="code-example">
+<span class="annotation">@RestController</span><br>
+<span class="annotation">@RequestMapping</span>(<span class="string-literal">"/api/students"</span>)<br>
+<span class="annotation">@RequiredArgsConstructor</span><br>
+public class <span class="class-name">StudentController</span> {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private final <span class="class-name">StudentService</span> studentService;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="annotation">@GetMapping</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;public <span class="class-name">ResponseEntity</span>&lt;<span class="class-name">ApiResponse</span>&gt; <span class="method-name">getAllStudents</span>() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 学生一覧取得処理<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return <span class="class-name">ResponseEntity</span>.ok(<span class="method-name">ApiResponse</span>.success(students));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="annotation">@GetMapping</span>(<span class="string-literal">"/{id}"</span>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public <span class="class-name">ResponseEntity</span>&lt;<span class="class-name">ApiResponse</span>&gt; <span class="method-name">getStudent</span>(<span class="annotation">@PathVariable</span> Long id) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 特定学生取得処理<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return <span class="class-name">ResponseEntity</span>.ok(<span class="method-name">ApiResponse</span>.success(student));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="annotation">@PostMapping</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;public <span class="class-name">ResponseEntity</span>&lt;<span class="class-name">ApiResponse</span>&gt; <span class="method-name">createStudent</span>(<span class="annotation">@RequestBody</span> <span class="class-name">Student</span> student) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 学生登録処理<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return <span class="class-name">ResponseEntity</span>.ok(<span class="method-name">ApiResponse</span>.success(newStudent));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                </div>
+            </div>
+
+            <div class="annotations-explanation">
+                <div class="code-title">📝 アノテーション解説</div>
+                
+                <div class="annotation-item">
+                    <div class="annotation-name">@RestController</div>
+                    <div class="annotation-desc">
+                        このクラスがREST APIのController<br>
+                        JSON形式で自動レスポンス
+                    </div>
+                </div>
+
+                <div class="annotation-item">
+                    <div class="annotation-name">@RequestMapping</div>
+                    <div class="annotation-desc">
+                        基本URL設定（/api/students）<br>
+                        すべてのメソッドの共通パス
+                    </div>
+                </div>
+
+                <div class="annotation-item">
+                    <div class="annotation-name">@RequiredArgsConstructor</div>
+                    <div class="annotation-desc">
+                        Lombokアノテーション<br>
+                        final フィールドのコンストラクタ自動生成
+                    </div>
+                </div>
+
+                <div class="annotation-item">
+                    <div class="annotation-name">@GetMapping / @PostMapping</div>
+                    <div class="annotation-desc">
+                        HTTPメソッドとパスの指定<br>
+                        リクエストを適切なメソッドにルーティング
+                    </div>
+                </div>
+
+                <div class="annotation-item">
+                    <div class="annotation-name">@PathVariable / @RequestBody</div>
+                    <div class="annotation-desc">
+                        リクエストパラメータの取得<br>
+                        URL中の変数やJSONデータを受け取り
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="structure-overview">
+            <div class="overview-title">🎯 Controller実装のポイント</div>
+            <div class="structure-grid">
+                <div class="structure-item">
+                    <div class="structure-icon">🔧</div>
+                    <div class="structure-text">
+                        <span class="highlight">Week 7.10準備ファイル</span><br>
+                        ActivityResponseクラス活用
+                    </div>
+                </div>
+                <div class="structure-item">
+                    <div class="structure-icon">⚙️</div>
+                    <div class="structure-text">
+                        <span class="highlight">Week 8.6 Mapper連携</span><br>
+                        StudentService経由でDB操作
+                    </div>
+                </div>
+                <div class="structure-item">
+                    <div class="structure-icon">📊</div>
+                    <div class="structure-text">
+                        <span class="highlight">Week 8.5 Entity活用</span><br>
+                        Studentクラスでデータ構造統一
+                    </div>
+                </div>
+                <div class="structure-item">
+                    <div class="structure-icon">🌐</div>
+                    <div class="structure-text">
+                        <span class="highlight">RESTful設計</span><br>
+                        標準的なWeb API構造
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

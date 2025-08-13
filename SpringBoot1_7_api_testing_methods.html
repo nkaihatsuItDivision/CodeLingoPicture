@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API動作確認の方法</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background-color: white;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+
+        .week-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .testing-overview {
+            background: linear-gradient(135deg, #e8f5e8, #d4edda);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 2px solid #28a745;
+        }
+
+        .overview-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #28a745;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .overview-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .overview-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #28a745;
+        }
+
+        .overview-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .overview-text {
+            font-size: 13px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .testing-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .method-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 2px solid #dee2e6;
+            transition: transform 0.3s ease;
+        }
+
+        .method-card:hover {
+            transform: scale(1.02);
+            border-color: #3498db;
+        }
+
+        .method-card.browser {
+            border-left: 6px solid #4CAF50;
+        }
+
+        .method-card.curl {
+            border-left: 6px solid #FF9800;
+        }
+
+        .method-card.postman {
+            border-left: 6px solid #2196F3;
+        }
+
+        .method-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .method-icon {
+            font-size: 32px;
+        }
+
+        .method-info {
+            flex: 1;
+        }
+
+        .method-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .method-difficulty {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .easy { background: #4CAF50; }
+        .medium { background: #FF9800; }
+        .advanced { background: #2196F3; }
+
+        .method-description {
+            color: #7f8c8d;
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .pros, .cons {
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 12px;
+        }
+
+        .pros {
+            background: #e8f5e8;
+            border: 1px solid #28a745;
+        }
+
+        .cons {
+            background: #ffe6e6;
+            border: 1px solid #dc3545;
+        }
+
+        .pros-title, .cons-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .pros-title {
+            color: #28a745;
+        }
+
+        .cons-title {
+            color: #dc3545;
+        }
+
+        .usage-example {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+
+        .step-by-step {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .step-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .step-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-size: 12px;
+            color: #495057;
+        }
+
+        .step-number {
+            background: #3498db;
+            color: white;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .comparison-table {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .table-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .comparison-header {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .comparison-cell {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .rating {
+            font-size: 16px;
+        }
+
+        .practical-workflow {
+            background: linear-gradient(135deg, #fff8e1, #ffecb3);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 2px solid #ffc107;
+        }
+
+        .workflow-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .workflow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .workflow-step {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #ffc107;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .workflow-step-number {
+            width: 30px;
+            height: 30px;
+            background: #ffc107;
+            color: #856404;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            margin: 0 auto 10px;
+        }
+
+        .workflow-step-text {
+            font-size: 13px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .tips-section {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid #6c757d;
+        }
+
+        .tips-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .tip-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #6c757d;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .tip-icon {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .tip-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .tip-description {
+            font-size: 12px;
+            color: #495057;
+            line-height: 1.4;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #856404;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .pros-cons {
+                grid-template-columns: 1fr;
+            }
+            .comparison-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="week-badge">Week 8.7</div>
+    
+    <div class="container">
+        <div class="title">🧪 API動作確認の方法</div>
+        
+        <div class="testing-overview">
+            <div class="overview-title">🎯 API テストの重要性</div>
+            <div class="overview-content">
+                <div class="overview-item">
+                    <div class="overview-icon">🔧</div>
+                    <div class="overview-text">
+                        <span class="highlight">開発効率</span><br>
+                        即座の動作確認
+                    </div>
+                </div>
+                <div class="overview-item">
+                    <div class="overview-icon">🐛</div>
+                    <div class="overview-text">
+                        <span class="highlight">バグ発見</span><br>
+                        早期問題特定
+                    </div>
+                </div>
+                <div class="overview-item">
+                    <div class="overview-icon">📊</div>
+                    <div class="overview-text">
+                        <span class="highlight">品質保証</span><br>
+                        リリース前検証
+                    </div>
+                </div>
+                <div class="overview-item">
+                    <div class="overview-icon">🎨</div>
+                    <div class="overview-text">
+                        <span class="highlight">UX確認</span><br>
+                        レスポンス検証
+                    </div>
+                </div>
+                <div class="overview-item">
+                    <div class="overview-icon">📖</div>
+                    <div class="overview-text">
+                        <span class="highlight">仕様理解</span><br>
+                        API動作学習
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="testing-methods">
+            <div class="method-card browser">
+                <div class="method-header">
+                    <div class="method-icon">🌐</div>
+                    <div class="method-info">
+                        <div class="method-title">ブラウザでの確認</div>
+                        <div class="method-difficulty easy">初心者向け</div>
+                    </div>
+                </div>
+                <div class="method-description">
+                    最も簡単で直感的な確認方法<br>
+                    GETリクエストの結果をブラウザ上で即座に確認
+                </div>
+                <div class="pros-cons">
+                    <div class="pros">
+                        <div class="pros-title">✅ メリット</div>
+                        • 特別なツール不要<br>
+                        • 即座に結果確認<br>
+                        • JSON形式で見やすい表示<br>
+                        • 初心者でも簡単
+                    </div>
+                    <div class="cons">
+                        <div class="cons-title">❌ 制限</div>
+                        • GETメソッドのみ<br>
+                        • リクエストボディ送信不可<br>
+                        • カスタムヘッダー設定困難<br>
+                        • 高度なテスト不可
+                    </div>
+                </div>
+                <div class="usage-example">
+アドレスバーに直接入力：<br>
+http://localhost:8080/api/students<br>
+http://localhost:8080/api/students/1
+                </div>
+                <div class="step-by-step">
+                    <div class="step-title">🔧 実行手順</div>
+                    <ul class="step-list">
+                        <li class="step-item">
+                            <div class="step-number">1</div>
+                            <div>Spring Bootアプリケーションを起動</div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">2</div>
+                            <div>ブラウザを開く</div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">3</div>
+                            <div>アドレスバーにAPIエンドポイントを入力</div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">4</div>
+                            <div>Enterキーを押してリクエスト送信</div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">5</div>
+                            <div>JSON形式のレスポンスを確認</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="method-card curl">
+                <div class="method-header">
+                    <div class="method-icon">💻</div>
+                    <div class="method-info">
+                        <div class="method-title">cURL コマンド</div>
+                        <div class="method-difficulty medium">中級者向け</div>
+                    </div>
+                </div>
+                <div class="method-description">
+                    コマンドラインからHTTPリクエストを送信<br>
+                    全てのHTTPメソッドとヘッダー設定が可能
+                </div>
+                <div class="pros-cons">
+                    <div class="pros">
+                        <div class="pros-title">✅ メリット</div>
+                        • 全HTTPメソッド対応<br>
+                        • スクリプト化可能<br>
+                        • ヘッダー自由設定<br>
+                        • 軽量・高速
+                    </div>
+                    <div class="cons">
+                        <div class="cons-title">❌ 制限</div>
+                        • コマンドライン操作必要<br>
+                        • 複雑なデータ送信が煩雑<br>
+                        • レスポンスの見た目が質素<br>
+                        • 初心者には難易度高
+                    </div>
+                </div>
+                <div class="usage-example">
+# GET リクエスト<br>
+curl -X GET http://localhost:8080/api/students<br>
+<br>
+# POST リクエスト<br>
+curl -X POST http://localhost:8080/api/students \<br>
+&nbsp;&nbsp;-H "Content-Type: application/json" \<br>
+&nbsp;&nbsp;-d '{"name":"田中太郎","age":20}'<br>
+<br>
+# PUT リクエスト<br>
+curl -X PUT http://localhost:8080/api/students/1 \<br>
+&nbsp;&nbsp;-H "Content-Type: application/json" \<br>
+&nbsp;&nbsp;-d '{"name":"田中次郎","age":21}'
+                </div>
+                <div class="step-by-step">
+                    <div class="step-title">🔧 実行手順</div>
+                    <ul class="step-list">
+                        <li class="step-item">
+                            <div class="step-number">1</div>
+                            <div>ターミナル/コマンドプロンプトを開く</div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">2</div>
+                            <div>cURLコマンドを入力</div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">3</div>
+                            <div>必要に応じてヘッダーやボディを追加</div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">4</div>
+                            <div>Enterキーでコマンド実行</div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">5</div>
+                            <div>コンソールでレスポンス確認</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="method-card postman">
+                <div class="method-header">
+                    <div class="method-icon">📱</div>
+                    <div class="method-info">
+                        <div class="method-title">Postman</div>
+                        <div class="method-difficulty advanced">上級者推奨</div>
+                    </div>
+                </div>
+                <div class="method-description">
+                    API開発専用のGUIツール<br>
+                    豊富な機能と直感的操作で効率的テスト
+                </div>
+                <div class="pros-cons">
+                    <div class="pros">
+                        <div class="pros-title">✅ メリット</div>
+                        • GUI操作で直感的<br>
+                        • レスポンス見やすい<br>
+                        • コレクション管理<br>
+                        • 自動テスト作成可能
+                    </div>
+                    <div class="cons">
+                        <div class="cons-title">❌ 制限</div>
+                        • インストール必要<br>
+                        • 学習コスト若干あり<br>
+                        • 一部機能は有料<br>
+                        • オンライン環境推奨
+                    </div>
+                </div>
+                <div class="usage-example">
+1. HTTPメソッド選択 (GET/POST/PUT/DELETE)<br>
+2. URL入力: http://localhost:8080/api/students<br>
+3. Headers設定: Content-Type: application/json<br>
+4. Body設定 (POST/PUT時): {"name":"田中","age":20}<br>
+5. Send ボタンをクリック<br>
+6. レスポンス内容を確認
+                </div>
+                <div class="step-by-step">
+                    <div class="step-title">🔧 実行手順</div>
+                    <ul class="step-list">
+                        <li class="step-item">
+                            <div class="step-number">1</div>
+                            <div>Postmanアプリケーションを起動</div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">2</div>
+                            <div>新しいリクエストを作成</div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">3</div>
+                            <div>HTTPメソッドとURLを設定</div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">4</div>
+                            <div>必要に応じてHeadersとBodyを設定</div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">5</div>
+                            <div>Sendボタンでリクエスト送信</div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">6</div>
+                            <div>レスポンスタブで結果を確認</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="comparison-table">
+            <div class="table-title">📊 テスト方法の比較表</div>
+            <div class="comparison-grid">
+                <div class="comparison-header">項目</div>
+                <div class="comparison-header">ブラウザ</div>
+                <div class="comparison-header">cURL</div>
+                <div class="comparison-header">Postman</div>
+                
+                <div class="comparison-cell">初心者向け</div>
+                <div class="comparison-cell"><span class="rating">⭐⭐⭐⭐⭐</span></div>
+                <div class="comparison-cell"><span class="rating">⭐⭐</span></div>
+                <div class="comparison-cell"><span class="rating">⭐⭐⭐⭐</span></div>
+                
+                <div class="comparison-cell">機能豊富さ</div>
+                <div class="comparison-cell"><span class="rating">⭐</span></div>
+                <div class="comparison-cell"><span class="rating">⭐⭐⭐⭐</span></div>
+                <div class="comparison-cell"><span class="rating">⭐⭐⭐⭐⭐</span></div>
+                
+                <div class="comparison-cell">視認性</div>
+                <div class="comparison-cell"><span class="rating">⭐⭐⭐</span></div>
+                <div class="comparison-cell"><span class="rating">⭐⭐</span></div>
+                <div class="comparison-cell"><span class="rating">⭐⭐⭐⭐⭐</span></div>
+                
+                <div class="comparison-cell">自動化</div>
+                <div class="comparison-cell"><span class="rating">⭐</span></div>
+                <div class="comparison-cell"><span class="rating">⭐⭐⭐⭐⭐</span></div>
+                <div class="comparison-cell"><span class="rating">⭐⭐⭐⭐</span></div>
+                
+                <div class="comparison-cell">対応メソッド</div>
+                <div class="comparison-cell">GET のみ</div>
+                <div class="comparison-cell">全て</div>
+                <div class="comparison-cell">全て</div>
+                
+                <div class="comparison-cell">推奨度</div>
+                <div class="comparison-cell">GET確認</div>
+                <div class="comparison-cell">スクリプト</div>
+                <div class="comparison-cell">開発全般</div>
+            </div>
+        </div>
+
+        <div class="practical-workflow">
+            <div class="workflow-title">🎯 実践的テストワークフロー</div>
+            <div class="workflow-steps">
+                <div class="workflow-step">
+                    <div class="workflow-step-number">1</div>
+                    <div class="workflow-step-text">
+                        <span class="highlight">初期確認</span><br>
+                        ブラウザでGETリクエスト
+                    </div>
+                </div>
+                <div class="workflow-step">
+                    <div class="workflow-step-number">2</div>
+                    <div class="workflow-step-text">
+                        <span class="highlight">POST確認</span><br>
+                        PostmanでJSON送信
+                    </div>
+                </div>
+                <div class="workflow-step">
+                    <div class="workflow-step-number">3</div>
+                    <div class="workflow-step-text">
+                        <span class="highlight">エラー確認</span><br>
+                        不正データで例外処理
+                    </div>
+                </div>
+                <div class="workflow-step">
+                    <div class="workflow-step-number">4</div>
+                    <div class="workflow-step-text">
+                        <span class="highlight">自動化</span><br>
+                        cURLスクリプト作成
+                    </div>
+                </div>
+                <div class="workflow-step">
+                    <div class="workflow-step-number">5</div>
+                    <div class="workflow-step-text">
+                        <span class="highlight">文書化</span><br>
+                        API仕様書更新
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tips-section">
+            <div class="tips-title">💡 効果的なテストのコツ</div>
+            <div class="tips-grid">
+                <div class="tip-item">
+                    <div class="tip-icon">🎯</div>
+                    <div class="tip-title">段階的テスト</div>
+                    <div class="tip-description">
+                        簡単なGETから始めて、徐々に複雑なリクエストをテスト
+                    </div>
+                </div>
+                <div class="tip-item">
+                    <div class="tip-icon">📊</div>
+                    <div class="tip-title">ステータスコード確認</div>
+                    <div class="tip-description">
+                        200, 400, 404等のHTTPステータスが適切に返されるか確認
+                    </div>
+                </div>
+                <div class="tip-item">
+                    <div class="tip-icon">🔍</div>
+                    <div class="tip-title">エッジケーステスト</div>
+                    <div class="tip-description">
+                        存在しないID、不正データ等での異常系動作確認
+                    </div>
+                </div>
+                <div class="tip-item">
+                    <div class="tip-icon">📝</div>
+                    <div class="tip-title">結果記録</div>
+                    <div class="tip-description">
+                        テスト結果を記録して、後から振り返り可能にする
+                    </div>
+                </div>
+                <div class="tip-item">
+                    <div class="tip-icon">🔄</div>
+                    <div class="tip-title">継続的テスト</div>
+                    <div class="tip-description">
+                        機能修正のたびに回帰テストを実行してデグレ防止
+                    </div>
+                </div>
+                <div class="tip-item">
+                    <div class="tip-icon">🎨</div>
+                    <div class="tip-title">レスポンス形式確認</div>
+                    <div class="tip-description">
+                        ApiResponseの統一形式が正しく適用されているか確認
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

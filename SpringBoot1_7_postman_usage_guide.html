@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Postman使用（推奨）</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background-color: white;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+
+        .week-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .postman-overview {
+            background: linear-gradient(135deg, #FF6C37, #FF4713);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .overview-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .overview-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .overview-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .overview-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .overview-text {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .interface-mockup {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .mockup-header {
+            background: #343a40;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mockup-title {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .postman-logo {
+            width: 20px;
+            height: 20px;
+            background: #FF6C37;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .mockup-toolbar {
+            background: #e9ecef;
+            padding: 15px 20px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .request-line {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .method-dropdown {
+            background: #28a745;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .url-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+
+        .send-button {
+            background: #007bff;
+            color: white;
+            padding: 8px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .tabs-section {
+            display: flex;
+            gap: 0;
+            margin-bottom: 0;
+        }
+
+        .tab {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-bottom: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .tab.active {
+            background: white;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .mockup-content {
+            background: white;
+            padding: 20px;
+        }
+
+        .headers-section, .body-section {
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 10px;
+        }
+
+        .header-row, .body-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 10px;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+
+        .header-input, .body-input {
+            padding: 6px 10px;
+            border: 1px solid #ced4da;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+
+        .checkbox {
+            width: 16px;
+            height: 16px;
+        }
+
+        .json-editor {
+            background: #2c3e50;
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            min-height: 100px;
+        }
+
+        .json-key {
+            color: #3498db;
+        }
+
+        .json-value {
+            color: #e74c3c;
+        }
+
+        .json-string {
+            color: #27ae60;
+        }
+
+        .response-mockup {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .response-header {
+            background: #28a745;
+            color: white;
+            padding: 12px 20px;
+            font-weight: bold;
+        }
+
+        .status-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #e8f5e8;
+            padding: 10px 20px;
+            border-bottom: 1px solid #c3e6c3;
+        }
+
+        .status-code {
+            background: #28a745;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .response-time {
+            font-size: 12px;
+            color: #6c757d;
+        }
+
+        .response-content {
+            background: white;
+            padding: 20px;
+        }
+
+        .response-json {
+            background: #2c3e50;
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .feature-highlights {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 2px solid #dee2e6;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: scale(1.02);
+            border-color: #FF6C37;
+        }
+
+        .feature-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .feature-icon {
+            font-size: 24px;
+        }
+
+        .feature-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .feature-description {
+            color: #7f8c8d;
+            margin-bottom: 15px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .feature-example {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-left: 4px solid #FF6C37;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #495057;
+        }
+
+        .workflow-guide {
+            background: linear-gradient(135deg, #e8f5e8, #d4edda);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 2px solid #28a745;
+        }
+
+        .workflow-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #28a745;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .workflow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .workflow-step {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #28a745;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .step-number {
+            width: 30px;
+            height: 30px;
+            background: #28a745;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            margin: 0 auto 10px;
+        }
+
+        .step-text {
+            font-size: 13px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .practical-tips {
+            background: linear-gradient(135deg, #fff8e1, #ffecb3);
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid #ffc107;
+        }
+
+        .tips-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .tip-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .tip-icon {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .tip-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 8px;
+        }
+
+        .tip-description {
+            font-size: 12px;
+            color: #495057;
+            line-height: 1.4;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #856404;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .request-line {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .status-line {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="week-badge">Week 8.7</div>
+    
+    <div class="container">
+        <div class="title">📱 Postman使用（推奨）</div>
+        
+        <div class="postman-overview">
+            <div class="overview-title">🎯 なぜPostmanが開発者に選ばれるのか</div>
+            <div class="overview-content">
+                <div class="overview-item">
+                    <div class="overview-icon">🎨</div>
+                    <div class="overview-text">
+                        <span class="highlight">直感的UI</span><br>
+                        GUI操作で簡単テスト
+                    </div>
+                </div>
+                <div class="overview-item">
+                    <div class="overview-icon">📊</div>
+                    <div class="overview-text">
+                        <span class="highlight">見やすいレスポンス</span><br>
+                        JSON整形・シンタックスハイライト
+                    </div>
+                </div>
+                <div class="overview-item">
+                    <div class="overview-icon">💾</div>
+                    <div class="overview-text">
+                        <span class="highlight">リクエスト保存</span><br>
+                        コレクション機能で再利用
+                    </div>
+                </div>
+                <div class="overview-item">
+                    <div class="overview-icon">🔄</div>
+                    <div class="overview-text">
+                        <span class="highlight">環境管理</span><br>
+                        本番・テスト環境切り替え
+                    </div>
+                </div>
+                <div class="overview-item">
+                    <div class="overview-icon">🧪</div>
+                    <div class="overview-text">
+                        <span class="highlight">自動テスト</span><br>
+                        スクリプトによる検証
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="interface-mockup">
+            <div class="mockup-header">
+                <div class="postman-logo">P</div>
+                <div class="mockup-title">Postman - API Testing</div>
+            </div>
+            <div class="mockup-toolbar">
+                <div class="request-line">
+                    <div class="method-dropdown">POST</div>
+                    <input type="text" class="url-input" value="http://localhost:8080/api/students" readonly>
+                    <button class="send-button">Send</button>
+                </div>
+                <div class="tabs-section">
+                    <div class="tab">Params</div>
+                    <div class="tab active">Headers</div>
+                    <div class="tab">Body</div>
+                    <div class="tab">Pre-request Script</div>
+                    <div class="tab">Tests</div>
+                </div>
+            </div>
+            <div class="mockup-content">
+                <div class="headers-section">
+                    <div class="section-title">Headers</div>
+                    <div class="header-row">
+                        <input type="text" class="header-input" value="Content-Type" readonly>
+                        <input type="text" class="header-input" value="application/json" readonly>
+                        <input type="checkbox" class="checkbox" checked readonly>
+                    </div>
+                    <div class="header-row">
+                        <input type="text" class="header-input" value="Accept" readonly>
+                        <input type="text" class="header-input" value="application/json" readonly>
+                        <input type="checkbox" class="checkbox" checked readonly>
+                    </div>
+                </div>
+                <div class="body-section">
+                    <div class="section-title">Body (raw - JSON)</div>
+                    <div class="json-editor">
+{<br>
+&nbsp;&nbsp;<span class="json-key">"name"</span>: <span class="json-string">"田中太郎"</span>,<br>
+&nbsp;&nbsp;<span class="json-key">"age"</span>: <span class="json-value">20</span><br>
+}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="response-mockup">
+            <div class="response-header">Response</div>
+            <div class="status-line">
+                <div>
+                    <span class="status-code">201 Created</span>
+                    <span style="margin-left: 10px; color: #6c757d;">Status: Created</span>
+                </div>
+                <div class="response-time">Time: 45ms | Size: 156 B</div>
+            </div>
+            <div class="response-content">
+                <div class="section-title">Response Body</div>
+                <div class="response-json">
+{<br>
+&nbsp;&nbsp;<span class="json-key">"status"</span>: <span class="json-string">"success"</span>,<br>
+&nbsp;&nbsp;<span class="json-key">"data"</span>: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"id"</span>: <span class="json-value">1</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"name"</span>: <span class="json-string">"田中太郎"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"age"</span>: <span class="json-value">20</span><br>
+&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;<span class="json-key">"timestamp"</span>: <span class="json-string">"2024-01-15T10:30:00"</span><br>
+}
+                </div>
+            </div>
+        </div>
+
+        <div class="feature-highlights">
+            <div class="feature-card">
+                <div class="feature-header">
+                    <div class="feature-icon">📚</div>
+                    <div class="feature-title">コレクション機能</div>
+                </div>
+                <div class="feature-description">
+                    関連するAPIリクエストをグループ化<br>
+                    プロジェクト単位で整理・管理
+                </div>
+                <div class="feature-example">
+                    Student API Collection<br>
+                    ├── GET /api/students (一覧取得)<br>
+                    ├── POST /api/students (新規登録)<br>
+                    ├── GET /api/students/{id} (詳細取得)<br>
+                    ├── PUT /api/students/{id} (更新)<br>
+                    └── DELETE /api/students/{id} (削除)
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-header">
+                    <div class="feature-icon">🌍</div>
+                    <div class="feature-title">環境変数</div>
+                </div>
+                <div class="feature-description">
+                    開発・本番環境のURL切り替え<br>
+                    共通設定の一元管理
+                </div>
+                <div class="feature-example">
+                    {{baseUrl}}/api/students<br>
+                    <br>
+                    Development: http://localhost:8080<br>
+                    Production: https://api.example.com<br>
+                    Testing: http://test.example.com
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-header">
+                    <div class="feature-icon">🧪</div>
+                    <div class="feature-title">自動テスト機能</div>
+                </div>
+                <div class="feature-description">
+                    レスポンスの内容を自動検証<br>
+                    JavaScriptでテストスクリプト作成
+                </div>
+                <div class="feature-example">
+                    pm.test("Status code is 200", function () {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;pm.response.to.have.status(200);<br>
+                    });<br>
+                    <br>
+                    pm.test("Response has name", function () {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;pm.expect(pm.response.json().data.name)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.to.eql("田中太郎");<br>
+                    });
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-header">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-title">レスポンス分析</div>
+                </div>
+                <div class="feature-description">
+                    JSONの構造を見やすく表示<br>
+                    レスポンス時間やサイズも確認
+                </div>
+                <div class="feature-example">
+                    ✅ Pretty (整形表示)<br>
+                    ✅ Raw (生データ)<br>
+                    ✅ Preview (プレビュー)<br>
+                    ✅ Headers (ヘッダー情報)<br>
+                    ✅ Cookies (クッキー情報)<br>
+                    ✅ Test Results (テスト結果)
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-header">
+                    <div class="feature-icon">🔄</div>
+                    <div class="feature-title">リクエスト履歴</div>
+                </div>
+                <div class="feature-description">
+                    過去のリクエストを自動保存<br>
+                    履歴から簡単に再実行可能
+                </div>
+                <div class="feature-example">
+                    History タブから確認<br>
+                    • 実行時刻<br>
+                    • メソッドとURL<br>
+                    • ステータスコード<br>
+                    • レスポンス時間<br>
+                    <br>
+                    ワンクリックで再実行可能
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-header">
+                    <div class="feature-icon">📤</div>
+                    <div class="feature-title">共有・エクスポート</div>
+                </div>
+                <div class="feature-description">
+                    チームメンバーとの設定共有<br>
+                    コード生成機能で実装支援
+                </div>
+                <div class="feature-example">
+                    📤 コレクション共有リンク生成<br>
+                    📄 cURL / JavaScript / Python コード生成<br>
+                    💾 JSON形式でエクスポート<br>
+                    🔗 Swagger / OpenAPI 連携<br>
+                    👥 ワークスペース機能
+                </div>
+            </div>
+        </div>
+
+        <div class="workflow-guide">
+            <div class="workflow-title">🎯 Postman を使った効率的ワークフロー</div>
+            <div class="workflow-steps">
+                <div class="workflow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-text">
+                        <span class="highlight">コレクション作成</span><br>
+                        StudentAPI専用フォルダ
+                    </div>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-text">
+                        <span class="highlight">環境設定</span><br>
+                        localhost:8080設定
+                    </div>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-text">
+                        <span class="highlight">基本テスト</span><br>
+                        GET・POST確認
+                    </div>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-text">
+                        <span class="highlight">自動化設定</span><br>
+                        テストスクリプト作成
+                    </div>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">5</div>
+                    <div class="step-text">
+                        <span class="highlight">チーム共有</span><br>
+                        コレクション公開
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="practical-tips">
+            <div class="tips-title">💡 Postman活用の実践的コツ</div>
+            <div class="tips-grid">
+                <div class="tip-item">
+                    <div class="tip-icon">⚡</div>
+                    <div class="tip-title">ショートカット活用</div>
+                    <div class="tip-description">
+                        Ctrl+Enter: リクエスト送信<br>
+                        Ctrl+S: リクエスト保存<br>
+                        Ctrl+D: リクエスト複製
+                    </div>
+                </div>
+                <div class="tip-item">
+                    <div class="tip-icon">🔄</div>
+                    <div class="tip-title">変数活用</div>
+                    <div class="tip-description">
+                        {{studentId}} でIDを動的設定<br>
+                        レスポンスから次のリクエストのIDを自動取得
+                    </div>
+                </div>
+                <div class="tip-item">
+                    <div class="tip-icon">📝</div>
+                    <div class="tip-title">テンプレート利用</div>
+                    <div class="tip-description">
+                        よく使うJSONリクエストを保存<br>
+                        Example機能で複数パターン管理
+                    </div>
+                </div>
+                <div class="tip-item">
+                    <div class="tip-icon">🎯</div>
+                    <div class="tip-title">テスト自動化</div>
+                    <div class="tip-description">
+                        Collection Runner で一括テスト<br>
+                        Newman CLI で CI/CD 連携
+                    </div>
+                </div>
+                <div class="tip-item">
+                    <div class="tip-icon">📊</div>
+                    <div class="tip-title">モニタリング</div>
+                    <div class="tip-description">
+                        定期的なAPIヘルスチェック<br>
+                        パフォーマンス監視設定
+                    </div>
+                </div>
+                <div class="tip-item">
+                    <div class="tip-icon">🔐</div>
+                    <div class="tip-title">認証管理</div>
+                    <div class="tip-description">
+                        Authorization タブで認証設定<br>
+                        Bearer Token・API Key管理
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

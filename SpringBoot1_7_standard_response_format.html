@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>標準レスポンス形式の実装</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background-color: white;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+
+        .week-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .week-connection {
+            background: linear-gradient(135deg, #e8f5e8, #d4edda);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 2px solid #27ae60;
+        }
+
+        .connection-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .connection-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .connection-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #27ae60;
+        }
+
+        .connection-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .connection-text {
+            font-size: 14px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .apiresponse-structure {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .structure-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .structure-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .structure-code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .annotation {
+            color: #f39c12;
+        }
+
+        .class-name {
+            color: #3498db;
+        }
+
+        .method-name {
+            color: #27ae60;
+        }
+
+        .string-literal {
+            color: #e74c3c;
+        }
+
+        .structure-features {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .response-patterns {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .pattern-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 2px solid #dee2e6;
+            transition: transform 0.3s ease;
+        }
+
+        .pattern-card:hover {
+            transform: scale(1.02);
+            border-color: #3498db;
+        }
+
+        .pattern-card.success {
+            border-left: 6px solid #28a745;
+        }
+
+        .pattern-card.error {
+            border-left: 6px solid #dc3545;
+        }
+
+        .pattern-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .pattern-icon {
+            font-size: 24px;
+        }
+
+        .pattern-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .pattern-description {
+            color: #7f8c8d;
+            margin-bottom: 15px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .code-example {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            margin-bottom: 10px;
+            overflow-x: auto;
+        }
+
+        .json-response {
+            background: #2c3e50;
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+
+        .json-key {
+            color: #3498db;
+        }
+
+        .json-value {
+            color: #e74c3c;
+        }
+
+        .json-string {
+            color: #27ae60;
+        }
+
+        .practical-usage {
+            background: linear-gradient(135deg, #fff8e1, #ffecb3);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 2px solid #ffc107;
+        }
+
+        .usage-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .usage-examples {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .usage-example {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #ffc107;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .usage-scenario {
+            font-size: 16px;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .controller-code {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            margin-bottom: 8px;
+            border-left: 3px solid #ffc107;
+        }
+
+        .benefits-section {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid #6c757d;
+        }
+
+        .benefits-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .benefit-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #6c757d;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .benefit-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .benefit-text {
+            font-size: 14px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #856404;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .structure-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="week-badge">Week 8.7</div>
+    
+    <div class="container">
+        <div class="title">📋 標準レスポンス形式の実装</div>
+        
+        <div class="week-connection">
+            <div class="connection-title">🔗 Week 7.10 準備ファイルとの連携</div>
+            <div class="connection-content">
+                <div class="connection-item">
+                    <div class="connection-icon">📄</div>
+                    <div class="connection-text">
+                        <span class="highlight">ApiResponse.java</span><br>
+                        Week 7.10で準備済み
+                    </div>
+                </div>
+                <div class="connection-item">
+                    <div class="connection-icon">🎯</div>
+                    <div class="connection-text">
+                        <span class="highlight">統一レスポンス</span><br>
+                        一貫したJSON構造
+                    </div>
+                </div>
+                <div class="connection-item">
+                    <div class="connection-icon">⚙️</div>
+                    <div class="connection-text">
+                        <span class="highlight">Controller活用</span><br>
+                        Week 8.7で実装開始
+                    </div>
+                </div>
+                <div class="connection-item">
+                    <div class="connection-icon">🏗️</div>
+                    <div class="connection-text">
+                        <span class="highlight">基盤技術</span><br>
+                        Spring Boot環境
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="apiresponse-structure">
+            <div class="structure-title">🏗️ ApiResponse.java クラス構造</div>
+            <div class="structure-content">
+                <div class="structure-code">
+public class <span class="class-name">ApiResponse</span>&lt;T&gt; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private String status;   // "success" or "error"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private T data;          // 成功時のデータ<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private String message;  // エラーメッセージ<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private String code;     // エラーコード<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private LocalDateTime timestamp;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 成功レスポンス生成<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public static &lt;T&gt; <span class="class-name">ApiResponse</span>&lt;T&gt; <span class="method-name">success</span>(T data) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="class-name">ApiResponse</span>&lt;T&gt; response = new <span class="class-name">ApiResponse</span>&lt;&gt;();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;response.status = <span class="string-literal">"success"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;response.data = data;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;response.timestamp = LocalDateTime.now();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return response;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// エラーレスポンス生成<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public static <span class="class-name">ApiResponse</span>&lt;Void&gt; <span class="method-name">error</span>(String message) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="class-name">ApiResponse</span>&lt;Void&gt; response = new <span class="class-name">ApiResponse</span>&lt;&gt;();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;response.status = <span class="string-literal">"error"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;response.message = message;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;response.timestamp = LocalDateTime.now();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return response;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                </div>
+                <div class="structure-features">
+                    <h4>🎯 ApiResponse の特徴</h4>
+                    <ul class="feature-list">
+                        <li class="feature-item">
+                            <span>✅</span>
+                            <span>成功・エラー時の統一レスポンス形式</span>
+                        </li>
+                        <li class="feature-item">
+                            <span>✅</span>
+                            <span>ジェネリクスで型安全なデータ格納</span>
+                        </li>
+                        <li class="feature-item">
+                            <span>✅</span>
+                            <span>タイムスタンプで処理時刻記録</span>
+                        </li>
+                        <li class="feature-item">
+                            <span>✅</span>
+                            <span>静的メソッドで簡単インスタンス生成</span>
+                        </li>
+                        <li class="feature-item">
+                            <span>✅</span>
+                            <span>Spring Boot自動JSON変換対応</span>
+                        </li>
+                        <li class="feature-item">
+                            <span>✅</span>
+                            <span>フロントエンド開発での一貫処理</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="response-patterns">
+            <div class="pattern-card success">
+                <div class="pattern-header">
+                    <div class="pattern-icon">✅</div>
+                    <div class="pattern-title">成功レスポンスパターン</div>
+                </div>
+                <div class="pattern-description">
+                    データ取得・登録・更新が正常に完了した場合<br>
+                    統一されたJSON構造で結果を返却
+                </div>
+                <div class="code-example">
+// Controller での実装<br>
+return ResponseEntity.ok(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ApiResponse.success(studentList)<br>
+);
+                </div>
+                <div class="json-response">
+{<br>
+&nbsp;&nbsp;<span class="json-key">"status"</span>: <span class="json-string">"success"</span>,<br>
+&nbsp;&nbsp;<span class="json-key">"data"</span>: [<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"id"</span>: <span class="json-value">1</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"name"</span>: <span class="json-string">"田中太郎"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"age"</span>: <span class="json-value">20</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;],<br>
+&nbsp;&nbsp;<span class="json-key">"timestamp"</span>: <span class="json-string">"2024-01-15T10:30:00"</span><br>
+}
+                </div>
+            </div>
+
+            <div class="pattern-card error">
+                <div class="pattern-header">
+                    <div class="pattern-icon">⚠️</div>
+                    <div class="pattern-title">エラーレスポンスパターン</div>
+                </div>
+                <div class="pattern-description">
+                    バリデーションエラーやシステムエラーが発生した場合<br>
+                    詳細なエラー情報を含む統一形式で返却
+                </div>
+                <div class="code-example">
+// Controller での実装<br>
+return ResponseEntity.badRequest()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.body(ApiResponse.error("入力データが不正です"));
+                </div>
+                <div class="json-response">
+{<br>
+&nbsp;&nbsp;<span class="json-key">"status"</span>: <span class="json-string">"error"</span>,<br>
+&nbsp;&nbsp;<span class="json-key">"message"</span>: <span class="json-string">"入力データが不正です"</span>,<br>
+&nbsp;&nbsp;<span class="json-key">"code"</span>: <span class="json-string">"VALIDATION_ERROR"</span>,<br>
+&nbsp;&nbsp;<span class="json-key">"data"</span>: null,<br>
+&nbsp;&nbsp;<span class="json-key">"timestamp"</span>: <span class="json-string">"2024-01-15T10:31:00"</span><br>
+}
+                </div>
+            </div>
+
+            <div class="pattern-card success">
+                <div class="pattern-header">
+                    <div class="pattern-icon">➕</div>
+                    <div class="pattern-title">作成成功パターン</div>
+                </div>
+                <div class="pattern-description">
+                    新規データ作成時の201 Createdステータス<br>
+                    作成されたリソースの情報を含んで返却
+                </div>
+                <div class="code-example">
+// Controller での実装<br>
+return ResponseEntity.status(201)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.body(ApiResponse.success(newStudent));
+                </div>
+                <div class="json-response">
+{<br>
+&nbsp;&nbsp;<span class="json-key">"status"</span>: <span class="json-string">"success"</span>,<br>
+&nbsp;&nbsp;<span class="json-key">"data"</span>: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"id"</span>: <span class="json-value">2</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"name"</span>: <span class="json-string">"佐藤花子"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"age"</span>: <span class="json-value">19</span><br>
+&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;<span class="json-key">"timestamp"</span>: <span class="json-string">"2024-01-15T10:32:00"</span><br>
+}
+                </div>
+            </div>
+
+            <div class="pattern-card error">
+                <div class="pattern-header">
+                    <div class="pattern-icon">🔍</div>
+                    <div class="pattern-title">データ未発見パターン</div>
+                </div>
+                <div class="pattern-description">
+                    存在しないリソースへのアクセス時<br>
+                    404ステータスと共に適切なエラー情報を返却
+                </div>
+                <div class="code-example">
+// Controller での実装<br>
+return ResponseEntity.notFound()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.build();
+</div>
+                <div class="json-response">
+{<br>
+&nbsp;&nbsp;<span class="json-key">"status"</span>: <span class="json-string">"error"</span>,<br>
+&nbsp;&nbsp;<span class="json-key">"message"</span>: <span class="json-string">"Student not found"</span>,<br>
+&nbsp;&nbsp;<span class="json-key">"code"</span>: <span class="json-string">"STUDENT_NOT_FOUND"</span>,<br>
+&nbsp;&nbsp;<span class="json-key">"data"</span>: null,<br>
+&nbsp;&nbsp;<span class="json-key">"timestamp"</span>: <span class="json-string">"2024-01-15T10:33:00"</span><br>
+}
+                </div>
+            </div>
+        </div>
+
+        <div class="practical-usage">
+            <div class="usage-title">🎯 実際のController実装例</div>
+            <div class="usage-examples">
+                <div class="usage-example">
+                    <div class="usage-scenario">📖 学生一覧取得</div>
+                    <div class="controller-code">
+@GetMapping<br>
+public ResponseEntity&lt;ApiResponse&lt;List&lt;Student&gt;&gt;&gt; getAllStudents() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;List&lt;Student&gt; students = studentService.findAll();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return ResponseEntity.ok(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ApiResponse.success(students)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;);<br>
+}
+                    </div>
+                </div>
+
+                <div class="usage-example">
+                    <div class="usage-scenario">➕ 学生新規登録</div>
+                    <div class="controller-code">
+@PostMapping<br>
+public ResponseEntity&lt;ApiResponse&lt;Student&gt;&gt; createStudent(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Valid @RequestBody Student student) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Student newStudent = studentService.create(student);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return ResponseEntity.status(201)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.body(ApiResponse.success(newStudent));<br>
+}
+                    </div>
+                </div>
+
+                <div class="usage-example">
+                    <div class="usage-scenario">🔍 学生詳細取得</div>
+                    <div class="controller-code">
+@GetMapping("/{id}")<br>
+public ResponseEntity&lt;ApiResponse&lt;Student&gt;&gt; getStudent(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@PathVariable Long id) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Student student = studentService.findById(id);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return ResponseEntity.ok(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ApiResponse.success(student)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;);<br>
+}
+                    </div>
+                </div>
+
+                <div class="usage-example">
+                    <div class="usage-scenario">⚠️ バリデーションエラー</div>
+                    <div class="controller-code">
+if (result.hasErrors()) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;String errorMsg = result.getFieldErrors()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.stream()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.map(FieldError::getDefaultMessage)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.collect(Collectors.joining(", "));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return ResponseEntity.badRequest()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.body(ApiResponse.error(errorMsg));<br>
+}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="benefits-section">
+            <div class="benefits-title">🏗️ 統一レスポンス形式の効果的価値</div>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">🎯</div>
+                    <div class="benefit-text">
+                        <span class="highlight">フロントエンド</span><br>
+                        一貫した処理ロジック
+                    </div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🔄</div>
+                    <div class="benefit-text">
+                        <span class="highlight">API設計統一</span><br>
+                        開発者間の認識合わせ
+                    </div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🛠️</div>
+                    <div class="benefit-text">
+                        <span class="highlight">メンテナンス性</span><br>
+                        修正範囲の明確化
+                    </div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">📊</div>
+                    <div class="benefit-text">
+                        <span class="highlight">監視・ログ</span><br>
+                        統一されたデータ形式
+                    </div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🎨</div>
+                    <div class="benefit-text">
+                        <span class="highlight">ユーザー体験</span><br>
+                        予測可能なAPI挙動
+                    </div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🏗️</div>
+                    <div class="benefit-text">
+                        <span class="highlight">スケーラビリティ</span><br>
+                        機能拡張の容易性
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

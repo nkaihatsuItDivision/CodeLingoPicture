@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>エラーハンドリングの重要性</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background-color: white;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+
+        .week-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .importance-overview {
+            background: linear-gradient(135deg, #ffe6e6, #ffcccc);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 2px solid #dc3545;
+        }
+
+        .overview-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #dc3545;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .importance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .importance-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #dc3545;
+            text-align: center;
+        }
+
+        .importance-icon {
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+
+        .importance-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #dc3545;
+            margin-bottom: 10px;
+        }
+
+        .importance-description {
+            font-size: 14px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+
+        .error-patterns {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .pattern-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 2px solid #dee2e6;
+            transition: transform 0.3s ease;
+        }
+
+        .pattern-card:hover {
+            transform: scale(1.02);
+            border-color: #3498db;
+        }
+
+        .pattern-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .pattern-icon {
+            font-size: 24px;
+        }
+
+        .pattern-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .pattern-description {
+            color: #7f8c8d;
+            margin-bottom: 15px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ffffff;
+            border: 1px solid #dee2e6;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            margin-bottom: 10px;
+            overflow-x: auto;
+        }
+
+        .annotation {
+            color: #f39c12;
+        }
+
+        .class-name {
+            color: #3498db;
+        }
+
+        .method-name {
+            color: #27ae60;
+        }
+
+        .string-literal {
+            color: #e74c3c;
+        }
+
+        .benefit-tag {
+            background: #e8f5e8;
+            border: 1px solid #27ae60;
+            border-radius: 6px;
+            padding: 8px;
+            font-size: 12px;
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .global-exception-handler {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .handler-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .handler-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .handler-code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .handler-benefits {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .benefit-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .custom-exceptions {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 2px solid #6c757d;
+        }
+
+        .custom-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .exception-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .exception-type {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #6c757d;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .exception-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+
+        .exception-usage {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            margin-bottom: 8px;
+        }
+
+        .exception-benefit {
+            color: #28a745;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .robustness-benefits {
+            background: linear-gradient(135deg, #e8f5e8, #d4edda);
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid #28a745;
+        }
+
+        .robustness-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #28a745;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .benefit-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #28a745;
+        }
+
+        .benefit-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .benefit-text {
+            font-size: 14px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #856404;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .handler-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="week-badge">Week 8.7</div>
+    
+    <div class="container">
+        <div class="title">🛡️ エラーハンドリングの重要性</div>
+        
+        <div class="importance-overview">
+            <div class="overview-title">🎯 なぜエラーハンドリングが重要なのか</div>
+            <div class="importance-grid">
+                <div class="importance-item">
+                    <div class="importance-icon">🔒</div>
+                    <div class="importance-title">システムの安定性</div>
+                    <div class="importance-description">
+                        予期しないエラーでアプリケーションが<br>
+                        停止することを防止
+                    </div>
+                </div>
+                <div class="importance-item">
+                    <div class="importance-icon">🎨</div>
+                    <div class="importance-title">ユーザー体験向上</div>
+                    <div class="importance-description">
+                        分かりやすいエラーメッセージで<br>
+                        ユーザーの混乱を防止
+                    </div>
+                </div>
+                <div class="importance-item">
+                    <div class="importance-icon">🔍</div>
+                    <div class="importance-title">デバッグ効率化</div>
+                    <div class="importance-description">
+                        詳細なログで問題箇所を<br>
+                        迅速に特定・修正
+                    </div>
+                </div>
+                <div class="importance-item">
+                    <div class="importance-icon">🛡️</div>
+                    <div class="importance-title">セキュリティ強化</div>
+                    <div class="importance-description">
+                        機密情報の漏洩を防ぎ<br>
+                        適切なエラー情報を制御
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="error-patterns">
+            <div class="pattern-card">
+                <div class="pattern-header">
+                    <div class="pattern-icon">🎯</div>
+                    <div class="pattern-title">try-catch 基本パターン</div>
+                </div>
+                <div class="pattern-description">
+                    メソッド内での例外処理の基本形<br>
+                    予期される例外を個別にキャッチして処理
+                </div>
+                <div class="code-example">
+<span class="annotation">@GetMapping</span>(<span class="string-literal">"/{id}"</span>)<br>
+public <span class="class-name">ResponseEntity</span>&lt;<span class="class-name">ApiResponse</span>&gt; <span class="method-name">getStudent</span>(<span class="annotation">@PathVariable</span> Long id) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;try {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="class-name">Student</span> student = studentService.<span class="method-name">findById</span>(id);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return <span class="class-name">ResponseEntity</span>.<span class="method-name">ok</span>(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="class-name">ApiResponse</span>.<span class="method-name">success</span>(student)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;} catch (<span class="class-name">StudentNotFoundException</span> e) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return <span class="class-name">ResponseEntity</span>.<span class="method-name">notFound</span>().<span class="method-name">build</span>();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;} catch (<span class="class-name">Exception</span> e) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;log.<span class="method-name">error</span>(<span class="string-literal">"Unexpected error"</span>, e);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return <span class="class-name">ResponseEntity</span>.<span class="method-name">status</span>(500)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<span class="method-name">body</span>(<span class="class-name">ApiResponse</span>.<span class="method-name">error</span>(<span class="string-literal">"System Error"</span>));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                </div>
+                <div class="benefit-tag">
+                    💡 メリット：個別対応でき、問題特定が容易
+                </div>
+            </div>
+
+            <div class="pattern-card">
+                <div class="pattern-header">
+                    <div class="pattern-icon">🌐</div>
+                    <div class="pattern-title">@Valid バリデーション連携</div>
+                </div>
+                <div class="pattern-description">
+                    Bean Validationと組み合わせた<br>
+                    入力データの自動検証とエラーハンドリング
+                </div>
+                <div class="code-example">
+<span class="annotation">@PostMapping</span><br>
+public <span class="class-name">ResponseEntity</span>&lt;<span class="class-name">ApiResponse</span>&gt; <span class="method-name">createStudent</span>(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="annotation">@Valid</span> <span class="annotation">@RequestBody</span> <span class="class-name">Student</span> student,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="class-name">BindingResult</span> result) {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (result.<span class="method-name">hasErrors</span>()) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="class-name">List</span>&lt;<span class="class-name">String</span>&gt; errors = result.<span class="method-name">getFieldErrors</span>()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<span class="method-name">stream</span>()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<span class="method-name">map</span>(<span class="class-name">FieldError</span>::<span class="method-name">getDefaultMessage</span>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<span class="method-name">collect</span>(<span class="class-name">Collectors</span>.<span class="method-name">toList</span>());<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return <span class="class-name">ResponseEntity</span>.<span class="method-name">badRequest</span>()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<span class="method-name">body</span>(<span class="class-name">ApiResponse</span>.<span class="method-name">error</span>(errors));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return studentService.<span class="method-name">create</span>(student);<br>
+}
+                </div>
+                <div class="benefit-tag">
+                    💡 メリット：入力チェック自動化、詳細エラー情報
+                </div>
+            </div>
+        </div>
+
+        <div class="global-exception-handler">
+            <div class="handler-title">🌍 Global Exception Handler</div>
+            <div class="handler-content">
+                <div class="handler-code">
+<span class="annotation">@ControllerAdvice</span><br>
+public class <span class="class-name">GlobalExceptionHandler</span> {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="annotation">@ExceptionHandler</span>(<span class="class-name">StudentNotFoundException</span>.class)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public <span class="class-name">ResponseEntity</span>&lt;<span class="class-name">ApiResponse</span>&gt; <span class="method-name">handleNotFound</span>(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="class-name">StudentNotFoundException</span> e) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return <span class="class-name">ResponseEntity</span>.<span class="method-name">notFound</span>().<span class="method-name">build</span>();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="annotation">@ExceptionHandler</span>(<span class="class-name">MethodArgumentNotValidException</span>.class)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public <span class="class-name">ResponseEntity</span>&lt;<span class="class-name">ApiResponse</span>&gt; <span class="method-name">handleValidation</span>(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="class-name">MethodArgumentNotValidException</span> e) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return <span class="class-name">ResponseEntity</span>.<span class="method-name">badRequest</span>()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<span class="method-name">body</span>(<span class="class-name">ApiResponse</span>.<span class="method-name">error</span>(<span class="string-literal">"Validation Error"</span>));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="annotation">@ExceptionHandler</span>(<span class="class-name">Exception</span>.class)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public <span class="class-name">ResponseEntity</span>&lt;<span class="class-name">ApiResponse</span>&gt; <span class="method-name">handleGeneral</span>(<span class="class-name">Exception</span> e) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;log.<span class="method-name">error</span>(<span class="string-literal">"Unexpected error"</span>, e);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return <span class="class-name">ResponseEntity</span>.<span class="method-name">status</span>(500)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<span class="method-name">body</span>(<span class="class-name">ApiResponse</span>.<span class="method-name">error</span>(<span class="string-literal">"System Error"</span>));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                </div>
+                <div class="handler-benefits">
+                    <h4>🎯 Global Handler の利点</h4>
+                    <ul class="benefit-list">
+                        <li class="benefit-item">
+                            <span>✅</span>
+                            <span>アプリケーション全体で統一されたエラー処理</span>
+                        </li>
+                        <li class="benefit-item">
+                            <span>✅</span>
+                            <span>Controllerコードの重複排除</span>
+                        </li>
+                        <li class="benefit-item">
+                            <span>✅</span>
+                            <span>一箇所でエラー処理ロジックを管理</span>
+                        </li>
+                        <li class="benefit-item">
+                            <span>✅</span>
+                            <span>レスポンス形式の一貫性確保</span>
+                        </li>
+                        <li class="benefit-item">
+                            <span>✅</span>
+                            <span>メンテナンス性の向上</span>
+                        </li>
+                        <li class="benefit-item">
+                            <span>✅</span>
+                            <span>例外タイプ別の詳細制御</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="custom-exceptions">
+            <div class="custom-title">🎨 カスタム例外クラス</div>
+            <div class="exception-types">
+                <div class="exception-type">
+                    <div class="exception-name">StudentNotFoundException</div>
+                    <div class="exception-usage">
+public class StudentNotFoundException<br>
+&nbsp;&nbsp;&nbsp;&nbsp;extends RuntimeException {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public StudentNotFoundException(Long id) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;super("Student not found: " + id);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                    </div>
+                    <div class="exception-benefit">💡 学生データ未発見時の専用例外</div>
+                </div>
+
+                <div class="exception-type">
+                    <div class="exception-name">DuplicateStudentException</div>
+                    <div class="exception-usage">
+public class DuplicateStudentException<br>
+&nbsp;&nbsp;&nbsp;&nbsp;extends RuntimeException {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public DuplicateStudentException(String id) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;super("Duplicate student ID: " + id);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                    </div>
+                    <div class="exception-benefit">💡 学籍番号重複時の専用例外</div>
+                </div>
+
+                <div class="exception-type">
+                    <div class="exception-name">InvalidAgeException</div>
+                    <div class="exception-usage">
+public class InvalidAgeException<br>
+&nbsp;&nbsp;&nbsp;&nbsp;extends RuntimeException {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public InvalidAgeException(int age) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;super("Invalid age: " + age);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                    </div>
+                    <div class="exception-benefit">💡 年齢データ不正時の専用例外</div>
+                </div>
+
+                <div class="exception-type">
+                    <div class="exception-name">BusinessLogicException</div>
+                    <div class="exception-usage">
+public class BusinessLogicException<br>
+&nbsp;&nbsp;&nbsp;&nbsp;extends RuntimeException {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public BusinessLogicException(String msg) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;super(msg);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                    </div>
+                    <div class="exception-benefit">💡 ビジネスルール違反時の汎用例外</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="robustness-benefits">
+            <div class="robustness-title">🏗️ 堅牢なWebアプリケーション開発への効果</div>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">🔒</div>
+                    <div class="benefit-text">
+                        <span class="highlight">信頼性向上</span><br>
+                        予期しない停止の防止
+                    </div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🎯</div>
+                    <div class="benefit-text">
+                        <span class="highlight">問題の早期発見</span><br>
+                        適切なログとエラー追跡
+                    </div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🛡️</div>
+                    <div class="benefit-text">
+                        <span class="highlight">セキュリティ強化</span><br>
+                        情報漏洩の防止
+                    </div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🎨</div>
+                    <div class="benefit-text">
+                        <span class="highlight">UX改善</span><br>
+                        分かりやすいエラー通知
+                    </div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">⚙️</div>
+                    <div class="benefit-text">
+                        <span class="highlight">運用効率化</span><br>
+                        監視・デバッグの簡素化
+                    </div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">📈</div>
+                    <div class="benefit-text">
+                        <span class="highlight">品質向上</span><br>
+                        エンタープライズ水準
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

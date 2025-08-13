@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 8.8以降への期待</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background-color: white;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+
+        .week-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .journey-overview {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .journey-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .journey-subtitle {
+            font-size: 16px;
+            text-align: center;
+            margin-bottom: 25px;
+            opacity: 0.9;
+        }
+
+        .progress-track {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .progress-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+        }
+
+        .progress-item.completed {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .progress-item.current {
+            background: rgba(52, 152, 219, 0.3);
+            border-color: #3498db;
+            transform: scale(1.05);
+        }
+
+        .progress-item.future {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .week-number {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .week-tech {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .roadmap-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .roadmap-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 2px solid #dee2e6;
+            transition: transform 0.3s ease;
+        }
+
+        .roadmap-card:hover {
+            transform: scale(1.02);
+        }
+
+        .roadmap-card.week-8-8 {
+            border-left: 6px solid #f39c12;
+        }
+
+        .roadmap-card.week-8-9 {
+            border-left: 6px solid #9b59b6;
+        }
+
+        .roadmap-card.integration {
+            border-left: 6px solid #e74c3c;
+        }
+
+        .roadmap-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .roadmap-icon {
+            font-size: 32px;
+        }
+
+        .roadmap-info {
+            flex: 1;
+        }
+
+        .roadmap-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .roadmap-subtitle {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .week-8-8 .roadmap-subtitle {
+            background: #f39c12;
+        }
+
+        .week-8-9 .roadmap-subtitle {
+            background: #9b59b6;
+        }
+
+        .integration .roadmap-subtitle {
+            background: #e74c3c;
+        }
+
+        .roadmap-description {
+            color: #7f8c8d;
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .tech-list {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+
+        .tech-list-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .tech-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tech-item {
+            background: #e9ecef;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            color: #495057;
+            font-weight: 500;
+        }
+
+        .expectations {
+            background: #e8f5e8;
+            border: 1px solid #27ae60;
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 12px;
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .integration-flow {
+            background: linear-gradient(135deg, #ff7b7b, #667eea);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .flow-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .flow-diagram {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .flow-step {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+        }
+
+        .flow-step-number {
+            width: 30px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            margin: 0 auto 10px;
+        }
+
+        .flow-step-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .flow-step-desc {
+            font-size: 11px;
+            opacity: 0.9;
+        }
+
+        .learning-benefits {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 2px solid #6c757d;
+        }
+
+        .benefits-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .benefit-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #6c757d;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .benefit-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .benefit-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .benefit-description {
+            font-size: 13px;
+            color: #495057;
+            line-height: 1.4;
+        }
+
+        .motivation-section {
+            background: linear-gradient(135deg, #ffecd2, #fcb69f);
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid #fd7e14;
+        }
+
+        .motivation-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #fd7e14;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .motivation-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .motivation-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #fd7e14;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .motivation-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .motivation-text {
+            font-size: 13px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #856404;
+            font-weight: bold;
+        }
+
+        .future-highlight {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .flow-diagram {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="week-badge">Week 8.7</div>
+    
+    <div class="container">
+        <div class="title">🚀 Week 8.8以降への期待</div>
+        
+        <div class="journey-overview">
+            <div class="journey-title">🌟 Spring Boot開発者への道筋</div>
+            <div class="journey-subtitle">Week 8.7 Controller習得から始まる、本格的なWebアプリケーション開発への旅</div>
+            <div class="progress-track">
+                <div class="progress-item completed">
+                    <div class="week-number">Week 8.5</div>
+                    <div class="week-tech">Entity完成</div>
+                </div>
+                <div class="progress-item completed">
+                    <div class="week-number">Week 8.6</div>
+                    <div class="week-tech">Mapper実装</div>
+                </div>
+                <div class="progress-item current">
+                    <div class="week-number">Week 8.7</div>
+                    <div class="week-tech">Controller作成</div>
+                </div>
+                <div class="progress-item future">
+                    <div class="week-number">Week 8.8</div>
+                    <div class="week-tech">画面表示</div>
+                </div>
+                <div class="progress-item future">
+                    <div class="week-number">Week 8.9</div>
+                    <div class="week-tech">Template統合</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="roadmap-section">
+            <div class="roadmap-card week-8-8">
+                <div class="roadmap-header">
+                    <div class="roadmap-icon">📊</div>
+                    <div class="roadmap-info">
+                        <div class="roadmap-title">Week 8.8 学生一覧表示機能</div>
+                        <div class="roadmap-subtitle">データ取得から画面表示まで</div>
+                    </div>
+                </div>
+                <div class="roadmap-description">
+                    Week 8.7で作成したControllerを活用して、ブラウザ上での実際の画面表示を実現。
+                    APIからWebページへの発展を体験します。
+                </div>
+                <div class="tech-list">
+                    <div class="tech-list-title">🔧 習得する技術</div>
+                    <div class="tech-items">
+                        <div class="tech-item">@Controller</div>
+                        <div class="tech-item">Model</div>
+                        <div class="tech-item">ViewResolver</div>
+                        <div class="tech-item">HTML返却</div>
+                        <div class="tech-item">データバインディング</div>
+                    </div>
+                </div>
+                <div class="expectations">
+                    💡 期待効果：API技術をWebページに応用、実用的な画面開発技術の習得
+                </div>
+            </div>
+
+            <div class="roadmap-card week-8-9">
+                <div class="roadmap-header">
+                    <div class="roadmap-icon">🎨</div>
+                    <div class="roadmap-info">
+                        <div class="roadmap-title">Week 8.9 Thymeleafテンプレート</div>
+                        <div class="roadmap-subtitle">動的HTML生成とWeek 1技術の統合</div>
+                    </div>
+                </div>
+                <div class="roadmap-description">
+                    Week 1で学習したHTML/CSSと統合し、Thymeleafを活用した動的なWebページ生成技術を習得。
+                    本格的なWebアプリケーション開発を完成させます。
+                </div>
+                <div class="tech-list">
+                    <div class="tech-list-title">🔧 習得する技術</div>
+                    <div class="tech-items">
+                        <div class="tech-item">Thymeleaf</div>
+                        <div class="tech-item">テンプレート</div>
+                        <div class="tech-item">th:each</div>
+                        <div class="tech-item">th:text</div>
+                        <div class="tech-item">フォーム処理</div>
+                        <div class="tech-item">レイアウト</div>
+                    </div>
+                </div>
+                <div class="expectations">
+                    💡 期待効果：Week 1〜8の技術統合、完全なWebアプリケーション開発力
+                </div>
+            </div>
+
+            <div class="roadmap-card integration">
+                <div class="roadmap-header">
+                    <div class="roadmap-icon">🏗️</div>
+                    <div class="roadmap-info">
+                        <div class="roadmap-title">全Week技術統合</div>
+                        <div class="roadmap-subtitle">エンタープライズ水準の開発技術</div>
+                    </div>
+                </div>
+                <div class="roadmap-description">
+                    Week 1の基礎からWeek 8.9までの全技術を統合し、実践的なWebアプリケーション開発プロジェクトを完成。
+                    即戦力エンジニアレベルへの到達を実現します。
+                </div>
+                <div class="tech-list">
+                    <div class="tech-list-title">🔧 統合技術スタック</div>
+                    <div class="tech-items">
+                        <div class="tech-item">HTML/CSS</div>
+                        <div class="tech-item">Java 17</div>
+                        <div class="tech-item">Spring Boot 3</div>
+                        <div class="tech-item">MyBatis</div>
+                        <div class="tech-item">MySQL</div>
+                        <div class="tech-item">Thymeleaf</div>
+                        <div class="tech-item">RESTful API</div>
+                    </div>
+                </div>
+                <div class="expectations">
+                    💡 期待効果：フルスタック開発技術、就職・転職に直結する実践スキル
+                </div>
+            </div>
+        </div>
+
+        <div class="integration-flow">
+            <div class="flow-title">🔄 技術発展の流れ：Controller → View → Template統合</div>
+            <div class="flow-diagram">
+                <div class="flow-step">
+                    <div class="flow-step-number">1</div>
+                    <div class="flow-step-title">Week 8.7</div>
+                    <div class="flow-step-desc">
+                        Controller実装<br>
+                        JSON API完成
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-number">2</div>
+                    <div class="flow-step-title">Week 8.8</div>
+                    <div class="flow-step-desc">
+                        画面表示機能<br>
+                        HTML返却開始
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-number">3</div>
+                    <div class="flow-step-title">Week 8.9</div>
+                    <div class="flow-step-desc">
+                        Template統合<br>
+                        動的HTML生成
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-number">4</div>
+                    <div class="flow-step-title">完成</div>
+                    <div class="flow-step-desc">
+                        Webアプリ完成<br>
+                        実用レベル到達
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-number">5</div>
+                    <div class="flow-step-title">応用</div>
+                    <div class="flow-step-desc">
+                        ポートフォリオ<br>
+                        就職・転職活用
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="learning-benefits">
+            <div class="benefits-title">🎯 継続学習で得られる価値</div>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">🚀</div>
+                    <div class="benefit-title">実践的開発力</div>
+                    <div class="benefit-description">
+                        理論だけでなく、実際に動くWebアプリケーションを
+                        ゼロから構築できる実践的な開発技術を習得
+                    </div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🏢</div>
+                    <div class="benefit-title">就職・転職力</div>
+                    <div class="benefit-description">
+                        企業が求めるSpring Boot技術スタックを完全習得し、
+                        エンジニア就職・転職の強力な武器を獲得
+                    </div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">💼</div>
+                    <div class="benefit-title">ポートフォリオ作成</div>
+                    <div class="benefit-description">
+                        完成したWebアプリケーションをポートフォリオとして活用し、
+                        面接時の具体的な技術力証明が可能
+                    </div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🔧</div>
+                    <div class="benefit-title">フルスタック理解</div>
+                    <div class="benefit-description">
+                        フロントエンド（HTML/CSS）からバックエンド（Java/Spring Boot）
+                        データベース（MySQL）まで一貫した理解
+                    </div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">⚡</div>
+                    <div class="benefit-title">即戦力レベル</div>
+                    <div class="benefit-description">
+                        研修期間を大幅短縮し、入社後すぐに
+                        実務レベルの開発業務に参加可能
+                    </div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🌟</div>
+                    <div class="benefit-title">自信・確信</div>
+                    <div class="benefit-description">
+                        体系的な学習により、エンジニアとしての
+                        確固たる自信と技術への確信を構築
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="motivation-section">
+            <div class="motivation-title">🎨 Week 8.8以降で実現する未来</div>
+            <div class="motivation-content">
+                <div class="motivation-item">
+                    <div class="motivation-icon">💻</div>
+                    <div class="motivation-text">
+                        <span class="highlight">実用Webアプリ</span><br>
+                        実際に使える<br>システム開発
+                    </div>
+                </div>
+                <div class="motivation-item">
+                    <div class="motivation-icon">🎯</div>
+                    <div class="motivation-text">
+                        <span class="highlight">技術統合体験</span><br>
+                        Week 1から8.9<br>完全連携
+                    </div>
+                </div>
+                <div class="motivation-item">
+                    <div class="motivation-icon">🚀</div>
+                    <div class="motivation-text">
+                        <span class="highlight">開発効率向上</span><br>
+                        Spring Boot<br>生産性実感
+                    </div>
+                </div>
+                <div class="motivation-item">
+                    <div class="motivation-icon">🏆</div>
+                    <div class="motivation-text">
+                        <span class="highlight">成果物完成</span><br>
+                        ポートフォリオ<br>レベル到達
+                    </div>
+                </div>
+                <div class="motivation-item">
+                    <div class="motivation-icon">🌈</div>
+                    <div class="motivation-text">
+                        <span class="highlight">キャリア展開</span><br>
+                        エンジニア転職<br>現実化
+                    </div>
+                </div>
+                <div class="motivation-item">
+                    <div class="motivation-icon">⭐</div>
+                    <div class="motivation-text">
+                        <span class="highlight">自己実現</span><br>
+                        技術者として<br>自立・成長
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

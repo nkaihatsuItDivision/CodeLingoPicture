@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controller実装のポイント</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background-color: white;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+
+        .week-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .annotations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .annotation-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 2px solid #dee2e6;
+            transition: transform 0.3s ease;
+        }
+
+        .annotation-card:hover {
+            transform: scale(1.02);
+            border-color: #3498db;
+        }
+
+        .annotation-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .annotation-icon {
+            font-size: 24px;
+        }
+
+        .annotation-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #f39c12;
+        }
+
+        .annotation-description {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .code-example {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+
+        .practical-value {
+            background: #e8f5e8;
+            border: 1px solid #27ae60;
+            border-radius: 6px;
+            padding: 10px;
+            font-size: 12px;
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .response-entity-section {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .response-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .response-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .response-code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .spring-boot-benefits {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid #3498db;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .benefit-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .benefit-icon {
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+
+        .benefit-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .benefit-description {
+            font-size: 14px;
+            color: #7f8c8d;
+            line-height: 1.4;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #856404;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="week-badge">Week 8.7</div>
+    
+    <div class="container">
+        <div class="title">⚙️ Controller実装のポイント</div>
+        
+        <div class="annotations-grid">
+            <div class="annotation-card">
+                <div class="annotation-header">
+                    <div class="annotation-icon">🎯</div>
+                    <div class="annotation-name">@PathVariable</div>
+                </div>
+                <div class="annotation-description">
+                    URL中の変数を取得するアノテーション<br>
+                    動的なパスパラメータの処理に使用
+                </div>
+                <div class="code-example">
+@GetMapping("/{id}")<br>
+public ResponseEntity&lt;ApiResponse&gt; getStudent(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@PathVariable Long id) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// id変数にURL中の{id}値が設定される<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return studentService.findById(id);<br>
+}
+                </div>
+                <div class="practical-value">
+                    💡 実用価値：個別リソースへのアクセスが簡単
+                </div>
+            </div>
+
+            <div class="annotation-card">
+                <div class="annotation-header">
+                    <div class="annotation-icon">📦</div>
+                    <div class="annotation-name">@RequestBody</div>
+                </div>
+                <div class="annotation-description">
+                    HTTPリクエストのボディを取得<br>
+                    JSON形式のデータを自動でオブジェクトに変換
+                </div>
+                <div class="code-example">
+@PostMapping<br>
+public ResponseEntity&lt;ApiResponse&gt; createStudent(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@RequestBody Student student) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// JSONが自動でStudentオブジェクトに変換<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return studentService.create(student);<br>
+}
+                </div>
+                <div class="practical-value">
+                    💡 実用価値：複雑なデータも簡単に受け取り可能
+                </div>
+            </div>
+
+            <div class="annotation-card">
+                <div class="annotation-header">
+                    <div class="annotation-icon">🔍</div>
+                    <div class="annotation-name">@RequestParam</div>
+                </div>
+                <div class="annotation-description">
+                    クエリパラメータを取得<br>
+                    検索条件やページング情報の受け取りに使用
+                </div>
+                <div class="code-example">
+@GetMapping("/search")<br>
+public ResponseEntity&lt;ApiResponse&gt; searchStudents(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@RequestParam String name,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@RequestParam(defaultValue = "0") int page) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// ?name=田中&page=1 → name="田中", page=1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return studentService.search(name, page);<br>
+}
+                </div>
+                <div class="practical-value">
+                    💡 実用価値：検索機能の実装が容易
+                </div>
+            </div>
+
+            <div class="annotation-card">
+                <div class="annotation-header">
+                    <div class="annotation-icon">✅</div>
+                    <div class="annotation-name">@Valid</div>
+                </div>
+                <div class="annotation-description">
+                    入力データの妥当性検証<br>
+                    Bean Validationと組み合わせて自動検証
+                </div>
+                <div class="code-example">
+@PostMapping<br>
+public ResponseEntity&lt;ApiResponse&gt; createStudent(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Valid @RequestBody Student student,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;BindingResult result) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (result.hasErrors()) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return ResponseEntity.badRequest();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return studentService.create(student);<br>
+}
+                </div>
+                <div class="practical-value">
+                    💡 実用価値：入力チェックの自動化
+                </div>
+            </div>
+        </div>
+
+        <div class="response-entity-section">
+            <div class="section-title">📊 ResponseEntity活用パターン</div>
+            <div class="response-grid">
+                <div class="response-item">
+                    <h4>🎯 成功レスポンス</h4>
+                    <div class="response-code">
+return ResponseEntity.ok(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ApiResponse.success(data)<br>
+);
+                    </div>
+                    <p>ステータス：200 OK</p>
+                </div>
+
+                <div class="response-item">
+                    <h4>➕ 作成成功</h4>
+                    <div class="response-code">
+return ResponseEntity.status(201)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.body(ApiResponse.success(data)<br>
+);
+                    </div>
+                    <p>ステータス：201 Created</p>
+                </div>
+
+                <div class="response-item">
+                    <h4>⚠️ 入力エラー</h4>
+                    <div class="response-code">
+return ResponseEntity.badRequest()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.body(ApiResponse.error(msg)<br>
+);
+                    </div>
+                    <p>ステータス：400 Bad Request</p>
+                </div>
+
+                <div class="response-item">
+                    <h4>🔍 データ未発見</h4>
+                    <div class="response-code">
+return ResponseEntity.notFound()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.build();<br>
+                    </div>
+                    <p>ステータス：404 Not Found</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="spring-boot-benefits">
+            <div class="section-title">🎨 Spring Boot Web技術の実践的価値</div>
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="benefit-icon">🚀</div>
+                    <div class="benefit-title">開発速度向上</div>
+                    <div class="benefit-description">
+                        <span class="highlight">自動設定</span>により<br>
+                        複雑な設定なしで即座に開発開始
+                    </div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-icon">🔄</div>
+                    <div class="benefit-title">データ変換自動化</div>
+                    <div class="benefit-description">
+                        <span class="highlight">JSON⇔Java</span>の<br>
+                        面倒な変換処理を自動実行
+                    </div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-icon">🛡️</div>
+                    <div class="benefit-title">堅牢性確保</div>
+                    <div class="benefit-description">
+                        <span class="highlight">妥当性検証</span>と<br>
+                        統一的なエラーハンドリング
+                    </div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-icon">📐</div>
+                    <div class="benefit-title">標準設計採用</div>
+                    <div class="benefit-description">
+                        <span class="highlight">RESTful API</span>の<br>
+                        業界標準パターンを自動適用
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
