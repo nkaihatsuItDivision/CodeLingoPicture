@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>実際の学生一覧画面表示例</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            overflow-x: auto;
+        }
+        
+        .main-container {
+            width: 1200px;
+            min-height: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+        }
+        
+        .week-badge {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        .screen-preview {
+            flex: 1;
+            background: #2c3e50;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(44, 62, 80, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .browser-frame {
+            background: white;
+            border-radius: 10px;
+            height: 100%;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .browser-header {
+            background: #ecf0f1;
+            padding: 12px 20px;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #bdc3c7;
+        }
+        
+        .browser-buttons {
+            display: flex;
+            gap: 8px;
+            margin-right: 15px;
+        }
+        
+        .browser-button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .btn-close { background: #e74c3c; }
+        .btn-minimize { background: #f39c12; }
+        .btn-maximize { background: #27ae60; }
+        
+        .address-bar {
+            background: white;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            padding: 6px 12px;
+            flex: 1;
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+        
+        .webapp-content {
+            flex: 1;
+            padding: 25px;
+            background: white;
+            overflow-y: auto;
+        }
+        
+        .app-header {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .app-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .app-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .stats-bar {
+            background: #ecf0f1;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .student-count {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .add-button {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .add-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+        }
+        
+        .student-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .table-header {
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            color: white;
+        }
+        
+        .table-header th {
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: bold;
+            font-size: 13px;
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .table-header th:last-child {
+            border-right: none;
+        }
+        
+        .student-row {
+            transition: all 0.3s ease;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .student-row:hover {
+            background: #f8f9fa;
+            transform: scale(1.01);
+        }
+        
+        .student-row:last-child {
+            border-bottom: none;
+        }
+        
+        .student-row td {
+            padding: 12px;
+            font-size: 13px;
+            color: #2c3e50;
+            border-right: 1px solid #ecf0f1;
+        }
+        
+        .student-row td:last-child {
+            border-right: none;
+        }
+        
+        .student-id {
+            font-weight: bold;
+            color: #9b59b6;
+            text-align: center;
+        }
+        
+        .student-name {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .student-email {
+            color: #7f8c8d;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+        
+        .gpa-score {
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .gpa-excellent { color: #27ae60; }
+        .gpa-good { color: #f39c12; }
+        .gpa-average { color: #e74c3c; }
+        
+        .action-links {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .action-link {
+            padding: 4px 8px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .edit-link {
+            background: #3498db;
+            color: white;
+        }
+        
+        .edit-link:hover {
+            background: #2980b9;
+            transform: translateY(-1px);
+        }
+        
+        .delete-link {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .delete-link:hover {
+            background: #c0392b;
+            transform: translateY(-1px);
+        }
+        
+        .tech-info {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 11px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .achievement-banner {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .achievement-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .achievement-description {
+            font-size: 12px;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+        
+        @media (max-width: 768px) {
+            .main-container {
+                width: 100%;
+                height: auto;
+                padding: 20px;
+            }
+            
+            .student-table {
+                font-size: 11px;
+            }
+            
+            .student-row td {
+                padding: 8px;
+            }
+            
+            .action-links {
+                flex-direction: column;
+                gap: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="header">
+            <div class="title">学生一覧画面の実際の表示</div>
+            <div class="subtitle">Week 8.8で完成する実用的なWebアプリケーション画面</div>
+            <div class="week-badge">Week 8.8: 学生一覧表示機能</div>
+        </div>
+        
+        <div class="screen-preview">
+            <div class="browser-frame">
+                <div class="browser-header">
+                    <div class="browser-buttons">
+                        <div class="browser-button btn-close"></div>
+                        <div class="browser-button btn-minimize"></div>
+                        <div class="browser-button btn-maximize"></div>
+                    </div>
+                    <div class="address-bar">localhost:8080/students</div>
+                </div>
+                
+                <div class="webapp-content">
+                    <div class="app-header">
+                        <div class="app-title">🎓 学生管理システム</div>
+                        <div class="app-subtitle">Spring Boot + Thymeleaf による動的Web画面</div>
+                    </div>
+                    
+                    <div class="stats-bar">
+                        <div class="student-count">📊 登録学生数: 5名</div>
+                        <a href="#" class="add-button">➕ 新規学生登録</a>
+                    </div>
+                    
+                    <table class="student-table">
+                        <thead class="table-header">
+                            <tr>
+                                <th style="width: 80px;">ID</th>
+                                <th style="width: 150px;">氏名</th>
+                                <th style="width: 200px;">メールアドレス</th>
+                                <th style="width: 80px;">GPA</th>
+                                <th style="width: 120px;">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="student-row">
+                                <td class="student-id">001</td>
+                                <td class="student-name">田中 太郎</td>
+                                <td class="student-email">tanaka@example.com</td>
+                                <td class="gpa-score gpa-excellent">3.8</td>
+                                <td>
+                                    <div class="action-links">
+                                        <a href="#" class="action-link edit-link">編集</a>
+                                        <a href="#" class="action-link delete-link">削除</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="student-row">
+                                <td class="student-id">002</td>
+                                <td class="student-name">佐藤 花子</td>
+                                <td class="student-email">sato@example.com</td>
+                                <td class="gpa-score gpa-good">3.4</td>
+                                <td>
+                                    <div class="action-links">
+                                        <a href="#" class="action-link edit-link">編集</a>
+                                        <a href="#" class="action-link delete-link">削除</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="student-row">
+                                <td class="student-id">003</td>
+                                <td class="student-name">高橋 次郎</td>
+                                <td class="student-email">takahashi@example.com</td>
+                                <td class="gpa-score gpa-excellent">3.9</td>
+                                <td>
+                                    <div class="action-links">
+                                        <a href="#" class="action-link edit-link">編集</a>
+                                        <a href="#" class="action-link delete-link">削除</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="student-row">
+                                <td class="student-id">004</td>
+                                <td class="student-name">山田 美咲</td>
+                                <td class="student-email">yamada@example.com</td>
+                                <td class="gpa-score gpa-good">3.2</td>
+                                <td>
+                                    <div class="action-links">
+                                        <a href="#" class="action-link edit-link">編集</a>
+                                        <a href="#" class="action-link delete-link">削除</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="student-row">
+                                <td class="student-id">005</td>
+                                <td class="student-name">鈴木 健太</td>
+                                <td class="student-email">suzuki@example.com</td>
+                                <td class="gpa-score gpa-average">2.8</td>
+                                <td>
+                                    <div class="action-links">
+                                        <a href="#" class="action-link edit-link">編集</a>
+                                        <a href="#" class="action-link delete-link">削除</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="achievement-banner">
+                        <div class="achievement-title">🎉 Week 8.8 達成！</div>
+                        <div class="achievement-description">
+                            HTML/CSS（Week 1）+ Java（Week 2-5）+ SQL（Week 7）+ Spring Boot（Week 8）<br>
+                            全ての技術が統合され、実用的なWebアプリケーションが完成しました！
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tech-info">
+                💻 使用技術: Spring Boot + Thymeleaf + MyBatis
+            </div>
+        </div>
+    </div>
+</body>
+</html>

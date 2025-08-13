@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudentViewController.java のコード例</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            overflow-x: auto;
+        }
+        
+        .main-container {
+            width: 1200px;
+            min-height: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+        }
+        
+        .week-badge {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        .content-area {
+            flex: 1;
+            display: flex;
+            gap: 30px;
+        }
+        
+        .code-section {
+            flex: 2;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 6px solid #9b59b6;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .explanation-section {
+            flex: 1;
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(155, 89, 182, 0.3);
+        }
+        
+        .code-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .file-icon {
+            background: #3498db;
+            color: white;
+            padding: 8px;
+            border-radius: 6px;
+            margin-right: 10px;
+            font-size: 16px;
+        }
+        
+        .code-block {
+            background: #ffffff;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            text-align: left;
+            color: #2c3e50;
+            overflow-x: auto;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .java-keyword {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .java-annotation {
+            color: #f39c12;
+            font-weight: bold;
+        }
+        
+        .java-class {
+            color: #3498db;
+            font-weight: bold;
+        }
+        
+        .java-method {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        .java-string {
+            color: #8e44ad;
+        }
+        
+        .java-comment {
+            color: #95a5a6;
+            font-style: italic;
+        }
+        
+        .explanation-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            padding-bottom: 10px;
+        }
+        
+        .point {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            border-left: 4px solid rgba(255,255,255,0.5);
+        }
+        
+        .point-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .point-icon {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+        
+        .point-description {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .technology-integration {
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+        
+        .integration-title {
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .integration-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+        
+        .flow-item {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .flow-arrow {
+            font-size: 20px;
+            color: #e74c3c;
+            margin: 0 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-container {
+                width: 100%;
+                height: auto;
+                padding: 20px;
+            }
+            
+            .content-area {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .title {
+                font-size: 22px;
+            }
+            
+            .code-block {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="header">
+            <div class="title">StudentViewController.java</div>
+            <div class="subtitle">@Controller実装の具体的なJavaコード</div>
+            <div class="week-badge">Week 8.8: 学生一覧表示機能</div>
+        </div>
+        
+        <div class="content-area">
+            <div class="code-section">
+                <div class="code-title">
+                    <span class="file-icon">📄</span>
+                    StudentViewController.java
+                </div>
+                
+                <div class="code-block">
+<span class="java-keyword">package</span> com.example.student.controller;<br><br>
+
+<span class="java-keyword">import</span> org.springframework.beans.factory.annotation.Autowired;<br>
+<span class="java-keyword">import</span> org.springframework.stereotype.<span class="java-class">Controller</span>;<br>
+<span class="java-keyword">import</span> org.springframework.ui.<span class="java-class">Model</span>;<br>
+<span class="java-keyword">import</span> org.springframework.web.bind.annotation.<span class="java-class">GetMapping</span>;<br>
+<span class="java-keyword">import</span> java.util.<span class="java-class">List</span>;<br><br>
+
+<span class="java-annotation">@Controller</span><br>
+<span class="java-keyword">public class</span> <span class="java-class">StudentViewController</span> {<br><br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="java-annotation">@Autowired</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="java-keyword">private</span> <span class="java-class">StudentService</span> studentService;<br><br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="java-comment">// 学生一覧画面を表示</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="java-annotation">@GetMapping</span>(<span class="java-string">"/students"</span>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="java-keyword">public</span> <span class="java-class">String</span> <span class="java-method">showStudents</span>(<span class="java-class">Model</span> model) {<br><br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="java-comment">// データベースから学生一覧を取得</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="java-class">List</span>&lt;<span class="java-class">Student</span>&gt; students = studentService.<span class="java-method">findAll</span>();<br><br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="java-comment">// Modelにデータを追加</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;model.<span class="java-method">addAttribute</span>(<span class="java-string">"students"</span>, students);<br><br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="java-comment">// テンプレート名を返す（HTML表示）</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="java-keyword">return</span> <span class="java-string">"students/list"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                </div>
+            </div>
+            
+            <div class="explanation-section">
+                <div class="explanation-title">🎯 コードの重要ポイント</div>
+                
+                <div class="point">
+                    <div class="point-title">
+                        <span class="point-icon">📝</span>
+                        @Controller
+                    </div>
+                    <div class="point-description">
+                        画面表示用のコントローラーを示すアノテーション。Week 8.7の@RestControllerとは戻り値が異なる
+                    </div>
+                </div>
+                
+                <div class="point">
+                    <div class="point-title">
+                        <span class="point-icon">🔗</span>
+                        Model
+                    </div>
+                    <div class="point-description">
+                        データをViewに渡すためのオブジェクト。addAttributeでデータを追加
+                    </div>
+                </div>
+                
+                <div class="point">
+                    <div class="point-title">
+                        <span class="point-icon">📄</span>
+                        戻り値（String）
+                    </div>
+                    <div class="point-description">
+                        テンプレート名を返す。"students/list"はlist.htmlを表示
+                    </div>
+                </div>
+                
+                <div class="point">
+                    <div class="point-title">
+                        <span class="point-icon">⚡</span>
+                        @GetMapping
+                    </div>
+                    <div class="point-description">
+                        URLパスとメソッドを関連付け。/studentsにアクセスするとこのメソッドが実行
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="technology-integration">
+            <div class="integration-title">🔄 技術統合フロー</div>
+            <div class="integration-flow">
+                <div class="flow-item">
+                    <strong>Week 8.5</strong><br>
+                    Student Entity
+                </div>
+                <span class="flow-arrow">➡️</span>
+                <div class="flow-item">
+                    <strong>Week 8.6</strong><br>
+                    StudentService
+                </div>
+                <span class="flow-arrow">➡️</span>
+                <div class="flow-item">
+                    <strong>Week 8.8</strong><br>
+                    @Controller
+                </div>
+                <span class="flow-arrow">➡️</span>
+                <div class="flow-item">
+                    <strong>Week 1統合</strong><br>
+                    HTML画面
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

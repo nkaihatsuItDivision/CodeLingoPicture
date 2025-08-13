@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新しい学生データを追加のSQL例</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            overflow-x: auto;
+        }
+        
+        .main-container {
+            width: 1200px;
+            height: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+        }
+        
+        .week-badge {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        .content-area {
+            flex: 1;
+            display: flex;
+            gap: 30px;
+        }
+        
+        .sql-section {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .sql-block {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 6px solid #f39c12;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .sql-block:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .sql-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .sql-icon {
+            background: #f39c12;
+            color: white;
+            padding: 8px;
+            border-radius: 6px;
+            margin-right: 10px;
+            font-size: 16px;
+        }
+        
+        .code-block {
+            background: #ffffff;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            text-align: left;
+            color: #2c3e50;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+        }
+        
+        .sql-keyword {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .sql-table {
+            color: #3498db;
+            font-weight: bold;
+        }
+        
+        .sql-column {
+            color: #27ae60;
+        }
+        
+        .sql-value {
+            color: #8e44ad;
+        }
+        
+        .sql-comment {
+            color: #95a5a6;
+            font-style: italic;
+        }
+        
+        .result-section {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        
+        .result-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .result-text {
+            font-size: 13px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .process-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .process-step {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(155, 89, 182, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .process-step:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(155, 89, 182, 0.4);
+        }
+        
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .step-number {
+            background: rgba(255,255,255,0.2);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+        
+        .step-title {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .step-description {
+            font-size: 13px;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+        
+        .before-after {
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+        
+        .before-after-title {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .comparison {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .comparison-item {
+            flex: 1;
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .comparison-label {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .data-table {
+            width: 100%;
+            font-size: 12px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .data-table td {
+            padding: 4px 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .new-row {
+            background: rgba(39, 174, 96, 0.3);
+            animation: highlight 2s ease-in-out infinite;
+        }
+        
+        .integration-badge {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .integration-text {
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        @keyframes highlight {
+            0%, 100% { background: rgba(39, 174, 96, 0.3); }
+            50% { background: rgba(39, 174, 96, 0.6); }
+        }
+        
+        @media (max-width: 768px) {
+            .main-container {
+                width: 100%;
+                height: auto;
+                padding: 20px;
+            }
+            
+            .content-area {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .comparison {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .code-block {
+                font-size: 12px;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="header">
+            <div class="title">新しい学生データを追加</div>
+            <div class="subtitle">INSERT文による動的データ更新の実証</div>
+            <div class="week-badge">Week 8.8: 学生一覧表示機能</div>
+        </div>
+        
+        <div class="content-area">
+            <div class="sql-section">
+                <div class="sql-block">
+                    <div class="sql-title">
+                        <span class="sql-icon">📝</span>
+                        Week 7技術活用：新規学生登録SQL
+                    </div>
+                    
+                    <div class="code-block">
+<span class="sql-comment">-- Week 7で学んだINSERT文をWeek 8.8で実際に活用</span><br>
+<span class="sql-keyword">INSERT INTO</span> <span class="sql-table">students</span> (<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="sql-column">student_id</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="sql-column">name</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="sql-column">email</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="sql-column">gpa</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="sql-column">enrollment_date</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="sql-column">department_id</span><br>
+) <span class="sql-keyword">VALUES</span> (<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="sql-value">006</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="sql-value">'伊藤 結愛'</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="sql-value">'ito@example.com'</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="sql-value">3.6</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="sql-value">'2024-04-01'</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="sql-value">1</span><br>
+);
+                    </div>
+                    
+                    <div class="result-section">
+                        <div class="result-title">✅ 実行結果</div>
+                        <div class="result-text">
+Query OK, 1 row affected (0.01 sec)
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="sql-block">
+                    <div class="sql-title">
+                        <span class="sql-icon">🔍</span>
+                        確認用SELECT文
+                    </div>
+                    
+                    <div class="code-block">
+<span class="sql-comment">-- 新しく追加された学生データを確認</span><br>
+<span class="sql-keyword">SELECT</span> <br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="sql-column">student_id</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="sql-column">name</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="sql-column">email</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="sql-column">gpa</span><br>
+<span class="sql-keyword">FROM</span> <span class="sql-table">students</span><br>
+<span class="sql-keyword">ORDER BY</span> <span class="sql-column">student_id</span> <span class="sql-keyword">DESC</span><br>
+<span class="sql-keyword">LIMIT</span> <span class="sql-value">1</span>;
+                    </div>
+                    
+                    <div class="result-section">
+                        <div class="result-title">📊 取得結果</div>
+                        <div class="result-text">
+| 006 | 伊藤 結愛 | ito@example.com | 3.6 |
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="process-section">
+                <div class="process-step">
+                    <div class="step-header">
+                        <div class="step-number">1</div>
+                        <div class="step-title">データ投入</div>
+                    </div>
+                    <div class="step-description">
+                        INSERT文を実行して新しい学生データをstudentsテーブルに追加
+                    </div>
+                </div>
+                
+                <div class="process-step">
+                    <div class="step-header">
+                        <div class="step-number">2</div>
+                        <div class="step-title">自動反映</div>
+                    </div>
+                    <div class="step-description">
+                        ブラウザをリロードすると追加された学生が自動的に一覧に表示
+                    </div>
+                </div>
+                
+                <div class="process-step">
+                    <div class="step-header">
+                        <div class="step-number">3</div>
+                        <div class="step-title">動的更新</div>
+                    </div>
+                    <div class="step-description">
+                        Javaコードを変更せずにデータベースの変更だけで画面が更新される
+                    </div>
+                </div>
+                
+                <div class="process-step">
+                    <div class="step-header">
+                        <div class="step-number">4</div>
+                        <div class="step-title">Week 7統合</div>
+                    </div>
+                    <div class="step-description">
+                        SQL技術がWeb開発で実用的に活用されることを実感
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="before-after">
+            <div class="before-after-title">📈 データ追加前後の比較</div>
+            <div class="comparison">
+                <div class="comparison-item">
+                    <div class="comparison-label">🔴 追加前</div>
+                    <table class="data-table">
+                        <tr><td>001</td><td>田中太郎</td></tr>
+                        <tr><td>002</td><td>佐藤花子</td></tr>
+                        <tr><td>003</td><td>高橋次郎</td></tr>
+                        <tr><td>004</td><td>山田美咲</td></tr>
+                        <tr><td>005</td><td>鈴木健太</td></tr>
+                    </table>
+                </div>
+                
+                <div class="comparison-item">
+                    <div class="comparison-label">🟢 追加後</div>
+                    <table class="data-table">
+                        <tr><td>001</td><td>田中太郎</td></tr>
+                        <tr><td>002</td><td>佐藤花子</td></tr>
+                        <tr><td>003</td><td>高橋次郎</td></tr>
+                        <tr><td>004</td><td>山田美咲</td></tr>
+                        <tr><td>005</td><td>鈴木健太</td></tr>
+                        <tr class="new-row"><td>006</td><td>伊藤結愛</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="integration-badge">
+            <div class="integration-text">
+                🎯 Week 7のSQL技術がWeek 8.8のWeb開発で実用的に活用される瞬間！
+            </div>
+        </div>
+    </div>
+</body>
+</html>

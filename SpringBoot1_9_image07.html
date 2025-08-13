@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thymeleaf属性の活用例図</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            overflow-x: auto;
+        }
+        
+        .main-container {
+            width: 1200px;
+            min-height: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+        }
+        
+        .week-badge {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        .attributes-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .attribute-card {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(155, 89, 182, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .attribute-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(155, 89, 182, 0.4);
+        }
+        
+        .attr-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .attr-icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .attr-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .attr-purpose {
+            font-size: 14px;
+            color: rgba(255,255,255,0.9);
+        }
+        
+        .code-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .code-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .code-example {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            text-align: left;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            flex: 1;
+        }
+        
+        .thymeleaf-attr {
+            color: #f1c40f;
+            font-weight: bold;
+        }
+        
+        .html-tag {
+            color: #fff;
+            font-weight: bold;
+        }
+        
+        .html-value {
+            color: #a8e6cf;
+        }
+        
+        .result-section {
+            background: rgba(255,255,255,0.15);
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 4px solid rgba(255,255,255,0.5);
+        }
+        
+        .result-title {
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .result-output {
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            color: rgba(255,255,255,0.9);
+            line-height: 1.4;
+        }
+        
+        .data-flow-section {
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+        
+        .flow-title {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            gap: 15px;
+        }
+        
+        .flow-step {
+            text-align: center;
+            flex: 1;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .flow-step:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.05);
+        }
+        
+        .flow-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .flow-label {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .flow-description {
+            font-size: 11px;
+            color: rgba(255,255,255,0.8);
+            line-height: 1.3;
+        }
+        
+        .flow-arrow {
+            font-size: 20px;
+            color: #e74c3c;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        @media (max-width: 768px) {
+            .main-container {
+                width: 100%;
+                height: auto;
+                padding: 20px;
+            }
+            
+            .attributes-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .flow-diagram {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .flow-arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="header">
+            <div class="title">Thymeleaf主要属性の活用例</div>
+            <div class="subtitle">th:each、th:text、th:href の実装パターンと効果</div>
+            <div class="week-badge">Week 8.8: 学生一覧表示機能</div>
+        </div>
+        
+        <div class="attributes-grid">
+            <div class="attribute-card">
+                <div class="attr-header">
+                    <span class="attr-icon">🔄</span>
+                    <div class="attr-name">th:each</div>
+                    <div class="attr-purpose">リスト繰り返し処理</div>
+                </div>
+                
+                <div class="code-section">
+                    <div class="code-title">📝 コード例</div>
+                    <div class="code-example">
+<span class="html-tag">&lt;tr</span> <span class="thymeleaf-attr">th:each</span>=<br>
+&nbsp;&nbsp;<span class="html-value">"student : ${students}"</span><span class="html-tag">&gt;</span><br>
+&nbsp;&nbsp;<span class="html-tag">&lt;td</span> <span class="thymeleaf-attr">th:text</span>=<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="html-value">"${student.name}"</span><span class="html-tag">&gt;&lt;/td&gt;</span><br>
+<span class="html-tag">&lt;/tr&gt;</span>
+                    </div>
+                    
+                    <div class="result-section">
+                        <div class="result-title">🖥️ 生成結果</div>
+                        <div class="result-output">
+&lt;tr&gt;&lt;td&gt;田中太郎&lt;/td&gt;&lt;/tr&gt;<br>
+&lt;tr&gt;&lt;td&gt;佐藤花子&lt;/td&gt;&lt;/tr&gt;<br>
+&lt;tr&gt;&lt;td&gt;高橋次郎&lt;/td&gt;&lt;/tr&gt;
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="attribute-card">
+                <div class="attr-header">
+                    <span class="attr-icon">📝</span>
+                    <div class="attr-name">th:text</div>
+                    <div class="attr-purpose">テキスト内容設定</div>
+                </div>
+                
+                <div class="code-section">
+                    <div class="code-title">📝 コード例</div>
+                    <div class="code-example">
+<span class="html-tag">&lt;h1</span> <span class="thymeleaf-attr">th:text</span>=<br>
+&nbsp;&nbsp;<span class="html-value">"'学生数: ' + ${students.size()}"</span><span class="html-tag">&gt;</span><br>
+<span class="html-tag">&lt;/h1&gt;</span><br><br>
+
+<span class="html-tag">&lt;p</span> <span class="thymeleaf-attr">th:text</span>=<br>
+&nbsp;&nbsp;<span class="html-value">"${student.email}"</span><span class="html-tag">&gt;&lt;/p&gt;</span>
+                    </div>
+                    
+                    <div class="result-section">
+                        <div class="result-title">🖥️ 生成結果</div>
+                        <div class="result-output">
+&lt;h1&gt;学生数: 25&lt;/h1&gt;<br><br>
+
+&lt;p&gt;tanaka@example.com&lt;/p&gt;
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="attribute-card">
+                <div class="attr-header">
+                    <span class="attr-icon">🔗</span>
+                    <div class="attr-name">th:href</div>
+                    <div class="attr-purpose">動的リンク生成</div>
+                </div>
+                
+                <div class="code-section">
+                    <div class="code-title">📝 コード例</div>
+                    <div class="code-example">
+<span class="html-tag">&lt;a</span> <span class="thymeleaf-attr">th:href</span>=<br>
+&nbsp;&nbsp;<span class="html-value">"@{/students/{id}(id=${student.id})}"</span><br>
+&nbsp;&nbsp;<span class="thymeleaf-attr">th:text</span>=<span class="html-value">"${student.name}"</span><span class="html-tag">&gt;</span><br>
+<span class="html-tag">&lt;/a&gt;</span><br><br>
+
+<span class="html-tag">&lt;a</span> <span class="thymeleaf-attr">th:href</span>=<br>
+&nbsp;&nbsp;<span class="html-value">"@{/students/edit(id=${student.id})}"</span><span class="html-tag">&gt;</span><br>
+&nbsp;&nbsp;編集<br>
+<span class="html-tag">&lt;/a&gt;</span>
+                    </div>
+                    
+                    <div class="result-section">
+                        <div class="result-title">🖥️ 生成結果</div>
+                        <div class="result-output">
+&lt;a href="/students/1"&gt;<br>
+&nbsp;&nbsp;田中太郎<br>
+&lt;/a&gt;<br><br>
+
+&lt;a href="/students/edit?id=1"&gt;<br>
+&nbsp;&nbsp;編集<br>
+&lt;/a&gt;
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="data-flow-section">
+            <div class="flow-title">🔄 Thymeleaf処理フロー</div>
+            <div class="flow-diagram">
+                <div class="flow-step">
+                    <span class="flow-icon">📊</span>
+                    <div class="flow-label">Modelデータ</div>
+                    <div class="flow-description">
+                        Controllerから渡される<br>
+                        studentsリスト
+                    </div>
+                </div>
+                
+                <span class="flow-arrow">➡️</span>
+                
+                <div class="flow-step">
+                    <span class="flow-icon">🎨</span>
+                    <div class="flow-label">テンプレート解析</div>
+                    <div class="flow-description">
+                        th:each、th:text等の<br>
+                        属性を検出・処理
+                    </div>
+                </div>
+                
+                <span class="flow-arrow">➡️</span>
+                
+                <div class="flow-step">
+                    <span class="flow-icon">🔄</span>
+                    <div class="flow-label">データバインディング</div>
+                    <div class="flow-description">
+                        各studentオブジェクトの<br>
+                        プロパティを取得
+                    </div>
+                </div>
+                
+                <span class="flow-arrow">➡️</span>
+                
+                <div class="flow-step">
+                    <span class="flow-icon">🖥️</span>
+                    <div class="flow-label">HTML生成</div>
+                    <div class="flow-description">
+                        ブラウザ表示用の<br>
+                        完成HTMLを出力
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
