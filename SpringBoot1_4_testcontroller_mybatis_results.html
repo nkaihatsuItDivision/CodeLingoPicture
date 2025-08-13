@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TestController動作確認とMyBatis実行結果画面</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .title {
+            text-align: center;
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .api-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .api-header {
+            background: linear-gradient(135deg, #00b894, #00a085);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .browser-mockup {
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .browser-header {
+            background: #f5f5f5;
+            padding: 10px 15px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .browser-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27ca3f; }
+        
+        .address-bar {
+            flex: 1;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 5px 10px;
+            margin-left: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        
+        .browser-content {
+            background: white;
+            padding: 20px;
+            font-size: 16px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .success-response {
+            color: #00b894;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .console-section {
+            background: #0d1117;
+            color: #c9d1d9;
+            border-radius: 10px;
+            padding: 20px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+        }
+        
+        .console-header {
+            color: #58a6ff;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #30363d;
+        }
+        
+        .sql-log {
+            background: rgba(88, 166, 255, 0.1);
+            border-left: 3px solid #58a6ff;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        
+        .sql-preparing {
+            color: #f1c232;
+        }
+        
+        .sql-result {
+            color: #3fb950;
+        }
+        
+        .log-timestamp {
+            color: #7d8590;
+            font-size: 12px;
+        }
+        
+        .success-indicator {
+            background: linear-gradient(135deg, #00b894, #00a085);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        
+        .api-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .api-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">
+            🧪 TestController & MyBatis 動作確認結果
+        </div>
+        
+        <div class="api-grid">
+            <!-- API Test 1 -->
+            <div class="api-section">
+                <div class="api-header">
+                    🔌 基本動作確認 API
+                </div>
+                
+                <div class="browser-mockup">
+                    <div class="browser-header">
+                        <div class="browser-dot dot-red"></div>
+                        <div class="browser-dot dot-yellow"></div>
+                        <div class="browser-dot dot-green"></div>
+                        <div class="address-bar">http://localhost:8080/api/test</div>
+                    </div>
+                    <div class="browser-content">
+                        <div class="success-response">
+                            Spring Boot + MyBatis 連携テスト成功！
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="success-indicator">
+                    ✅ TestController 正常動作確認
+                </div>
+            </div>
+            
+            <!-- API Test 2 -->
+            <div class="api-section">
+                <div class="api-header">
+                    📊 学生数取得 API
+                </div>
+                
+                <div class="browser-mockup">
+                    <div class="browser-header">
+                        <div class="browser-dot dot-red"></div>
+                        <div class="browser-dot dot-yellow"></div>
+                        <div class="browser-dot dot-green"></div>
+                        <div class="address-bar">http://localhost:8080/api/students/count</div>
+                    </div>
+                    <div class="browser-content">
+                        <div class="success-response">
+                            学生数: 5人
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="success-indicator">
+                    ✅ MyBatis データベース連携成功
+                </div>
+            </div>
+        </div>
+        
+        <!-- Console Logs -->
+        <div class="api-section">
+            <div class="api-header">
+                📋 MyBatis SQL実行ログ - Week 7.10準備ファイルの実力実証
+            </div>
+            
+            <div class="console-section">
+                <div class="console-header">
+                    🔍 StudentMapper.findAll() 実行ログ
+                </div>
+                
+                <div class="log-timestamp">2025-08-13 10:16:34.567</div>
+                Creating a new SqlSession<br>
+                <div class="sql-log">
+                    <div class="sql-preparing">==&gt;  Preparing: SELECT student_id, name, email, enrollment_date, gpa, department_id FROM students</div><br>
+                    <div class="sql-preparing">==&gt; Parameters: </div><br>
+                    <div class="sql-result">&lt;==    Columns: student_id, name, email, enrollment_date, gpa, department_id</div><br>
+                    <div class="sql-result">&lt;==        Row: 1, 田中太郎, tanaka@test.com, 2023-04-01, 3.8, 1</div><br>
+                    <div class="sql-result">&lt;==        Row: 2, 佐藤花子, sato@test.com, 2023-04-01, 3.9, 2</div><br>
+                    <div class="sql-result">&lt;==        Row: 3, 鈴木一郎, suzuki@test.com, 2023-04-01, 3.7, 1</div><br>
+                    <div class="sql-result">&lt;==        Row: 4, 高橋美咲, takahashi@test.com, 2023-04-01, 3.6, 3</div><br>
+                    <div class="sql-result">&lt;==        Row: 5, 伊藤健太, ito@test.com, 2023-04-01, 3.4, 2</div><br>
+                    <div class="sql-result">&lt;==      Total: 5</div>
+                </div>
+                
+                <div style="color: #3fb950; font-weight: bold; margin-top: 15px;">
+                    === データベースから5件の学生データを取得 ===<br>
+                    Week 7.9 サンプルデータが完璧に取得されました！
+                </div>
+            </div>
+            
+            <div class="success-indicator">
+                🎯 Week 7技術統合成功: DB設計 → Java Mapper → Web API の完全な流れを確認
+            </div>
+        </div>
+    </div>
+</body>
+</html>

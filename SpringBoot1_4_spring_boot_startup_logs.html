@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spring Boot起動ログとデータベース接続成功画面</title>
+    <style>
+        body {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+        }
+        
+        .terminal-container {
+            background: #0d1117;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            max-width: 1200px;
+            margin: 0 auto;
+            border: 2px solid #30363d;
+        }
+        
+        .terminal-header {
+            background: #21262d;
+            color: #f0f6fc;
+            padding: 15px 20px;
+            border-radius: 10px 10px 0 0;
+            margin: -25px -25px 20px -25px;
+            font-weight: bold;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .terminal-dots {
+            display: flex;
+            gap: 8px;
+            margin-right: 15px;
+        }
+        
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .dot.red { background: #ff5f56; }
+        .dot.yellow { background: #ffbd2e; }
+        .dot.green { background: #27ca3f; }
+        
+        .log-content {
+            color: #c9d1d9;
+            font-size: 14px;
+            line-height: 1.4;
+            overflow-x: auto;
+        }
+        
+        .log-line {
+            margin: 3px 0;
+            white-space: nowrap;
+        }
+        
+        .timestamp {
+            color: #7d8590;
+        }
+        
+        .level-info {
+            color: #58a6ff;
+            font-weight: bold;
+        }
+        
+        .level-warn {
+            color: #f1c232;
+            font-weight: bold;
+        }
+        
+        .success {
+            color: #3fb950;
+            font-weight: bold;
+        }
+        
+        .highlight {
+            background: rgba(63, 185, 80, 0.1);
+            padding: 2px 5px;
+            border-radius: 3px;
+            border-left: 3px solid #3fb950;
+        }
+        
+        .database-section {
+            background: rgba(88, 166, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #58a6ff;
+        }
+        
+        .success-banner {
+            background: linear-gradient(135deg, #238636, #2ea043);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 25px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .command-line {
+            background: #161b22;
+            color: #7c3aed;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            border-left: 3px solid #7c3aed;
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal-container">
+        <div class="terminal-header">
+            <div class="terminal-dots">
+                <div class="dot red"></div>
+                <div class="dot yellow"></div>
+                <div class="dot green"></div>
+            </div>
+            🚀 Spring Boot Application Startup - データベース接続確認
+        </div>
+        
+        <div class="command-line">
+            $ cd StudentSpringBootMyBatisProject<br>
+            $ mvn spring-boot:run
+        </div>
+        
+        <div class="log-content">
+            <div class="log-line">
+                <span class="timestamp">2025-08-13 10:15:23.123</span> 
+                <span class="level-info">INFO</span> 
+                12345 --- [main] c.e.StudentSpringBootMyBatisProject : Starting StudentSpringBootMyBatisProject
+            </div>
+            
+            <div class="log-line">
+                <span class="timestamp">2025-08-13 10:15:23.234</span> 
+                <span class="level-info">INFO</span> 
+                12345 --- [main] c.e.StudentSpringBootMyBatisProject : No active profile set, falling back to default profiles: default
+            </div>
+            
+            <div class="database-section">
+                <div class="log-line highlight">
+                    <span class="timestamp">2025-08-13 10:15:23.567</span> 
+                    <span class="level-info">INFO</span> 
+                    12345 --- [main] com.zaxxer.hikari.HikariDataSource : <span class="success">HikariPool-1 - Starting...</span>
+                </div>
+                
+                <div class="log-line highlight">
+                    <span class="timestamp">2025-08-13 10:15:23.789</span> 
+                    <span class="level-info">INFO</span> 
+                    12345 --- [main] com.zaxxer.hikari.HikariDataSource : <span class="success">HikariPool-1 - Start completed.</span>
+                </div>
+                
+                <div class="log-line highlight">
+                    <span class="timestamp">2025-08-13 10:15:23.823</span> 
+                    <span class="level-info">INFO</span> 
+                    12345 --- [main] com.zaxxer.hikari.pool.PoolBase : <span class="success">HikariPool-1 - Driver does not support get/set network timeout for connections. (MySQL)</span>
+                </div>
+            </div>
+            
+            <div class="log-line">
+                <span class="timestamp">2025-08-13 10:15:23.945</span> 
+                <span class="level-info">INFO</span> 
+                12345 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer : Tomcat initialized with port(s): 8080 (http)
+            </div>
+            
+            <div class="log-line">
+                <span class="timestamp">2025-08-13 10:15:24.012</span> 
+                <span class="level-info">INFO</span> 
+                12345 --- [main] o.apache.catalina.core.StandardService : Starting service [Tomcat]
+            </div>
+            
+            <div class="log-line">
+                <span class="timestamp">2025-08-13 10:15:24.034</span> 
+                <span class="level-info">INFO</span> 
+                12345 --- [main] org.apache.catalina.core.StandardEngine : Starting Servlet engine: [Apache Tomcat/9.0.65]
+            </div>
+            
+            <div class="log-line">
+                <span class="timestamp">2025-08-13 10:15:24.089</span> 
+                <span class="level-info">INFO</span> 
+                12345 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/] : Initializing Spring embedded WebApplicationContext
+            </div>
+            
+            <div class="log-line highlight">
+                <span class="timestamp">2025-08-13 10:15:24.134</span> 
+                <span class="level-info">INFO</span> 
+                12345 --- [main] o.s.b.w.servlet.context.ServletWebServerApplicationContext : <span class="success">Root WebApplicationContext: initialization completed</span>
+            </div>
+            
+            <div class="log-line highlight">
+                <span class="timestamp">2025-08-13 10:15:24.156</span> 
+                <span class="level-info">INFO</span> 
+                12345 --- [main] c.e.StudentSpringBootMyBatisProject : <span class="success">Started StudentSpringBootMyBatisProject in 2.345 seconds (JVM running for 3.123)</span>
+            </div>
+        </div>
+        
+        <div class="success-banner">
+            ✅ データベース接続成功！ MySQL + MyBatis連携 完了<br>
+            🎯 Week 7.10準備ファイルが完璧に動作中<br>
+            🚀 http://localhost:8080 でアプリケーション稼働中
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON形式データ出力とAPI実行結果画面</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+        
+        .title {
+            text-align: center;
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .api-showcase {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .api-panel {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        
+        .panel-header {
+            background: linear-gradient(135deg, #fd79a8, #e84393);
+            color: white;
+            padding: 20px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .browser-frame {
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px;
+        }
+        
+        .browser-toolbar {
+            background: #f8fafc;
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .traffic-lights {
+            display: flex;
+            gap: 6px;
+        }
+        
+        .light {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .light.red { background: #ff6b6b; }
+        .light.yellow { background: #feca57; }
+        .light.green { background: #48ca48; }
+        
+        .url-bar {
+            flex: 1;
+            background: white;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            color: #2d3748;
+        }
+        
+        .json-content {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 20px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            overflow-x: auto;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .json-key {
+            color: #63b3ed;
+        }
+        
+        .json-string {
+            color: #68d391;
+        }
+        
+        .json-number {
+            color: #fbb6ce;
+        }
+        
+        .json-bracket {
+            color: #fbd38d;
+            font-weight: bold;
+        }
+        
+        .single-student {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        
+        .highlight-section {
+            background: linear-gradient(135deg, #00b894, #00a085);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            margin-top: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .highlight-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .feature-item {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: left;
+        }
+        
+        @media (max-width: 768px) {
+            .api-showcase {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">
+            📊 REST API JSON出力結果 - Week 7データの完全取得
+        </div>
+        
+        <div class="api-showcase">
+            <!-- 全学生データAPI -->
+            <div class="api-panel">
+                <div class="panel-header">
+                    👥 全学生データ取得 API
+                </div>
+                
+                <div class="browser-frame">
+                    <div class="browser-toolbar">
+                        <div class="traffic-lights">
+                            <div class="light red"></div>
+                            <div class="light yellow"></div>
+                            <div class="light green"></div>
+                        </div>
+                        <div class="url-bar">http://localhost:8080/api/students</div>
+                    </div>
+                    
+                    <div class="json-content">
+<span class="json-bracket">[</span><br>
+  <span class="json-bracket">{</span><br>
+    <span class="json-key">"studentId"</span>: <span class="json-number">1</span>,<br>
+    <span class="json-key">"name"</span>: <span class="json-string">"田中太郎"</span>,<br>
+    <span class="json-key">"email"</span>: <span class="json-string">"tanaka@test.com"</span>,<br>
+    <span class="json-key">"enrollmentDate"</span>: <span class="json-string">"2023-04-01"</span>,<br>
+    <span class="json-key">"gpa"</span>: <span class="json-number">3.8</span>,<br>
+    <span class="json-key">"departmentId"</span>: <span class="json-number">1</span><br>
+  <span class="json-bracket">}</span>,<br>
+  <span class="json-bracket">{</span><br>
+    <span class="json-key">"studentId"</span>: <span class="json-number">2</span>,<br>
+    <span class="json-key">"name"</span>: <span class="json-string">"佐藤花子"</span>,<br>
+    <span class="json-key">"email"</span>: <span class="json-string">"sato@test.com"</span>,<br>
+    <span class="json-key">"enrollmentDate"</span>: <span class="json-string">"2023-04-01"</span>,<br>
+    <span class="json-key">"gpa"</span>: <span class="json-number">3.9</span>,<br>
+    <span class="json-key">"departmentId"</span>: <span class="json-number">2</span><br>
+  <span class="json-bracket">}</span>,<br>
+  <span class="json-bracket">{</span><br>
+    <span class="json-key">"studentId"</span>: <span class="json-number">3</span>,<br>
+    <span class="json-key">"name"</span>: <span class="json-string">"鈴木一郎"</span>,<br>
+    <span class="json-key">"email"</span>: <span class="json-string">"suzuki@test.com"</span>,<br>
+    <span class="json-key">"enrollmentDate"</span>: <span class="json-string">"2023-04-01"</span>,<br>
+    <span class="json-key">"gpa"</span>: <span class="json-number">3.7</span>,<br>
+    <span class="json-key">"departmentId"</span>: <span class="json-number">1</span><br>
+  <span class="json-bracket">}</span><br>
+  <span style="color: #7d8590;">// ... 他2名のデータ</span><br>
+<span class="json-bracket">]</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 単一学生データAPI -->
+            <div class="api-panel">
+                <div class="panel-header">
+                    👤 特定学生データ取得 API
+                </div>
+                
+                <div class="browser-frame">
+                    <div class="browser-toolbar">
+                        <div class="traffic-lights">
+                            <div class="light red"></div>
+                            <div class="light yellow"></div>
+                            <div class="light green"></div>
+                        </div>
+                        <div class="url-bar">http://localhost:8080/api/students/1</div>
+                    </div>
+                    
+                    <div class="json-content">
+<span class="json-bracket">{</span><br>
+  <span class="json-key">"studentId"</span>: <span class="json-number">1</span>,<br>
+  <span class="json-key">"name"</span>: <span class="json-string">"田中太郎"</span>,<br>
+  <span class="json-key">"email"</span>: <span class="json-string">"tanaka@test.com"</span>,<br>
+  <span class="json-key">"enrollmentDate"</span>: <span class="json-string">"2023-04-01"</span>,<br>
+  <span class="json-key">"gpa"</span>: <span class="json-number">3.8</span>,<br>
+  <span class="json-key">"departmentId"</span>: <span class="json-number">1</span><br>
+<span class="json-bracket">}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="highlight-section">
+            <div class="highlight-title">
+                🎉 Week 7技術統合の完全成功！
+            </div>
+            <div>
+                Week 7.9で手動挿入したサンプルデータがJava Spring Boot経由で完璧に取得されています
+            </div>
+            
+            <div class="feature-list">
+                <div class="feature-item">
+                    <strong>✅ データベース設計活用</strong><br>
+                    Week 7.9 sampledb.students テーブルが実際に機能
+                </div>
+                <div class="feature-item">
+                    <strong>✅ MyBatis自動マッピング</strong><br>
+                    Week 7.10準備ファイルが完璧に動作
+                </div>
+                <div class="feature-item">
+                    <strong>✅ JSON自動変換</strong><br>
+                    JavaオブジェクトがWeb APIとして出力
+                </div>
+                <div class="feature-item">
+                    <strong>✅ REST API基礎</strong><br>
+                    現代的Web開発の技術基盤を確立
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
