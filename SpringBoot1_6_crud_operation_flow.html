@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD操作の具体的な流れ図</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .title {
+            text-align: center;
+            color: #667eea;
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+        }
+        
+        .crud-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .crud-operation {
+            border: 3px solid #667eea;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        .operation-header {
+            background: linear-gradient(135deg, #667eea 0%, #5a6fdd 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+        
+        .create-header { background: linear-gradient(135deg, #27ae60 0%, #219a52 100%); }
+        .read-header { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); }
+        .update-header { background: linear-gradient(135deg, #ffc107 0%, #e6ac00 100%); color: #333; }
+        .delete-header { background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); }
+        
+        .operation-content {
+            padding: 25px;
+            background: #f8f9ff;
+        }
+        
+        .flow-steps {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .flow-step {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            position: relative;
+        }
+        
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            position: absolute;
+            top: -12px;
+            left: 15px;
+        }
+        
+        .step-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 8px;
+            margin-left: 15px;
+        }
+        
+        .step-description {
+            font-size: 0.9rem;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        .code-snippet {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            margin: 8px 0;
+            overflow-x: auto;
+        }
+        
+        .highlight-section {
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8ecff 100%);
+            border: 2px solid #667eea;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .section-title {
+            color: #667eea;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .benefit-card {
+            background: white;
+            border: 2px solid #27ae60;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .benefit-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .benefit-title {
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 5px;
+        }
+        
+        .benefit-desc {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .integration-box {
+            background: linear-gradient(135deg, #27ae60 0%, #219a52 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 30px 0;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        @media (max-width: 1200px) {
+            .crud-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .benefits-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">CRUD操作の具体的な流れ図</h1>
+        <p class="subtitle">StudentMapperの各メソッドが実行される詳細プロセス</p>
+        
+        <div class="crud-grid">
+            <!-- CREATE操作 -->
+            <div class="crud-operation">
+                <div class="operation-header create-header">CREATE - 学生登録</div>
+                <div class="operation-content">
+                    <div class="flow-steps">
+                        <div class="flow-step">
+                            <div class="step-number">1</div>
+                            <div class="step-title">Javaメソッド呼び出し</div>
+                            <div class="step-description">
+                                Serviceクラスから Mapper メソッドを実行
+                                <div class="code-snippet">mapper.save(student);</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flow-step">
+                            <div class="step-number">2</div>
+                            <div class="step-title">MyBatis XML解析</div>
+                            <div class="step-description">
+                                StudentMapper.xmlの&lt;insert&gt;要素を解析
+                                <div class="code-snippet">&lt;insert id="save" parameterType="Student"&gt;</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flow-step">
+                            <div class="step-number">3</div>
+                            <div class="step-title">SQL自動生成</div>
+                            <div class="step-description">
+                                EntityオブジェクトからSQL文を自動構築
+                                <div class="code-snippet">INSERT INTO students (name, email, birth_date)<br>VALUES (?, ?, ?)</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flow-step">
+                            <div class="step-number">4</div>
+                            <div class="step-title">データベース実行</div>
+                            <div class="step-description">
+                                生成されたSQL文をデータベースで実行<br>
+                                自動コミットまたはトランザクション管理
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- READ操作 -->
+            <div class="crud-operation">
+                <div class="operation-header read-header">READ - 学生検索</div>
+                <div class="operation-content">
+                    <div class="flow-steps">
+                        <div class="flow-step">
+                            <div class="step-number">1</div>
+                            <div class="step-title">検索条件指定</div>
+                            <div class="step-description">
+                                IDまたは検索条件を指定してメソッド呼び出し
+                                <div class="code-snippet">Student student = mapper.findById(1L);</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flow-step">
+                            <div class="step-number">2</div>
+                            <div class="step-title">動的SQL処理</div>
+                            <div class="step-description">
+                                条件に応じてWHERE句を自動構築
+                                <div class="code-snippet">&lt;if test="id != null"&gt;<br>  AND id = #{id}<br>&lt;/if&gt;</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flow-step">
+                            <div class="step-number">3</div>
+                            <div class="step-title">SELECT実行</div>
+                            <div class="step-description">
+                                データベースからレコードを取得
+                                <div class="code-snippet">SELECT id, name, email, birth_date<br>FROM students WHERE id = 1</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flow-step">
+                            <div class="step-number">4</div>
+                            <div class="step-title">Entity変換</div>
+                            <div class="step-description">
+                                取得結果を Student オブジェクトに自動変換<br>
+                                スネークケース→キャメルケース自動変換
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- UPDATE操作 -->
+            <div class="crud-operation">
+                <div class="operation-header update-header">UPDATE - 学生更新</div>
+                <div class="operation-content">
+                    <div class="flow-steps">
+                        <div class="flow-step">
+                            <div class="step-number">1</div>
+                            <div class="step-title">更新データ準備</div>
+                            <div class="step-description">
+                                変更後のStudentオブジェクトを渡す
+                                <div class="code-snippet">mapper.update(modifiedStudent);</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flow-step">
+                            <div class="step-number">2</div>
+                            <div class="step-title">部分更新SQL生成</div>
+                            <div class="step-description">
+                                変更があったフィールドのみSETに含める
+                                <div class="code-snippet">&lt;if test="email != null"&gt;<br>  email = #{email},<br>&lt;/if&gt;</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flow-step">
+                            <div class="step-number">3</div>
+                            <div class="step-title">WHERE条件指定</div>
+                            <div class="step-description">
+                                主キーでレコードを特定
+                                <div class="code-snippet">UPDATE students SET email = ?<br>WHERE id = ?</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flow-step">
+                            <div class="step-number">4</div>
+                            <div class="step-title">更新実行＆確認</div>
+                            <div class="step-description">
+                                更新件数を返却して処理結果を確認<br>
+                                トランザクション管理による整合性保証
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- DELETE操作 -->
+            <div class="crud-operation">
+                <div class="operation-header delete-header">DELETE - 学生削除</div>
+                <div class="operation-content">
+                    <div class="flow-steps">
+                        <div class="flow-step">
+                            <div class="step-number">1</div>
+                            <div class="step-title">削除対象指定</div>
+                            <div class="step-description">
+                                削除対象のIDを指定
+                                <div class="code-snippet">mapper.delete(1L);</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flow-step">
+                            <div class="step-number">2</div>
+                            <div class="step-title">関連チェック</div>
+                            <div class="step-description">
+                                外部キー制約による関連データの確認
+                                <div class="code-snippet">-- 成績データが存在する場合はエラー</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flow-step">
+                            <div class="step-number">3</div>
+                            <div class="step-title">物理削除 or 論理削除</div>
+                            <div class="step-description">
+                                設定に応じた削除方式を選択
+                                <div class="code-snippet">DELETE FROM students<br>-- または --<br>UPDATE students SET deleted = true</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flow-step">
+                            <div class="step-number">4</div>
+                            <div class="step-title">削除確認</div>
+                            <div class="step-description">
+                                削除件数を返却して処理結果を確認<br>
+                                エラー時は自動ロールバック
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="highlight-section">
+            <div class="section-title">🚀 Week 8.6で習得したCRUD技術の価値</div>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">⚡</div>
+                    <div class="benefit-title">開発効率</div>
+                    <div class="benefit-desc">複雑なJDBCコードが1行のメソッド呼び出しに</div>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">🛡️</div>
+                    <div class="benefit-title">型安全性</div>
+                    <div class="benefit-desc">コンパイル時エラーチェックによる品質向上</div>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">🔄</div>
+                    <div class="benefit-title">自動変換</div>
+                    <div class="benefit-desc">Java↔SQLの命名規則自動変換</div>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">🎯</div>
+                    <div class="benefit-title">動的SQL</div>
+                    <div class="benefit-desc">条件に応じた柔軟なクエリ自動生成</div>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">🔧</div>
+                    <div class="benefit-title">エラー処理</div>
+                    <div class="benefit-desc">データベースエラーの自動ハンドリング</div>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">🏗️</div>
+                    <div class="benefit-title">保守性</div>
+                    <div class="benefit-desc">SQLとJavaコードの分離による保守性向上</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="integration-box">
+            🎉 Week 8.5のEntity技術 + Week 8.6のMapper技術 = 完璧な統合！<br>
+            データアクセス層の実装技術が確立され、Week 8.7のController実装準備完了<br>
+            実務レベルのWebアプリケーション開発基盤の完成
+        </div>
+    </div>
+</body>
+</html>

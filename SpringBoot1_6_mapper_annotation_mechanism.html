@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@Mapperアノテーションの仕組み</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .title {
+            text-align: center;
+            color: #667eea;
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+        }
+        
+        .process-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .process-step {
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8ecff 100%);
+            border: 2px solid #667eea;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 auto 15px;
+        }
+        
+        .step-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .step-content {
+            font-size: 0.9rem;
+            color: #555;
+            line-height: 1.5;
+        }
+        
+        .code-example {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+        
+        .example-section {
+            background: #f8f9fa;
+            border-left: 4px solid #27ae60;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .example-title {
+            color: #27ae60;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .benefit-card {
+            background: linear-gradient(135deg, #27ae60 0%, #219a52 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .benefit-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .benefit-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .benefit-desc {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #ffc107 0%, #e6ac00 100%);
+            color: #333;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 30px 0;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .process-container {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">@Mapperアノテーションの仕組み</h1>
+        <p class="subtitle">MyBatis自動処理による魔法のような実装体験</p>
+        
+        <div class="process-container">
+            <div class="process-step">
+                <div class="step-number">1</div>
+                <div class="step-title">インターフェース定義</div>
+                <div class="step-content">
+                    @Mapperアノテーションを付けたインターフェースを作成<br><br>
+                    実装クラスは書かない！
+                </div>
+            </div>
+            
+            <div class="process-step">
+                <div class="step-number">2</div>
+                <div class="step-title">MyBatis自動処理</div>
+                <div class="step-content">
+                    Spring Boot起動時にMyBatisが自動で実装クラスを生成<br><br>
+                    開発者は何もしない！
+                </div>
+            </div>
+            
+            <div class="process-step">
+                <div class="step-number">3</div>
+                <div class="step-title">SQL自動実行</div>
+                <div class="step-content">
+                    メソッド呼び出しで自動的にSQL文が構築・実行される<br><br>
+                    エラーハンドリングも自動！
+                </div>
+            </div>
+            
+            <div class="process-step">
+                <div class="step-number">4</div>
+                <div class="step-title">Entity型で返却</div>
+                <div class="step-content">
+                    データベース結果がStudentオブジェクトに自動変換<br><br>
+                    型安全で使いやすい！
+                </div>
+            </div>
+        </div>
+        
+        <div class="example-section">
+            <div class="example-title">🚀 実際のコード例</div>
+            <div class="code-example">
+@Mapper<br>
+public interface StudentMapper {<br>
+    // たった1行でデータベースアクセス完成！<br>
+    List&lt;Student&gt; findAll();<br>
+    Student findById(Long id);<br>
+    void save(Student student);<br>
+}<br><br>
+// Week 8.5のEntityと完璧連携<br>
+@Service<br>
+public class StudentService {<br>
+    @Autowired<br>
+    private StudentMapper mapper;<br><br>
+    public Student getStudent(Long id) {<br>
+        // この1行で複雑なJDBCコードが不要！<br>
+        return mapper.findById(id);<br>
+    }<br>
+}
+            </div>
+        </div>
+        
+        <div class="highlight-box">
+            🎯 findById(1L) → SQL自動構築 → データベースアクセス → Student型返却<br>
+            従来100行以上のJDBCコードが、たった1行のメソッド呼び出しに！
+        </div>
+        
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <div class="benefit-icon">🛡️</div>
+                <div class="benefit-title">型安全性</div>
+                <div class="benefit-desc">コンパイル時にエラーチェック<br>実行時エラーを予防</div>
+            </div>
+            
+            <div class="benefit-card">
+                <div class="benefit-icon">⚡</div>
+                <div class="benefit-title">開発効率向上</div>
+                <div class="benefit-desc">複雑なJDBCコードが1行に<br>開発時間を大幅短縮</div>
+            </div>
+            
+            <div class="benefit-card">
+                <div class="benefit-icon">🔧</div>
+                <div class="benefit-title">エラーハンドリング</div>
+                <div class="benefit-desc">データベースエラーを自動処理<br>安全で堅牢なアプリケーション</div>
+            </div>
+            
+            <div class="benefit-card">
+                <div class="benefit-icon">🎨</div>
+                <div class="benefit-title">Entity連携</div>
+                <div class="benefit-desc">Week 8.5技術との完璧統合<br>Javaオブジェクトで直感操作</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

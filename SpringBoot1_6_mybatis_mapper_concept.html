@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyBatisとMapperの概念図</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px;
+        }
+        .comparison {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        .approach {
+            flex: 1;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid;
+        }
+        .jdbc {
+            border-color: #e74c3c;
+            background: #fdf2f2;
+        }
+        .mybatis {
+            border-color: #27ae60;
+            background: #f0f9f0;
+        }
+        .approach-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .jdbc .approach-title {
+            background: #e74c3c;
+            color: white;
+        }
+        .mybatis .approach-title {
+            background: #27ae60;
+            color: white;
+        }
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        .benefits {
+            background: #e8f5e8;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 5px solid #27ae60;
+            margin: 20px 0;
+        }
+        .benefits-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            border-left: 3px solid #27ae60;
+        }
+        .benefit-number {
+            background: #27ae60;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        .entity-connection {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .entity-title {
+            color: #856404;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .entity-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+        .entity-box {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 5px;
+            border: 2px solid #ffc107;
+        }
+        .flow-arrow {
+            font-size: 20px;
+            color: #ffc107;
+            font-weight: bold;
+        }
+        .highlight {
+            background: #fff3cd;
+            padding: 3px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">
+            🚀 MyBatisとMapperの概念図：データアクセス層の価値
+        </div>
+
+        <div class="comparison">
+            <div class="approach jdbc">
+                <div class="approach-title">❌ 従来のJDBCアプローチ（複雑）</div>
+                <div class="code-example">
+// 手動でSQL文作成・パラメータ設定・結果変換<br>
+String sql = "SELECT * FROM students WHERE id = ?";<br>
+PreparedStatement stmt = connection.prepareStatement(sql);<br>
+stmt.setLong(1, studentId);<br>
+ResultSet rs = stmt.executeQuery();<br>
+<br>
+// 結果セットからStudentオブジェクトへの手動変換<br>
+Student student = new Student();<br>
+if (rs.next()) {<br>
+    student.setId(rs.getLong("id"));<br>
+    student.setName(rs.getString("name"));<br>
+    student.setEmail(rs.getString("email"));<br>
+    // さらに多くの手動設定...<br>
+}<br>
+rs.close();<br>
+stmt.close();
+                </div>
+                <div style="color: #c0392b; font-weight: bold; text-align: center; margin-top: 10px;">
+                    😫 複雑・エラーが起きやすい・保守困難
+                </div>
+            </div>
+
+            <div class="approach mybatis">
+                <div class="approach-title">✅ MyBatis Mapperアプローチ（簡潔）</div>
+                <div class="code-example">
+// MyBatis Mapper：1行でデータベース操作が完了<br>
+Student student = studentMapper.findById(studentId);<br>
+<br>
+// 他のCRUD操作も同様に簡潔<br>
+List&lt;Student&gt; all = studentMapper.findAll();<br>
+studentMapper.insert(newStudent);<br>
+studentMapper.update(student);<br>
+studentMapper.delete(studentId);
+                </div>
+                <div style="color: #27ae60; font-weight: bold; text-align: center; margin-top: 10px;">
+                    😊 簡潔・安全・保守しやすい
+                </div>
+            </div>
+        </div>
+
+        <div class="benefits">
+            <div class="benefits-title">
+                🌟 Mapperが提供する価値
+            </div>
+            <div class="benefit-item">
+                <div class="benefit-number">1</div>
+                <div>
+                    <strong>開発効率の飛躍的向上</strong><br>
+                    複雑なJDBCコードが1行に。開発時間を大幅短縮
+                </div>
+            </div>
+            <div class="benefit-item">
+                <div class="benefit-number">2</div>
+                <div>
+                    <strong>エラー削減</strong><br>
+                    SQL文法エラーや型変換エラーの大幅減少
+                </div>
+            </div>
+            <div class="benefit-item">
+                <div class="benefit-number">3</div>
+                <div>
+                    <strong>保守性向上</strong><br>
+                    SQLとJavaコードの分離管理で長期保守に最適
+                </div>
+            </div>
+            <div class="benefit-item">
+                <div class="benefit-number">4</div>
+                <div>
+                    <strong>型安全性</strong><br>
+                    コンパイル時の型チェックでランタイムエラーを防止
+                </div>
+            </div>
+        </div>
+
+        <div class="entity-connection">
+            <div class="entity-title">
+                🔗 Week 8.5のEntity技術との完璧な連携
+            </div>
+            <div class="entity-flow">
+                <div class="entity-box">
+                    <strong>Week 8.5の成果</strong><br>
+                    Studentエンティティ<br>
+                    <span class="highlight">@Entity</span> <span class="highlight">@Data</span> <span class="highlight">@Builder</span>
+                </div>
+                <div class="flow-arrow">➜</div>
+                <div class="entity-box">
+                    <strong>Week 8.6の学習</strong><br>
+                    StudentMapper<br>
+                    <span class="highlight">@Mapper</span> <span class="highlight">XML設定</span>
+                </div>
+                <div class="flow-arrow">➜</div>
+                <div class="entity-box">
+                    <strong>実現される価値</strong><br>
+                    自動SQL実行<br>
+                    <span class="highlight">簡潔</span> <span class="highlight">安全</span> <span class="highlight">効率的</span>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px;">
+            <strong style="font-size: 18px;">
+                🎯 今回の学習により、JavaオブジェクトとSQL文の完全な自動変換が実現します！
+            </strong>
+        </div>
+    </div>
+</body>
+</html>
