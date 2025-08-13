@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web API（@RestController）から画面表示（@Controller）への発展</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .evolution-container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .evolution-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .evolution-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .week-section {
+            flex: 1;
+            min-width: 280px;
+            text-align: center;
+        }
+
+        .week-header {
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .week-7-header {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+
+        .week-8-header {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+        }
+
+        .technology-box {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid;
+            transition: transform 0.3s ease;
+        }
+
+        .technology-box:hover {
+            transform: translateY(-3px);
+        }
+
+        .week-7 .technology-box {
+            border-left-color: #3498db;
+        }
+
+        .week-8 .technology-box {
+            border-left-color: #9b59b6;
+        }
+
+        .tech-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .tech-description {
+            font-size: 14px;
+            color: #7f8c8d;
+            line-height: 1.5;
+        }
+
+        .evolution-arrow {
+            font-size: 48px;
+            color: #e74c3c;
+            text-align: center;
+            margin: 0 10px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .response-example {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            border: 1px solid #e9ecef;
+            text-align: left;
+        }
+
+        .json-example {
+            color: #2c3e50;
+        }
+
+        .html-example {
+            color: #8e44ad;
+        }
+
+        .evolution-summary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .summary-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .summary-text {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .evolution-flow {
+                flex-direction: column;
+            }
+            
+            .evolution-arrow {
+                transform: rotate(90deg);
+                margin: 20px 0;
+            }
+            
+            .week-section {
+                min-width: auto;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="evolution-container">
+        <div class="evolution-title">
+            🚀 Web API（@RestController）から画面表示（@Controller）への発展
+        </div>
+
+        <div class="evolution-flow">
+            <!-- Week 8.7: Web API -->
+            <div class="week-section week-7">
+                <div class="week-header week-7-header">
+                    📡 Week 8.7
+                </div>
+                
+                <div class="technology-box">
+                    <div class="tech-name">@RestController</div>
+                    <div class="tech-description">
+                        Web API実装<br>
+                        JSON形式でデータを返す
+                    </div>
+                    <div class="response-example json-example">
+                        {<br>
+                        &nbsp;&nbsp;"id": 1,<br>
+                        &nbsp;&nbsp;"name": "田中太郎",<br>
+                        &nbsp;&nbsp;"age": 20<br>
+                        }
+                    </div>
+                </div>
+
+                <div class="technology-box">
+                    <div class="tech-name">RESTful API</div>
+                    <div class="tech-description">
+                        GET、POST、PUT、DELETE<br>
+                        プログラム間のデータ通信
+                    </div>
+                </div>
+
+                <div class="technology-box">
+                    <div class="tech-name">JSONレスポンス</div>
+                    <div class="tech-description">
+                        機械が読み取り可能な形式<br>
+                        他のシステムとの連携
+                    </div>
+                </div>
+            </div>
+
+            <!-- Evolution Arrow -->
+            <div class="evolution-arrow">
+                ➡️
+            </div>
+
+            <!-- Week 8.8: View -->
+            <div class="week-section week-8">
+                <div class="week-header week-8-header">
+                    🎨 Week 8.8
+                </div>
+                
+                <div class="technology-box">
+                    <div class="tech-name">@Controller</div>
+                    <div class="tech-description">
+                        画面表示実装<br>
+                        HTML形式で画面を返す
+                    </div>
+                    <div class="response-example html-example">
+                        &lt;table&gt;<br>
+                        &nbsp;&nbsp;&lt;tr&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;td&gt;田中太郎&lt;/td&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;td&gt;20歳&lt;/td&gt;<br>
+                        &nbsp;&nbsp;&lt;/tr&gt;<br>
+                        &lt;/table&gt;
+                    </div>
+                </div>
+
+                <div class="technology-box">
+                    <div class="tech-name">Thymeleafテンプレート</div>
+                    <div class="tech-description">
+                        動的HTML生成<br>
+                        ユーザーが見る画面作成
+                    </div>
+                </div>
+
+                <div class="technology-box">
+                    <div class="tech-name">HTMLレスポンス</div>
+                    <div class="tech-description">
+                        人間が読める形式<br>
+                        ブラウザで直接表示
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="evolution-summary">
+            <div class="summary-title">🎯 技術発展のポイント</div>
+            <div class="summary-text">
+                Week 8.7のAPI技術基盤を活用して、Week 8.8では実際にユーザーが操作できる画面を作成します。<br>
+                <strong>JSON（機械向け）</strong> から <strong>HTML（人間向け）</strong> への発展により、完全なWebアプリケーションが実現されます。
+            </div>
+        </div>
+    </div>
+</body>
+</html>
