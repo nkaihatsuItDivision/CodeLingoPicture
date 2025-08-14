@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新規登録画面デザイン例</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            color: white;
+            text-align: center;
+            padding: 25px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .subtitle {
+            background: linear-gradient(135deg, #fff9e6, #fdeaa7);
+            padding: 15px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #d68910;
+            border-bottom: 3px solid #f39c12;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .form-preview {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .form-container {
+            background: linear-gradient(135deg, #fff9e6, #fdeaa7);
+            border: 3px solid #f39c12;
+            border-radius: 15px;
+            padding: 30px;
+            position: relative;
+        }
+
+        .form-title {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 20px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #d68910;
+            font-size: 14px;
+        }
+
+        .required {
+            color: #e74c3c;
+            margin-left: 3px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #f8c471;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #f39c12;
+            box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.1);
+        }
+
+        .form-control::placeholder {
+            color: #bdc3c7;
+            font-style: italic;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .checkbox-input {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .checkbox-label {
+            font-size: 14px;
+            color: #2c3e50;
+        }
+
+        .checkbox-label a {
+            color: #f39c12;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .checkbox-label a:hover {
+            text-decoration: underline;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.3);
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+            transform: translateY(-2px);
+        }
+
+        .design-features {
+            background: linear-gradient(135deg, #e8f5e8, #c8e6c9);
+            border: 3px solid #27ae60;
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .features-title {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: white;
+            border: 2px solid #27ae60;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .feature-icon {
+            background: #27ae60;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 24px;
+        }
+
+        .feature-title {
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .feature-description {
+            font-size: 14px;
+            color: #2c3e50;
+        }
+
+        .thymeleaf-code {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        .highlight {
+            background: #f39c12;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .responsive-note {
+            background: #e8f4f8;
+            border-left: 5px solid #3498db;
+            padding: 15px;
+            margin-top: 30px;
+            border-radius: 5px;
+        }
+
+        .responsive-icon {
+            color: #3498db;
+            font-size: 18px;
+            margin-right: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .form-preview {
+                grid-template-columns: 1fr;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                text-align: center;
+            }
+            
+            .header {
+                font-size: 24px;
+                padding: 20px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            Week 9.2: 新規登録画面デザイン例
+        </div>
+        
+        <div class="subtitle">
+            Bootstrapベース × Thymeleaf技術による実用的フォーム画面
+        </div>
+
+        <div class="content">
+            <div class="form-preview">
+                <div class="form-container">
+                    <div class="form-title">
+                        🎓 学生新規登録フォーム
+                    </div>
+                    
+                    <form>
+                        <div class="form-group">
+                            <label class="form-label" for="name">
+                                名前<span class="required">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="name" name="name" 
+                                   placeholder="例: 田中太郎" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="email">
+                                メールアドレス<span class="required">*</span>
+                            </label>
+                            <input type="email" class="form-control" id="email" name="email" 
+                                   placeholder="例: tanaka@example.com" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="age">
+                                年齢<span class="required">*</span>
+                            </label>
+                            <input type="number" class="form-control" id="age" name="age" 
+                                   placeholder="例: 25" min="0" max="150" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="password">
+                                パスワード<span class="required">*</span>
+                            </label>
+                            <input type="password" class="form-control" id="password" name="password" 
+                                   placeholder="8文字以上で入力してください" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="confirmPassword">
+                                パスワード確認<span class="required">*</span>
+                            </label>
+                            <input type="password" class="form-control" id="confirmPassword" 
+                                   name="confirmPassword" placeholder="パスワードを再入力してください" required>
+                        </div>
+                        
+                        <div class="checkbox-group">
+                            <input type="checkbox" class="checkbox-input" id="agreeTerms" 
+                                   name="agreeTerms" required>
+                            <label class="checkbox-label" for="agreeTerms">
+                                <a href="#" target="_blank">利用規約</a>に同意します<span class="required">*</span>
+                            </label>
+                        </div>
+                        
+                        <div class="button-group">
+                            <button type="submit" class="btn btn-primary">
+                                🚀 登録する
+                            </button>
+                            <a href="#" class="btn btn-secondary">
+                                ← 戻る
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="design-features">
+                    <div class="features-title">
+                        🎨 デザイン特徴・ユーザビリティ配慮
+                    </div>
+                    
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">📱</div>
+                            <div class="feature-title">レスポンシブ対応</div>
+                            <div class="feature-description">
+                                PC・タブレット・スマートフォンすべてに最適化されたレイアウト
+                            </div>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">✨</div>
+                            <div class="feature-title">視覚的フィードバック</div>
+                            <div class="feature-description">
+                                フォーカス時のハイライト効果とボタンホバーアニメーション
+                            </div>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">🎯</div>
+                            <div class="feature-title">必須項目の明示</div>
+                            <div class="feature-description">
+                                赤色の「*」マークで必須フィールドを明確に表示
+                            </div>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">💡</div>
+                            <div class="feature-title">入力支援</div>
+                            <div class="feature-description">
+                                具体例を示すプレースホルダーでユーザーの入力をサポート
+                            </div>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">🔒</div>
+                            <div class="feature-title">セキュリティ配慮</div>
+                            <div class="feature-description">
+                                パスワード確認フィールドとHTTPS前提の設計
+                            </div>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">⚡</div>
+                            <div class="feature-title">アクセシビリティ</div>
+                            <div class="feature-description">
+                                適切なlabel要素とHTML5入力タイプの活用
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="thymeleaf-code">
+&lt;form <span class="highlight">th:object="${studentData}"</span> method="post" th:action="@{/students}" class="form"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="form-group"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;label class="form-label" for="name"&gt;名前&lt;span class="required"&gt;*&lt;/span&gt;&lt;/label&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;input type="text" class="form-control" <span class="highlight">th:field="*{name}"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;placeholder="例: 田中太郎" required&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="form-group"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;label class="form-label" for="email"&gt;メールアドレス&lt;span class="required"&gt;*&lt;/span&gt;&lt;/label&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;input type="email" class="form-control" <span class="highlight">th:field="*{email}"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;placeholder="例: tanaka@example.com" required&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="button-group"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;button type="submit" class="btn btn-primary"&gt;🚀 登録する&lt;/button&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;a th:href="@{/students}" class="btn btn-secondary"&gt;← 戻る&lt;/a&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;<br>
+&lt;/form&gt;
+            </div>
+
+            <div class="responsive-note">
+                <span class="responsive-icon">📱</span>
+                <strong>レスポンシブ対応:</strong> 
+                このフォームはBootstrapのグリッドシステムとメディアクエリを活用し、デスクトップ（1200px以上）、タブレット（768px-1199px）、スマートフォン（767px以下）すべてで最適なユーザー体験を提供します。Week 9.3ではこのフォームにBean Validationによるリアルタイムエラー表示機能を追加します。
+            </div>
+        </div>
+    </div>
+</body>
+</html>

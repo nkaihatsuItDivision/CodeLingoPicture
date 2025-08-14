@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 8技術統合図</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            color: white;
+            text-align: center;
+            padding: 25px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .subtitle {
+            background: linear-gradient(135deg, #fff9e6, #fdeaa7);
+            padding: 15px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #d68910;
+            border-bottom: 3px solid #f39c12;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .evolution-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .week8-section {
+            background: linear-gradient(135deg, #e8f4f8, #aed6f1);
+            border: 3px solid #3498db;
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .week9-section {
+            background: linear-gradient(135deg, #fff9e6, #fdeaa7);
+            border: 3px solid #f39c12;
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .week-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            color: white;
+        }
+
+        .week8-title {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+
+        .week9-title {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+        }
+
+        .technology-focus {
+            background: white;
+            border: 2px solid #bdc3c7;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .tech-label {
+            font-weight: bold;
+            color: #34495e;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        .highlight-week8 {
+            background: #3498db;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .highlight-week9 {
+            background: #f39c12;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .mvc-evolution {
+            background: linear-gradient(135deg, #e8f5e8, #c8e6c9);
+            border: 3px solid #27ae60;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .mvc-title {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .mvc-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .mvc-stage {
+            background: white;
+            border: 2px solid #27ae60;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .stage-title {
+            background: #27ae60;
+            color: white;
+            padding: 8px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .stage-description {
+            font-size: 14px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .stage-technologies {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .tech-box {
+            padding: 8px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .model-tech {
+            background: #27ae60;
+        }
+
+        .view-tech {
+            background: #9b59b6;
+        }
+
+        .controller-tech {
+            background: #3498db;
+        }
+
+        .integration-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .integration-card {
+            background: linear-gradient(135deg, #fff9e6, #fdeaa7);
+            border: 2px solid #f39c12;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .integration-icon {
+            background: #f39c12;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 24px;
+        }
+
+        .integration-title {
+            font-weight: bold;
+            color: #d68910;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .integration-description {
+            font-size: 14px;
+            color: #2c3e50;
+        }
+
+        .learning-path {
+            background: #fdf2e9;
+            border: 3px solid #e67e22;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .path-title {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .path-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .path-step {
+            background: white;
+            border: 2px solid #e67e22;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            background: #e67e22;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .step-week {
+            font-weight: bold;
+            color: #e67e22;
+            margin-top: 15px;
+            margin-bottom: 8px;
+        }
+
+        .step-tech {
+            font-size: 13px;
+            color: #2c3e50;
+        }
+
+        .bidirectional-flow {
+            background: #e8f4f8;
+            border-left: 5px solid #3498db;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+
+        .flow-title {
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .flow-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .flow-direction {
+            background: white;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .direction-title {
+            background: #3498db;
+            color: white;
+            padding: 6px;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .direction-description {
+            font-size: 13px;
+            color: #2c3e50;
+        }
+
+        @media (max-width: 768px) {
+            .evolution-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .mvc-comparison {
+                grid-template-columns: 1fr;
+            }
+            
+            .integration-points {
+                grid-template-columns: 1fr;
+            }
+            
+            .path-steps {
+                grid-template-columns: 1fr;
+            }
+            
+            .flow-comparison {
+                grid-template-columns: 1fr;
+            }
+            
+            .stage-technologies {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                font-size: 24px;
+                padding: 20px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            Week 8→9.2: 技術統合・発展図
+        </div>
+        
+        <div class="subtitle">
+            表示技術からフォーム技術への自然な技術発展
+        </div>
+
+        <div class="content">
+            <div class="evolution-container">
+                <div class="week8-section">
+                    <div class="week-title week8-title">
+                        📖 Week 8: 表示技術の習得
+                    </div>
+                    
+                    <div class="technology-focus">
+                        <div class="tech-label">🎯 主要技術要素</div>
+                        <div class="code-example">
+&lt;!-- データ表示 --&gt;<br>
+&lt;p <span class="highlight-week8">th:text="${student.name}"</span>&gt;&lt;/p&gt;<br>
+&lt;p <span class="highlight-week8">th:text="${student.email}"</span>&gt;&lt;/p&gt;<br>
+<br>
+&lt;!-- リスト表示 --&gt;<br>
+&lt;tr <span class="highlight-week8">th:each="student : ${students}"</span>&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;td th:text="${student.name}"&gt;&lt;/td&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;td th:text="${student.age}"&gt;&lt;/td&gt;<br>
+&lt;/tr&gt;<br>
+<br>
+&lt;!-- 条件分岐 --&gt;<br>
+&lt;span <span class="highlight-week8">th:if="${student.age >= 20}"</span>&gt;成人&lt;/span&gt;
+                        </div>
+                    </div>
+                    
+                    <div class="technology-focus">
+                        <div class="tech-label">📊 データフロー特徴</div>
+                        <ul style="font-size: 14px; color: #2c3e50;">
+                            <li><strong>単方向</strong>: Controller → View のみ</li>
+                            <li><strong>読み取り専用</strong>: データの表示に特化</li>
+                            <li><strong>静的処理</strong>: ユーザー入力なし</li>
+                            <li><strong>Model依存</strong>: Controller準備データを表示</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="week9-section">
+                    <div class="week-title week9-title">
+                        📝 Week 9.2: フォーム技術の習得
+                    </div>
+                    
+                    <div class="technology-focus">
+                        <div class="tech-label">🎯 主要技術要素</div>
+                        <div class="code-example">
+&lt;!-- フォームバインディング --&gt;<br>
+&lt;form <span class="highlight-week9">th:object="${studentData}"</span>&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;input <span class="highlight-week9">th:field="*{name}"</span> /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;input <span class="highlight-week9">th:field="*{email}"</span> /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;input <span class="highlight-week9">th:field="*{age}"</span> /&gt;<br>
+&lt;/form&gt;<br>
+<br>
+&lt;!-- データ受け取り --&gt;<br>
+@PostMapping("/students")<br>
+public String create(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-week9">@ModelAttribute</span> StudentData data) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 自動バインディング完了<br>
+}
+                        </div>
+                    </div>
+                    
+                    <div class="technology-focus">
+                        <div class="tech-label">📊 データフロー特徴</div>
+                        <ul style="font-size: 14px; color: #2c3e50;">
+                            <li><strong>双方向</strong>: Controller ⇄ View</li>
+                            <li><strong>読み書き両用</strong>: 表示＋入力処理</li>
+                            <li><strong>動的処理</strong>: ユーザー入力処理</li>
+                            <li><strong>自動バインディング</strong>: フォーム⇄オブジェクト</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mvc-evolution">
+                <div class="mvc-title">
+                    🏗️ MVCアーキテクチャの発展：単方向から双方向へ
+                </div>
+                
+                <div class="mvc-comparison">
+                    <div class="mvc-stage">
+                        <div class="stage-title">Week 8: 単方向MVC</div>
+                        <div class="stage-description">
+                            Controllerで準備したデータをViewで表示する一方向の流れ
+                        </div>
+                        <div class="stage-technologies">
+                            <div class="tech-box model-tech">@Entity</div>
+                            <div class="tech-box view-tech">th:text</div>
+                            <div class="tech-box controller-tech">@GetMapping</div>
+                            <div class="tech-box model-tech">Repository</div>
+                            <div class="tech-box view-tech">th:each</div>
+                            <div class="tech-box controller-tech">Model</div>
+                            <div class="tech-box model-tech">Service</div>
+                            <div class="tech-box view-tech">th:if</div>
+                            <div class="tech-box controller-tech">return "view"</div>
+                        </div>
+                    </div>
+                    
+                    <div class="mvc-stage">
+                        <div class="stage-title">Week 9.2: 双方向MVC</div>
+                        <div class="stage-description">
+                            ユーザー入力をControllerで受け取り、処理結果をViewに反映する双方向の流れ
+                        </div>
+                        <div class="stage-technologies">
+                            <div class="tech-box model-tech">DTO Pattern</div>
+                            <div class="tech-box view-tech">th:object</div>
+                            <div class="tech-box controller-tech">@PostMapping</div>
+                            <div class="tech-box model-tech">StudentData</div>
+                            <div class="tech-box view-tech">th:field</div>
+                            <div class="tech-box controller-tech">@ModelAttribute</div>
+                            <div class="tech-box model-tech">Data Binding</div>
+                            <div class="tech-box view-tech">Form Elements</div>
+                            <div class="tech-box controller-tech">redirect:</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="integration-points">
+                <div class="integration-card">
+                    <div class="integration-icon">🔄</div>
+                    <div class="integration-title">Thymeleaf技術の統合</div>
+                    <div class="integration-description">
+                        Week 8のth:text・th:eachに加えて、th:object・th:fieldを習得。Thymeleafの全機能を活用可能に
+                    </div>
+                </div>
+                
+                <div class="integration-card">
+                    <div class="integration-icon">🎯</div>
+                    <div class="integration-title">DTOパターンの活用</div>
+                    <div class="integration-description">
+                        Week 9.1のStudentDataクラスとWeek 8のEntityクラスを組み合わせた実践的なデータ処理
+                    </div>
+                </div>
+                
+                <div class="integration-card">
+                    <div class="integration-icon">⚡</div>
+                    <div class="integration-title">Controller処理の進化</div>
+                    <div class="integration-description">
+                        @GetMappingに加えて@PostMappingを習得。CRUD操作の基盤となる技術を完全習得
+                    </div>
+                </div>
+                
+                <div class="integration-card">
+                    <div class="integration-icon">🛡️</div>
+                    <div class="integration-title">Web開発基盤の完成</div>
+                    <div class="integration-description">
+                        表示・フォーム・データ処理の3要素が統合され、実用的なWebアプリケーション開発が可能に
+                    </div>
+                </div>
+            </div>
+
+            <div class="bidirectional-flow">
+                <div class="flow-title">
+                    🌐 データフローの進化：単方向から双方向へ
+                </div>
+                
+                <div class="flow-comparison">
+                    <div class="flow-direction">
+                        <div class="direction-title">Week 8: 単方向フロー</div>
+                        <div class="direction-description">
+                            <strong>① Repository</strong> → データ取得<br>
+                            <strong>② Service</strong> → ビジネスロジック<br>
+                            <strong>③ Controller</strong> → Model設定<br>
+                            <strong>④ Thymeleaf</strong> → HTML生成<br>
+                            <strong>⑤ Browser</strong> → 画面表示
+                        </div>
+                    </div>
+                    
+                    <div class="flow-direction">
+                        <div class="direction-title">Week 9.2: 双方向フロー</div>
+                        <div class="direction-description">
+                            <strong>① GET</strong> → フォーム表示<br>
+                            <strong>② User Input</strong> → データ入力<br>
+                            <strong>③ POST</strong> → フォーム送信<br>
+                            <strong>④ @ModelAttribute</strong> → 自動バインディング<br>
+                            <strong>⑤ Processing</strong> → データ処理<br>
+                            <strong>⑥ Redirect</strong> → 結果画面表示
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="learning-path">
+                <div class="path-title">
+                    🎓 技術習得の段階的積み上げ
+                </div>
+                
+                <div class="path-steps">
+                    <div class="path-step">
+                        <div class="step-number">1</div>
+                        <div class="step-week">Week 8.5-8.7</div>
+                        <div class="step-tech">Entity・Repository・Service<br>データ層の基盤構築</div>
+                    </div>
+                    
+                    <div class="path-step">
+                        <div class="step-number">2</div>
+                        <div class="step-week">Week 8.8-8.9</div>
+                        <div class="step-tech">Controller・Thymeleaf表示<br>MVC表示技術の習得</div>
+                    </div>
+                    
+                    <div class="path-step">
+                        <div class="step-number">3</div>
+                        <div class="step-week">Week 9.1</div>
+                        <div class="step-tech">DTO Pattern・StudentData<br>フォーム処理の準備</div>
+                    </div>
+                    
+                    <div class="path-step">
+                        <div class="step-number">4</div>
+                        <div class="step-week">Week 9.2</div>
+                        <div class="step-tech">th:object・th:field<br>フォーム技術の完全習得</div>
+                    </div>
+                    
+                    <div class="path-step">
+                        <div class="step-number">5</div>
+                        <div class="step-week">Week 9.3→</div>
+                        <div class="step-tech">Bean Validation<br>実用アプリの完成</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

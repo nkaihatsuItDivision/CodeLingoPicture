@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>フォームフィールド対応図</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            color: white;
+            text-align: center;
+            padding: 25px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .subtitle {
+            background: linear-gradient(135deg, #fff9e6, #fdeaa7);
+            padding: 15px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #d68910;
+            border-bottom: 3px solid #f39c12;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .mapping-overview {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .dto-class {
+            background: linear-gradient(135deg, #e8f5e8, #c8e6c9);
+            border: 3px solid #27ae60;
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .html-form {
+            background: linear-gradient(135deg, #fff9e6, #fdeaa7);
+            border: 3px solid #f39c12;
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            color: white;
+        }
+
+        .dto-title {
+            background: linear-gradient(135deg, #27ae60, #229954);
+        }
+
+        .html-title {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        .highlight {
+            background: #f39c12;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .validation-highlight {
+            background: #e74c3c;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .field-mappings {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .field-card {
+            background: linear-gradient(135deg, #fff9e6, #fdeaa7);
+            border: 2px solid #f39c12;
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .field-title {
+            background: #f39c12;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .field-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .dto-field {
+            background: #e8f5e8;
+            border: 2px solid #27ae60;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .html-field {
+            background: white;
+            border: 2px solid #f8c471;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .field-label {
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+
+        .html-label {
+            font-weight: bold;
+            color: #d68910;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+
+        .field-code {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            overflow-x: auto;
+        }
+
+        .validation-info {
+            background: #fdf2e9;
+            border-left: 4px solid #e67e22;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 11px;
+        }
+
+        .auto-mapping {
+            background: linear-gradient(135deg, #e8f4f8, #aed6f1);
+            border: 3px solid #3498db;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .mapping-title {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .mapping-benefits {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .benefit-card {
+            background: white;
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .benefit-icon {
+            background: #3498db;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 24px;
+        }
+
+        .benefit-title {
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .benefit-description {
+            font-size: 14px;
+            color: #2c3e50;
+        }
+
+        .full-example {
+            background: linear-gradient(135deg, #e8f5e8, #c8e6c9);
+            border: 3px solid #27ae60;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .example-title {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .example-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .example-section {
+            background: white;
+            border: 2px solid #27ae60;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .example-section-title {
+            background: #27ae60;
+            color: white;
+            padding: 8px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .mapping-overview {
+                grid-template-columns: 1fr;
+            }
+            
+            .field-mappings {
+                grid-template-columns: 1fr;
+            }
+            
+            .field-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .mapping-benefits {
+                grid-template-columns: 1fr;
+            }
+            
+            .example-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                font-size: 24px;
+                padding: 20px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            Week 9.2: フォームフィールド対応図
+        </div>
+        
+        <div class="subtitle">
+            StudentDataクラス ⟷ HTML要素の完全マッピング
+        </div>
+
+        <div class="content">
+            <div class="mapping-overview">
+                <div class="dto-class">
+                    <div class="section-title dto-title">
+                        📊 StudentData DTO クラス
+                    </div>
+                    
+                    <div class="code-example">
+@Data<br>
+@NoArgsConstructor<br>
+@AllArgsConstructor<br>
+public class StudentData {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="validation-highlight">@NotBlank</span>(message = "名前は必須です")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="validation-highlight">@Size</span>(min = 1, max = 50)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private String <span class="highlight">name</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="validation-highlight">@NotBlank</span>(message = "メールアドレスは必須です")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="validation-highlight">@Email</span>(message = "正しいメールアドレスを入力してください")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private String <span class="highlight">email</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="validation-highlight">@NotNull</span>(message = "年齢は必須です")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="validation-highlight">@Min</span>(value = 0) <span class="validation-highlight">@Max</span>(value = 150)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private Integer <span class="highlight">age</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="validation-highlight">@NotBlank</span>(message = "パスワードは必須です")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="validation-highlight">@Size</span>(min = 8, max = 100)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private String <span class="highlight">password</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="validation-highlight">@AssertTrue</span>(message = "利用規約に同意してください")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private Boolean <span class="highlight">agreeTerms</span>;<br>
+}
+                    </div>
+                </div>
+
+                <div class="html-form">
+                    <div class="section-title html-title">
+                        🌐 Thymeleaf HTML フォーム
+                    </div>
+                    
+                    <div class="code-example">
+&lt;form <span class="highlight">th:object="${studentData}"</span> method="post" th:action="@{/students}"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="form-group"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;input type="text" <span class="highlight">th:field="*{name}"</span> /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="form-group"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;input type="email" <span class="highlight">th:field="*{email}"</span> /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="form-group"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;input type="number" <span class="highlight">th:field="*{age}"</span> /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="form-group"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;input type="password" <span class="highlight">th:field="*{password}"</span> /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="form-group"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;input type="checkbox" <span class="highlight">th:field="*{agreeTerms}"</span> /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;<br>
+&lt;/form&gt;
+                    </div>
+                </div>
+            </div>
+
+            <div class="field-mappings">
+                <div class="field-card">
+                    <div class="field-title">📝 name フィールド</div>
+                    
+                    <div class="field-details">
+                        <div class="dto-field">
+                            <div class="field-label">DTOフィールド</div>
+                            <div class="field-code">
+private String name;
+                            </div>
+                            <div class="validation-info">
+                                バリデーション: @NotBlank, @Size(min=1, max=50)
+                            </div>
+                        </div>
+                        
+                        <div class="html-field">
+                            <div class="html-label">HTML要素</div>
+                            <div class="field-code">
+&lt;input type="text"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;th:field="*{name}"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;placeholder="例: 田中太郎" /&gt;
+                            </div>
+                            <div class="validation-info">
+                                自動生成: name="name", id="name", value="${studentData.name}"
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field-card">
+                    <div class="field-title">📧 email フィールド</div>
+                    
+                    <div class="field-details">
+                        <div class="dto-field">
+                            <div class="field-label">DTOフィールド</div>
+                            <div class="field-code">
+private String email;
+                            </div>
+                            <div class="validation-info">
+                                バリデーション: @NotBlank, @Email
+                            </div>
+                        </div>
+                        
+                        <div class="html-field">
+                            <div class="html-label">HTML要素</div>
+                            <div class="field-code">
+&lt;input type="email"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;th:field="*{email}"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;placeholder="例: tanaka@example.com" /&gt;
+                            </div>
+                            <div class="validation-info">
+                                自動生成: name="email", id="email" + HTML5 email検証
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field-card">
+                    <div class="field-title">🔢 age フィールド</div>
+                    
+                    <div class="field-details">
+                        <div class="dto-field">
+                            <div class="field-label">DTOフィールド</div>
+                            <div class="field-code">
+private Integer age;
+                            </div>
+                            <div class="validation-info">
+                                バリデーション: @NotNull, @Min(0), @Max(150)
+                            </div>
+                        </div>
+                        
+                        <div class="html-field">
+                            <div class="html-label">HTML要素</div>
+                            <div class="field-code">
+&lt;input type="number"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;th:field="*{age}"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;min="0" max="150" /&gt;
+                            </div>
+                            <div class="validation-info">
+                                自動生成: 数値型の自動変換 + HTML5 number検証
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field-card">
+                    <div class="field-title">🔒 password フィールド</div>
+                    
+                    <div class="field-details">
+                        <div class="dto-field">
+                            <div class="field-label">DTOフィールド</div>
+                            <div class="field-code">
+private String password;
+                            </div>
+                            <div class="validation-info">
+                                バリデーション: @NotBlank, @Size(min=8, max=100)
+                            </div>
+                        </div>
+                        
+                        <div class="html-field">
+                            <div class="html-label">HTML要素</div>
+                            <div class="field-code">
+&lt;input type="password"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;th:field="*{password}"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;placeholder="8文字以上" /&gt;
+                            </div>
+                            <div class="validation-info">
+                                自動生成: セキュリティを考慮したパスワード非表示
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field-card">
+                    <div class="field-title">✅ agreeTerms フィールド</div>
+                    
+                    <div class="field-details">
+                        <div class="dto-field">
+                            <div class="field-label">DTOフィールド</div>
+                            <div class="field-code">
+private Boolean agreeTerms;
+                            </div>
+                            <div class="validation-info">
+                                バリデーション: @AssertTrue（必須チェック）
+                            </div>
+                        </div>
+                        
+                        <div class="html-field">
+                            <div class="html-label">HTML要素</div>
+                            <div class="field-code">
+&lt;input type="checkbox"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;th:field="*{agreeTerms}"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value="true" /&gt;
+                            </div>
+                            <div class="validation-info">
+                                自動生成: Boolean型のチェックボックス処理
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field-card">
+                    <div class="field-title">🔄 confirmPassword フィールド</div>
+                    
+                    <div class="field-details">
+                        <div class="dto-field">
+                            <div class="field-label">DTOフィールド</div>
+                            <div class="field-code">
+private String confirmPassword;
+                            </div>
+                            <div class="validation-info">
+                                バリデーション: カスタムバリデーション（Week 9.3で実装）
+                            </div>
+                        </div>
+                        
+                        <div class="html-field">
+                            <div class="html-label">HTML要素</div>
+                            <div class="field-code">
+&lt;input type="password"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;th:field="*{confirmPassword}"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;placeholder="パスワード再入力" /&gt;
+                            </div>
+                            <div class="validation-info">
+                                自動生成: パスワード一致検証との連携
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="auto-mapping">
+                <div class="mapping-title">
+                    ⚡ th:field による自動マッピングの利点
+                </div>
+                
+                <div class="mapping-benefits">
+                    <div class="benefit-card">
+                        <div class="benefit-icon">🎯</div>
+                        <div class="benefit-title">name属性自動生成</div>
+                        <div class="benefit-description">
+                            th:field="*{name}" → name="name" が自動生成。手動設定によるミスを防止
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <div class="benefit-icon">🆔</div>
+                        <div class="benefit-title">id属性自動生成</div>
+                        <div class="benefit-description">
+                            th:field="*{email}" → id="email" が自動生成。ラベルとの関連付けも自動化
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <div class="benefit-icon">📝</div>
+                        <div class="benefit-title">value属性自動設定</div>
+                        <div class="benefit-description">
+                            編集時や入力エラー時に既存の値を自動的に復元。ユーザビリティ大幅向上
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <div class="benefit-icon">🔄</div>
+                        <div class="benefit-title">型変換自動処理</div>
+                        <div class="benefit-description">
+                            String ⟷ Integer、String ⟷ Boolean の変換を自動実行
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <div class="benefit-icon">🛡️</div>
+                        <div class="benefit-title">タイプセーフ</div>
+                        <div class="benefit-description">
+                            IDEの補完機能とリファクタリング安全性。フィールド名の変更も自動追従
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <div class="benefit-icon">⚠️</div>
+                        <div class="benefit-title">エラー連携準備</div>
+                        <div class="benefit-description">
+                            Week 9.3のBean Validationエラーと自動連携する基盤を構築
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="full-example">
+                <div class="example-title">
+                    🔧 完全実装例：Controller + Thymeleaf
+                </div>
+                
+                <div class="example-grid">
+                    <div class="example-section">
+                        <div class="example-section-title">Controller実装</div>
+                        <div class="code-example">
+@Controller<br>
+public class StudentController {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight">@GetMapping</span>("/students/new")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public String showForm(Model model) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;model.addAttribute(<span class="highlight">"studentData"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new StudentData());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return "students/form";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight">@PostMapping</span>("/students")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public String createStudent(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight">@ModelAttribute</span> StudentData studentData) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 自動的にフォームデータがstudentDataに設定される<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Student student = studentData.toEntity();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;studentService.save(student);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return "redirect:/students";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                        </div>
+                    </div>
+                    
+                    <div class="example-section">
+                        <div class="example-section-title">Thymeleafテンプレート</div>
+                        <div class="code-example">
+&lt;!-- students/form.html --&gt;<br>
+&lt;form <span class="highlight">th:object="${studentData}"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;method="post"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;th:action="@{/students}"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;class="form"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="form-group"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;label for="name"&gt;名前&lt;/label&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;input type="text"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight">th:field="*{name}"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;class="form-control"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;placeholder="例: 田中太郎" /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;!-- 他のフィールドも同様 --&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;button type="submit" class="btn btn-primary"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;登録する<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/button&gt;<br>
+&lt;/form&gt;
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

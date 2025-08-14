@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 9.1→9.2技術発展図</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            color: white;
+            text-align: center;
+            padding: 25px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .evolution-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .week-section {
+            flex: 1;
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 3px solid;
+            position: relative;
+        }
+        
+        .week-9-1 {
+            border-color: #3498db;
+            background: linear-gradient(135deg, #ecf0f1, #bdc3c7);
+        }
+        
+        .week-9-2 {
+            border-color: #f39c12;
+            background: linear-gradient(135deg, #fff9e6, #fdeaa7);
+        }
+        
+        .week-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .week-9-1 .week-title {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+        
+        .week-9-2 .week-title {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            color: white;
+        }
+        
+        .achievement {
+            background: rgba(255,255,255,0.9);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid;
+        }
+        
+        .week-9-1 .achievement {
+            border-left-color: #3498db;
+        }
+        
+        .week-9-2 .achievement {
+            border-left-color: #f39c12;
+        }
+        
+        .achievement-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+        
+        .achievement-desc {
+            font-size: 14px;
+            color: #7f8c8d;
+            line-height: 1.4;
+        }
+        
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        
+        .flow-indicator {
+            text-align: center;
+            margin: 30px 0;
+            font-size: 24px;
+            color: #f39c12;
+            font-weight: bold;
+        }
+        
+        .integration-section {
+            background: linear-gradient(135deg, #e8f5e8, #c8e6c9);
+            border-radius: 12px;
+            padding: 25px;
+            border: 3px solid #27ae60;
+            margin-top: 30px;
+        }
+        
+        .integration-title {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .integration-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .integration-point {
+            background: rgba(255,255,255,0.9);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #27ae60;
+        }
+        
+        .point-number {
+            background: #27ae60;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .tech-item {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 20px;
+            padding: 5px 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .week-9-1 .tech-item {
+            border-color: #3498db;
+            color: #3498db;
+        }
+        
+        .week-9-2 .tech-item {
+            border-color: #f39c12;
+            color: #f39c12;
+        }
+        
+        @media (max-width: 768px) {
+            .evolution-container {
+                flex-direction: column;
+            }
+            
+            .integration-points {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            📈 Week 9.1 → Week 9.2 技術発展図
+        </div>
+        
+        <div class="content">
+            <div class="evolution-container">
+                <!-- Week 9.1 セクション -->
+                <div class="week-section week-9-1">
+                    <div class="week-title">
+                        🎯 Week 9.1: DTOパターン基盤確立
+                    </div>
+                    
+                    <div class="achievement">
+                        <div class="achievement-title">✅ StudentDataクラス設計</div>
+                        <div class="achievement-desc">フォーム専用DTOの完全設計</div>
+                    </div>
+                    
+                    <div class="code-example">
+@Data<br>
+@NoArgsConstructor<br>
+@AllArgsConstructor<br>
+public class StudentData {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@NotBlank(message = "名前は必須です")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private String name;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Email(message = "正しいメールアドレス")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private String email;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 変換メソッド<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public Student toEntity() {...}<br>
+}
+                    </div>
+                    
+                    <div class="achievement">
+                        <div class="achievement-title">✅ Bean Validation基礎</div>
+                        <div class="achievement-desc">バリデーションアノテーションの習得</div>
+                    </div>
+                    
+                    <div class="achievement">
+                        <div class="achievement-title">✅ 設計思考の向上</div>
+                        <div class="achievement-desc">責務分離による保守性向上</div>
+                    </div>
+                    
+                    <div class="tech-stack">
+                        <div class="tech-item">@Data</div>
+                        <div class="tech-item">@NotBlank</div>
+                        <div class="tech-item">@Email</div>
+                        <div class="tech-item">toEntity()</div>
+                    </div>
+                </div>
+                
+                <!-- Week 9.2 セクション -->
+                <div class="week-section week-9-2">
+                    <div class="week-title">
+                        🚀 Week 9.2: Thymeleafフォーム構築
+                    </div>
+                    
+                    <div class="achievement">
+                        <div class="achievement-title">🎯 フォームバインディング</div>
+                        <div class="achievement-desc">th:object・th:fieldによる自動連携</div>
+                    </div>
+                    
+                    <div class="code-example">
+&lt;form th:object="${studentData}"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;method="post"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;th:action="@{/students}"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;input type="text"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;th:field="*{name}"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;placeholder="例: 田中太郎"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;input type="email"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;th:field="*{email}"&gt;<br>
+&lt;/form&gt;
+                    </div>
+                    
+                    <div class="achievement">
+                        <div class="achievement-title">🎯 Controller処理</div>
+                        <div class="achievement-desc">GET/POSTによるフォーム処理</div>
+                    </div>
+                    
+                    <div class="achievement">
+                        <div class="achievement-title">🎯 UI/UX設計</div>
+                        <div class="achievement-desc">ユーザビリティ重視のフォーム</div>
+                    </div>
+                    
+                    <div class="tech-stack">
+                        <div class="tech-item">th:object</div>
+                        <div class="tech-item">th:field</div>
+                        <div class="tech-item">@GetMapping</div>
+                        <div class="tech-item">@PostMapping</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flow-indicator">
+                📊 技術統合の実現 📊
+            </div>
+            
+            <!-- 統合セクション -->
+            <div class="integration-section">
+                <div class="integration-title">
+                    🏆 Week 9.1 + Week 9.2 = 実務レベルフォーム開発技術の確立
+                </div>
+                
+                <div class="integration-points">
+                    <div class="integration-point">
+                        <span class="point-number">1</span>
+                        <strong>DTOパターンの実践活用</strong><br>
+                        Week 9.1で設計したStudentDataクラスが実際のフォーム処理で活用される実感
+                    </div>
+                    
+                    <div class="integration-point">
+                        <span class="point-number">2</span>
+                        <strong>自動バインディングの強力さ</strong><br>
+                        th:fieldによる自動的なデータ連携で開発効率が劇的に向上
+                    </div>
+                    
+                    <div class="integration-point">
+                        <span class="point-number">3</span>
+                        <strong>保守性・拡張性の確保</strong><br>
+                        クラス設計とフォーム実装の分離による保守性の高いシステム
+                    </div>
+                    
+                    <div class="integration-point">
+                        <span class="point-number">4</span>
+                        <strong>Week 9.3への準備完了</strong><br>
+                        バリデーション機能実装への技術基盤が完全に確立
+                    </div>
+                </div>
+                
+                <div class="highlight">
+                    <strong>🎯 到達レベル:</strong> エンタープライズ級フォーム開発技術を持つ実務レベルWeb開発者
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
