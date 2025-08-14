@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 8.9 - 基本的な条件分岐実装例</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic UI', sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .before-section, .after-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            border: 2px solid #e9ecef;
+        }
+
+        .before-section {
+            border-left: 5px solid #dc3545;
+        }
+
+        .after-section {
+            border-left: 5px solid #28a745;
+        }
+
+        .section-title {
+            font-size: 1.4em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .before-section .section-title {
+            color: #dc3545;
+        }
+
+        .after-section .section-title {
+            color: #28a745;
+        }
+
+        .screen-mockup {
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            min-height: 250px;
+        }
+
+        .table-container {
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .table-header {
+            background: #e9ecef;
+            padding: 10px;
+            font-weight: 600;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .table-row {
+            padding: 8px 10px;
+            border-bottom: 1px solid #f1f3f4;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .empty-message {
+            color: #6c757d;
+            font-style: italic;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .gpa-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .gpa-excellent {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .gpa-good {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .gpa-average {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .stats-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .improvement-points {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .improvement-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #856404;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .improvement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .improvement-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #f39c12;
+        }
+
+        .improvement-card h4 {
+            color: #d68910;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        .improvement-card p {
+            color: #5d6d7e;
+            font-size: 0.9em;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .improvement-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 基本的な条件分岐実装例</h1>
+            <p>Week 8.8からの改良点と実際の画面表示</p>
+        </div>
+
+        <div class="main-content">
+            <div class="comparison-container">
+                <!-- Before Section -->
+                <div class="before-section">
+                    <div class="section-title">
+                        <div class="step-number">❌</div>
+                        <span>Week 8.8: 基本表示のみ</span>
+                    </div>
+                    
+                    <div class="screen-mockup">
+                        <div class="table-container">
+                            <div class="table-header">学生一覧</div>
+                            <div class="table-row">
+                                <span>田中太郎</span>
+                                <span>85</span>
+                            </div>
+                            <div class="table-row">
+                                <span>佐藤花子</span>
+                                <span>92</span>
+                            </div>
+                            <div class="table-row">
+                                <span>鈴木次郎</span>
+                                <span>78</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="background:#ffe6e6; padding:15px; border-radius:8px; color:#d73527;">
+                        <strong>問題点:</strong><br>
+                        • データが0件でも表が表示される<br>
+                        • 成績評価が分からない<br>
+                        • 統計情報がない<br>
+                        • ユーザビリティが低い
+                    </div>
+                </div>
+
+                <!-- After Section -->
+                <div class="after-section">
+                    <div class="section-title">
+                        <div class="step-number">✅</div>
+                        <span>Week 8.9: 条件分岐活用</span>
+                    </div>
+                    
+                    <div class="screen-mockup">
+                        <div class="table-container">
+                            <div class="table-header">学生一覧 (3名)</div>
+                            <div class="table-row">
+                                <span>田中太郎</span>
+                                <span>85 <span class="gpa-badge gpa-good">良好</span></span>
+                            </div>
+                            <div class="table-row">
+                                <span>佐藤花子</span>
+                                <span>92 <span class="gpa-badge gpa-excellent">優秀</span></span>
+                            </div>
+                            <div class="table-row">
+                                <span>鈴木次郎</span>
+                                <span>78 <span class="gpa-badge gpa-average">普通</span></span>
+                            </div>
+                        </div>
+                        
+                        <div class="stats-section">
+                            📈 <strong>統計情報:</strong> 平均点: 85.0 | 最高点: 92 | 優秀者: 1名
+                        </div>
+                    </div>
+                    
+                    <div style="background:#e8f5e8; padding:15px; border-radius:8px; color:#2d5a2d;">
+                        <strong>改善点:</strong><br>
+                        • データ0件時は専用メッセージ表示<br>
+                        • GPAによる自動評価バッジ<br>
+                        • 統計情報の動的表示<br>
+                        • ユーザーフレンドリーな設計
+                    </div>
+                </div>
+            </div>
+
+            <!-- データ0件の場合の表示例 -->
+            <div style="background:#f8f9fa; border-radius:12px; padding:25px; margin-bottom:30px;">
+                <h3 style="color:#d68910; margin-bottom:15px;">📋 データ0件時の表示例</h3>
+                <div class="screen-mockup" style="margin-bottom:0;">
+                    <div class="table-container">
+                        <div class="table-header">学生一覧 (0名)</div>
+                        <div class="empty-message">
+                            📚 まだ学生データが登録されていません<br>
+                            <strong>「新規登録」</strong>ボタンから学生を追加してください
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 改善ポイント -->
+            <div class="improvement-points">
+                <div class="improvement-title">🎯 Week 8.9での具体的改善ポイント</div>
+                <div class="improvement-grid">
+                    <div class="improvement-card">
+                        <h4>🔍 条件分岐表示</h4>
+                        <p>th:if・th:unlessを使用してデータの有無に応じた表示切り替えを実現</p>
+                    </div>
+                    <div class="improvement-card">
+                        <h4>🎨 動的スタイリング</h4>
+                        <p>th:classappendでGPA値に応じて評価バッジの色を自動変更</p>
+                    </div>
+                    <div class="improvement-card">
+                        <h4>📊 統計情報表示</h4>
+                        <p>データが存在する場合のみ平均点・最高点・優秀者数を表示</p>
+                    </div>
+                    <div class="improvement-card">
+                        <h4>💫 UX向上</h4>
+                        <p>ユーザーに親切なメッセージとアクションガイドの提供</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

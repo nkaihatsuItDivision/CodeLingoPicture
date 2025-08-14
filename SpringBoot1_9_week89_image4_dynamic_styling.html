@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 8.9 - 動的スタイリング実装例</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic UI', sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .demo-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            border: 2px solid #e9ecef;
+        }
+
+        .demo-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #d68910;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9em;
+        }
+
+        /* 学生詳細画面のモックアップ */
+        .student-detail-mockup {
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .student-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .gpa-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            font-weight: 700;
+            color: white;
+        }
+
+        .gpa-excellent {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+
+        .gpa-good {
+            background: linear-gradient(135deg, #17a2b8, #6f42c1);
+        }
+
+        .gpa-average {
+            background: linear-gradient(135deg, #ffc107, #fd7e14);
+        }
+
+        .gpa-poor {
+            background: linear-gradient(135deg, #dc3545, #e83e8c);
+        }
+
+        .student-info h3 {
+            font-size: 1.4em;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+
+        .student-info p {
+            color: #6c757d;
+        }
+
+        .grade-badge {
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-top: 8px;
+            display: inline-block;
+        }
+
+        .grade-1 {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .grade-2 {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .grade-3 {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+
+        .grade-4 {
+            background: #fce4ec;
+            color: #c2185b;
+        }
+
+        .progress-section {
+            margin-top: 20px;
+        }
+
+        .progress-item {
+            margin-bottom: 15px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: #e9ecef;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-excellent {
+            background: linear-gradient(90deg, #28a745, #20c997);
+        }
+
+        .progress-good {
+            background: linear-gradient(90deg, #17a2b8, #6f42c1);
+        }
+
+        .progress-average {
+            background: linear-gradient(90deg, #ffc107, #fd7e14);
+        }
+
+        .progress-poor {
+            background: linear-gradient(90deg, #dc3545, #e83e8c);
+        }
+
+        .evaluation-message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .eval-excellent {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .eval-good {
+            background: #d1ecf1;
+            color: #0c5460;
+            border-left: 4px solid #17a2b8;
+        }
+
+        .eval-average {
+            background: #fff3cd;
+            color: #856404;
+            border-left: 4px solid #ffc107;
+        }
+
+        .eval-poor {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+
+        .code-section {
+            background: #2d3748;
+            color: #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+            margin-top: 15px;
+        }
+
+        .syntax-highlight {
+            color: #81c784;
+        }
+
+        .syntax-keyword {
+            color: #ffb74d;
+        }
+
+        .syntax-string {
+            color: #64b5f6;
+        }
+
+        .syntax-comment {
+            color: #9e9e9e;
+            font-style: italic;
+        }
+
+        .examples-section {
+            background: linear-gradient(135deg, #e8f5e8, #d4edda);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .examples-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #155724;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .pattern-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .pattern-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #28a745;
+        }
+
+        .pattern-title {
+            font-weight: 700;
+            color: #155724;
+            margin-bottom: 10px;
+        }
+
+        .pattern-example {
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .pattern-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .student-header {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎨 動的スタイリング実装例</h1>
+            <p>th:classappendによるデータ値に応じた見た目の自動変化</p>
+        </div>
+
+        <div class="main-content">
+            <div class="demo-grid">
+                <!-- 優秀な学生の表示例 -->
+                <div class="demo-card">
+                    <div class="demo-title">
+                        <div class="step-number">⭐</div>
+                        <span>優秀な学生（GPA: 92）</span>
+                    </div>
+                    
+                    <div class="student-detail-mockup">
+                        <div class="student-header">
+                            <div class="gpa-circle gpa-excellent">92</div>
+                            <div class="student-info">
+                                <h3>佐藤 花子</h3>
+                                <p>コンピューター科学科</p>
+                                <div class="grade-badge grade-2">2年生</div>
+                            </div>
+                        </div>
+                        
+                        <div class="progress-section">
+                            <div class="progress-item">
+                                <div class="progress-label">
+                                    <span>成績評価</span>
+                                    <span>92/100</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill progress-excellent" style="width: 92%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="evaluation-message eval-excellent">
+                            🌟 素晴らしい成績です！この調子で頑張ってください。
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 要努力な学生の表示例 -->
+                <div class="demo-card">
+                    <div class="demo-title">
+                        <div class="step-number">⚠️</div>
+                        <span>要努力な学生（GPA: 58）</span>
+                    </div>
+                    
+                    <div class="student-detail-mockup">
+                        <div class="student-header">
+                            <div class="gpa-circle gpa-poor">58</div>
+                            <div class="student-info">
+                                <h3>山田 次郎</h3>
+                                <p>情報工学科</p>
+                                <div class="grade-badge grade-3">3年生</div>
+                            </div>
+                        </div>
+                        
+                        <div class="progress-section">
+                            <div class="progress-item">
+                                <div class="progress-label">
+                                    <span>成績評価</span>
+                                    <span>58/100</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill progress-poor" style="width: 58%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="evaluation-message eval-poor">
+                            ⚠️ 成績向上のため、追加サポートが必要です。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- th:classappendの実装コード -->
+            <div style="background:#f8f9fa; border-radius:12px; padding:25px; margin-bottom:30px; border-left:5px solid #f39c12;">
+                <h3 style="color:#d68910; margin-bottom:15px;">💻 th:classappend実装コード</h3>
+                
+                <div class="code-section">
+<span class="syntax-comment">&lt;!-- GPAサークルの動的スタイリング --&gt;</span><br>
+&lt;<span class="syntax-keyword">div</span> class=<span class="syntax-string">"gpa-circle"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="syntax-highlight">th:classappend</span>=<span class="syntax-string">"${student.gpa &gt;= 90} ? 'gpa-excellent' : "</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="syntax-string">"${student.gpa &gt;= 80} ? 'gpa-good' : "</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="syntax-string">"${student.gpa &gt;= 70} ? 'gpa-average' : 'gpa-poor'"</span>&gt;<br>
+&nbsp;&nbsp;[[${student.gpa}]]<br>
+&lt;/<span class="syntax-keyword">div</span>&gt;<br>
+<br>
+<span class="syntax-comment">&lt;!-- 学年バッジの動的スタイリング --&gt;</span><br>
+&lt;<span class="syntax-keyword">span</span> class=<span class="syntax-string">"grade-badge"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="syntax-highlight">th:classappend</span>=<span class="syntax-string">"'grade-' + ${student.grade}"</span>&gt;<br>
+&nbsp;&nbsp;[[${student.grade}]]年生<br>
+&lt;/<span class="syntax-keyword">span</span>&gt;<br>
+<br>
+<span class="syntax-comment">&lt;!-- プログレスバーの動的スタイリング --&gt;</span><br>
+&lt;<span class="syntax-keyword">div</span> class=<span class="syntax-string">"progress-fill"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="syntax-highlight">th:classappend</span>=<span class="syntax-string">"${student.gpa &gt;= 90} ? 'progress-excellent' : "</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="syntax-string">"${student.gpa &gt;= 80} ? 'progress-good' : "</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="syntax-string">"${student.gpa &gt;= 70} ? 'progress-average' : 'progress-poor'"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="syntax-highlight">th:style</span>=<span class="syntax-string">"'width: ' + ${student.gpa} + '%'"</span>&gt;<br>
+&lt;/<span class="syntax-keyword">div</span>&gt;
+                </div>
+            </div>
+
+            <!-- 動的スタイリングのパターン例 -->
+            <div class="examples-section">
+                <div class="examples-title">🔧 動的スタイリングのパターン集</div>
+                <div class="pattern-grid">
+                    <div class="pattern-card">
+                        <div class="pattern-title">🎯 条件分岐クラス</div>
+                        <p>データの値に応じてCSSクラスを動的に追加</p>
+                        <div class="pattern-example">
+th:classappend="<br>
+${score &gt;= 90} ? 'excellent' :<br>
+${score &gt;= 70} ? 'good' : 'poor'"
+                        </div>
+                    </div>
+                    
+                    <div class="pattern-card">
+                        <div class="pattern-title">📊 データ連動スタイル</div>
+                        <p>数値データを直接スタイルに反映</p>
+                        <div class="pattern-example">
+th:style="<br>
+'width: ' + ${percentage} + '%;'<br>
++ 'background-color: ' + ${color}"
+                        </div>
+                    </div>
+                    
+                    <div class="pattern-card">
+                        <div class="pattern-title">🏷️ 動的属性追加</div>
+                        <p>データ値をクラス名の一部として使用</p>
+                        <div class="pattern-example">
+th:classappend="<br>
+'status-' + ${student.status}<br>
++ ' grade-' + ${student.grade}"
+                        </div>
+                    </div>
+                    
+                    <div class="pattern-card">
+                        <div class="pattern-title">⚡ パフォーマンス最適化</div>
+                        <p>Elvis演算子でnullセーフな実装</p>
+                        <div class="pattern-example">
+th:classappend="<br>
+${student.gpa ?: 0} &gt;= 80 ?<br>
+'high-performer' : 'standard'"
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

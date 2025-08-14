@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 8.9 - エラーハンドリング表示例</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic UI', sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .importance-banner {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            text-align: center;
+            border-left: 5px solid #f39c12;
+        }
+
+        .importance-title {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .importance-subtitle {
+            color: #5d6d7e;
+            font-size: 1.1em;
+        }
+
+        .message-examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .message-example {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            border: 2px solid #e9ecef;
+        }
+
+        .example-title {
+            font-size: 1.2em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9em;
+        }
+
+        /* アラートスタイル */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-left: 5px solid #28a745;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            border-left: 5px solid #dc3545;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+            border-left: 5px solid #ffc107;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+            border-left: 5px solid #17a2b8;
+        }
+
+        .alert-icon {
+            font-size: 1.2em;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.2em;
+            cursor: pointer;
+            color: inherit;
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
+        }
+
+        .close-btn:hover {
+            opacity: 1;
+        }
+
+        .auto-hide-demo {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auto-hide-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: rgba(0,0,0,0.2);
+            animation: autoHide 5s linear;
+        }
+
+        @keyframes autoHide {
+            from { width: 100%; }
+            to { width: 0%; }
+        }
+
+        .screen-mockup {
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 15px;
+            min-height: 150px;
+        }
+
+        .implementation-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-left: 5px solid #f39c12;
+        }
+
+        .implementation-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #d68910;
+            margin-bottom: 20px;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+
+        .syntax-highlight {
+            color: #81c784;
+        }
+
+        .syntax-keyword {
+            color: #ffb74d;
+        }
+
+        .syntax-string {
+            color: #64b5f6;
+        }
+
+        .syntax-comment {
+            color: #9e9e9e;
+            font-style: italic;
+        }
+
+        .best-practices {
+            background: linear-gradient(135deg, #e8f5e8, #d4edda);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .best-practices-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #155724;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .practices-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .practice-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #28a745;
+        }
+
+        .practice-icon {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .practice-title {
+            font-weight: 700;
+            color: #155724;
+            margin-bottom: 10px;
+        }
+
+        .practice-content {
+            color: #5d6d7e;
+            font-size: 0.9em;
+        }
+
+        .scenarios-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+            border-left: 5px solid #17a2b8;
+        }
+
+        .scenarios-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #0c5460;
+            margin-bottom: 20px;
+        }
+
+        .scenario-item {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #17a2b8;
+        }
+
+        .scenario-situation {
+            font-weight: 700;
+            color: #495057;
+            margin-bottom: 10px;
+        }
+
+        .scenario-message {
+            font-style: italic;
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+
+        .scenario-ux {
+            background: #e8f4fd;
+            padding: 10px;
+            border-radius: 5px;
+            color: #0c5460;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .message-examples-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .practices-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 エラーハンドリング表示例</h1>
+            <p>ユーザーフレンドリーなメッセージ表示の実装</p>
+        </div>
+
+        <div class="main-content">
+            <!-- 重要性バナー -->
+            <div class="importance-banner">
+                <div class="importance-title">💡 なぜエラーハンドリングが重要なのか？</div>
+                <div class="importance-subtitle">適切なメッセージ表示は、ユーザーの迷いを解消し、安心感のあるWebアプリケーションを実現します</div>
+            </div>
+
+            <!-- メッセージタイプ別の例 -->
+            <div class="message-examples-grid">
+                <!-- 成功メッセージ -->
+                <div class="message-example">
+                    <div class="example-title">
+                        <div class="step-number">✅</div>
+                        <span>成功メッセージ</span>
+                    </div>
+                    <div class="screen-mockup">
+                        <div class="alert alert-success">
+                            <span class="alert-icon">✅</span>
+                            <span>学生情報を正常に登録しました！</span>
+                            <button class="close-btn">×</button>
+                        </div>
+                        <div class="alert alert-success">
+                            <span class="alert-icon">🎉</span>
+                            <span>データの更新が完了しました</span>
+                            <button class="close-btn">×</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- エラーメッセージ -->
+                <div class="message-example">
+                    <div class="example-title">
+                        <div class="step-number">❌</div>
+                        <span>エラーメッセージ</span>
+                    </div>
+                    <div class="screen-mockup">
+                        <div class="alert alert-error">
+                            <span class="alert-icon">⚠️</span>
+                            <span>名前は必須項目です。入力してください</span>
+                            <button class="close-btn">×</button>
+                        </div>
+                        <div class="alert alert-error">
+                            <span class="alert-icon">🚫</span>
+                            <span>データベース接続エラーが発生しました</span>
+                            <button class="close-btn">×</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 警告メッセージ -->
+                <div class="message-example">
+                    <div class="example-title">
+                        <div class="step-number">⚠️</div>
+                        <span>警告メッセージ</span>
+                    </div>
+                    <div class="screen-mockup">
+                        <div class="alert alert-warning">
+                            <span class="alert-icon">⚠️</span>
+                            <span>この操作は元に戻せません。本当に削除しますか？</span>
+                            <button class="close-btn">×</button>
+                        </div>
+                        <div class="alert alert-warning">
+                            <span class="alert-icon">💡</span>
+                            <span>点数は0〜100の範囲で入力してください</span>
+                            <button class="close-btn">×</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 情報メッセージ -->
+                <div class="message-example">
+                    <div class="example-title">
+                        <div class="step-number">ℹ️</div>
+                        <span>情報メッセージ</span>
+                    </div>
+                    <div class="screen-mockup">
+                        <div class="alert alert-info">
+                            <span class="alert-icon">ℹ️</span>
+                            <span>検索結果: 15件の学生が見つかりました</span>
+                            <button class="close-btn">×</button>
+                        </div>
+                        <div class="alert alert-info auto-hide-demo">
+                            <span class="alert-icon">⏰</span>
+                            <span>このメッセージは5秒後に自動的に消えます</span>
+                            <div class="auto-hide-bar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thymeleaf実装コード -->
+            <div class="implementation-section">
+                <div class="implementation-title">💻 Thymeleafでの実装コード</div>
+                
+                <h4 style="color:#495057; margin-bottom:10px;">📝 基本的なメッセージ表示</h4>
+                <div class="code-block">
+<span class="syntax-comment">&lt;!-- 成功メッセージの表示 --&gt;</span><br>
+&lt;<span class="syntax-keyword">div</span> <span class="syntax-highlight">th:if</span>=<span class="syntax-string">"${successMessage != null}"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;class=<span class="syntax-string">"alert alert-success"</span>&gt;<br>
+&nbsp;&nbsp;&lt;<span class="syntax-keyword">span</span> class=<span class="syntax-string">"alert-icon"</span>&gt;✅&lt;/<span class="syntax-keyword">span</span>&gt;<br>
+&nbsp;&nbsp;&lt;<span class="syntax-keyword">span</span>&gt;[[${successMessage}]]&lt;/<span class="syntax-keyword">span</span>&gt;<br>
+&nbsp;&nbsp;&lt;<span class="syntax-keyword">button</span> class=<span class="syntax-string">"close-btn"</span> onclick=<span class="syntax-string">"this.parentElement.style.display='none'"</span>&gt;×&lt;/<span class="syntax-keyword">button</span>&gt;<br>
+&lt;/<span class="syntax-keyword">div</span>&gt;<br>
+<br>
+<span class="syntax-comment">&lt;!-- エラーメッセージの表示 --&gt;</span><br>
+&lt;<span class="syntax-keyword">div</span> <span class="syntax-highlight">th:if</span>=<span class="syntax-string">"${errorMessage != null}"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;class=<span class="syntax-string">"alert alert-error"</span>&gt;<br>
+&nbsp;&nbsp;&lt;<span class="syntax-keyword">span</span> class=<span class="syntax-string">"alert-icon"</span>&gt;⚠️&lt;/<span class="syntax-keyword">span</span>&gt;<br>
+&nbsp;&nbsp;&lt;<span class="syntax-keyword">span</span>&gt;[[${errorMessage}]]&lt;/<span class="syntax-keyword">span</span>&gt;<br>
+&nbsp;&nbsp;&lt;<span class="syntax-keyword">button</span> class=<span class="syntax-string">"close-btn"</span> onclick=<span class="syntax-string">"this.parentElement.style.display='none'"</span>&gt;×&lt;/<span class="syntax-keyword">button</span>&gt;<br>
+&lt;/<span class="syntax-keyword">div</span>&gt;
+                </div>
+
+                <h4 style="color:#495057; margin:20px 0 10px 0;">🔄 条件分岐による動的メッセージ</h4>
+                <div class="code-block">
+<span class="syntax-comment">&lt;!-- バリデーションエラーの条件分岐表示 --&gt;</span><br>
+&lt;<span class="syntax-keyword">div</span> <span class="syntax-highlight">th:if</span>=<span class="syntax-string">"${#fields.hasErrors('name')}"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;class=<span class="syntax-string">"alert alert-error"</span>&gt;<br>
+&nbsp;&nbsp;&lt;<span class="syntax-keyword">span</span> class=<span class="syntax-string">"alert-icon"</span>&gt;🚫&lt;/<span class="syntax-keyword">span</span>&gt;<br>
+&nbsp;&nbsp;&lt;<span class="syntax-keyword">span</span> <span class="syntax-highlight">th:errors</span>=<span class="syntax-string">"*{name}"</span>&gt;&lt;/<span class="syntax-keyword">span</span>&gt;<br>
+&lt;/<span class="syntax-keyword">div</span>&gt;<br>
+<br>
+<span class="syntax-comment">&lt;!-- データ件数による動的メッセージ --&gt;</span><br>
+&lt;<span class="syntax-keyword">div</span> <span class="syntax-highlight">th:if</span>=<span class="syntax-string">"${students.size() == 0}"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;class=<span class="syntax-string">"alert alert-info"</span>&gt;<br>
+&nbsp;&nbsp;&lt;<span class="syntax-keyword">span</span> class=<span class="syntax-string">"alert-icon"</span>&gt;ℹ️&lt;/<span class="syntax-keyword">span</span>&gt;<br>
+&nbsp;&nbsp;&lt;<span class="syntax-keyword">span</span>&gt;まだ学生データが登録されていません&lt;/<span class="syntax-keyword">span</span>&gt;<br>
+&lt;/<span class="syntax-keyword">div</span>&gt;<br>
+<br>
+&lt;<span class="syntax-keyword">div</span> <span class="syntax-highlight">th:unless</span>=<span class="syntax-string">"${students.size() == 0}"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;class=<span class="syntax-string">"alert alert-success"</span>&gt;<br>
+&nbsp;&nbsp;&lt;<span class="syntax-keyword">span</span> class=<span class="syntax-string">"alert-icon"</span>&gt;📊&lt;/<span class="syntax-keyword">span</span>&gt;<br>
+&nbsp;&nbsp;&lt;<span class="syntax-keyword">span</span>&gt;[[${students.size()}]]件の学生データが見つかりました&lt;/<span class="syntax-keyword">span</span>&gt;<br>
+&lt;/<span class="syntax-keyword">div</span>&gt;
+                </div>
+            </div>
+
+            <!-- 実用的なシナリオ例 -->
+            <div class="scenarios-section">
+                <div class="scenarios-title">🎬 実用的なシナリオ例</div>
+                
+                <div class="scenario-item">
+                    <div class="scenario-situation">📝 学生登録時</div>
+                    <div class="scenario-message">"佐藤花子さんの情報を正常に登録しました！"</div>
+                    <div class="scenario-ux">🎯 UX効果: ユーザーに成功を明確に伝え、安心感を提供</div>
+                </div>
+
+                <div class="scenario-item">
+                    <div class="scenario-situation">⚠️ バリデーションエラー時</div>
+                    <div class="scenario-message">"名前は必須項目です。入力してください"</div>
+                    <div class="scenario-ux">🎯 UX効果: 具体的なエラー箇所を示し、修正方法を案内</div>
+                </div>
+
+                <div class="scenario-item">
+                    <div class="scenario-situation">🔍 検索結果表示時</div>
+                    <div class="scenario-message">"'田中'で検索した結果、3件の学生が見つかりました"</div>
+                    <div class="scenario-ux">🎯 UX効果: 検索の実行確認と結果の明確な提示</div>
+                </div>
+
+                <div class="scenario-item">
+                    <div class="scenario-situation">🗑️ 削除確認時</div>
+                    <div class="scenario-message">"この操作は元に戻せません。本当に削除しますか？"</div>
+                    <div class="scenario-ux">🎯 UX効果: 重要な操作に対する注意喚起と誤操作防止</div>
+                </div>
+            </div>
+
+            <!-- ベストプラクティス -->
+            <div class="best-practices">
+                <div class="best-practices-title">🏆 エラーハンドリングのベストプラクティス</div>
+                <div class="practices-grid">
+                    <div class="practice-card">
+                        <div class="practice-icon">📝</div>
+                        <div class="practice-title">具体的で親切な文言</div>
+                        <div class="practice-content">「エラー」ではなく「名前を入力してください」など、具体的で行動しやすいメッセージを表示</div>
+                    </div>
+                    <div class="practice-card">
+                        <div class="practice-icon">🎨</div>
+                        <div class="practice-title">視覚的な分かりやすさ</div>
+                        <div class="practice-content">色分け・アイコン・アニメーションを活用して、直感的に理解できるデザインを実現</div>
+                    </div>
+                    <div class="practice-card">
+                        <div class="practice-icon">⏰</div>
+                        <div class="practice-title">適切なタイミング</div>
+                        <div class="practice-content">成功メッセージは自動非表示、エラーメッセージは手動消去で使い分けを実施</div>
+                    </div>
+                    <div class="practice-card">
+                        <div class="practice-icon">🔄</div>
+                        <div class="practice-title">一貫性のある設計</div>
+                        <div class="practice-content">アプリケーション全体で統一されたメッセージ形式・スタイルを維持</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

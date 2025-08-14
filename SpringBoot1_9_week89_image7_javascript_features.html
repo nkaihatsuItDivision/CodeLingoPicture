@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 8.9 - JavaScript機能実装例</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic UI', sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .js-intro-banner {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-left: 5px solid #2196f3;
+        }
+
+        .intro-title {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #1565c0;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .intro-content {
+            color: #424242;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        .intro-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .intro-point {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            color: #1565c0;
+            border: 2px solid #e3f2fd;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            border: 2px solid #e9ecef;
+        }
+
+        .feature-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #d68910;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1em;
+        }
+
+        .demo-area {
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            min-height: 120px;
+        }
+
+        /* 自動非表示デモ */
+        .auto-hide-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 5px solid #28a745;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .countdown-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: #28a745;
+            animation: countdown 3s linear;
+        }
+
+        @keyframes countdown {
+            from { width: 100%; }
+            to { width: 0%; }
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);
+        }
+
+        /* インタラクティブカードデモ */
+        .interactive-card {
+            background: linear-gradient(135deg, #fff, #f8f9fa);
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .interactive-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: #f39c12;
+            box-shadow: 0 8px 25px rgba(243, 156, 18, 0.2);
+        }
+
+        .interactive-card.clicked {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border-color: #f39c12;
+        }
+
+        /* 動的コンテンツ表示 */
+        .content-display {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 10px;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1em;
+            color: #6c757d;
+        }
+
+        .loading-animation {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #f39c12;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* フォームバリデーション */
+        .validation-form {
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #f39c12;
+        }
+
+        .form-input.error {
+            border-color: #dc3545;
+        }
+
+        .form-input.success {
+            border-color: #28a745;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .success-message {
+            color: #28a745;
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .code-section {
+            background: #2d3748;
+            color: #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+            margin-top: 15px;
+        }
+
+        .syntax-highlight {
+            color: #81c784;
+        }
+
+        .syntax-keyword {
+            color: #ffb74d;
+        }
+
+        .syntax-string {
+            color: #64b5f6;
+        }
+
+        .syntax-comment {
+            color: #9e9e9e;
+            font-style: italic;
+        }
+
+        .benefits-section {
+            background: linear-gradient(135deg, #e8f5e8, #d4edda);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .benefits-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #155724;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .benefit-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #28a745;
+        }
+
+        .benefit-icon {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .benefit-title {
+            font-weight: 700;
+            color: #155724;
+            margin-bottom: 10px;
+        }
+
+        .benefit-content {
+            color: #5d6d7e;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .intro-points {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚡ JavaScript機能実装例</h1>
+            <p>最小限のJavaScriptでユーザビリティを劇的に向上</p>
+        </div>
+
+        <div class="main-content">
+            <!-- JavaScript紹介バナー -->
+            <div class="js-intro-banner">
+                <div class="intro-title">
+                    <span>🔍</span>
+                    <span>JavaScriptとは何か？</span>
+                </div>
+                <div class="intro-content">
+                    JavaScriptは、Webページに「動き」と「対話性」を追加するプログラミング言語です。<br>
+                    Week 8.9では、ユーザビリティ向上のための基本的な機能を学習します。
+                </div>
+                <div class="intro-points">
+                    <div class="intro-point">💫 動的な画面変化</div>
+                    <div class="intro-point">🎯 ユーザー操作への反応</div>
+                    <div class="intro-point">✨ リアルタイムフィードバック</div>
+                    <div class="intro-point">🚀 滑らかなアニメーション</div>
+                </div>
+            </div>
+
+            <!-- JavaScript機能デモ -->
+            <div class="features-grid">
+                <!-- 自動非表示メッセージ -->
+                <div class="feature-card">
+                    <div class="feature-title">
+                        <div class="step-number">⏰</div>
+                        <span>自動非表示メッセージ</span>
+                    </div>
+                    <div class="demo-area">
+                        <div id="autoHideDemo" class="auto-hide-message" style="display: none;">
+                            <span>✅</span>
+                            <span>学生情報を保存しました！</span>
+                            <div class="countdown-bar"></div>
+                        </div>
+                        <button class="demo-button" onclick="showAutoHideMessage()">
+                            メッセージ表示デモ
+                        </button>
+                    </div>
+                    <div class="code-section">
+<span class="syntax-comment">// 3秒後に自動でメッセージを非表示</span><br>
+<span class="syntax-keyword">function</span> <span class="syntax-highlight">showAutoHideMessage</span>() {<br>
+&nbsp;&nbsp;<span class="syntax-keyword">const</span> message = document.<span class="syntax-highlight">getElementById</span>(<span class="syntax-string">'autoHideDemo'</span>);<br>
+&nbsp;&nbsp;message.style.<span class="syntax-highlight">display</span> = <span class="syntax-string">'flex'</span>;<br>
+&nbsp;&nbsp;<span class="syntax-keyword">setTimeout</span>(() =&gt; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;message.style.<span class="syntax-highlight">display</span> = <span class="syntax-string">'none'</span>;<br>
+&nbsp;&nbsp;}, <span class="syntax-string">3000</span>);<br>
+}
+                    </div>
+                </div>
+
+                <!-- インタラクティブカード -->
+                <div class="feature-card">
+                    <div class="feature-title">
+                        <div class="step-number">🎯</div>
+                        <span>クリック反応効果</span>
+                    </div>
+                    <div class="demo-area">
+                        <div class="interactive-card" onclick="toggleCard(this)">
+                            <h4>田中太郎</h4>
+                            <p>クリックして詳細表示</p>
+                        </div>
+                        <div class="interactive-card" onclick="toggleCard(this)">
+                            <h4>佐藤花子</h4>
+                            <p>クリックして詳細表示</p>
+                        </div>
+                    </div>
+                    <div class="code-section">
+<span class="syntax-comment">// クリックで見た目を変更</span><br>
+<span class="syntax-keyword">function</span> <span class="syntax-highlight">toggleCard</span>(element) {<br>
+&nbsp;&nbsp;element.<span class="syntax-highlight">classList</span>.toggle(<span class="syntax-string">'clicked'</span>);<br>
+&nbsp;&nbsp;<span class="syntax-keyword">if</span> (element.classList.contains(<span class="syntax-string">'clicked'</span>)) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;element.innerHTML = <span class="syntax-string">'&lt;h4&gt;詳細情報&lt;/h4&gt;&lt;p&gt;GPA: 85点&lt;/p&gt;'</span>;<br>
+&nbsp;&nbsp;}<br>
+}
+                    </div>
+                </div>
+
+                <!-- 動的コンテンツ読み込み -->
+                <div class="feature-card">
+                    <div class="feature-title">
+                        <div class="step-number">📊</div>
+                        <span>動的データ表示</span>
+                    </div>
+                    <div class="demo-area">
+                        <div id="contentDisplay" class="content-display">
+                            ボタンを押してデータを読み込んでください
+                        </div>
+                        <button class="demo-button" onclick="loadStudentData()">
+                            学生データ読み込み
+                        </button>
+                    </div>
+                    <div class="code-section">
+<span class="syntax-comment">// 動的にコンテンツを表示</span><br>
+<span class="syntax-keyword">function</span> <span class="syntax-highlight">loadStudentData</span>() {<br>
+&nbsp;&nbsp;<span class="syntax-keyword">const</span> display = document.<span class="syntax-highlight">getElementById</span>(<span class="syntax-string">'contentDisplay'</span>);<br>
+&nbsp;&nbsp;display.innerHTML = <span class="syntax-string">'&lt;div class="loading-animation"&gt;&lt;/div&gt; 読み込み中...'</span>;<br>
+&nbsp;&nbsp;<span class="syntax-keyword">setTimeout</span>(() =&gt; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;display.innerHTML = <span class="syntax-string">'📊 学生数: 25名&lt;br&gt;平均GPA: 82.4'</span>;<br>
+&nbsp;&nbsp;}, <span class="syntax-string">1500</span>);<br>
+}
+                    </div>
+                </div>
+
+                <!-- リアルタイムバリデーション -->
+                <div class="feature-card">
+                    <div class="feature-title">
+                        <div class="step-number">✅</div>
+                        <span>リアルタイム入力チェック</span>
+                    </div>
+                    <div class="demo-area">
+                        <div class="validation-form">
+                            <div class="form-group">
+                                <label class="form-label">学生名</label>
+                                <input type="text" class="form-input" id="nameInput" 
+                                       placeholder="名前を入力してください" 
+                                       oninput="validateName(this)">
+                                <div class="error-message" id="nameError">名前は必須項目です</div>
+                                <div class="success-message" id="nameSuccess">✅ 正しい形式です</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="code-section">
+<span class="syntax-comment">// リアルタイムでバリデーション実行</span><br>
+<span class="syntax-keyword">function</span> <span class="syntax-highlight">validateName</span>(input) {<br>
+&nbsp;&nbsp;<span class="syntax-keyword">const</span> value = input.value.trim();<br>
+&nbsp;&nbsp;<span class="syntax-keyword">if</span> (value.length &lt; <span class="syntax-string">2</span>) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;input.<span class="syntax-highlight">className</span> = <span class="syntax-string">'form-input error'</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;document.<span class="syntax-highlight">getElementById</span>(<span class="syntax-string">'nameError'</span>).style.<span class="syntax-highlight">display</span> = <span class="syntax-string">'block'</span>;<br>
+&nbsp;&nbsp;} <span class="syntax-keyword">else</span> {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;input.<span class="syntax-highlight">className</span> = <span class="syntax-string">'form-input success'</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;document.<span class="syntax-highlight">getElementById</span>(<span class="syntax-string">'nameSuccess'</span>).style.<span class="syntax-highlight">display</span> = <span class="syntax-string">'block'</span>;<br>
+&nbsp;&nbsp;}<br>
+}
+                    </div>
+                </div>
+            </div>
+
+            <!-- JavaScript活用のメリット -->
+            <div class="benefits-section">
+                <div class="benefits-title">🚀 JavaScript活用によるユーザビリティ向上効果</div>
+                <div class="benefits-grid">
+                    <div class="benefit-card">
+                        <div class="benefit-icon">⚡</div>
+                        <div class="benefit-title">即座のフィードバック</div>
+                        <div class="benefit-content">ページ遷移なしでユーザーの操作に即座に反応し、快適な操作感を提供</div>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon">🎯</div>
+                        <div class="benefit-title">エラー予防</div>
+                        <div class="benefit-content">リアルタイムバリデーションでユーザーの入力ミスを事前に防止</div>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon">💫</div>
+                        <div class="benefit-title">視覚的な魅力</div>
+                        <div class="benefit-content">アニメーションや効果でプロ品質のWebアプリケーションを実現</div>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon">🔄</div>
+                        <div class="benefit-title">動的な更新</div>
+                        <div class="benefit-content">ページ全体を再読み込みせずに必要な部分のみを更新して高速化</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 自動非表示メッセージ
+        function showAutoHideMessage() {
+            const message = document.getElementById('autoHideDemo');
+            message.style.display = 'flex';
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 3000);
+        }
+
+        // インタラクティブカード
+        function toggleCard(element) {
+            element.classList.toggle('clicked');
+            if (element.classList.contains('clicked')) {
+                const name = element.querySelector('h4').textContent;
+                element.innerHTML = `<h4>${name}</h4><p>GPA: ${Math.floor(Math.random() * 30) + 70}点</p><p>学年: ${Math.floor(Math.random() * 4) + 1}年生</p>`;
+            } else {
+                element.innerHTML = '<h4>' + name + '</h4><p>クリックして詳細表示</p>';
+            }
+        }
+
+        // 動的データ読み込み
+        function loadStudentData() {
+            const display = document.getElementById('contentDisplay');
+            display.innerHTML = '<div class="loading-animation"></div> データ読み込み中...';
+            setTimeout(() => {
+                const studentCount = Math.floor(Math.random() * 50) + 10;
+                const avgGPA = (Math.random() * 30 + 60).toFixed(1);
+                display.innerHTML = `📊 学生数: ${studentCount}名<br>📈 平均GPA: ${avgGPA}点<br>⭐ 優秀者: ${Math.floor(studentCount * 0.2)}名`;
+            }, 1500);
+        }
+
+        // リアルタイムバリデーション
+        function validateName(input) {
+            const value = input.value.trim();
+            const errorMsg = document.getElementById('nameError');
+            const successMsg = document.getElementById('nameSuccess');
+            
+            // 前回のメッセージを非表示
+            errorMsg.style.display = 'none';
+            successMsg.style.display = 'none';
+            
+            if (value.length < 2) {
+                input.className = 'form-input error';
+                errorMsg.style.display = 'block';
+            } else {
+                input.className = 'form-input success';
+                successMsg.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
