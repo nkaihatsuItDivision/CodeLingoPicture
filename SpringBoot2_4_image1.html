@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 9.3からWeek 9.4への技術発展図</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #2c3e50;
+            text-align: left;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+        
+        .development-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .week-section {
+            flex: 1;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: left;
+        }
+        
+        .week-9-3 {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            color: white;
+        }
+        
+        .week-9-4 {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            color: white;
+        }
+        
+        .week-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .achievement-list {
+            margin-bottom: 20px;
+        }
+        
+        .achievement-item {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+            line-height: 1.4;
+        }
+        
+        .achievement-item::before {
+            content: "✅";
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        
+        .development-arrow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 0;
+        }
+        
+        .arrow-text {
+            background: #34495e;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .arrow-icon {
+            font-size: 36px;
+            color: #e74c3c;
+            margin: 5px 0;
+        }
+        
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            margin-top: 15px;
+            overflow-x: auto;
+            text-align: left;
+        }
+        
+        .highlight {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        
+        .comparison-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #ecf0f1;
+            border-radius: 12px;
+        }
+        
+        .comparison-title {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        .comparison-content {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .before-after {
+            flex: 1;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: left;
+        }
+        
+        .before {
+            background: #95a5a6;
+            color: white;
+        }
+        
+        .after {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            color: white;
+        }
+        
+        .label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Week 9.3からWeek 9.4への技術発展</div>
+        
+        <div class="development-flow">
+            <div class="week-section week-9-3">
+                <div class="week-title">Week 9.3 完了<br>Bean Validation導入</div>
+                <div class="achievement-list">
+                    <div class="achievement-item">@Valid・BindingResultによる自動バリデーション</div>
+                    <div class="achievement-item">th:errorsによる親切なエラー表示</div>
+                    <div class="achievement-item">#fields.hasErrors()による動的表示制御</div>
+                    <div class="achievement-item">エラーサマリー実装</div>
+                </div>
+                
+                <div class="code-example">
+&lt;input type="text"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;th:field="*{name}"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;class="form-control"&gt;<br>
+<br>
+&lt;div class="invalid-feedback"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;th:if="${#fields.hasErrors('name')}"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;th:errors="*{name}"&gt;&lt;/div&gt;
+                </div>
+            </div>
+            
+            <div class="development-arrow">
+                <div class="arrow-text">技術発展</div>
+                <div class="arrow-icon">➤</div>
+                <div style="font-size: 12px; color: #7f8c8d; text-align: center;">UX改善へ</div>
+            </div>
+            
+            <div class="week-section week-9-4">
+                <div class="week-title">Week 9.4 目標<br>エラー処理・UX改善</div>
+                <div class="achievement-list">
+                    <div class="achievement-item">条件分岐による親切な案内</div>
+                    <div class="achievement-item">フォーム値保持技術</div>
+                    <div class="achievement-item">ユーザビリティ向上技術</div>
+                    <div class="achievement-item">アクセシビリティ配慮</div>
+                </div>
+                
+                <div class="code-example">
+&lt;div th:if="${#fields.hasErrors('email')}"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;class="alert alert-info mt-2"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;i class="fas fa-info-circle"&gt;&lt;/i&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;strong&gt;メールアドレスについて&lt;/strong&gt;&lt;br&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;正しい形式: 例）tanaka@example.com&lt;br&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;よくある間違い: @マークの忘れ<br>
+&lt;/div&gt;
+                </div>
+            </div>
+        </div>
+        
+        <div class="comparison-section">
+            <div class="comparison-title">Week 9.4での発展ポイント</div>
+            <div class="comparison-content">
+                <div class="before-after before">
+                    <div class="label">❌ 従来（Week 9.3まで）</div>
+                    <div>• エラーメッセージを表示するだけ</div>
+                    <div>• 「メールアドレスの形式が正しくありません」</div>
+                    <div>• ユーザーは何が間違っているか分からない</div>
+                    <div>• エラー時の案内が不十分</div>
+                </div>
+                
+                <div class="before-after after">
+                    <div class="label">✅ Week 9.4（UX改善後）</div>
+                    <div>• エラー状況に応じた親切な案内とサポート</div>
+                    <div>• 「正しい形式: tanaka@example.com」</div>
+                    <div>• 「よくある間違い: @マークの忘れ」</div>
+                    <div>• ユーザーが迷わず正しい入力ができる</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

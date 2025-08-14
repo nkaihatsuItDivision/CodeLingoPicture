@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 9.4 - 条件分岐表示技術の仕組み図</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(230, 126, 34, 0.3);
+        }
+        .week-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 0;
+        }
+        .subtitle {
+            font-size: 16px;
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+        }
+        .flow-diagram {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border-left: 5px solid #e67e22;
+        }
+        .flow-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #e67e22;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .flow-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .flow-step {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            flex: 1;
+            min-width: 180px;
+            border: 2px solid #e67e22;
+        }
+        .step-number {
+            background: #e67e22;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px auto;
+            font-weight: bold;
+        }
+        .step-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #e67e22;
+        }
+        .step-content {
+            font-size: 14px;
+            color: #555;
+        }
+        .flow-arrow {
+            font-size: 24px;
+            color: #e67e22;
+        }
+        .code-examples {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        .code-section {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+        }
+        .code-header {
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            margin: 15px;
+            overflow-x: auto;
+            text-align: left;
+        }
+        .condition-types {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+        .types-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #e67e22;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .types-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .type-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #e67e22;
+        }
+        .type-title {
+            font-weight: bold;
+            color: #e67e22;
+            margin-bottom: 10px;
+        }
+        .benefits {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+        }
+        .benefits-title {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        .benefit-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="week-badge">Week 9.4：エラー処理・UX改善</div>
+            <h1 class="title">条件分岐による親切な案内技術</h1>
+            <p class="subtitle">Thymeleaf条件分岐でエラー状況に応じた表示制御を実現</p>
+        </div>
+
+        <div class="flow-diagram">
+            <div class="flow-title">🔄 条件分岐表示の動作フロー</div>
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-title">バリデーション実行</div>
+                    <div class="step-content">Bean Validationによる<br>入力チェック実施</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-title">エラー状況判定</div>
+                    <div class="step-content">th:ifによる<br>条件判定実行</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-title">適切な表示選択</div>
+                    <div class="step-content">状況に応じた<br>案内メッセージ表示</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-title">ユーザビリティ向上</div>
+                    <div class="step-content">親切で分かりやすい<br>ユーザー体験実現</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="code-examples">
+            <div class="code-section">
+                <div class="code-header">📝 エラー時の親切な案内</div>
+                <div class="code-example">
+&lt;!-- エラー種別に応じた表示制御 --&gt;<br>
+&lt;div th:if="${#fields.hasErrors('email')}"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;class="alert alert-info"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;i class="fas fa-info-circle"&gt;&lt;/i&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;strong&gt;メールアドレスについて&lt;/strong&gt;&lt;br&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;正しい形式: 例）tanaka@example.com&lt;br&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;よくある間違い: @マークの忘れ、<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ドメイン名の誤り<br>
+&lt;/div&gt;
+                </div>
+            </div>
+            
+            <div class="code-section">
+                <div class="code-header">✅ 成功時のフィードバック</div>
+                <div class="code-example">
+&lt;!-- 成功時の視覚的フィードバック --&gt;<br>
+&lt;div th:if="${!#fields.hasErrors('email') and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;!#strings.isEmpty(studentData.email)}"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;class="alert alert-success alert-sm"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;i class="fas fa-check-circle"&gt;&lt;/i&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;メールアドレスの形式が正しいです<br>
+&lt;/div&gt;
+                </div>
+            </div>
+        </div>
+
+        <div class="condition-types">
+            <div class="types-title">🎯 実装できる条件分岐の種類</div>
+            <div class="types-grid">
+                <div class="type-card">
+                    <div class="type-title">エラー有無による分岐</div>
+                    <div>${#fields.hasErrors('fieldName')}</div>
+                    <div style="font-size: 12px; color: #666; margin-top: 5px;">特定フィールドのエラー状況で表示を切り替え</div>
+                </div>
+                <div class="type-card">
+                    <div class="type-title">値の存在による分岐</div>
+                    <div>${!#strings.isEmpty(value)}</div>
+                    <div style="font-size: 12px; color: #666; margin-top: 5px;">入力値が存在する場合の表示制御</div>
+                </div>
+                <div class="type-card">
+                    <div class="type-title">複合条件による分岐</div>
+                    <div>${condition1 and condition2}</div>
+                    <div style="font-size: 12px; color: #666; margin-top: 5px;">複数条件を組み合わせた高度な制御</div>
+                </div>
+                <div class="type-card">
+                    <div class="type-title">値の範囲による分岐</div>
+                    <div>${value >= min and value <= max}</div>
+                    <div style="font-size: 12px; color: #666; margin-top: 5px;">数値範囲に基づく表示切り替え</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="benefits">
+            <div class="benefits-title">🚀 条件分岐表示技術の効果</div>
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <strong>ユーザビリティ向上</strong><br>
+                    状況に応じた適切な案内<br>
+                    迷わない操作を実現
+                </div>
+                <div class="benefit-item">
+                    <strong>エラー解決の促進</strong><br>
+                    具体的な修正方法提示<br>
+                    問い合わせ削減効果
+                </div>
+                <div class="benefit-item">
+                    <strong>モチベーション維持</strong><br>
+                    成功フィードバック提供<br>
+                    継続利用の促進
+                </div>
+                <div class="benefit-item">
+                    <strong>プロフェッショナル品質</strong><br>
+                    エンタープライズレベル<br>
+                    実務で使える技術習得
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

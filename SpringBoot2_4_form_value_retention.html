@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 9.4 - フォーム値保持技術の概念図</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(230, 126, 34, 0.3);
+        }
+        .week-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 0;
+        }
+        .subtitle {
+            font-size: 16px;
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+        }
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        .comparison-card {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            padding: 20px;
+            color: white;
+            text-align: center;
+        }
+        .before-header {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+        .after-header {
+            background: linear-gradient(135deg, #27ae60, #229954);
+        }
+        .header-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .header-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .card-content {
+            padding: 25px;
+            background: white;
+        }
+        .form-simulation {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        .form-field {
+            margin-bottom: 15px;
+        }
+        .field-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .field-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .empty-input {
+            background: #ffebee;
+            border-color: #f44336;
+            color: #999;
+        }
+        .retained-input {
+            background: #e8f5e8;
+            border-color: #4caf50;
+        }
+        .error-message {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        .user-feeling {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-style: italic;
+        }
+        .sad-feeling {
+            background: #ffebee;
+            color: #c62828;
+        }
+        .happy-feeling {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+        .technical-explanation {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border-left: 5px solid #e67e22;
+        }
+        .tech-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #e67e22;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .code-section {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .code-header {
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            margin: 15px;
+            overflow-x: auto;
+            text-align: left;
+        }
+        .mechanism {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .mechanism-step {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            flex: 1;
+            min-width: 150px;
+            border: 2px solid #e67e22;
+        }
+        .step-icon {
+            font-size: 24px;
+            color: #e67e22;
+            margin-bottom: 10px;
+        }
+        .step-text {
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .mechanism-arrow {
+            font-size: 24px;
+            color: #e67e22;
+        }
+        .benefits-section {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+        }
+        .benefits-title {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        .benefit-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="week-badge">Week 9.4：エラー処理・UX改善</div>
+            <h1 class="title">フォーム値保持技術</h1>
+            <p class="subtitle">th:fieldによる自動値保持でユーザー体験を劇的に改善</p>
+        </div>
+
+        <div class="comparison">
+            <div class="comparison-card">
+                <div class="card-header before-header">
+                    <div class="header-icon">❌</div>
+                    <div class="header-title">改善前：値が消える</div>
+                </div>
+                <div class="card-content">
+                    <div class="form-simulation">
+                        <div class="form-field">
+                            <label class="field-label">氏名</label>
+                            <input type="text" class="field-input empty-input" value="" placeholder="入力内容が消えてしまった...">
+                        </div>
+                        <div class="form-field">
+                            <label class="field-label">メールアドレス</label>
+                            <input type="text" class="field-input empty-input" value="" placeholder="また最初から入力...">
+                            <div class="error-message">メールアドレスの形式が正しくありません</div>
+                        </div>
+                        <div class="form-field">
+                            <label class="field-label">年齢</label>
+                            <input type="text" class="field-input empty-input" value="" placeholder="全部やり直し...">
+                        </div>
+                    </div>
+                    <div class="user-feeling sad-feeling">
+                        😢 また最初から入力するの？<br>
+                        何度も同じことを繰り返すのは面倒...
+                    </div>
+                </div>
+            </div>
+
+            <div class="comparison-card">
+                <div class="card-header after-header">
+                    <div class="header-icon">✅</div>
+                    <div class="header-title">改善後：値が保持される</div>
+                </div>
+                <div class="card-content">
+                    <div class="form-simulation">
+                        <div class="form-field">
+                            <label class="field-label">氏名</label>
+                            <input type="text" class="field-input retained-input" value="田中太郎" readonly>
+                        </div>
+                        <div class="form-field">
+                            <label class="field-label">メールアドレス</label>
+                            <input type="text" class="field-input retained-input" value="tanaka-example.com" readonly>
+                            <div class="error-message">メールアドレスの形式が正しくありません</div>
+                        </div>
+                        <div class="form-field">
+                            <label class="field-label">年齢</label>
+                            <input type="text" class="field-input retained-input" value="25" readonly>
+                        </div>
+                    </div>
+                    <div class="user-feeling happy-feeling">
+                        😊 入力した内容が残ってる！<br>
+                        間違った部分だけ修正すればOK！
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="technical-explanation">
+            <div class="tech-title">🔧 th:field による自動値保持の仕組み</div>
+            
+            <div class="code-section">
+                <div class="code-header">📝 th:field実装例</div>
+                <div class="code-example">
+&lt;!-- Thymeleafによる自動値保持 --&gt;<br>
+&lt;input type="text"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;th:field="*{name}"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;th:classappend="${#fields.hasErrors('name')}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;? 'is-invalid' : ''"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;placeholder="例: 田中太郎"&gt;
+                </div>
+            </div>
+
+            <div class="mechanism">
+                <div class="mechanism-step">
+                    <div class="step-icon">📝</div>
+                    <div class="step-text">ユーザーが<br>フォーム入力</div>
+                </div>
+                <div class="mechanism-arrow">→</div>
+                <div class="mechanism-step">
+                    <div class="step-icon">❌</div>
+                    <div class="step-text">バリデーション<br>エラー発生</div>
+                </div>
+                <div class="mechanism-arrow">→</div>
+                <div class="mechanism-step">
+                    <div class="step-icon">💾</div>
+                    <div class="step-text">th:fieldが<br>値を自動保持</div>
+                </div>
+                <div class="mechanism-arrow">→</div>
+                <div class="mechanism-step">
+                    <div class="step-icon">🔄</div>
+                    <div class="step-text">再表示時に<br>値が復元</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="benefits-section">
+            <div class="benefits-title">🚀 フォーム値保持技術の効果</div>
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <strong>ユーザーストレス軽減</strong><br>
+                    再入力の手間を削除<br>
+                    快適な操作体験を実現
+                </div>
+                <div class="benefit-item">
+                    <strong>作業効率向上</strong><br>
+                    間違った部分のみ修正<br>
+                    時間とコストを削減
+                </div>
+                <div class="benefit-item">
+                    <strong>離脱率の改善</strong><br>
+                    フォーム放棄を防止<br>
+                    コンバージョン率向上
+                </div>
+                <div class="benefit-item">
+                    <strong>システムの信頼性</strong><br>
+                    データが失われない安心感<br>
+                    プロフェッショナル品質
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

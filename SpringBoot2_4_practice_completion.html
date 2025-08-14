@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 9.4 - 実践演習完成画面イメージ</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(230, 126, 34, 0.3);
+        }
+        .week-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 0;
+        }
+        .subtitle {
+            font-size: 16px;
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+        }
+        .steps-overview {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border-left: 5px solid #e67e22;
+        }
+        .steps-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #e67e22;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .steps-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .step-box {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            flex: 1;
+            min-width: 180px;
+            border: 2px solid #e67e22;
+        }
+        .step-number {
+            background: #e67e22;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px auto;
+            font-weight: bold;
+        }
+        .step-title {
+            font-weight: bold;
+            color: #e67e22;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        .step-detail {
+            font-size: 12px;
+            color: #555;
+        }
+        .step-arrow {
+            font-size: 20px;
+            color: #e67e22;
+        }
+        .final-result {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .result-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .completed-screen {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            margin-bottom: 30px;
+        }
+        .screen-header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .browser-controls {
+            display: flex;
+            gap: 8px;
+        }
+        .control-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .red { background: #ff5f56; }
+        .yellow { background: #ffbd2e; }
+        .green { background: #27ca3f; }
+        .address-bar {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 14px;
+        }
+        .screen-content {
+            padding: 30px;
+            background: #f8f9fa;
+            min-height: 600px;
+        }
+        .app-header {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        .app-title {
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .completion-badge {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: inline-block;
+        }
+        .demo-form {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .form-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .form-title {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .progress-indicator {
+            background: #ecf0f1;
+            border-radius: 10px;
+            height: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            height: 100%;
+            width: 100%;
+            border-radius: 10px;
+        }
+        .progress-text {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        .form-field {
+            margin-bottom: 20px;
+        }
+        .field-label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: block;
+            color: #2c3e50;
+        }
+        .required {
+            color: #e74c3c;
+        }
+        .field-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #27ae60;
+            border-radius: 8px;
+            font-size: 14px;
+            background: #eafaf1;
+            box-sizing: border-box;
+        }
+        .success-message {
+            background: #d5f4e6;
+            color: #27ae60;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+        }
+        .message-icon {
+            margin-right: 8px;
+        }
+        .accessibility-indicators {
+            background: #e8f4f8;
+            border: 2px dashed #3498db;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        .accessibility-title {
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .accessibility-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            font-size: 12px;
+        }
+        .feature-item {
+            display: flex;
+            align-items: center;
+            color: #2980b9;
+        }
+        .feature-icon {
+            margin-right: 8px;
+        }
+        .submit-section {
+            text-align: center;
+            margin-top: 25px;
+        }
+        .submit-btn {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(230, 126, 34, 0.3);
+        }
+        .completion-summary {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+        .summary-title {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        .achievement-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+        }
+        .achievement-icon {
+            font-size: 24px;
+            margin-right: 15px;
+        }
+        .achievement-text {
+            flex: 1;
+        }
+        .achievement-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .achievement-detail {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+        .next-step {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .next-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .next-content {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="week-badge">Week 9.4：エラー処理・UX改善</div>
+            <h1 class="title">実践演習：UX改善機能付きフォームの実装</h1>
+            <p class="subtitle">5ステップ実装で完成する最終成果物イメージ</p>
+        </div>
+
+        <div class="steps-overview">
+            <div class="steps-title">🛠️ 実践演習 5ステップ実装フロー</div>
+            <div class="steps-flow">
+                <div class="step-box">
+                    <div class="step-number">1</div>
+                    <div class="step-title">条件分岐表示</div>
+                    <div class="step-detail">th:if でエラー時の<br>親切な案内を実装</div>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step-box">
+                    <div class="step-number">2</div>
+                    <div class="step-title">フォーム値保持</div>
+                    <div class="step-detail">th:field による<br>自動値保持を設定</div>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step-box">
+                    <div class="step-number">3</div>
+                    <div class="step-title">視覚的フィードバック</div>
+                    <div class="step-detail">成功・エラー状態の<br>色分け表示を実装</div>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step-box">
+                    <div class="step-number">4</div>
+                    <div class="step-title">アクセシビリティ</div>
+                    <div class="step-detail">ARIA属性と<br>キーボード対応を追加</div>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step-box">
+                    <div class="step-number">5</div>
+                    <div class="step-title">統合テスト</div>
+                    <div class="step-detail">全機能の動作確認と<br>最終調整</div>
+                </div>
+            </div>
+            <div class="final-result">
+                <div class="result-title">🎯 完成目標：プロフェッショナルレベルのUX改善フォーム</div>
+                <div>エンタープライズ開発で求められる品質のユーザビリティ向上技術を完全習得</div>
+            </div>
+        </div>
+
+        <div class="completed-screen">
+            <div class="screen-header">
+                <div class="browser-controls">
+                    <div class="control-dot red"></div>
+                    <div class="control-dot yellow"></div>
+                    <div class="control-dot green"></div>
+                </div>
+                <div class="address-bar">localhost:8080/students/new</div>
+                <div></div>
+            </div>
+            <div class="screen-content">
+                <div class="app-header">
+                    <h1 class="app-title">学生管理システム</h1>
+                    <div class="completion-badge">Week 9.4 UX改善技術 完全実装版</div>
+                </div>
+                
+                <div class="demo-form">
+                    <div class="form-header">
+                        <h2 class="form-title">新規学生登録</h2>
+                        <div class="progress-indicator">
+                            <div class="progress-bar"></div>
+                        </div>
+                        <div class="progress-text">✅ 入力完了 - 登録可能状態</div>
+                    </div>
+
+                    <div class="form-field">
+                        <label class="field-label">氏名 <span class="required">*</span></label>
+                        <input type="text" class="field-input" value="田中太郎" readonly>
+                        <div class="success-message">
+                            <span class="message-icon">✅</span>
+                            正しく入力されています
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label class="field-label">メールアドレス <span class="required">*</span></label>
+                        <input type="email" class="field-input" value="tanaka@example.com" readonly>
+                        <div class="success-message">
+                            <span class="message-icon">✅</span>
+                            メールアドレスの形式が正しいです
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label class="field-label">年齢</label>
+                        <input type="number" class="field-input" value="25" readonly>
+                        <div class="success-message">
+                            <span class="message-icon">✅</span>
+                            適切な年齢が入力されています
+                        </div>
+                    </div>
+
+                    <div class="accessibility-indicators">
+                        <div class="accessibility-title">🌍 アクセシビリティ機能 ON</div>
+                        <div class="accessibility-features">
+                            <div class="feature-item">
+                                <span class="feature-icon">🔊</span>
+                                スクリーンリーダー対応
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">⌨️</span>
+                                キーボードナビゲーション
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">🎨</span>
+                                高コントラスト表示
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">📱</span>
+                                レスポンシブ対応
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="submit-section">
+                        <button class="submit-btn">✨ 登録完了 ✨</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="completion-summary">
+            <div class="summary-title">🏆 Week 9.4 実践演習で達成した技術要素</div>
+            <div class="achievement-grid">
+                <div class="achievement-item">
+                    <div class="achievement-icon">🔄</div>
+                    <div class="achievement-text">
+                        <div class="achievement-title">条件分岐表示制御</div>
+                        <div class="achievement-detail">th:if による状況に応じた親切な案内システム</div>
+                    </div>
+                </div>
+                <div class="achievement-item">
+                    <div class="achievement-icon">💾</div>
+                    <div class="achievement-text">
+                        <div class="achievement-title">フォーム値自動保持</div>
+                        <div class="achievement-detail">th:field によるエラー時データ保持機能</div>
+                    </div>
+                </div>
+                <div class="achievement-item">
+                    <div class="achievement-icon">🎨</div>
+                    <div class="achievement-text">
+                        <div class="achievement-title">視覚的フィードバック</div>
+                        <div class="achievement-detail">色分け・アイコンによる直感的な状態表示</div>
+                    </div>
+                </div>
+                <div class="achievement-item">
+                    <div class="achievement-icon">🌍</div>
+                    <div class="achievement-text">
+                        <div class="achievement-title">アクセシビリティ対応</div>
+                        <div class="achievement-detail">ARIA属性・キーボード操作対応の実装</div>
+                    </div>
+                </div>
+                <div class="achievement-item">
+                    <div class="achievement-icon">⚡</div>
+                    <div class="achievement-text">
+                        <div class="achievement-title">ユーザビリティ向上</div>
+                        <div class="achievement-detail">プログレッシブエンハンスメント技術</div>
+                    </div>
+                </div>
+                <div class="achievement-item">
+                    <div class="achievement-icon">🏢</div>
+                    <div class="achievement-text">
+                        <div class="achievement-title">エンタープライズ品質</div>
+                        <div class="achievement-detail">実務レベルのプロフェッショナル設計</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="next-step">
+            <div class="next-title">🚀 次のステップ：Week 9.5への準備完了</div>
+            <div class="next-content">
+                UX改善技術を完全習得し、いよいよ Week 9.5 でDB保存機能の実装へ！<br>
+                @PostMapping・データ永続化・CRUD操作の完成に向けて、<br>
+                強固な技術基盤が確立されました。
+            </div>
+        </div>
+    </div>
+</body>
+</html>

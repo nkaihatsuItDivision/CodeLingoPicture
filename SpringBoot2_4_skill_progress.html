@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 9.4 - 技術習得状況図</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(230, 126, 34, 0.3);
+        }
+        .week-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 0;
+        }
+        .subtitle {
+            font-size: 16px;
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+        }
+        .progress-timeline {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border-left: 5px solid #e67e22;
+        }
+        .timeline-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #e67e22;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .timeline-container {
+            position: relative;
+            margin: 20px 0;
+        }
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(135deg, #f1c40f, #e67e22);
+            border-radius: 2px;
+        }
+        .timeline-items {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        .timeline-item:nth-child(odd) {
+            flex-direction: row;
+        }
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+        .timeline-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+            width: 45%;
+            position: relative;
+        }
+        .timeline-item:nth-child(odd) .timeline-content::after {
+            content: '';
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border: 15px solid transparent;
+            border-left-color: white;
+        }
+        .timeline-item:nth-child(even) .timeline-content::after {
+            content: '';
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border: 15px solid transparent;
+            border-right-color: white;
+        }
+        .timeline-marker {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 16px;
+            z-index: 10;
+        }
+        .week91-marker {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+        }
+        .week92-marker {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+        }
+        .week93-marker {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+        }
+        .week94-marker {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            border: 4px solid white;
+            box-shadow: 0 0 20px rgba(230, 126, 34, 0.5);
+        }
+        .content-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .content-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+        .content-title {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .content-description {
+            color: #555;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .skill-tag {
+            background: #e8f4f8;
+            color: #2980b9;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .skill-mastery {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        .mastery-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #e67e22;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .mastery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .mastery-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid;
+        }
+        .foundational-skill {
+            border-left-color: #f1c40f;
+        }
+        .intermediate-skill {
+            border-left-color: #e67e22;
+        }
+        .advanced-skill {
+            border-left-color: #e74c3c;
+        }
+        .mastery-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .mastery-icon {
+            font-size: 32px;
+            margin-right: 15px;
+        }
+        .mastery-info {
+            flex: 1;
+        }
+        .mastery-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .mastery-level {
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            color: white;
+        }
+        .foundational {
+            background: #f1c40f;
+        }
+        .intermediate {
+            background: #e67e22;
+        }
+        .advanced {
+            background: #e74c3c;
+        }
+        .progress-bar-container {
+            background: #ecf0f1;
+            border-radius: 10px;
+            height: 8px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+        .foundational-progress {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            width: 100%;
+        }
+        .intermediate-progress {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            width: 95%;
+        }
+        .advanced-progress {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            width: 90%;
+        }
+        .skill-points {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .skill-points li {
+            font-size: 12px;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+        .point-icon {
+            margin-right: 5px;
+            color: #27ae60;
+        }
+        .achievement-section {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+        .achievement-title {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .achievement-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .stat-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .stat-label {
+            font-size: 14px;
+        }
+        .next-phase {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .phase-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .phase-content {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="week-badge">Week 9.4：エラー処理・UX改善</div>
+            <h1 class="title">Week 9.4完了時の技術習得状況</h1>
+            <p class="subtitle">Week 9.1-9.4の学習進捗とスキルレベル到達状況</p>
+        </div>
+
+        <div class="progress-timeline">
+            <div class="timeline-title">📈 Week 9フォーム処理技術の段階的習得</div>
+            <div class="timeline-container">
+                <div class="timeline-line"></div>
+                <div class="timeline-items">
+                    <div class="timeline-item">
+                        <div class="timeline-marker week91-marker">9.1</div>
+                        <div class="timeline-content">
+                            <div class="content-header">
+                                <div class="content-icon">📋</div>
+                                <div class="content-title">StudentDataクラス設計</div>
+                            </div>
+                            <div class="content-description">フォーム専用DTOの必要性を理解し、Entity分離設計を習得</div>
+                            <div class="skill-tags">
+                                <span class="skill-tag">DTO設計</span>
+                                <span class="skill-tag">責務分離</span>
+                                <span class="skill-tag">設計思考</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-marker week92-marker">9.2</div>
+                        <div class="timeline-content">
+                            <div class="content-header">
+                                <div class="content-icon">🖼️</div>
+                                <div class="content-title">新規登録画面作成</div>
+                            </div>
+                            <div class="content-description">Thymeleafフォームの構築とオブジェクトバインディング技術</div>
+                            <div class="skill-tags">
+                                <span class="skill-tag">th:object</span>
+                                <span class="skill-tag">th:field</span>
+                                <span class="skill-tag">フォーム設計</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-marker week93-marker">9.3</div>
+                        <div class="timeline-content">
+                            <div class="content-header">
+                                <div class="content-icon">✅</div>
+                                <div class="content-title">Bean Validation導入</div>
+                            </div>
+                            <div class="content-description">入力チェックの自動化とアノテーションベースのバリデーション</div>
+                            <div class="skill-tags">
+                                <span class="skill-tag">@NotBlank</span>
+                                <span class="skill-tag">@Email</span>
+                                <span class="skill-tag">自動検証</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-marker week94-marker">9.4</div>
+                        <div class="timeline-content">
+                            <div class="content-header">
+                                <div class="content-icon">🎨</div>
+                                <div class="content-title">エラー処理・UX改善</div>
+                            </div>
+                            <div class="content-description">ユーザビリティ重視の設計とプロフェッショナルレベルの実装</div>
+                            <div class="skill-tags">
+                                <span class="skill-tag">条件分岐表示</span>
+                                <span class="skill-tag">値保持技術</span>
+                                <span class="skill-tag">アクセシビリティ</span>
+                                <span class="skill-tag">UX設計</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="skill-mastery">
+            <div class="mastery-title">🎯 技術習得レベル評価</div>
+            <div class="mastery-grid">
+                <div class="mastery-card foundational-skill">
+                    <div class="mastery-header">
+                        <div class="mastery-icon">🏗️</div>
+                        <div class="mastery-info">
+                            <div class="mastery-name">基礎設計技術</div>
+                            <div class="mastery-level foundational">マスター完了</div>
+                        </div>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar foundational-progress"></div>
+                    </div>
+                    <ul class="skill-points">
+                        <li><span class="point-icon">✅</span>DTO設計パターン</li>
+                        <li><span class="point-icon">✅</span>責務分離設計</li>
+                        <li><span class="point-icon">✅</span>Thymeleafフォーム構築</li>
+                        <li><span class="point-icon">✅</span>Bean Validation活用</li>
+                    </ul>
+                </div>
+                
+                <div class="mastery-card intermediate-skill">
+                    <div class="mastery-header">
+                        <div class="mastery-icon">🎨</div>
+                        <div class="mastery-info">
+                            <div class="mastery-name">UX改善技術</div>
+                            <div class="mastery-level intermediate">上級レベル</div>
+                        </div>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar intermediate-progress"></div>
+                    </div>
+                    <ul class="skill-points">
+                        <li><span class="point-icon">✅</span>条件分岐表示制御</li>
+                        <li><span class="point-icon">✅</span>フォーム値自動保持</li>
+                        <li><span class="point-icon">✅</span>視覚的フィードバック</li>
+                        <li><span class="point-icon">✅</span>エラーハンドリング</li>
+                    </ul>
+                </div>
+                
+                <div class="mastery-card advanced-skill">
+                    <div class="mastery-header">
+                        <div class="mastery-icon">🌍</div>
+                        <div class="mastery-info">
+                            <div class="mastery-name">アクセシビリティ技術</div>
+                            <div class="mastery-level advanced">プロレベル</div>
+                        </div>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar advanced-progress"></div>
+                    </div>
+                    <ul class="skill-points">
+                        <li><span class="point-icon">✅</span>ARIA属性実装</li>
+                        <li><span class="point-icon">✅</span>キーボードナビゲーション</li>
+                        <li><span class="point-icon">✅</span>支援技術対応</li>
+                        <li><span class="point-icon">✅</span>WCAG準拠設計</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="achievement-section">
+            <div class="achievement-title">🏆 Week 9.4達成統計</div>
+            <div class="achievement-stats">
+                <div class="stat-item">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">週間レッスン完了</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">技術要素習得</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">実践演習ステップ</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">UX改善技術習得率</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">プロ級</div>
+                    <div class="stat-label">到達スキルレベル</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">準備完了</div>
+                    <div class="stat-label">Week 9.5への移行</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="next-phase">
+            <div class="phase-title">🚀 Week 9.5：新規登録処理への準備状況</div>
+            <div class="phase-content">
+                Week 9.1-9.4で構築した強固な技術基盤により、<br>
+                @PostMapping・データ保存・CRUD操作の実装に向けて<br>
+                完璧な準備が整いました。<br><br>
+                <strong>エンタープライズレベルのWebアプリケーション開発者</strong>として、<br>
+                次のフェーズに自信を持って進むことができます！
+            </div>
+        </div>
+    </div>
+</body>
+</html>

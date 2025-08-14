@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 9.4 - ユーザー体験の重要性説明図</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(230, 126, 34, 0.3);
+        }
+        .week-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 0;
+        }
+        .subtitle {
+            font-size: 16px;
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+        }
+        .comparison-section {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        .ux-card {
+            flex: 1;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .bad-ux {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+        }
+        .good-ux {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .card-icon {
+            font-size: 32px;
+            margin-right: 15px;
+        }
+        .card-title {
+            font-size: 22px;
+            font-weight: bold;
+        }
+        .ux-points {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .ux-points li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .ux-points li:last-child {
+            border-bottom: none;
+        }
+        .enterprise-value {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+        .value-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .value-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        .value-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .technical-impact {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 5px solid #e67e22;
+        }
+        .impact-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #e67e22;
+            margin-bottom: 15px;
+        }
+        .impact-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .flow-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            flex: 1;
+            min-width: 150px;
+        }
+        .flow-arrow {
+            font-size: 24px;
+            color: #e67e22;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="week-badge">Week 9.4：エラー処理・UX改善</div>
+            <h1 class="title">なぜユーザビリティ改善が重要なのか？</h1>
+            <p class="subtitle">エンタープライズ開発におけるUX重要性と実務価値</p>
+        </div>
+
+        <div class="comparison-section">
+            <div class="ux-card bad-ux">
+                <div class="card-header">
+                    <div class="card-icon">❌</div>
+                    <div class="card-title">悪いUXの例</div>
+                </div>
+                <ul class="ux-points">
+                    <li>エラー時に入力内容が全て消える</li>
+                    <li>「エラーが発生しました」だけの表示</li>
+                    <li>どこが間違いかわからない</li>
+                    <li>修正方法が不明</li>
+                    <li>同じエラーを何度も繰り返す</li>
+                    <li>ユーザーがシステムを使いたくなくなる</li>
+                </ul>
+            </div>
+            
+            <div class="ux-card good-ux">
+                <div class="card-header">
+                    <div class="card-icon">✅</div>
+                    <div class="card-title">良いUXの例</div>
+                </div>
+                <ul class="ux-points">
+                    <li>エラー時も入力内容が保持される</li>
+                    <li>具体的で分かりやすいエラーメッセージ</li>
+                    <li>問題箇所が明確に表示される</li>
+                    <li>修正方法の具体的な案内</li>
+                    <li>成功時の適切なフィードバック</li>
+                    <li>ユーザーが安心してシステムを利用できる</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="enterprise-value">
+            <div class="value-title">🏢 エンタープライズ開発でのUX重要性</div>
+            <div class="value-points">
+                <div class="value-item">
+                    <strong>コスト削減効果</strong><br>
+                    問い合わせ対応の削減<br>
+                    操作ミス防止による損失防止
+                </div>
+                <div class="value-item">
+                    <strong>生産性向上</strong><br>
+                    業務効率の改善<br>
+                    社員満足度の向上
+                </div>
+                <div class="value-item">
+                    <strong>信頼性確保</strong><br>
+                    システムの安定性向上<br>
+                    ユーザーからの信頼獲得
+                </div>
+                <div class="value-item">
+                    <strong>メンテナンス性</strong><br>
+                    バグ報告の具体化<br>
+                    改善要求の明確化
+                </div>
+            </div>
+        </div>
+
+        <div class="technical-impact">
+            <div class="impact-title">🎯 Week 9.3からWeek 9.4への技術発展</div>
+            <div class="impact-flow">
+                <div class="flow-item">
+                    <strong>Week 9.3</strong><br>
+                    Bean Validation<br>
+                    <small>技術的な基盤確立</small>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-item">
+                    <strong>Week 9.4</strong><br>
+                    UX改善技術<br>
+                    <small>ユーザビリティ重視</small>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-item">
+                    <strong>実務価値</strong><br>
+                    プロレベル<br>
+                    <small>エンタープライズ品質</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
