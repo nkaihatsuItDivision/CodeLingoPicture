@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>th:errors技術詳細図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            padding: 40px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 18px;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #f39c12;
+        }
+
+        .mechanism-section {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .mechanism-title {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .tech-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            border-top: 4px solid #f39c12;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .tech-header {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .tech-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        .tech-description {
+            color: #34495e;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            line-height: 1.4;
+            text-align: left;
+            margin: 10px 0;
+        }
+
+        .highlight-thymeleaf { color: #9b59b6; }
+        .highlight-attribute { color: #f39c12; }
+        .highlight-value { color: #2ecc71; }
+        .highlight-html { color: #e74c3c; }
+        .highlight-condition { color: #3498db; }
+
+        .flow-section {
+            background: #ecf0f1;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .flow-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .flow-steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .flow-step {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-top: 4px solid #f39c12;
+            position: relative;
+        }
+
+        .step-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #f39c12;
+            margin-bottom: 10px;
+        }
+
+        .step-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .step-description {
+            font-size: 13px;
+            color: #7f8c8d;
+            line-height: 1.4;
+        }
+
+        .examples-section {
+            background: #34495e;
+            color: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .examples-title {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .example-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .example-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .example-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #f39c12;
+        }
+
+        .example-code {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            line-height: 1.4;
+            text-align: left;
+        }
+
+        .benefits-section {
+            background: #2ecc71;
+            color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .benefits-title {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .benefits-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .benefit-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 12px 15px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+
+        .benefit-icon {
+            font-size: 18px;
+            margin-right: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .tech-grid,
+            .flow-steps,
+            .example-grid,
+            .benefits-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">th:errors技術詳細図</h1>
+        <p class="subtitle">エラー表示の仕組みと条件分岐による動的表示制御</p>
+
+        <div class="mechanism-section">
+            <h2 class="mechanism-title">🔧 エラー表示の仕組み</h2>
+            <div class="code-example">
+<span class="highlight-html">&lt;input</span> <span class="highlight-attribute">type</span>=<span class="highlight-value">"text"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-attribute">th:field</span>=<span class="highlight-value">"*{name}"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-attribute">class</span>=<span class="highlight-value">"form-control"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-thymeleaf">th:classappend</span>=<span class="highlight-value">"<span class="highlight-condition">${#fields.hasErrors('name')} ? 'is-invalid' : ''"</span></span><span class="highlight-html">&gt;</span><br>
+<br>
+<span class="highlight-html">&lt;div</span> <span class="highlight-attribute">class</span>=<span class="highlight-value">"invalid-feedback"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-thymeleaf">th:if</span>=<span class="highlight-value">"<span class="highlight-condition">${#fields.hasErrors('name')}</span>"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-thymeleaf">th:errors</span>=<span class="highlight-value">"*{name}"</span><span class="highlight-html">&gt;&lt;/div&gt;</span>
+            </div>
+        </div>
+
+        <div class="tech-grid">
+            <div class="tech-card">
+                <h3 class="tech-header">
+                    <span class="tech-icon">🔍</span>
+                    #fields.hasErrors()
+                </h3>
+                <div class="tech-description">
+                    特定フィールドにエラーがあるかを判定する関数
+                </div>
+                <div class="code-example">
+<span class="highlight-condition">${#fields.hasErrors('name')}</span><br>
+<br>
+<span class="highlight-thymeleaf">// 戻り値</span><br>
+<span class="highlight-thymeleaf">// true: エラーあり</span><br>
+<span class="highlight-thymeleaf">// false: エラーなし</span>
+                </div>
+                <div class="tech-description">
+                    <strong>使用場面:</strong><br>
+                    • th:if条件判定<br>
+                    • th:classappend条件分岐<br>
+                    • 表示・非表示の制御
+                </div>
+            </div>
+
+            <div class="tech-card">
+                <h3 class="tech-header">
+                    <span class="tech-icon">📝</span>
+                    th:errors
+                </h3>
+                <div class="tech-description">
+                    エラーメッセージを表示するThymeleaf属性
+                </div>
+                <div class="code-example">
+<span class="highlight-thymeleaf">th:errors</span>=<span class="highlight-value">"*{name}"</span><br>
+<br>
+<span class="highlight-thymeleaf">// 表示内容例</span><br>
+<span class="highlight-thymeleaf">// "名前は必須です"</span><br>
+<span class="highlight-thymeleaf">// "名前は50文字以下で..."</span>
+                </div>
+                <div class="tech-description">
+                    <strong>データ取得元:</strong><br>
+                    • StudentDataクラス<br>
+                    • @NotBlankのmessage属性<br>
+                    • BindingResultに格納された結果
+                </div>
+            </div>
+
+            <div class="tech-card">
+                <h3 class="tech-header">
+                    <span class="tech-icon">🎨</span>
+                    is-invalidクラス
+                </h3>
+                <div class="tech-description">
+                    Bootstrapのエラー表示専用CSSクラス
+                </div>
+                <div class="code-example">
+<span class="highlight-thymeleaf">th:classappend</span>=<br>
+<span class="highlight-value">"${#fields.hasErrors('name')}<br>
+&nbsp;&nbsp;? 'is-invalid' : ''"</span><br>
+<br>
+<span class="highlight-thymeleaf">/* CSS効果 */</span><br>
+<span class="highlight-thymeleaf">.is-invalid {</span><br>
+<span class="highlight-thymeleaf">&nbsp;&nbsp;border-color: #dc3545;</span><br>
+<span class="highlight-thymeleaf">}</span>
+                </div>
+                <div class="tech-description">
+                    <strong>視覚的効果:</strong><br>
+                    • 入力欄の枠線が赤色に<br>
+                    • エラー状態を直感的に表現<br>
+                    • invalid-feedbackとセット
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-section">
+            <h2 class="flow-title">🔄 動的表示制御のフロー</h2>
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-title">エラー判定</div>
+                    <div class="step-description">
+                        #fields.hasErrors()<br>
+                        でフィールド別判定
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-title">CSS制御</div>
+                    <div class="step-description">
+                        th:classappendで<br>
+                        is-invalidクラス追加
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-title">条件表示</div>
+                    <div class="step-description">
+                        th:ifで表示/非表示<br>
+                        を動的制御
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-title">メッセージ表示</div>
+                    <div class="step-description">
+                        th:errorsで<br>
+                        エラーメッセージ出力
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="examples-section">
+            <h2 class="examples-title">💡 実装例と動作パターン</h2>
+            <div class="example-grid">
+                <div class="example-item">
+                    <div class="example-title">🟢 正常時の動作</div>
+                    <div class="example-code">
+<span class="highlight-thymeleaf">// #fields.hasErrors('name') = false</span><br>
+<br>
+<span class="highlight-html">&lt;input</span> <span class="highlight-attribute">class</span>=<span class="highlight-value">"form-control"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-thymeleaf">th:classappend</span>=<span class="highlight-value">""</span><span class="highlight-html">&gt;</span><br>
+<br>
+<span class="highlight-thymeleaf">// エラーメッセージ非表示</span><br>
+<span class="highlight-html">&lt;div</span> <span class="highlight-attribute">style</span>=<span class="highlight-value">"display: none;"</span><span class="highlight-html">&gt;&lt;/div&gt;</span>
+                    </div>
+                </div>
+                
+                <div class="example-item">
+                    <div class="example-title">🔴 エラー時の動作</div>
+                    <div class="example-code">
+<span class="highlight-thymeleaf">// #fields.hasErrors('name') = true</span><br>
+<br>
+<span class="highlight-html">&lt;input</span> <span class="highlight-attribute">class</span>=<span class="highlight-value">"form-control is-invalid"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-thymeleaf">th:classappend</span>=<span class="highlight-value">"is-invalid"</span><span class="highlight-html">&gt;</span><br>
+<br>
+<span class="highlight-thymeleaf">// エラーメッセージ表示</span><br>
+<span class="highlight-html">&lt;div</span> <span class="highlight-attribute">class</span>=<span class="highlight-value">"invalid-feedback"</span><span class="highlight-html">&gt;</span><br>
+&nbsp;&nbsp;名前は必須です<br>
+<span class="highlight-html">&lt;/div&gt;</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="benefits-section">
+            <h2 class="benefits-title">✨ th:errors技術の利点</h2>
+            <div class="benefits-list">
+                <div class="benefit-item">
+                    <span class="benefit-icon">⚡</span>
+                    自動エラー判定・表示制御
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">🎨</span>
+                    Bootstrap連携による美しい表示
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">🔄</span>
+                    リアルタイムな動的表示
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">🛡️</span>
+                    条件分岐による安全な制御
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

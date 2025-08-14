@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bean Validation技術の理解図</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #f39c12;
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .method-section {
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+        
+        .manual-method {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+        }
+        
+        .bean-method {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+        }
+        
+        .method-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .method-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .method-desc {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .code-example {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            line-height: 1.4;
+            margin: 15px 0;
+            overflow-x: auto;
+            text-align: left;
+        }
+        
+        .highlight-java {
+            color: #3498db;
+        }
+        
+        .highlight-annotation {
+            color: #f1c40f;
+        }
+        
+        .highlight-string {
+            color: #2ecc71;
+        }
+        
+        .highlight-comment {
+            color: #95a5a6;
+            font-style: italic;
+        }
+        
+        .problems-list, .benefits-list {
+            margin-top: 15px;
+        }
+        
+        .list-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        
+        .problem-icon {
+            color: #ffcccb;
+            font-weight: bold;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        
+        .benefit-icon {
+            color: #90ee90;
+            font-weight: bold;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        
+        .spec-section {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            border-radius: 10px;
+            padding: 20px;
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .spec-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .spec-badges {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .spec-badge {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: bold;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .workflow-section {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 10px;
+            padding: 25px;
+            color: white;
+            text-align: center;
+        }
+        
+        .workflow-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .workflow-steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .workflow-step {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            padding: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .step-number {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .step-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .step-desc {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .workflow-steps {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .spec-badges {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">
+            📚 Bean Validation技術の理解
+        </div>
+        
+        <div class="subtitle">
+            Javaの標準仕様（JSR 303/349/380）による自動検証技術
+        </div>
+        
+        <div class="spec-section">
+            <div class="spec-title">🎯 Bean Validationとは？</div>
+            <div class="spec-badges">
+                <div class="spec-badge">JSR 303</div>
+                <div class="spec-badge">JSR 349</div>
+                <div class="spec-badge">JSR 380</div>
+                <div class="spec-badge">Java標準仕様</div>
+            </div>
+            <div style="font-size: 14px; opacity: 0.9;">
+                オブジェクトのフィールド値を自動検証する標準化された技術
+            </div>
+        </div>
+        
+        <div class="comparison-grid">
+            <div class="method-section manual-method">
+                <div class="method-header">
+                    <div class="method-title">
+                        ❌ 従来の手動バリデーション
+                    </div>
+                    <div class="method-desc">問題の多い方法</div>
+                </div>
+                
+                <div class="code-example">
+<span class="highlight-annotation">@PostMapping</span>(<span class="highlight-string">"/students"</span>)<br>
+<span class="highlight-java">public String</span> createStudent(<span class="highlight-annotation">@ModelAttribute</span> StudentData studentData) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-comment">// 手動でのバリデーション - 問題だらけ！</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-java">List&lt;String&gt;</span> errors = <span class="highlight-java">new</span> ArrayList&lt;&gt;();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-java">if</span> (studentData.getName() == <span class="highlight-java">null</span> ||<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;studentData.getName().trim().isEmpty()) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;errors.add(<span class="highlight-string">"名前は必須です"</span>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-java">if</span> (studentData.getEmail() == <span class="highlight-java">null</span> ||<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;!studentData.getEmail().contains(<span class="highlight-string">"@"</span>)) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;errors.add(<span class="highlight-string">"正しいメールアドレスを入力"</span>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-comment">// このような手動チェックが延々と続く...</span><br>
+}
+                </div>
+                
+                <div class="problems-list">
+                    <div class="list-item">
+                        <span class="problem-icon">❌</span>
+                        <span><strong>コードが冗長</strong>: バリデーション処理がControllerを圧迫</span>
+                    </div>
+                    <div class="list-item">
+                        <span class="problem-icon">❌</span>
+                        <span><strong>保守性が低い</strong>: 条件変更時の修正箇所が多数</span>
+                    </div>
+                    <div class="list-item">
+                        <span class="problem-icon">❌</span>
+                        <span><strong>一貫性がない</strong>: 開発者によってチェック方法が異なる</span>
+                    </div>
+                    <div class="list-item">
+                        <span class="problem-icon">❌</span>
+                        <span><strong>テストが困難</strong>: バリデーション処理の単体テストが複雑</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="method-section bean-method">
+                <div class="method-header">
+                    <div class="method-title">
+                        ✅ Bean Validation
+                    </div>
+                    <div class="method-desc">推奨される方法</div>
+                </div>
+                
+                <div class="code-example">
+<span class="highlight-annotation">@PostMapping</span>(<span class="highlight-string">"/students"</span>)<br>
+<span class="highlight-java">public String</span> createStudent(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-annotation">@Valid @ModelAttribute</span> StudentData studentData,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-java">BindingResult</span> bindingResult) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-java">if</span> (bindingResult.hasErrors()) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-comment">// エラーがある場合、フォーム画面に戻る</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-java">return</span> <span class="highlight-string">"students/form"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-comment">// バリデーション成功時の処理</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-java">return</span> <span class="highlight-string">"redirect:/students"</span>;<br>
+}
+                </div>
+                
+                <div class="benefits-list">
+                    <div class="list-item">
+                        <span class="benefit-icon">✅</span>
+                        <span><strong>シンプルなコード</strong>: @Validだけでバリデーション実行</span>
+                    </div>
+                    <div class="list-item">
+                        <span class="benefit-icon">✅</span>
+                        <span><strong>宣言的な設計</strong>: アノテーションによる分かりやすい検証ルール</span>
+                    </div>
+                    <div class="list-item">
+                        <span class="benefit-icon">✅</span>
+                        <span><strong>再利用性</strong>: 同じDTOクラスを他の場所でも活用可能</span>
+                    </div>
+                    <div class="list-item">
+                        <span class="benefit-icon">✅</span>
+                        <span><strong>標準仕様</strong>: Java標準のため学習コストが低い</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="workflow-section">
+            <div class="workflow-title">🔧 Bean Validation動作フロー</div>
+            
+            <div class="workflow-steps">
+                <div class="workflow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-title">@Valid実行</div>
+                    <div class="step-desc">Controllerで@Validアノテーション検出</div>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-title">アノテーション読込</div>
+                    <div class="step-desc">Week 9.1のDTOアノテーション自動実行</div>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-title">バリデーション実行</div>
+                    <div class="step-desc">@NotBlank、@Email等の検証実行</div>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-title">結果設定</div>
+                    <div class="step-desc">BindingResultにエラー情報を自動設定</div>
+                </div>
+            </div>
+            
+            <div class="code-example">
+<span class="highlight-comment">// Week 9.1で設定済みのアノテーションが自動実行される</span><br>
+<span class="highlight-annotation">@NotBlank</span>(<span class="highlight-java">message</span> = <span class="highlight-string">"名前は必須です"</span>)<br>
+<span class="highlight-annotation">@Size</span>(<span class="highlight-java">min</span> = 1, <span class="highlight-java">max</span> = 50)<br>
+<span class="highlight-java">private String</span> name;<br>
+<br>
+<span class="highlight-annotation">@Email</span>(<span class="highlight-java">message</span> = <span class="highlight-string">"正しいメールアドレスを入力してください"</span>)<br>
+<span class="highlight-java">private String</span> email;
+            </div>
+        </div>
+    </div>
+</body>
+</html>

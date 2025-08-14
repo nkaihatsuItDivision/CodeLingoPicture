@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@Valid・BindingResult技術解説図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            padding: 40px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 18px;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #f39c12;
+        }
+
+        .tech-section {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .tech-title {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .parameter-demo {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 8px;
+            padding: 25px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .highlight-java { color: #3498db; }
+        .highlight-annotation { color: #f39c12; }
+        .highlight-string { color: #2ecc71; }
+        .highlight-important { 
+            background: rgba(241, 196, 15, 0.3);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .detail-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            border-left: 5px solid #f39c12;
+        }
+
+        .detail-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .detail-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        .detail-content {
+            color: #34495e;
+            line-height: 1.6;
+        }
+
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin: 10px 0;
+            text-align: left;
+        }
+
+        .flow-section {
+            background: #ecf0f1;
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .flow-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .flow-steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .flow-step {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-top: 4px solid #f39c12;
+        }
+
+        .step-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #f39c12;
+            margin-bottom: 10px;
+        }
+
+        .step-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .step-description {
+            font-size: 13px;
+            color: #7f8c8d;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 768px) {
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .flow-steps {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">@Valid・BindingResult技術解説</h1>
+        <p class="subtitle">Bean Validation自動実行の仕組みとパラメータ詳細</p>
+
+        <div class="tech-section">
+            <h2 class="tech-title">🔧 技術実装の詳細</h2>
+            <div class="parameter-demo">
+<span class="highlight-annotation">@PostMapping</span>(<span class="highlight-string">"/students"</span>)<br>
+<span class="highlight-java">public String</span> createStudent(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-important"><span class="highlight-annotation">@Valid</span></span> <span class="highlight-annotation">@ModelAttribute</span> StudentData studentData,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-important">BindingResult bindingResult,</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;Model model) {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-java">// 重要：パラメータの順序は厳密に守る</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-java">// 1. @Valid対象オブジェクト</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-java">// 2. BindingResult（必ず直後に配置）</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-java">// 3. その他のパラメータ</span><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-important"><span class="highlight-java">if</span> (bindingResult.hasErrors()) {</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-java">// エラー時の処理</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-java">return</span> <span class="highlight-string">"students/form"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-java">// 正常時の処理</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;studentService.save(studentData);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-java">return</span> <span class="highlight-string">"redirect:/students"</span>;<br>
+}
+            </div>
+        </div>
+
+        <div class="details-grid">
+            <div class="detail-card">
+                <h3 class="detail-title">
+                    <span class="detail-icon">✨</span>
+                    @Validアノテーション
+                </h3>
+                <div class="detail-content">
+                    <strong>役割：</strong>Bean Validationの自動実行を指示<br><br>
+                    <strong>配置場所：</strong>@ModelAttributeの直前<br><br>
+                    <strong>動作：</strong>
+                    <ul style="margin: 10px 0; padding-left: 20px;">
+                        <li>StudentDataクラスのアノテーション（@NotBlank、@Emailなど）を自動実行</li>
+                        <li>バリデーション結果をBindingResultに格納</li>
+                        <li>手動バリデーション処理が不要になる</li>
+                    </ul>
+                    <div class="code-block">
+<span class="highlight-annotation">@Valid</span> <span class="highlight-annotation">@ModelAttribute</span> StudentData data
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-card">
+                <h3 class="detail-title">
+                    <span class="detail-icon">📋</span>
+                    BindingResultパラメータ
+                </h3>
+                <div class="detail-content">
+                    <strong>役割：</strong>バリデーション結果の受け取り<br><br>
+                    <strong>配置場所：</strong>@Valid対象パラメータの直後<br><br>
+                    <strong>主要メソッド：</strong>
+                    <ul style="margin: 10px 0; padding-left: 20px;">
+                        <li><code>hasErrors()</code> - エラー有無判定</li>
+                        <li><code>getFieldErrors()</code> - フィールド別エラー取得</li>
+                        <li><code>getAllErrors()</code> - 全エラー取得</li>
+                    </ul>
+                    <div class="code-block">
+BindingResult bindingResult<br>
+<span class="highlight-java">if</span> (bindingResult.hasErrors()) { ... }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-section">
+            <h2 class="flow-title">🔄 Bean Validation実行フロー</h2>
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-title">リクエスト受信</div>
+                    <div class="step-description">
+                        フォームデータが<br>
+                        Controllerに送信される
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-title">@Valid実行</div>
+                    <div class="step-description">
+                        StudentDataクラスの<br>
+                        アノテーションが自動実行
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-title">結果格納</div>
+                    <div class="step-description">
+                        バリデーション結果が<br>
+                        BindingResultに格納
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-title">エラー判定</div>
+                    <div class="step-description">
+                        hasErrors()で判定し<br>
+                        処理を分岐
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

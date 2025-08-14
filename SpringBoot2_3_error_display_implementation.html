@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>エラー表示機能追加図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            padding: 40px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 18px;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #f39c12;
+        }
+
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            border: 2px solid #ddd;
+        }
+
+        .week-9-2 {
+            border-color: #3498db;
+        }
+
+        .week-9-3 {
+            border-color: #f39c12;
+        }
+
+        .section-header {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .week-9-2 .section-header {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+
+        .week-9-3 .section-header {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            line-height: 1.5;
+            margin: 15px 0;
+            overflow-x: auto;
+            text-align: left;
+        }
+
+        .highlight-html { color: #e74c3c; }
+        .highlight-attribute { color: #f39c12; }
+        .highlight-value { color: #2ecc71; }
+        .highlight-thymeleaf { color: #9b59b6; }
+        .highlight-new {
+            background: rgba(241, 196, 15, 0.3);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        .additions-section {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .additions-title {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .additions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .addition-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .addition-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .addition-icon {
+            font-size: 22px;
+            margin-right: 10px;
+        }
+
+        .addition-description {
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .addition-code {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            text-align: left;
+        }
+
+        .feature-highlights {
+            background: #ecf0f1;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .highlights-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .highlights-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .highlight-item {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            border-top: 3px solid #f39c12;
+        }
+
+        .highlight-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .highlight-text {
+            font-size: 14px;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-container,
+            .additions-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .highlights-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">エラー表示機能追加図</h1>
+        <p class="subtitle">Week 9.2版フォーム → Week 9.3版エラー対応フォームへの改修</p>
+
+        <div class="comparison-container">
+            <div class="form-section week-9-2">
+                <div class="section-header">
+                    📝 Week 9.2版フォーム<br>（エラー表示なし）
+                </div>
+                <div class="code-example">
+<span class="highlight-html">&lt;form</span> <span class="highlight-attribute">th:action</span>=<span class="highlight-value">"@{/students}"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-attribute">th:object</span>=<span class="highlight-value">"${studentData}"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-attribute">method</span>=<span class="highlight-value">"post"</span><span class="highlight-html">&gt;</span><br>
+<br>
+&nbsp;&nbsp;<span class="highlight-html">&lt;div</span> <span class="highlight-attribute">class</span>=<span class="highlight-value">"form-group"</span><span class="highlight-html">&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-html">&lt;label</span> <span class="highlight-attribute">for</span>=<span class="highlight-value">"name"</span><span class="highlight-html">&gt;</span>名前<span class="highlight-html">&lt;/label&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-html">&lt;input</span> <span class="highlight-attribute">type</span>=<span class="highlight-value">"text"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-attribute">th:field</span>=<span class="highlight-value">"*{name}"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-attribute">class</span>=<span class="highlight-value">"form-control"</span><span class="highlight-html">&gt;</span><br>
+&nbsp;&nbsp;<span class="highlight-html">&lt;/div&gt;</span><br>
+<br>
+&nbsp;&nbsp;<span class="highlight-html">&lt;div</span> <span class="highlight-attribute">class</span>=<span class="highlight-value">"form-group"</span><span class="highlight-html">&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-html">&lt;label</span> <span class="highlight-attribute">for</span>=<span class="highlight-value">"email"</span><span class="highlight-html">&gt;</span>メール<span class="highlight-html">&lt;/label&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-html">&lt;input</span> <span class="highlight-attribute">type</span>=<span class="highlight-value">"email"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-attribute">th:field</span>=<span class="highlight-value">"*{email}"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-attribute">class</span>=<span class="highlight-value">"form-control"</span><span class="highlight-html">&gt;</span><br>
+&nbsp;&nbsp;<span class="highlight-html">&lt;/div&gt;</span><br>
+<br>
+&nbsp;&nbsp;<span class="highlight-html">&lt;button</span> <span class="highlight-attribute">type</span>=<span class="highlight-value">"submit"</span><span class="highlight-html">&gt;</span>保存<span class="highlight-html">&lt;/button&gt;</span><br>
+<span class="highlight-html">&lt;/form&gt;</span>
+                </div>
+            </div>
+
+            <div class="form-section week-9-3">
+                <div class="section-header">
+                    ✨ Week 9.3版フォーム<br>（エラー表示対応）
+                </div>
+                <div class="code-example">
+<span class="highlight-html">&lt;form</span> <span class="highlight-attribute">th:action</span>=<span class="highlight-value">"@{/students}"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-attribute">th:object</span>=<span class="highlight-value">"${studentData}"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-attribute">method</span>=<span class="highlight-value">"post"</span><span class="highlight-html">&gt;</span><br>
+<br>
+&nbsp;&nbsp;<span class="highlight-html">&lt;div</span> <span class="highlight-attribute">class</span>=<span class="highlight-value">"form-group"</span><span class="highlight-html">&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-html">&lt;label</span> <span class="highlight-attribute">for</span>=<span class="highlight-value">"name"</span><span class="highlight-html">&gt;</span>名前<span class="highlight-html">&lt;/label&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-html">&lt;input</span> <span class="highlight-attribute">type</span>=<span class="highlight-value">"text"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-attribute">th:field</span>=<span class="highlight-value">"*{name}"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-attribute">class</span>=<span class="highlight-value">"form-control"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-new"><span class="highlight-attribute">th:classappend</span>=<span class="highlight-value">"${#fields.hasErrors('name')} ? 'is-invalid' : ''"</span></span><span class="highlight-html">&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-new"><span class="highlight-html">&lt;div</span> <span class="highlight-attribute">class</span>=<span class="highlight-value">"invalid-feedback"</span></span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-new"><span class="highlight-attribute">th:if</span>=<span class="highlight-value">"${#fields.hasErrors('name')}"</span></span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-new"><span class="highlight-attribute">th:errors</span>=<span class="highlight-value">"*{name}"</span></span><span class="highlight-html">&gt;&lt;/div&gt;</span><br>
+&nbsp;&nbsp;<span class="highlight-html">&lt;/div&gt;</span><br>
+<br>
+&nbsp;&nbsp;<span class="highlight-html">&lt;div</span> <span class="highlight-attribute">class</span>=<span class="highlight-value">"form-group"</span><span class="highlight-html">&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-html">&lt;label</span> <span class="highlight-attribute">for</span>=<span class="highlight-value">"email"</span><span class="highlight-html">&gt;</span>メール<span class="highlight-html">&lt;/label&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-html">&lt;input</span> <span class="highlight-attribute">type</span>=<span class="highlight-value">"email"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-attribute">th:field</span>=<span class="highlight-value">"*{email}"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-attribute">class</span>=<span class="highlight-value">"form-control"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-new"><span class="highlight-attribute">th:classappend</span>=<span class="highlight-value">"${#fields.hasErrors('email')} ? 'is-invalid' : ''"</span></span><span class="highlight-html">&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-new"><span class="highlight-html">&lt;div</span> <span class="highlight-attribute">class</span>=<span class="highlight-value">"invalid-feedback"</span></span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-new"><span class="highlight-attribute">th:if</span>=<span class="highlight-value">"${#fields.hasErrors('email')}"</span></span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-new"><span class="highlight-attribute">th:errors</span>=<span class="highlight-value">"*{email}"</span></span><span class="highlight-html">&gt;&lt;/div&gt;</span><br>
+&nbsp;&nbsp;<span class="highlight-html">&lt;/div&gt;</span><br>
+<br>
+&nbsp;&nbsp;<span class="highlight-html">&lt;button</span> <span class="highlight-attribute">type</span>=<span class="highlight-value">"submit"</span><span class="highlight-html">&gt;</span>保存<span class="highlight-html">&lt;/button&gt;</span><br>
+<span class="highlight-html">&lt;/form&gt;</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="additions-section">
+            <h2 class="additions-title">🎨 追加されたエラー表示機能（Step 2）</h2>
+            <div class="additions-grid">
+                <div class="addition-item">
+                    <div class="addition-title">
+                        <span class="addition-icon">🎨</span>
+                        th:classappend
+                    </div>
+                    <div class="addition-description">
+                        エラー時に動的にCSSクラスを追加<br>
+                        is-invalidクラスでBootstrapのエラー表示
+                    </div>
+                    <div class="addition-code">
+th:classappend=<br>
+"${#fields.hasErrors('name')} ?<br>
+&nbsp;'is-invalid' : ''"
+                    </div>
+                </div>
+                
+                <div class="addition-item">
+                    <div class="addition-title">
+                        <span class="addition-icon">📝</span>
+                        th:errors
+                    </div>
+                    <div class="addition-description">
+                        エラーメッセージの表示<br>
+                        StudentDataクラスのmessage属性を表示
+                    </div>
+                    <div class="addition-code">
+&lt;div class="invalid-feedback"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;th:if="${#fields.hasErrors('name')}"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;th:errors="*{name}"&gt;&lt;/div&gt;
+                    </div>
+                </div>
+                
+                <div class="addition-item">
+                    <div class="addition-title">
+                        <span class="addition-icon">🔍</span>
+                        #fields.hasErrors()
+                    </div>
+                    <div class="addition-description">
+                        フィールド別エラー判定<br>
+                        条件分岐でエラー表示を制御
+                    </div>
+                    <div class="addition-code">
+${#fields.hasErrors('fieldName')}<br>
+<br>
+// true: エラーあり<br>
+// false: エラーなし
+                    </div>
+                </div>
+                
+                <div class="addition-item">
+                    <div class="addition-title">
+                        <span class="addition-icon">💎</span>
+                        Bootstrap連携
+                    </div>
+                    <div class="addition-description">
+                        is-invalidクラスとinvalid-feedbackクラス<br>
+                        美しいエラー表示の実現
+                    </div>
+                    <div class="addition-code">
+.is-invalid {<br>
+&nbsp;&nbsp;border-color: #dc3545;<br>
+}<br>
+.invalid-feedback {<br>
+&nbsp;&nbsp;color: #dc3545;<br>
+}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="feature-highlights">
+            <h2 class="highlights-title">🌟 エラー表示機能の特徴</h2>
+            <div class="highlights-list">
+                <div class="highlight-item">
+                    <div class="highlight-icon">⚡</div>
+                    <div class="highlight-text">自動判定</div>
+                </div>
+                <div class="highlight-item">
+                    <div class="highlight-icon">🎨</div>
+                    <div class="highlight-text">美しい表示</div>
+                </div>
+                <div class="highlight-item">
+                    <div class="highlight-icon">🔄</div>
+                    <div class="highlight-text">動的制御</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

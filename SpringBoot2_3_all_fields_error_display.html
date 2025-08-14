@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全フィールドエラー表示図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            padding: 40px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 18px;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #f39c12;
+        }
+
+        .fields-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .field-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 5px solid #f39c12;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .field-header {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .field-icon {
+            font-size: 20px;
+            margin-right: 10px;
+            color: #f39c12;
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            line-height: 1.4;
+            margin: 10px 0;
+            text-align: left;
+            overflow-x: auto;
+        }
+
+        .highlight-html { color: #e74c3c; }
+        .highlight-attribute { color: #f39c12; }
+        .highlight-value { color: #2ecc71; }
+        .highlight-thymeleaf { color: #9b59b6; }
+        .highlight-condition { color: #3498db; }
+
+        .validation-info {
+            background: #ecf0f1;
+            border-radius: 6px;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 12px;
+            color: #34495e;
+        }
+
+        .validation-rule {
+            font-weight: bold;
+            color: #e74c3c;
+        }
+
+        .special-section {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .special-title {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .checkbox-demo {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .checkbox-code {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            line-height: 1.4;
+            text-align: left;
+            margin: 15px 0;
+        }
+
+        .summary-section {
+            background: #34495e;
+            color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .summary-title {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .summary-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .summary-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #f39c12;
+            margin-bottom: 5px;
+        }
+
+        .summary-text {
+            font-size: 14px;
+        }
+
+        .tips-section {
+            background: #2ecc71;
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .tips-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .tips-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .tip-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            padding: 10px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+        }
+
+        .tip-icon {
+            font-size: 16px;
+            margin-right: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .fields-grid,
+            .summary-grid,
+            .tips-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">全フィールドエラー表示図</h1>
+        <p class="subtitle">StudentDataクラス全6フィールドのエラー表示実装</p>
+
+        <div class="fields-grid">
+            <div class="field-card">
+                <h3 class="field-header">
+                    <span class="field-icon">👤</span>
+                    name（名前）
+                </h3>
+                <div class="code-example">
+<span class="highlight-html">&lt;input</span> <span class="highlight-attribute">type</span>=<span class="highlight-value">"text"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-attribute">th:field</span>=<span class="highlight-value">"*{name}"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-attribute">class</span>=<span class="highlight-value">"form-control"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-thymeleaf">th:classappend</span>=<span class="highlight-value">"${#fields.hasErrors('name')} ? 'is-invalid' : ''"</span><span class="highlight-html">&gt;</span><br>
+<span class="highlight-html">&lt;div</span> <span class="highlight-attribute">class</span>=<span class="highlight-value">"invalid-feedback"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-thymeleaf">th:if</span>=<span class="highlight-value">"${#fields.hasErrors('name')}"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-thymeleaf">th:errors</span>=<span class="highlight-value">"*{name}"</span><span class="highlight-html">&gt;&lt;/div&gt;</span>
+                </div>
+                <div class="validation-info">
+                    <span class="validation-rule">バリデーション:</span> @NotBlank, @Size(max = 50)
+                </div>
+            </div>
+
+            <div class="field-card">
+                <h3 class="field-header">
+                    <span class="field-icon">📧</span>
+                    email（メールアドレス）
+                </h3>
+                <div class="code-example">
+<span class="highlight-html">&lt;input</span> <span class="highlight-attribute">type</span>=<span class="highlight-value">"email"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-attribute">th:field</span>=<span class="highlight-value">"*{email}"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-attribute">class</span>=<span class="highlight-value">"form-control"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-thymeleaf">th:classappend</span>=<span class="highlight-value">"${#fields.hasErrors('email')} ? 'is-invalid' : ''"</span><span class="highlight-html">&gt;</span><br>
+<span class="highlight-html">&lt;div</span> <span class="highlight-attribute">class</span>=<span class="highlight-value">"invalid-feedback"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-thymeleaf">th:if</span>=<span class="highlight-value">"${#fields.hasErrors('email')}"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-thymeleaf">th:errors</span>=<span class="highlight-value">"*{email}"</span><span class="highlight-html">&gt;&lt;/div&gt;</span>
+                </div>
+                <div class="validation-info">
+                    <span class="validation-rule">バリデーション:</span> @NotBlank, @Email
+                </div>
+            </div>
+
+            <div class="field-card">
+                <h3 class="field-header">
+                    <span class="field-icon">🎂</span>
+                    age（年齢）
+                </h3>
+                <div class="code-example">
+<span class="highlight-html">&lt;input</span> <span class="highlight-attribute">type</span>=<span class="highlight-value">"number"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-attribute">th:field</span>=<span class="highlight-value">"*{age}"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-attribute">class</span>=<span class="highlight-value">"form-control"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-thymeleaf">th:classappend</span>=<span class="highlight-value">"${#fields.hasErrors('age')} ? 'is-invalid' : ''"</span><span class="highlight-html">&gt;</span><br>
+<span class="highlight-html">&lt;div</span> <span class="highlight-attribute">class</span>=<span class="highlight-value">"invalid-feedback"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-thymeleaf">th:if</span>=<span class="highlight-value">"${#fields.hasErrors('age')}"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-thymeleaf">th:errors</span>=<span class="highlight-value">"*{age}"</span><span class="highlight-html">&gt;&lt;/div&gt;</span>
+                </div>
+                <div class="validation-info">
+                    <span class="validation-rule">バリデーション:</span> @NotNull, @Min(0), @Max(150)
+                </div>
+            </div>
+
+            <div class="field-card">
+                <h3 class="field-header">
+                    <span class="field-icon">🔐</span>
+                    password（パスワード）
+                </h3>
+                <div class="code-example">
+<span class="highlight-html">&lt;input</span> <span class="highlight-attribute">type</span>=<span class="highlight-value">"password"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-attribute">th:field</span>=<span class="highlight-value">"*{password}"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-attribute">class</span>=<span class="highlight-value">"form-control"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-thymeleaf">th:classappend</span>=<span class="highlight-value">"${#fields.hasErrors('password')} ? 'is-invalid' : ''"</span><span class="highlight-html">&gt;</span><br>
+<span class="highlight-html">&lt;div</span> <span class="highlight-attribute">class</span>=<span class="highlight-value">"invalid-feedback"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-thymeleaf">th:if</span>=<span class="highlight-value">"${#fields.hasErrors('password')}"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-thymeleaf">th:errors</span>=<span class="highlight-value">"*{password}"</span><span class="highlight-html">&gt;&lt;/div&gt;</span>
+                </div>
+                <div class="validation-info">
+                    <span class="validation-rule">バリデーション:</span> @NotBlank, @Size(min = 8, max = 100)
+                </div>
+            </div>
+
+            <div class="field-card">
+                <h3 class="field-header">
+                    <span class="field-icon">🔐</span>
+                    confirmPassword（確認用）
+                </h3>
+                <div class="code-example">
+<span class="highlight-html">&lt;input</span> <span class="highlight-attribute">type</span>=<span class="highlight-value">"password"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-attribute">th:field</span>=<span class="highlight-value">"*{confirmPassword}"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-attribute">class</span>=<span class="highlight-value">"form-control"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-thymeleaf">th:classappend</span>=<span class="highlight-value">"${#fields.hasErrors('confirmPassword')} ? 'is-invalid' : ''"</span><span class="highlight-html">&gt;</span><br>
+<span class="highlight-html">&lt;div</span> <span class="highlight-attribute">class</span>=<span class="highlight-value">"invalid-feedback"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-thymeleaf">th:if</span>=<span class="highlight-value">"${#fields.hasErrors('confirmPassword')}"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-thymeleaf">th:errors</span>=<span class="highlight-value">"*{confirmPassword}"</span><span class="highlight-html">&gt;&lt;/div&gt;</span>
+                </div>
+                <div class="validation-info">
+                    <span class="validation-rule">バリデーション:</span> @NotBlank（将来：パスワード一致チェック）
+                </div>
+            </div>
+
+            <div class="field-card">
+                <h3 class="field-header">
+                    <span class="field-icon">📋</span>
+                    agreeTerms（利用規約同意）
+                </h3>
+                <div class="code-example">
+<span class="highlight-html">&lt;input</span> <span class="highlight-attribute">type</span>=<span class="highlight-value">"checkbox"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-attribute">th:field</span>=<span class="highlight-value">"*{agreeTerms}"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-attribute">class</span>=<span class="highlight-value">"form-check-input"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-thymeleaf">th:classappend</span>=<span class="highlight-value">"${#fields.hasErrors('agreeTerms')} ? 'is-invalid' : ''"</span><span class="highlight-html">&gt;</span><br>
+<span class="highlight-html">&lt;div</span> <span class="highlight-attribute">class</span>=<span class="highlight-value">"invalid-feedback d-block"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-thymeleaf">th:if</span>=<span class="highlight-value">"${#fields.hasErrors('agreeTerms')}"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-thymeleaf">th:errors</span>=<span class="highlight-value">"*{agreeTerms}"</span><span class="highlight-html">&gt;&lt;/div&gt;</span>
+                </div>
+                <div class="validation-info">
+                    <span class="validation-rule">バリデーション:</span> @AssertTrue
+                </div>
+            </div>
+        </div>
+
+        <div class="special-section">
+            <h2 class="special-title">🎯 チェックボックスの特別対応</h2>
+            <div class="checkbox-demo">
+                <p style="margin-bottom: 15px; font-size: 14px;">
+                    チェックボックスではBootstrapの表示制御が異なるため、<code>d-block</code>クラスを追加します。
+                </p>
+                <div class="checkbox-code">
+<span class="highlight-html">&lt;div</span> <span class="highlight-attribute">class</span>=<span class="highlight-value">"form-check"</span><span class="highlight-html">&gt;</span><br>
+&nbsp;&nbsp;<span class="highlight-html">&lt;input</span> <span class="highlight-attribute">type</span>=<span class="highlight-value">"checkbox"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-attribute">th:field</span>=<span class="highlight-value">"*{agreeTerms}"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-attribute">class</span>=<span class="highlight-value">"form-check-input"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-thymeleaf">th:classappend</span>=<span class="highlight-value">"${#fields.hasErrors('agreeTerms')} ? 'is-invalid' : ''"</span><span class="highlight-html">&gt;</span><br>
+&nbsp;&nbsp;<span class="highlight-html">&lt;label</span> <span class="highlight-attribute">class</span>=<span class="highlight-value">"form-check-label"</span><span class="highlight-html">&gt;</span>利用規約に同意する<span class="highlight-html">&lt;/label&gt;</span><br>
+&nbsp;&nbsp;<span class="highlight-html">&lt;div</span> <span class="highlight-attribute">class</span>=<span class="highlight-value">"invalid-feedback d-block"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-thymeleaf">th:if</span>=<span class="highlight-value">"${#fields.hasErrors('agreeTerms')}"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-thymeleaf">th:errors</span>=<span class="highlight-value">"*{agreeTerms}"</span><span class="highlight-html">&gt;&lt;/div&gt;</span><br>
+<span class="highlight-html">&lt;/div&gt;</span>
+                </div>
+                <p style="font-size: 13px; margin-top: 10px;">
+                    <strong>重要：</strong><code>d-block</code>クラスで強制表示することで、チェックボックス下にエラーメッセージが確実に表示されます。
+                </p>
+            </div>
+        </div>
+
+        <div class="summary-section">
+            <h2 class="summary-title">📊 全フィールドエラー表示の統計</h2>
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <div class="summary-number">6</div>
+                    <div class="summary-text">対応フィールド数</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-number">12</div>
+                    <div class="summary-text">追加属性数</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-number">1</div>
+                    <div class="summary-text">特別対応（checkbox）</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tips-section">
+            <h3 class="tips-title">💡 実装のポイント</h3>
+            <div class="tips-list">
+                <div class="tip-item">
+                    <span class="tip-icon">✅</span>
+                    全フィールドに統一パターン適用
+                </div>
+                <div class="tip-item">
+                    <span class="tip-icon">🎨</span>
+                    Bootstrapクラスで美しい表示
+                </div>
+                <div class="tip-item">
+                    <span class="tip-icon">📋</span>
+                    チェックボックスにd-block追加
+                </div>
+                <div class="tip-item">
+                    <span class="tip-icon">🔄</span>
+                    th:ifで条件分岐表示
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>テスト実行画面図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            padding: 40px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 18px;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #f39c12;
+        }
+
+        .test-cases-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .test-case {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .case-empty {
+            border-top: 5px solid #e74c3c;
+        }
+
+        .case-invalid {
+            border-top: 5px solid #f39c12;
+        }
+
+        .case-valid {
+            border-top: 5px solid #27ae60;
+        }
+
+        .test-header {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .test-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        .icon-empty { color: #e74c3c; }
+        .icon-invalid { color: #f39c12; }
+        .icon-valid { color: #27ae60; }
+
+        .browser-mockup {
+            background: #2c3e50;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            color: #ecf0f1;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+
+        .browser-header {
+            background: #34495e;
+            margin: -20px -20px 15px -20px;
+            padding: 10px 15px;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            align-items: center;
+            font-size: 11px;
+        }
+
+        .browser-dots {
+            display: flex;
+            gap: 5px;
+            margin-right: 15px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .dot-red { background: #e74c3c; }
+        .dot-yellow { background: #f39c12; }
+        .dot-green { background: #27ae60; }
+
+        .form-field {
+            margin: 10px 0;
+            padding: 8px;
+            background: #34495e;
+            border-radius: 4px;
+            border-left: 3px solid #f39c12;
+        }
+
+        .field-label {
+            color: #bdc3c7;
+            font-size: 11px;
+            margin-bottom: 5px;
+        }
+
+        .field-input {
+            background: #ecf0f1;
+            color: #2c3e50;
+            padding: 5px 8px;
+            border-radius: 3px;
+            border: 1px solid #bdc3c7;
+            display: block;
+            width: 100%;
+            font-size: 11px;
+        }
+
+        .field-error {
+            border-color: #e74c3c !important;
+            background: #fdf2f2;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 10px;
+            margin-top: 3px;
+            font-style: italic;
+        }
+
+        .error-summary {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #f5c6cb;
+            margin: 10px 0;
+            font-size: 10px;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #c3e6cb;
+            margin: 10px 0;
+            font-size: 10px;
+        }
+
+        .submit-button {
+            background: #007bff;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            margin-top: 10px;
+        }
+
+        .test-description {
+            color: #34495e;
+            font-size: 14px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .test-inputs {
+            background: #ecf0f1;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 10px 0;
+            font-size: 12px;
+        }
+
+        .input-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .input-list {
+            color: #34495e;
+            line-height: 1.4;
+        }
+
+        .expected-result {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .expected-title {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .result-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .result-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .result-text {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .verification-section {
+            background: #34495e;
+            color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .verification-title {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .verification-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .verification-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+        }
+
+        .verification-icon {
+            font-size: 16px;
+            margin-right: 8px;
+            color: #f39c12;
+        }
+
+        @media (max-width: 768px) {
+            .test-cases-grid,
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .verification-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">テスト実行画面図</h1>
+        <p class="subtitle">3つのテストケース実行画面とエラー表示確認</p>
+
+        <div class="test-cases-grid">
+            <div class="test-case case-empty">
+                <h3 class="test-header">
+                    <span class="test-icon icon-empty">❌</span>
+                    テストケース1: 空欄入力
+                </h3>
+                <div class="test-description">
+                    全フィールドを空欄のまま送信し、必須チェックエラーを確認
+                </div>
+                <div class="test-inputs">
+                    <div class="input-title">入力値:</div>
+                    <div class="input-list">
+                        • 名前: （空欄）<br>
+                        • メール: （空欄）<br>
+                        • 年齢: （空欄）<br>
+                        • パスワード: （空欄）<br>
+                        • 確認用: （空欄）<br>
+                        • 利用規約: 未チェック
+                    </div>
+                </div>
+                <div class="browser-mockup">
+                    <div class="browser-header">
+                        <div class="browser-dots">
+                            <div class="dot dot-red"></div>
+                            <div class="dot dot-yellow"></div>
+                            <div class="dot dot-green"></div>
+                        </div>
+                        localhost:8080/students/form
+                    </div>
+                    <div class="error-summary">
+                        ⚠️ <strong>入力エラーが見つかりました：</strong><br>
+                        • 名前は必須です<br>
+                        • メールアドレスは必須です<br>
+                        • 年齢は必須です<br>
+                        • パスワードは必須です<br>
+                        • パスワード確認は必須です<br>
+                        • 利用規約に同意してください
+                    </div>
+                    <div class="form-field">
+                        <div class="field-label">名前 *</div>
+                        <input type="text" class="field-input field-error" value="">
+                        <div class="error-message">名前は必須です</div>
+                    </div>
+                    <div class="form-field">
+                        <div class="field-label">メールアドレス *</div>
+                        <input type="email" class="field-input field-error" value="">
+                        <div class="error-message">メールアドレスは必須です</div>
+                    </div>
+                    <button class="submit-button">保存</button>
+                </div>
+            </div>
+
+            <div class="test-case case-invalid">
+                <h3 class="test-header">
+                    <span class="test-icon icon-invalid">⚠️</span>
+                    テストケース2: 不正値入力
+                </h3>
+                <div class="test-description">
+                    形式・範囲エラーとなる値を入力し、バリデーションエラーを確認
+                </div>
+                <div class="test-inputs">
+                    <div class="input-title">入力値:</div>
+                    <div class="input-list">
+                        • 名前: 「a」×51（長すぎる）<br>
+                        • メール: 「invalid-email」<br>
+                        • 年齢: 「200」（範囲外）<br>
+                        • パスワード: 「123」（短すぎる）<br>
+                        • 確認用: 「456」（不一致）<br>
+                        • 利用規約: チェック済み
+                    </div>
+                </div>
+                <div class="browser-mockup">
+                    <div class="browser-header">
+                        <div class="browser-dots">
+                            <div class="dot dot-red"></div>
+                            <div class="dot dot-yellow"></div>
+                            <div class="dot dot-green"></div>
+                        </div>
+                        localhost:8080/students/form
+                    </div>
+                    <div class="error-summary">
+                        ⚠️ <strong>入力エラーが見つかりました：</strong><br>
+                        • 名前は50文字以下で入力してください<br>
+                        • 正しいメールアドレスを入力してください<br>
+                        • 年齢は150歳以下で入力してください<br>
+                        • パスワードは8文字以上で入力してください
+                    </div>
+                    <div class="form-field">
+                        <div class="field-label">名前 *</div>
+                        <input type="text" class="field-input field-error" value="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa">
+                        <div class="error-message">名前は50文字以下で入力してください</div>
+                    </div>
+                    <div class="form-field">
+                        <div class="field-label">メールアドレス *</div>
+                        <input type="email" class="field-input field-error" value="invalid-email">
+                        <div class="error-message">正しいメールアドレスを入力してください</div>
+                    </div>
+                    <button class="submit-button">保存</button>
+                </div>
+            </div>
+
+            <div class="test-case case-valid">
+                <h3 class="test-header">
+                    <span class="test-icon icon-valid">✅</span>
+                    テストケース3: 正常値入力
+                </h3>
+                <div class="test-description">
+                    全て正しい値を入力し、バリデーション成功とリダイレクトを確認
+                </div>
+                <div class="test-inputs">
+                    <div class="input-title">入力値:</div>
+                    <div class="input-list">
+                        • 名前: 「田中太郎」<br>
+                        • メール: 「tanaka@example.com」<br>
+                        • 年齢: 「25」<br>
+                        • パスワード: 「password123」<br>
+                        • 確認用: 「password123」<br>
+                        • 利用規約: チェック済み
+                    </div>
+                </div>
+                <div class="browser-mockup">
+                    <div class="browser-header">
+                        <div class="browser-dots">
+                            <div class="dot dot-red"></div>
+                            <div class="dot dot-yellow"></div>
+                            <div class="dot dot-green"></div>
+                        </div>
+                        localhost:8080/students （リダイレクト後）
+                    </div>
+                    <div class="success-message">
+                        ✅ <strong>学生情報が正常に登録されました</strong><br>
+                        新しい学生「田中太郎」さんが追加されました。
+                    </div>
+                    <div style="color: #27ae60; font-size: 12px; margin: 10px 0;">
+                        <strong>◆ 登録完了後の一覧表示</strong><br>
+                        ID: 001 | 名前: 田中太郎 | メール: tanaka@example.com | 年齢: 25歳
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="expected-result">
+            <h2 class="expected-title">🎯 期待される動作結果</h2>
+            <div class="result-grid">
+                <div class="result-item">
+                    <div class="result-icon">❌</div>
+                    <div class="result-text">
+                        空欄入力時<br>
+                        必須エラー表示
+                    </div>
+                </div>
+                <div class="result-item">
+                    <div class="result-icon">⚠️</div>
+                    <div class="result-text">
+                        不正値入力時<br>
+                        形式エラー表示
+                    </div>
+                </div>
+                <div class="result-item">
+                    <div class="result-icon">✅</div>
+                    <div class="result-text">
+                        正常値入力時<br>
+                        保存成功
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="verification-section">
+            <h2 class="verification-title">🔍 確認ポイント（Step 4）</h2>
+            <div class="verification-list">
+                <div class="verification-item">
+                    <span class="verification-icon">📋</span>
+                    エラーサマリーが正しく表示される
+                </div>
+                <div class="verification-item">
+                    <span class="verification-icon">🎨</span>
+                    入力欄の枠線が赤色になる
+                </div>
+                <div class="verification-item">
+                    <span class="verification-icon">📝</span>
+                    各フィールド下にエラーメッセージ表示
+                </div>
+                <div class="verification-item">
+                    <span class="verification-icon">✅</span>
+                    正常時はリダイレクト実行
+                </div>
+                <div class="verification-item">
+                    <span class="verification-icon">🔄</span>
+                    エラー時は入力値が保持される
+                </div>
+                <div class="verification-item">
+                    <span class="verification-icon">📱</span>
+                    レスポンシブ対応で見やすい表示
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

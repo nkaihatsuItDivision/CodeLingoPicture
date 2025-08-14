@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 9.3習得技術図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            padding: 40px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 18px;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #f39c12;
+        }
+
+        .achievement-header {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .achievement-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .achievement-summary {
+            font-size: 16px;
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+
+        .technologies-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .tech-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-top: 5px solid;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tech-1 { border-top-color: #e74c3c; }
+        .tech-2 { border-top-color: #3498db; }
+        .tech-3 { border-top-color: #2ecc71; }
+        .tech-4 { border-top-color: #9b59b6; }
+
+        .tech-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .tech-number {
+            background: #f39c12;
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            margin-right: 15px;
+        }
+
+        .tech-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .tech-subtitle {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+
+        .tech-content {
+            color: #34495e;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .tech-highlights {
+            background: #ecf0f1;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .highlights-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .highlight-item {
+            margin: 6px 0;
+            padding-left: 15px;
+            position: relative;
+            font-size: 13px;
+            color: #34495e;
+        }
+
+        .highlight-item:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .tech-code {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 6px;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            line-height: 1.4;
+            margin: 10px 0;
+            text-align: left;
+        }
+
+        .highlight-annotation { color: #f39c12; }
+        .highlight-thymeleaf { color: #9b59b6; }
+        .highlight-function { color: #3498db; }
+
+        .evolution-section {
+            background: #34495e;
+            color: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .evolution-title {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .evolution-timeline {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin: 20px 0;
+        }
+
+        .timeline-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .timeline-week {
+            background: #f39c12;
+            color: white;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        .timeline-focus {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .timeline-description {
+            font-size: 13px;
+            line-height: 1.4;
+            opacity: 0.9;
+        }
+
+        .integration-section {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .integration-title {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .integration-diagram {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .integration-layer {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .layer-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .layer-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .layer-tech {
+            font-size: 12px;
+            opacity: 0.9;
+            line-height: 1.3;
+        }
+
+        .mastery-level {
+            background: #95a5a6;
+            color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .mastery-title {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .mastery-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .mastery-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .mastery-score {
+            font-size: 24px;
+            font-weight: bold;
+            color: #f39c12;
+            margin-bottom: 5px;
+        }
+
+        .mastery-label {
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .next-step-preview {
+            background: #6f42c1;
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .next-step-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .next-step-content {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        @media (max-width: 768px) {
+            .technologies-grid,
+            .evolution-timeline,
+            .integration-diagram,
+            .mastery-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Week 9.3習得技術図</h1>
+        <p class="subtitle">Bean Validation導入による4つの重要技術の習得</p>
+
+        <div class="achievement-header">
+            <h2 class="achievement-title">🎉 Week 9.3で習得した核心技術</h2>
+            <p class="achievement-summary">
+                Bean Validation導入により、エンタープライズレベルのWebアプリケーション開発に<br>
+                必要な4つの重要技術を完全習得しました
+            </p>
+        </div>
+
+        <div class="technologies-grid">
+            <div class="tech-card tech-1">
+                <div class="tech-header">
+                    <div class="tech-number">1</div>
+                    <div>
+                        <div class="tech-title">Bean Validation技術</div>
+                        <div class="tech-subtitle">自動バリデーション実行システム</div>
+                    </div>
+                </div>
+                <div class="tech-content">
+                    Javaの標準的なバリデーション技術を完全習得。アノテーションベースの宣言的バリデーションにより、保守性と可読性が大幅に向上しました。
+                </div>
+                <div class="tech-highlights">
+                    <div class="highlights-title">習得した技術要素:</div>
+                    <div class="highlight-item">@Valid - バリデーション自動実行</div>
+                    <div class="highlight-item">BindingResult - 結果取得・判定</div>
+                    <div class="highlight-item">@NotBlank, @Email, @Min/@Max - 制約アノテーション</div>
+                    <div class="highlight-item">エラーメッセージのカスタマイズ</div>
+                </div>
+                <div class="tech-code">
+<span class="highlight-annotation">@Valid</span> <span class="highlight-annotation">@ModelAttribute</span> StudentData data,<br>
+BindingResult bindingResult<br>
+<br>
+<span class="highlight-function">if</span> (bindingResult.hasErrors()) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-function">return</span> <span class="highlight-string">"students/form"</span>;<br>
+}
+                </div>
+            </div>
+
+            <div class="tech-card tech-2">
+                <div class="tech-header">
+                    <div class="tech-number">2</div>
+                    <div>
+                        <div class="tech-title">エラーハンドリング技術</div>
+                        <div class="tech-subtitle">Thymeleafによる動的エラー表示</div>
+                    </div>
+                </div>
+                <div class="tech-content">
+                    Thymeleafの条件分岐とエラー表示機能を活用し、ユーザーフレンドリーなエラー表示システムを構築。UX向上に直結する実装技術を習得しました。
+                </div>
+                <div class="tech-highlights">
+                    <div class="highlights-title">習得した技術要素:</div>
+                    <div class="highlight-item">th:errors - エラーメッセージ表示</div>
+                    <div class="highlight-item">#fields.hasErrors() - エラー判定</div>
+                    <div class="highlight-item">th:classappend - 動的CSS制御</div>
+                    <div class="highlight-item">Bootstrap連携による美しい表示</div>
+                </div>
+                <div class="tech-code">
+<span class="highlight-thymeleaf">th:classappend</span>=<br>
+"${#fields.hasErrors('name')} ? 'is-invalid' : ''"<br>
+<br>
+<span class="highlight-thymeleaf">th:errors</span>="*{name}"
+                </div>
+            </div>
+
+            <div class="tech-card tech-3">
+                <div class="tech-header">
+                    <div class="tech-number">3</div>
+                    <div>
+                        <div class="tech-title">技術統合力</div>
+                        <div class="tech-subtitle">Week 9.1-9.2技術との完全連携</div>
+                    </div>
+                </div>
+                <div class="tech-content">
+                    Week 9.1のDTO設計技術とWeek 9.2のフォーム構築技術を基盤として、Bean Validationによる完全統合を実現。技術間の相乗効果を体感しました。
+                </div>
+                <div class="tech-highlights">
+                    <div class="highlights-title">統合実現技術:</div>
+                    <div class="highlight-item">StudentDataクラスアノテーション活用</div>
+                    <div class="highlight-item">Thymeleafフォーム基盤の発展</div>
+                    <div class="highlight-item">MVCアーキテクチャの完全理解</div>
+                    <div class="highlight-item">データフロー全体の把握</div>
+                </div>
+                <div class="tech-code">
+<span class="highlight-annotation">// Week 9.1: DTO基盤</span><br>
+<span class="highlight-annotation">@NotBlank</span>(message = "名前は必須です")<br>
+<span class="highlight-function">private</span> String name;<br>
+<br>
+<span class="highlight-annotation">// Week 9.3: 自動実行</span><br>
+<span class="highlight-thymeleaf">th:errors</span>="*{name}"
+                </div>
+            </div>
+
+            <div class="tech-card tech-4">
+                <div class="tech-header">
+                    <div class="tech-number">4</div>
+                    <div>
+                        <div class="tech-title">実装力向上</div>
+                        <div class="tech-subtitle">エンタープライズレベル到達</div>
+                    </div>
+                </div>
+                <div class="tech-content">
+                    複雑な機能要件を段階的に実装し、テスト・デバッグまでを完遂する実装力を習得。実務レベルの開発プロセスを体験し、自信を獲得しました。
+                </div>
+                <div class="tech-highlights">
+                    <div class="highlights-title">向上した実装スキル:</div>
+                    <div class="highlight-item">段階的開発アプローチの習得</div>
+                    <div class="highlight-item">テスト駆動による品質確保</div>
+                    <div class="highlight-item">デバッグ・トラブルシューティング</div>
+                    <div class="highlight-item">コードレビュー・改善思考</div>
+                </div>
+                <div class="tech-code">
+<span class="highlight-annotation">// 段階的実装アプローチ</span><br>
+1. Controller改修<br>
+2. フォーム改修<br>
+3. エラーサマリー実装<br>
+4. 動作確認・テスト<br>
+5. 統合確認
+                </div>
+            </div>
+        </div>
+
+        <div class="evolution-section">
+            <h2 class="evolution-title">🚀 Week 9.1-9.2からの技術発展</h2>
+            <div class="evolution-timeline">
+                <div class="timeline-item">
+                    <div class="timeline-week">Week 9.1</div>
+                    <div class="timeline-focus">DTO基盤確立</div>
+                    <div class="timeline-description">
+                        StudentDataクラス設計<br>
+                        Bean Validationアノテーション準備<br>
+                        データ構造の基盤構築
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-week">Week 9.2</div>
+                    <div class="timeline-focus">フォーム基盤確立</div>
+                    <div class="timeline-description">
+                        Thymeleafフォーム構築<br>
+                        th:field, th:objectの活用<br>
+                        ユーザー入力基盤の完成
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-week">Week 9.3</div>
+                    <div class="timeline-focus">バリデーション実装</div>
+                    <div class="timeline-description">
+                        Bean Validation機能統合<br>
+                        エラーハンドリング完成<br>
+                        Week 9.1-9.2技術の完全活用
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="integration-section">
+            <h2 class="integration-title">🏗️ MVCアーキテクチャの完全理解</h2>
+            <div class="integration-diagram">
+                <div class="integration-layer">
+                    <div class="layer-icon">🎯</div>
+                    <div class="layer-title">Model層</div>
+                    <div class="layer-tech">
+                        StudentDataクラス<br>
+                        Bean Validationアノテーション<br>
+                        データ制約定義
+                    </div>
+                </div>
+                
+                <div class="integration-layer">
+                    <div class="layer-icon">🎨</div>
+                    <div class="layer-title">View層</div>
+                    <div class="layer-tech">
+                        Thymeleafテンプレート<br>
+                        th:errors, th:classappend<br>
+                        動的エラー表示
+                    </div>
+                </div>
+                
+                <div class="integration-layer">
+                    <div class="layer-icon">🔧</div>
+                    <div class="layer-title">Controller層</div>
+                    <div class="layer-tech">
+                        @Valid, BindingResult<br>
+                        エラーハンドリング<br>
+                        フロー制御
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mastery-level">
+            <h3 class="mastery-title">📊 技術習得レベル</h3>
+            <div class="mastery-grid">
+                <div class="mastery-item">
+                    <div class="mastery-score">95%</div>
+                    <div class="mastery-label">Bean Validation</div>
+                </div>
+                <div class="mastery-item">
+                    <div class="mastery-score">90%</div>
+                    <div class="mastery-label">エラーハンドリング</div>
+                </div>
+                <div class="mastery-item">
+                    <div class="mastery-score">88%</div>
+                    <div class="mastery-label">技術統合</div>
+                </div>
+                <div class="mastery-item">
+                    <div class="mastery-score">92%</div>
+                    <div class="mastery-label">実装力</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="next-step-preview">
+            <h3 class="next-step-title">🌟 Week 9.4への準備完了</h3>
+            <p class="next-step-content">
+                Week 9.3で習得した技術を基盤として、Week 9.4ではエラー処理・UX改善に進みます。<br>
+                より洗練されたユーザーエクスペリエンスの実装に挑戦していきましょう！
+            </p>
+        </div>
+    </div>
+</body>
+</html>

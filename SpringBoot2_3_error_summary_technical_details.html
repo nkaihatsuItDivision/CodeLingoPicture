@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>エラーサマリー技術図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            padding: 40px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 18px;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #f39c12;
+        }
+
+        .technical-overview {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .technical-title {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .function-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .function-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            border-top: 4px solid #f39c12;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .function-header {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .function-icon {
+            font-size: 24px;
+            margin-right: 10px;
+            color: #f39c12;
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            line-height: 1.5;
+            margin: 15px 0;
+            text-align: left;
+            overflow-x: auto;
+        }
+
+        .highlight-thymeleaf { color: #9b59b6; }
+        .highlight-attribute { color: #f39c12; }
+        .highlight-value { color: #2ecc71; }
+        .highlight-html { color: #e74c3c; }
+        .highlight-condition { color: #3498db; }
+        .highlight-comment { color: #95a5a6; font-style: italic; }
+        .highlight-variable { color: #e67e22; }
+
+        .function-description {
+            color: #34495e;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .parameter-info {
+            background: #ecf0f1;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 10px 0;
+            font-size: 13px;
+            color: #2c3e50;
+        }
+
+        .implementation-section {
+            background: #34495e;
+            color: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .implementation-title {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .step-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .step-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .step-number {
+            background: #f39c12;
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 auto 15px;
+            font-size: 18px;
+        }
+
+        .step-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .step-description {
+            font-size: 13px;
+            line-height: 1.4;
+            opacity: 0.9;
+        }
+
+        .data-flow-section {
+            background: #ecf0f1;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .data-flow-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .flow-diagram {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin: 20px 0;
+        }
+
+        .flow-box {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 2px solid #f39c12;
+        }
+
+        .flow-label {
+            font-size: 14px;
+            font-weight: bold;
+            color: #f39c12;
+            margin-bottom: 10px;
+        }
+
+        .flow-content {
+            font-size: 12px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+
+        .example-section {
+            background: #2ecc71;
+            color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .example-title {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .example-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .example-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .example-label {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .example-content {
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .summary-points {
+            background: #95a5a6;
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .summary-title {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .points-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .point-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+        }
+
+        .point-icon {
+            font-size: 16px;
+            margin-right: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .function-grid,
+            .example-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .step-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .flow-diagram {
+                grid-template-columns: 1fr;
+            }
+            
+            .points-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">エラーサマリー技術図</h1>
+        <p class="subtitle">th:eachによる全エラー一覧表示の技術詳細</p>
+
+        <div class="technical-overview">
+            <h2 class="technical-title">🔧 技術概要</h2>
+            <div class="code-example">
+<span class="highlight-comment">&lt;!-- エラーサマリーの完全な実装例 --&gt;</span><br>
+<span class="highlight-html">&lt;div</span> <span class="highlight-attribute">class</span>=<span class="highlight-value">"alert alert-danger"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-thymeleaf">th:if</span>=<span class="highlight-value">"<span class="highlight-condition">${#fields.hasAnyErrors()}</span>"</span><span class="highlight-html">&gt;</span><br>
+<br>
+&nbsp;&nbsp;<span class="highlight-html">&lt;h4&gt;</span>入力エラーが見つかりました<span class="highlight-html">&lt;/h4&gt;</span><br>
+<br>
+&nbsp;&nbsp;<span class="highlight-html">&lt;ul&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-html">&lt;li</span> <span class="highlight-thymeleaf">th:each</span>=<span class="highlight-value">"<span class="highlight-variable">error</span> : <span class="highlight-condition">${#fields.allErrors()}</span>"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-thymeleaf">th:text</span>=<span class="highlight-value">"${<span class="highlight-variable">error</span>}"</span><span class="highlight-html">&gt;&lt;/li&gt;</span><br>
+&nbsp;&nbsp;<span class="highlight-html">&lt;/ul&gt;</span><br>
+<span class="highlight-html">&lt;/div&gt;</span>
+            </div>
+        </div>
+
+        <div class="function-grid">
+            <div class="function-card">
+                <h3 class="function-header">
+                    <span class="function-icon">🔍</span>
+                    #fields.hasAnyErrors()
+                </h3>
+                <div class="function-description">
+                    フォーム全体にエラーが存在するかを判定する関数
+                </div>
+                <div class="code-example">
+<span class="highlight-comment">// 基本構文</span><br>
+<span class="highlight-condition">${#fields.hasAnyErrors()}</span><br>
+<br>
+<span class="highlight-comment">// 戻り値型: boolean</span><br>
+<span class="highlight-comment">// true  : エラーが1つ以上存在</span><br>
+<span class="highlight-comment">// false : エラーなし（全て正常）</span><br>
+<br>
+<span class="highlight-comment">// 使用場面</span><br>
+<span class="highlight-thymeleaf">th:if</span>=<span class="highlight-value">"<span class="highlight-condition">${#fields.hasAnyErrors()}</span>"</span><br>
+<span class="highlight-thymeleaf">th:unless</span>=<span class="highlight-value">"<span class="highlight-condition">${#fields.hasAnyErrors()}</span>"</span>
+                </div>
+                <div class="parameter-info">
+                    <strong>判定対象:</strong> StudentDataクラスの全フィールド<br>
+                    name, email, age, password, confirmPassword, agreeTerms
+                </div>
+            </div>
+
+            <div class="function-card">
+                <h3 class="function-header">
+                    <span class="function-icon">📋</span>
+                    #fields.allErrors()
+                </h3>
+                <div class="function-description">
+                    全フィールドのエラーメッセージ一覧を取得する関数
+                </div>
+                <div class="code-example">
+<span class="highlight-comment">// 基本構文</span><br>
+<span class="highlight-condition">${#fields.allErrors()}</span><br>
+<br>
+<span class="highlight-comment">// 戻り値型: List&lt;String&gt;</span><br>
+<span class="highlight-comment">// 例: ["名前は必須です",</span><br>
+<span class="highlight-comment">//      "正しいメールアドレスを...",</span><br>
+<span class="highlight-comment">//      "年齢は0歳以上で..."]</span><br>
+<br>
+<span class="highlight-comment">// 使用場面</span><br>
+<span class="highlight-thymeleaf">th:each</span>=<span class="highlight-value">"error : <span class="highlight-condition">${#fields.allErrors()}</span>"</span>
+                </div>
+                <div class="parameter-info">
+                    <strong>取得内容:</strong> Bean Validationアノテーションのmessage属性値<br>
+                    <strong>順序:</strong> フィールド定義順に取得される
+                </div>
+            </div>
+        </div>
+
+        <div class="implementation-section">
+            <h2 class="implementation-title">⚙️ th:each実装の仕組み</h2>
+            <div class="step-grid">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-title">エラー判定</div>
+                    <div class="step-description">
+                        #fields.hasAnyErrors()<br>
+                        でエラー存在を確認
+                    </div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-title">リスト取得</div>
+                    <div class="step-description">
+                        #fields.allErrors()<br>
+                        で全エラーのList取得
+                    </div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-title">ループ処理</div>
+                    <div class="step-description">
+                        th:eachで<br>
+                        Listを1つずつ処理
+                    </div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <div class="step-title">メッセージ出力</div>
+                    <div class="step-description">
+                        th:textで<br>
+                        各エラーメッセージ表示
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="data-flow-section">
+            <h2 class="data-flow-title">🔄 データフローの詳細</h2>
+            <div class="flow-diagram">
+                <div class="flow-box">
+                    <div class="flow-label">Bean Validation実行</div>
+                    <div class="flow-content">
+                        @NotBlank, @Email, @Min/<br>
+                        @Max, @AssertTrueの<br>
+                        アノテーションが実行され<br>
+                        エラーメッセージ生成
+                    </div>
+                </div>
+                <div class="flow-box">
+                    <div class="flow-label">BindingResult格納</div>
+                    <div class="flow-content">
+                        各フィールドのエラー<br>
+                        メッセージがBindingResult<br>
+                        オブジェクトに蓄積される
+                    </div>
+                </div>
+                <div class="flow-box">
+                    <div class="flow-label">Thymeleaf処理</div>
+                    <div class="flow-content">
+                        #fields.allErrors()で<br>
+                        List&lt;String&gt;として取得し<br>
+                        th:eachでHTML生成
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="function-grid">
+            <div class="function-card">
+                <h3 class="function-header">
+                    <span class="function-icon">🔄</span>
+                    th:each詳細構文
+                </h3>
+                <div class="code-example">
+<span class="highlight-comment">// 基本パターン</span><br>
+<span class="highlight-thymeleaf">th:each</span>=<span class="highlight-value">"<span class="highlight-variable">error</span> : <span class="highlight-condition">${#fields.allErrors()}</span>"</span><br>
+<br>
+<span class="highlight-comment">// 変数名: error（任意の名前可能）</span><br>
+<span class="highlight-comment">// データ源: ${#fields.allErrors()}</span><br>
+<br>
+<span class="highlight-comment">// 拡張パターン（インデックス付き）</span><br>
+<span class="highlight-thymeleaf">th:each</span>=<span class="highlight-value">"<span class="highlight-variable">error, stat</span> : <span class="highlight-condition">${#fields.allErrors()}</span>"</span><br>
+<br>
+<span class="highlight-comment">// stat.index  : インデックス（0〜）</span><br>
+<span class="highlight-comment">// stat.count  : カウント（1〜）</span><br>
+<span class="highlight-comment">// stat.size   : 全体サイズ</span><br>
+<span class="highlight-comment">// stat.first  : 最初の要素か</span><br>
+<span class="highlight-comment">// stat.last   : 最後の要素か</span>
+                </div>
+            </div>
+
+            <div class="function-card">
+                <h3 class="function-header">
+                    <span class="function-icon">📤</span>
+                    th:text出力処理
+                </h3>
+                <div class="code-example">
+<span class="highlight-comment">// 基本出力</span><br>
+<span class="highlight-thymeleaf">th:text</span>=<span class="highlight-value">"${<span class="highlight-variable">error</span>}"</span><br>
+<br>
+<span class="highlight-comment">// 実際の出力例</span><br>
+<span class="highlight-comment">// "名前は必須です"</span><br>
+<span class="highlight-comment">// "正しいメールアドレスを入力してください"</span><br>
+<span class="highlight-comment">// "年齢は0歳以上で入力してください"</span><br>
+<br>
+<span class="highlight-comment">// 番号付き出力</span><br>
+<span class="highlight-thymeleaf">th:text</span>=<span class="highlight-value">"|${stat.count}. ${<span class="highlight-variable">error</span>}|"</span><br>
+<br>
+<span class="highlight-comment">// 結果: "1. 名前は必須です"</span><br>
+<span class="highlight-comment">//       "2. 正しいメールアドレスを..."</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="example-section">
+            <h2 class="example-title">💡 実装例とパターン</h2>
+            <div class="example-grid">
+                <div class="example-item">
+                    <div class="example-label">🟢 エラーなしの場合</div>
+                    <div class="example-content">
+                        #fields.hasAnyErrors() = false<br>
+                        → エラーサマリー全体が非表示<br>
+                        → th:ifによる条件分岐で制御<br>
+                        → ユーザーには何も表示されない
+                    </div>
+                </div>
+                
+                <div class="example-item">
+                    <div class="example-label">🔴 エラーありの場合</div>
+                    <div class="example-content">
+                        #fields.hasAnyErrors() = true<br>
+                        → #fields.allErrors()でList取得<br>
+                        → th:eachで各エラーをループ処理<br>
+                        → &lt;li&gt;要素として一覧表示
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="summary-points">
+            <h3 class="summary-title">🎯 技術的なポイント</h3>
+            <div class="points-grid">
+                <div class="point-item">
+                    <span class="point-icon">🔍</span>
+                    hasAnyErrors()で全体判定
+                </div>
+                <div class="point-item">
+                    <span class="point-icon">📋</span>
+                    allErrors()でList&lt;String&gt;取得
+                </div>
+                <div class="point-item">
+                    <span class="point-icon">🔄</span>
+                    th:eachでループ処理
+                </div>
+                <div class="point-item">
+                    <span class="point-icon">📤</span>
+                    th:textで個別メッセージ出力
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

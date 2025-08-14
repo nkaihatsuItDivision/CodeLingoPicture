@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controller改修手順図 - Week 9.3 Bean Validation導入</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            padding: 40px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 18px;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #f39c12;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .version-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            border: 2px solid #ddd;
+        }
+
+        .week-9-2 {
+            border-color: #3498db;
+        }
+
+        .week-9-3 {
+            border-color: #f39c12;
+        }
+
+        .version-header {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .week-9-2 .version-header {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+
+        .week-9-3 .version-header {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.5;
+            margin: 15px 0;
+            overflow-x: auto;
+            text-align: left;
+        }
+
+        .highlight-java { color: #3498db; }
+        .highlight-annotation { color: #f39c12; }
+        .highlight-string { color: #2ecc71; }
+        .highlight-new { 
+            background: rgba(241, 196, 15, 0.3);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        .changes-section {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .changes-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .changes-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .change-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .change-number {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .change-description {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid,
+            .changes-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Controller改修手順図</h1>
+        <p class="subtitle">Week 9.2版 → Week 9.3版への改修手順</p>
+
+        <div class="comparison-grid">
+            <div class="version-section week-9-2">
+                <div class="version-header">
+                    📝 Week 9.2版 Controller<br>（改修前）
+                </div>
+                <div class="code-example">
+<span class="highlight-annotation">@Controller</span><br>
+<span class="highlight-annotation">@RequestMapping</span>(<span class="highlight-string">"/students"</span>)<br>
+<span class="highlight-java">public class</span> StudentController {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-annotation">@PostMapping</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-java">public String</span> createStudent(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-annotation">@ModelAttribute</span> StudentData studentData,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Model model) {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-java">// 手動バリデーション処理</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-java">if</span> (studentData.getName().isEmpty()) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;model.addAttribute(<span class="highlight-string">"error"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-string">"名前は必須です"</span>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-java">return</span> <span class="highlight-string">"students/form"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;studentService.save(studentData);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-java">return</span> <span class="highlight-string">"redirect:/students"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                </div>
+            </div>
+
+            <div class="version-section week-9-3">
+                <div class="version-header">
+                    ✨ Week 9.3版 Controller<br>（改修後）
+                </div>
+                <div class="code-example">
+<span class="highlight-annotation">@Controller</span><br>
+<span class="highlight-annotation">@RequestMapping</span>(<span class="highlight-string">"/students"</span>)<br>
+<span class="highlight-java">public class</span> StudentController {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-annotation">@PostMapping</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-java">public String</span> createStudent(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-new"><span class="highlight-annotation">@Valid</span></span> <span class="highlight-annotation">@ModelAttribute</span> StudentData studentData,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-new">BindingResult bindingResult,</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Model model) {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-java">// Bean Validation自動実行</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-new"><span class="highlight-java">if</span> (bindingResult.hasErrors()) {</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-java">return</span> <span class="highlight-string">"students/form"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;studentService.save(studentData);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-java">return</span> <span class="highlight-string">"redirect:/students"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                </div>
+            </div>
+        </div>
+
+        <div class="changes-section">
+            <h2 class="changes-title">🔧 重要な変更点（Step 1）</h2>
+            <div class="changes-grid">
+                <div class="change-item">
+                    <div class="change-number">1️⃣ @Valid追加</div>
+                    <div class="change-description">
+                        @ModelAttributeの直前に@Validを追加<br>
+                        → StudentDataクラスのアノテーションが自動実行される
+                    </div>
+                </div>
+                <div class="change-item">
+                    <div class="change-number">2️⃣ BindingResult追加</div>
+                    <div class="change-description">
+                        @ModelAttributeパラメータの直後に追加<br>
+                        → バリデーション結果を受け取るオブジェクト
+                    </div>
+                </div>
+                <div class="change-item">
+                    <div class="change-number">3️⃣ 手動チェック削除</div>
+                    <div class="change-description">
+                        if文による手動バリデーション処理を削除<br>
+                        → Bean Validationが自動で実行
+                    </div>
+                </div>
+                <div class="change-item">
+                    <div class="change-number">4️⃣ hasErrors()判定</div>
+                    <div class="change-description">
+                        bindingResult.hasErrors()でエラー判定<br>
+                        → エラー時はフォーム画面に戻る
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
