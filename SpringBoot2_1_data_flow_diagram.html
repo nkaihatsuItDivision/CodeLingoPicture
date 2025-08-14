@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>データの流れ図（フォーム処理）</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        .content {
+            padding: 50px;
+        }
+
+        .flow-section {
+            margin-bottom: 50px;
+        }
+
+        .flow-title {
+            font-size: 2rem;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .flow-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            border-radius: 2px;
+        }
+
+        .flow-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .flow-step {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            transition: all 0.3s ease;
+            border-left: 5px solid transparent;
+        }
+
+        .flow-step:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .step-submit {
+            border-left-color: #3498db;
+        }
+
+        .step-display {
+            border-left-color: #e74c3c;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 5px 15px rgba(241, 196, 15, 0.3);
+        }
+
+        .step-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #2c3e50;
+            flex-grow: 1;
+            margin-left: 20px;
+        }
+
+        .step-type {
+            background: #f8f9fa;
+            color: #7f8c8d;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid #e9ecef;
+        }
+
+        .step-process {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .process-box {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            border: 2px dashed #e9ecef;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .process-box:hover {
+            border-color: #f39c12;
+            background: #fffbf0;
+        }
+
+        .process-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #f39c12;
+        }
+
+        .process-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .process-tech {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #e74c3c;
+            background: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid #ecf0f1;
+        }
+
+        .flow-divider {
+            text-align: center;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .divider-line {
+            height: 2px;
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            margin: 20px auto;
+            width: 100px;
+            border-radius: 1px;
+        }
+
+        .divider-text {
+            background: white;
+            color: #7f8c8d;
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: 2px solid #e9ecef;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        .comparison-section {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 40px;
+            margin-top: 50px;
+        }
+
+        .comparison-title {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .comparison-title::before {
+            content: "🔄";
+            font-size: 2.5rem;
+            margin-right: 15px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .comparison-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .comparison-card-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .card-icon {
+            font-size: 1.8rem;
+            margin-right: 10px;
+        }
+
+        .submit-icon {
+            color: #3498db;
+        }
+
+        .display-icon {
+            color: #e74c3c;
+        }
+
+        .comparison-steps {
+            list-style: none;
+        }
+
+        .comparison-step {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f8f9fa;
+        }
+
+        .comparison-step:last-child {
+            border-bottom: none;
+        }
+
+        .step-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .submit-dot {
+            background: #3498db;
+        }
+
+        .display-dot {
+            background: #e74c3c;
+        }
+
+        .step-text {
+            font-size: 0.95rem;
+            color: #34495e;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 30px 20px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .step-process {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .step-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+            
+            .step-title {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>フォーム処理のデータフロー</h1>
+            <p>Entity ⇔ DTO 変換による安全なデータ処理</p>
+            <div class="subtitle">StudentData（DTO）を中心とした処理の流れ</div>
+        </div>
+        
+        <div class="content">
+            <div class="flow-section">
+                <div class="flow-title">📤 フォーム送信時のデータフロー</div>
+                <div class="flow-container">
+                    <div class="flow-step step-submit">
+                        <div class="step-header">
+                            <div class="step-number">1</div>
+                            <div class="step-title">ユーザー入力</div>
+                            <div class="step-type">Input</div>
+                        </div>
+                        <div class="step-process">
+                            <div class="process-box">
+                                <div class="process-icon">👤</div>
+                                <div class="process-name">ユーザー</div>
+                                <div class="process-tech">Browser</div>
+                            </div>
+                            <div class="process-box">
+                                <div class="process-icon">📝</div>
+                                <div class="process-name">フォーム入力</div>
+                                <div class="process-tech">HTML Form</div>
+                            </div>
+                            <div class="process-box">
+                                <div class="process-icon">📤</div>
+                                <div class="process-name">送信実行</div>
+                                <div class="process-tech">POST Request</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-step step-submit">
+                        <div class="step-header">
+                            <div class="step-number">2</div>
+                            <div class="step-title">DTO受信・バリデーション</div>
+                            <div class="step-type">Validation</div>
+                        </div>
+                        <div class="step-process">
+                            <div class="process-box">
+                                <div class="process-icon">🎯</div>
+                                <div class="process-name">StudentData</div>
+                                <div class="process-tech">DTO Class</div>
+                            </div>
+                            <div class="process-box">
+                                <div class="process-icon">✅</div>
+                                <div class="process-name">バリデーション</div>
+                                <div class="process-tech">Bean Validation</div>
+                            </div>
+                            <div class="process-box">
+                                <div class="process-icon">🛡️</div>
+                                <div class="process-name">エラーチェック</div>
+                                <div class="process-tech">@Valid</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-step step-submit">
+                        <div class="step-header">
+                            <div class="step-number">3</div>
+                            <div class="step-title">Entity変換</div>
+                            <div class="step-type">Conversion</div>
+                        </div>
+                        <div class="step-process">
+                            <div class="process-box">
+                                <div class="process-icon">🔄</div>
+                                <div class="process-name">変換処理</div>
+                                <div class="process-tech">toEntity()</div>
+                            </div>
+                            <div class="process-box">
+                                <div class="process-icon">🗃️</div>
+                                <div class="process-name">Student Entity</div>
+                                <div class="process-tech">Entity Class</div>
+                            </div>
+                            <div class="process-box">
+                                <div class="process-icon">🔗</div>
+                                <div class="process-name">DB対応</div>
+                                <div class="process-tech">JPA Ready</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-step step-submit">
+                        <div class="step-header">
+                            <div class="step-number">4</div>
+                            <div class="step-title">データベース保存</div>
+                            <div class="step-type">Persistence</div>
+                        </div>
+                        <div class="step-process">
+                            <div class="process-box">
+                                <div class="process-icon">💾</div>
+                                <div class="process-name">データベース</div>
+                                <div class="process-tech">MySQL</div>
+                            </div>
+                            <div class="process-box">
+                                <div class="process-icon">💿</div>
+                                <div class="process-name">永続化</div>
+                                <div class="process-tech">JPA/Hibernate</div>
+                            </div>
+                            <div class="process-box">
+                                <div class="process-icon">✅</div>
+                                <div class="process-name">保存完了</div>
+                                <div class="process-tech">Commit</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flow-divider">
+                <div class="divider-text">データフロー切り替え</div>
+                <div class="divider-line"></div>
+            </div>
+            
+            <div class="flow-section">
+                <div class="flow-title">📥 フォーム表示時のデータフロー</div>
+                <div class="flow-container">
+                    <div class="flow-step step-display">
+                        <div class="step-header">
+                            <div class="step-number">1</div>
+                            <div class="step-title">データベース取得</div>
+                            <div class="step-type">Retrieval</div>
+                        </div>
+                        <div class="step-process">
+                            <div class="process-box">
+                                <div class="process-icon">💾</div>
+                                <div class="process-name">データベース</div>
+                                <div class="process-tech">MySQL</div>
+                            </div>
+                            <div class="process-box">
+                                <div class="process-icon">🔍</div>
+                                <div class="process-name">検索実行</div>
+                                <div class="process-tech">Repository</div>
+                            </div>
+                            <div class="process-box">
+                                <div class="process-icon">🗃️</div>
+                                <div class="process-name">Student Entity</div>
+                                <div class="process-tech">Entity Class</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-step step-display">
+                        <div class="step-header">
+                            <div class="step-number">2</div>
+                            <div class="step-title">DTO変換</div>
+                            <div class="step-type">Conversion</div>
+                        </div>
+                        <div class="step-process">
+                            <div class="process-box">
+                                <div class="process-icon">🔄</div>
+                                <div class="process-name">変換処理</div>
+                                <div class="process-tech">fromEntity()</div>
+                            </div>
+                            <div class="process-box">
+                                <div class="process-icon">🎯</div>
+                                <div class="process-name">StudentData</div>
+                                <div class="process-tech">DTO Class</div>
+                            </div>
+                            <div class="process-box">
+                                <div class="process-icon">🎨</div>
+                                <div class="process-name">フォーム対応</div>
+                                <div class="process-tech">UI Ready</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-step step-display">
+                        <div class="step-header">
+                            <div class="step-number">3</div>
+                            <div class="step-title">Modelに設定</div>
+                            <div class="step-type">Model Binding</div>
+                        </div>
+                        <div class="step-process">
+                            <div class="process-box">
+                                <div class="process-icon">🎛️</div>
+                                <div class="process-name">Controller</div>
+                                <div class="process-tech">Spring MVC</div>
+                            </div>
+                            <div class="process-box">
+                                <div class="process-icon">📦</div>
+                                <div class="process-name">Model設定</div>
+                                <div class="process-tech">addAttribute()</div>
+                            </div>
+                            <div class="process-box">
+                                <div class="process-icon">🚀</div>
+                                <div class="process-name">View転送</div>
+                                <div class="process-tech">Thymeleaf</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-step step-display">
+                        <div class="step-header">
+                            <div class="step-number">4</div>
+                            <div class="step-title">フォーム表示</div>
+                            <div class="step-type">Rendering</div>
+                        </div>
+                        <div class="step-process">
+                            <div class="process-box">
+                                <div class="process-icon">🎨</div>
+                                <div class="process-name">Thymeleaf</div>
+                                <div class="process-tech">Template Engine</div>
+                            </div>
+                            <div class="process-box">
+                                <div class="process-icon">📱</div>
+                                <div class="process-name">HTML生成</div>
+                                <div class="process-tech">Dynamic HTML</div>
+                            </div>
+                            <div class="process-box">
+                                <div class="process-icon">👁️</div>
+                                <div class="process-name">ユーザー表示</div>
+                                <div class="process-tech">Browser</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="comparison-section">
+                <div class="comparison-title">データフロー比較：送信 vs 表示</div>
+                <div class="comparison-grid">
+                    <div class="comparison-card">
+                        <div class="comparison-card-title">
+                            <span class="card-icon submit-icon">📤</span>
+                            フォーム送信時
+                        </div>
+                        <ul class="comparison-steps">
+                            <li class="comparison-step">
+                                <div class="step-dot submit-dot"></div>
+                                <div class="step-text">ユーザー入力データ受信</div>
+                            </li>
+                            <li class="comparison-step">
+                                <div class="step-dot submit-dot"></div>
+                                <div class="step-text">StudentDataで受信・検証</div>
+                            </li>
+                            <li class="comparison-step">
+                                <div class="step-dot submit-dot"></div>
+                                <div class="step-text">StudentEntityに変換</div>
+                            </li>
+                            <li class="comparison-step">
+                                <div class="step-dot submit-dot"></div>
+                                <div class="step-text">データベースに保存</div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="comparison-card">
+                        <div class="comparison-card-title">
+                            <span class="card-icon display-icon">📥</span>
+                            フォーム表示時
+                        </div>
+                        <ul class="comparison-steps">
+                            <li class="comparison-step">
+                                <div class="step-dot display-dot"></div>
+                                <div class="step-text">データベースから取得</div>
+                            </li>
+                            <li class="comparison-step">
+                                <div class="step-dot display-dot"></div>
+                                <div class="step-text">StudentEntityで受信</div>
+                            </li>
+                            <li class="comparison-step">
+                                <div class="step-dot display-dot"></div>
+                                <div class="step-text">StudentDataに変換</div>
+                            </li>
+                            <li class="comparison-step">
+                                <div class="step-dot display-dot"></div>
+                                <div class="step-text">Thymeleafで画面表示</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

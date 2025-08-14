@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>フォームとデータベース項目の違い比較図</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            font-family: 'Segoe UI', 'Yu Gothic', 'Hiragino Sans', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .comparison-container {
+            display: flex;
+            gap: 40px;
+            max-width: 1200px;
+            width: 100%;
+            margin-bottom: 40px;
+        }
+
+        .side {
+            flex: 1;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border: 3px solid transparent;
+        }
+
+        .form-side {
+            border-color: #f39c12;
+        }
+
+        .database-side {
+            border-color: #27ae60;
+        }
+
+        .side-header {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            padding: 15px;
+            border-radius: 12px;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .form-header {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+        }
+
+        .database-header {
+            background: linear-gradient(135deg, #27ae60, #229954);
+        }
+
+        .field-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .field-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .field-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        .form-common {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border-left: 5px solid #f39c12;
+        }
+
+        .form-only {
+            background: linear-gradient(135deg, #ffe5b4, #ffd93d);
+            border-left: 5px solid #e67e22;
+        }
+
+        .database-common {
+            background: linear-gradient(135deg, #d4edda, #a8e6a3);
+            border-left: 5px solid #27ae60;
+        }
+
+        .database-only {
+            background: linear-gradient(135deg, #b8e6b8, #82e0aa);
+            border-left: 5px solid #1e8449;
+        }
+
+        .field-icon {
+            width: 30px;
+            height: 30px;
+            margin-right: 15px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 14px;
+        }
+
+        .icon-common {
+            background: #3498db;
+        }
+
+        .icon-form {
+            background: #e67e22;
+        }
+
+        .icon-database {
+            background: #1e8449;
+        }
+
+        .field-text {
+            flex: 1;
+        }
+
+        .field-description {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-top: 5px;
+            font-weight: normal;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .legend-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+
+        .summary {
+            text-align: center;
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #e8f4f8, #d4e6f1);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-width: 800px;
+        }
+
+        .summary-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .summary-text {
+            font-size: 16px;
+            color: #34495e;
+            line-height: 1.6;
+        }
+
+        .highlight {
+            color: #e67e22;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="title">📋 フォームとデータベース項目の違い比較</div>
+    
+    <div class="comparison-container">
+        <!-- フォーム項目側 -->
+        <div class="side form-side">
+            <div class="side-header form-header">
+                🖥️ フォーム項目<br>
+                <span style="font-size: 16px;">（ユーザーが入力）</span>
+            </div>
+            <ul class="field-list">
+                <li class="field-item form-common">
+                    <div class="field-icon icon-common">共</div>
+                    <div class="field-text">
+                        名前
+                        <div class="field-description">ユーザーが直接入力</div>
+                    </div>
+                </li>
+                <li class="field-item form-common">
+                    <div class="field-icon icon-common">共</div>
+                    <div class="field-text">
+                        メールアドレス
+                        <div class="field-description">ユーザーが直接入力</div>
+                    </div>
+                </li>
+                <li class="field-item form-common">
+                    <div class="field-icon icon-common">共</div>
+                    <div class="field-text">
+                        年齢
+                        <div class="field-description">ユーザーが直接入力</div>
+                    </div>
+                </li>
+                <li class="field-item form-only">
+                    <div class="field-icon icon-form">フ</div>
+                    <div class="field-text">
+                        パスワード
+                        <div class="field-description">フォームのみ（暗号化してDB保存）</div>
+                    </div>
+                </li>
+                <li class="field-item form-only">
+                    <div class="field-icon icon-form">フ</div>
+                    <div class="field-text">
+                        パスワード確認
+                        <div class="field-description">フォームのみ（確認用）</div>
+                    </div>
+                </li>
+                <li class="field-item form-only">
+                    <div class="field-icon icon-form">フ</div>
+                    <div class="field-text">
+                        利用規約同意
+                        <div class="field-description">フォームのみ（必須チェック）</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- データベース項目側 -->
+        <div class="side database-side">
+            <div class="side-header database-header">
+                🗃️ データベース項目<br>
+                <span style="font-size: 16px;">（システムが管理）</span>
+            </div>
+            <ul class="field-list">
+                <li class="field-item database-only">
+                    <div class="field-icon icon-database">DB</div>
+                    <div class="field-text">
+                        id
+                        <div class="field-description">DBで自動生成（主キー）</div>
+                    </div>
+                </li>
+                <li class="field-item database-common">
+                    <div class="field-icon icon-common">共</div>
+                    <div class="field-text">
+                        name
+                        <div class="field-description">フォームから取得</div>
+                    </div>
+                </li>
+                <li class="field-item database-common">
+                    <div class="field-icon icon-common">共</div>
+                    <div class="field-text">
+                        email
+                        <div class="field-description">フォームから取得</div>
+                    </div>
+                </li>
+                <li class="field-item database-common">
+                    <div class="field-icon icon-common">共</div>
+                    <div class="field-text">
+                        age
+                        <div class="field-description">フォームから取得</div>
+                    </div>
+                </li>
+                <li class="field-item database-only">
+                    <div class="field-icon icon-database">DB</div>
+                    <div class="field-text">
+                        created_at
+                        <div class="field-description">DBで自動設定（作成日時）</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="legend">
+        <div class="legend-item">
+            <div class="legend-icon icon-common"></div>
+            <span>共通項目</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-icon" style="background: #e67e22;"></div>
+            <span>フォーム専用</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-icon" style="background: #1e8449;"></div>
+            <span>データベース専用</span>
+        </div>
+    </div>
+
+    <div class="summary">
+        <div class="summary-title">💡 なぜ別々のクラスが必要なのか？</div>
+        <div class="summary-text">
+            フォーム項目とデータベース項目には<span class="highlight">明確な違い</span>があります。<br>
+            フォームには「パスワード確認」や「利用規約同意」などの<span class="highlight">ユーザビリティ項目</span>があり、<br>
+            データベースには「id」や「created_at」などの<span class="highlight">システム管理項目</span>があります。<br><br>
+            <strong>この違いが、EntityとDTO（Data Transfer Object）を分離する理由です！</strong>
+        </div>
+    </div>
+</body>
+</html>

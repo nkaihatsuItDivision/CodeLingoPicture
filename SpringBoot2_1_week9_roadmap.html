@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 9全体の学習ロードマップ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        .week-badge {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 12px 30px;
+            margin: 20px auto 0;
+            display: inline-flex;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .week-badge::before {
+            content: "📚";
+            margin-right: 10px;
+            font-size: 1.4rem;
+        }
+
+        .content {
+            padding: 50px;
+        }
+
+        .roadmap-intro {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .intro-title {
+            font-size: 2rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .intro-title::before {
+            content: "🗺️";
+            font-size: 2.5rem;
+            margin-right: 15px;
+        }
+
+        .intro-description {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .lessons-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .lesson-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border-left: 5px solid #f39c12;
+        }
+
+        .lesson-card.current {
+            border-left-color: #27ae60;
+            background: linear-gradient(135deg, #f8fff8, #e8f5e8);
+        }
+
+        .lesson-card.current::before {
+            content: '現在のレッスン';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: #27ae60;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .lesson-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .lesson-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .lesson-number {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-right: 15px;
+            box-shadow: 0 5px 15px rgba(241, 196, 15, 0.3);
+        }
+
+        .lesson-card.current .lesson-number {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+        }
+
+        .lesson-info {
+            flex-grow: 1;
+        }
+
+        .lesson-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+            line-height: 1.3;
+        }
+
+        .lesson-subtitle {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+
+        .lesson-description {
+            font-size: 1rem;
+            color: #34495e;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .lesson-objectives {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .objectives-title {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .objectives-title::before {
+            content: "🎯";
+            margin-right: 8px;
+        }
+
+        .objectives-list {
+            list-style: none;
+        }
+
+        .objective-item {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            margin-bottom: 4px;
+            padding-left: 15px;
+            position: relative;
+        }
+
+        .objective-item::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #f39c12;
+        }
+
+        .lesson-duration {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 15px;
+            border-top: 1px solid #ecf0f1;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+
+        .duration-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .duration-info::before {
+            content: "⏱️";
+            margin-right: 5px;
+        }
+
+        .difficulty-badge {
+            background: #f39c12;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .progress-section {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .progress-title {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .progress-title::before {
+            content: "📊";
+            font-size: 2.5rem;
+            margin-right: 15px;
+        }
+
+        .progress-bar-container {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            height: 20px;
+            margin: 30px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            height: 100%;
+            width: 12.5%;
+            border-radius: 25px;
+            transition: width 0.3s ease;
+            position: relative;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #f1c40f;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .achievements-section {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .achievements-title {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .achievements-title::before {
+            content: "🏆";
+            font-size: 2.5rem;
+            margin-right: 15px;
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .achievement-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-top: 3px solid #f39c12;
+        }
+
+        .achievement-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #f39c12;
+        }
+
+        .achievement-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .achievement-description {
+            font-size: 0.95rem;
+            color: #7f8c8d;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 30px 20px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .lessons-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .progress-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .achievements-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .lesson-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <h1>Week 9 学習ロードマップ</h1>
+                <p>フォーム処理とバリデーションの完全マスター</p>
+                <div class="subtitle">8レッスンでプロフェッショナルレベルの技術力を獲得</div>
+                <div class="week-badge">8週間構成の集中学習プログラム</div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="roadmap-intro">
+                <div class="intro-title">Week 9の全体構成</div>
+                <div class="intro-description">
+                    Week 9では、DTOパターン設計から始まり、段階的にフォーム処理の全技術を習得します。
+                    各レッスンが連携して、最終的には企業レベルのフォーム処理システムを完成させます。
+                    現在はWeek 9.1を学習中です。
+                </div>
+            </div>
+            
+            <div class="lessons-container">
+                <div class="lesson-card current">
+                    <div class="lesson-header">
+                        <div class="lesson-number">9.1</div>
+                        <div class="lesson-info">
+                            <div class="lesson-title">StudentDataクラス設計</div>
+                            <div class="lesson-subtitle">フォーム専用DTOの必要性</div>
+                        </div>
+                    </div>
+                    <div class="lesson-description">
+                        DTOパターンの理解とStudentDataクラスの設計・実装。Bean Validationの基礎を学び、責務分離による設計品質向上を体験します。
+                    </div>
+                    <div class="lesson-objectives">
+                        <div class="objectives-title">学習目標</div>
+                        <ul class="objectives-list">
+                            <li class="objective-item">DTOパターンの完全理解</li>
+                            <li class="objective-item">Bean Validationアノテーション習得</li>
+                            <li class="objective-item">Entity⇔DTO変換メソッド実装</li>
+                            <li class="objective-item">保守性向上の実感</li>
+                        </ul>
+                    </div>
+                    <div class="lesson-duration">
+                        <div class="duration-info">50-60分</div>
+                        <div class="difficulty-badge">基礎</div>
+                    </div>
+                </div>
+                
+                <div class="lesson-card">
+                    <div class="lesson-header">
+                        <div class="lesson-number">9.2</div>
+                        <div class="lesson-info">
+                            <div class="lesson-title">フォーム画面実装</div>
+                            <div class="lesson-subtitle">Thymeleafとの連携</div>
+                        </div>
+                    </div>
+                    <div class="lesson-description">
+                        StudentDataクラスを活用したThymeleafフォーム画面の実装。Bootstrap連携による美しいUIデザインと実用的なフォーム機能を完成させます。
+                    </div>
+                    <div class="lesson-objectives">
+                        <div class="objectives-title">学習目標</div>
+                        <ul class="objectives-list">
+                            <li class="objective-item">Thymeleafフォーム実装</li>
+                            <li class="objective-item">Bootstrap UI連携</li>
+                            <li class="objective-item">DTO⇔画面データ連携</li>
+                            <li class="objective-item">フォーム表示機能完成</li>
+                        </ul>
+                    </div>
+                    <div class="lesson-duration">
+                        <div class="duration-info">60-70分</div>
+                        <div class="difficulty-badge">実装</div>
+                    </div>
+                </div>
+                
+                <div class="lesson-card">
+                    <div class="lesson-header">
+                        <div class="lesson-number">9.3</div>
+                        <div class="lesson-info">
+                            <div class="lesson-title">バリデーション実装</div>
+                            <div class="lesson-subtitle">入力値検証とエラー表示</div>
+                        </div>
+                    </div>
+                    <div class="lesson-description">
+                        Bean Validationによる入力値検証とエラーメッセージ表示の実装。ユーザビリティを重視したエラー処理を学習します。
+                    </div>
+                    <div class="lesson-objectives">
+                        <div class="objectives-title">学習目標</div>
+                        <ul class="objectives-list">
+                            <li class="objective-item">@Valid アノテーション活用</li>
+                            <li class="objective-item">BindingResult処理</li>
+                            <li class="objective-item">エラーメッセージ表示</li>
+                            <li class="objective-item">カスタムバリデーション</li>
+                        </ul>
+                    </div>
+                    <div class="lesson-duration">
+                        <div class="duration-info">55-65分</div>
+                        <div class="difficulty-badge">応用</div>
+                    </div>
+                </div>
+                
+                <div class="lesson-card">
+                    <div class="lesson-header">
+                        <div class="lesson-number">9.4</div>
+                        <div class="lesson-info">
+                            <div class="lesson-title">エラー処理強化</div>
+                            <div class="lesson-subtitle">ユーザビリティ向上</div>
+                        </div>
+                    </div>
+                    <div class="lesson-description">
+                        より高度なエラー処理とユーザビリティ向上技術。フィールドレベルエラー、グローバルエラー、JavaScript連携を学習します。
+                    </div>
+                    <div class="lesson-objectives">
+                        <div class="objectives-title">学習目標</div>
+                        <ul class="objectives-list">
+                            <li class="objective-item">フィールドエラー処理</li>
+                            <li class="objective-item">グローバルエラー対応</li>
+                            <li class="objective-item">JavaScript連携</li>
+                            <li class="objective-item">UX最適化</li>
+                        </ul>
+                    </div>
+                    <div class="lesson-duration">
+                        <div class="duration-info">50-60分</div>
+                        <div class="difficulty-badge">応用</div>
+                    </div>
+                </div>
+                
+                <div class="lesson-card">
+                    <div class="lesson-header">
+                        <div class="lesson-number">9.5</div>
+                        <div class="lesson-info">
+                            <div class="lesson-title">登録処理実装</div>
+                            <div class="lesson-subtitle">データベース保存機能</div>
+                        </div>
+                    </div>
+                    <div class="lesson-description">
+                        フォーム送信データのデータベース保存処理実装。トランザクション管理と成功時リダイレクト処理を学習します。
+                    </div>
+                    <div class="lesson-objectives">
+                        <div class="objectives-title">学習目標</div>
+                        <ul class="objectives-list">
+                            <li class="objective-item">POST処理実装</li>
+                            <li class="objective-item">データベース保存</li>
+                            <li class="objective-item">トランザクション管理</li>
+                            <li class="objective-item">PRG パターン実装</li>
+                        </ul>
+                    </div>
+                    <div class="lesson-duration">
+                        <div class="duration-info">60-70分</div>
+                        <div class="difficulty-badge">実装</div>
+                    </div>
+                </div>
+                
+                <div class="lesson-card">
+                    <div class="lesson-header">
+                        <div class="lesson-number">9.6</div>
+                        <div class="lesson-info">
+                            <div class="lesson-title">編集機能実装</div>
+                            <div class="lesson-subtitle">既存データの更新</div>
+                        </div>
+                    </div>
+                    <div class="lesson-description">
+                        既存学生データの編集・更新機能の実装。データ取得、フォーム初期化、更新処理の一連の流れを完成させます。
+                    </div>
+                    <div class="lesson-objectives">
+                        <div class="objectives-title">学習目標</div>
+                        <ul class="objectives-list">
+                            <li class="objective-item">データ取得・表示</li>
+                            <li class="objective-item">フォーム初期化</li>
+                            <li class="objective-item">更新処理実装</li>
+                            <li class="objective-item">楽観的ロック対応</li>
+                        </ul>
+                    </div>
+                    <div class="lesson-duration">
+                        <div class="duration-info">65-75分</div>
+                        <div class="difficulty-badge">応用</div>
+                    </div>
+                </div>
+                
+                <div class="lesson-card">
+                    <div class="lesson-header">
+                        <div class="lesson-number">9.7</div>
+                        <div class="lesson-info">
+                            <div class="lesson-title">成功処理実装</div>
+                            <div class="lesson-subtitle">完了画面とメッセージ</div>
+                        </div>
+                    </div>
+                    <div class="lesson-description">
+                        処理成功時の完了画面とメッセージ機能の実装。Flash Attributesを活用したユーザーフレンドリーな成功体験を提供します。
+                    </div>
+                    <div class="lesson-objectives">
+                        <div class="objectives-title">学習目標</div>
+                        <ul class="objectives-list">
+                            <li class="objective-item">Flash Attributes活用</li>
+                            <li class="objective-item">成功メッセージ表示</li>
+                            <li class="objective-item">完了画面設計</li>
+                            <li class="objective-item">UX完成度向上</li>
+                        </ul>
+                    </div>
+                    <div class="lesson-duration">
+                        <div class="duration-info">45-55分</div>
+                        <div class="difficulty-badge">実装</div>
+                    </div>
+                </div>
+                
+                <div class="lesson-card">
+                    <div class="lesson-header">
+                        <div class="lesson-number">9.8</div>
+                        <div class="lesson-info">
+                            <div class="lesson-title">Service層統合</div>
+                            <div class="lesson-subtitle">アーキテクチャ完成</div>
+                        </div>
+                    </div>
+                    <div class="lesson-description">
+                        Service層の実装によるアーキテクチャの完成。ビジネスロジックの分離と保守性向上を実現し、企業レベルの設計を完成させます。
+                    </div>
+                    <div class="lesson-objectives">
+                        <div class="objectives-title">学習目標</div>
+                        <ul class="objectives-list">
+                            <li class="objective-item">Service層設計</li>
+                            <li class="objective-item">ビジネスロジック分離</li>
+                            <li class="objective-item">DI活用</li>
+                            <li class="objective-item">企業レベル設計完成</li>
+                        </ul>
+                    </div>
+                    <div class="lesson-duration">
+                        <div class="duration-info">70-80分</div>
+                        <div class="difficulty-badge">上級</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="progress-section">
+                <div class="progress-title">Week 9 学習進捗</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar"></div>
+                </div>
+                <div class="progress-stats">
+                    <div class="stat-card">
+                        <div class="stat-number">1/8</div>
+                        <div class="stat-label">完了レッスン</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">12.5%</div>
+                        <div class="stat-label">進捗率</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">~7</div>
+                        <div class="stat-label">残りレッスン</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">~420分</div>
+                        <div class="stat-label">残り学習時間</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="achievements-section">
+                <div class="achievements-title">Week 9完了時の達成目標</div>
+                <div class="achievements-grid">
+                    <div class="achievement-card">
+                        <div class="achievement-icon">🎯</div>
+                        <div class="achievement-title">フォーム処理マスター</div>
+                        <div class="achievement-description">
+                            DTOパターンを活用した完全なフォーム処理システムの設計・実装力を獲得
+                        </div>
+                    </div>
+                    <div class="achievement-card">
+                        <div class="achievement-icon">🛡️</div>
+                        <div class="achievement-title">バリデーション専門家</div>
+                        <div class="achievement-description">
+                            Bean Validationを駆使した堅牢なデータ検証システムの構築技術を習得
+                        </div>
+                    </div>
+                    <div class="achievement-card">
+                        <div class="achievement-icon">🏗️</div>
+                        <div class="achievement-title">アーキテクト思考</div>
+                        <div class="achievement-description">
+                            企業レベルの保守性・拡張性を重視したシステム設計思考を確立
+                        </div>
+                    </div>
+                    <div class="achievement-card">
+                        <div class="achievement-icon">💎</div>
+                        <div class="achievement-title">プロフェッショナル</div>
+                        <div class="achievement-description">
+                            実務で即戦力として活躍できる実践的なWeb開発技術力を完全習得
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
