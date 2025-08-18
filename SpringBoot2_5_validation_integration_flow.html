@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>バリデーション統合処理フロー</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .week-badge {
+            background: linear-gradient(135deg, #16a085, #138d75);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        .integration-section {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .integration-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .integration-text {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .flow-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .flow-row {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .flow-step {
+            flex: 1;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .flow-step:hover {
+            transform: translateY(-5px);
+        }
+
+        .week93-step {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            color: white;
+        }
+
+        .week94-step {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            color: white;
+        }
+
+        .week95-step {
+            background: linear-gradient(135deg, #16a085, #138d75);
+            color: white;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .step-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        .step-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .step-week {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: auto;
+        }
+
+        .step-content {
+            font-size: 14px;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        .step-code {
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            text-align: left;
+            line-height: 1.4;
+        }
+
+        .arrow-down {
+            text-align: center;
+            font-size: 30px;
+            color: #16a085;
+            font-weight: bold;
+        }
+
+        .decision-point {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .decision-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .decision-code {
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            text-align: left;
+            margin-top: 15px;
+        }
+
+        .branch-container {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .branch {
+            flex: 1;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .error-branch {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        .success-branch {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+        }
+
+        .branch-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .branch-code {
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 12px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 12px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="week-badge">Week 9.5</div>
+            <h1 class="title">バリデーション統合処理フロー</h1>
+        </div>
+
+        <div class="integration-section">
+            <div class="integration-title">🎯 Week 9.3-9.4技術の統合活用</div>
+            <div class="integration-text">
+                既習技術を@PostMappingで完全統合 → フルスタック実装の完成
+            </div>
+        </div>
+
+        <div class="flow-container">
+            <div class="flow-row">
+                <div class="flow-step week93-step">
+                    <div class="step-header">
+                        <div class="step-icon">✅</div>
+                        <div class="step-title">Bean Validation定義</div>
+                        <div class="step-week">Week 9.3</div>
+                    </div>
+                    <div class="step-content">
+                        DTOクラスにアノテーション設定
+                    </div>
+                    <div class="step-code">
+public class StudentData {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@NotBlank(message = "名前は必須です")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private String name;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Email(message = "正しい形式で")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private String email;<br>
+}
+                    </div>
+                </div>
+            </div>
+
+            <div class="arrow-down">↓</div>
+
+            <div class="flow-row">
+                <div class="flow-step week94-step">
+                    <div class="step-header">
+                        <div class="step-icon">🎨</div>
+                        <div class="step-title">エラー表示設定</div>
+                        <div class="step-week">Week 9.4</div>
+                    </div>
+                    <div class="step-content">
+                        Thymeleafテンプレートでエラー処理
+                    </div>
+                    <div class="step-code">
+&lt;div th:if="${#fields.hasErrors('name')}"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;class="error-message"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;span th:errors="*{name}"&gt;&lt;/span&gt;<br>
+&lt;/div&gt;
+                    </div>
+                </div>
+            </div>
+
+            <div class="arrow-down">↓</div>
+
+            <div class="flow-step week95-step">
+                <div class="step-header">
+                    <div class="step-icon">⚙️</div>
+                    <div class="step-title">@PostMappingで統合実行</div>
+                    <div class="step-week">Week 9.5</div>
+                </div>
+                <div class="step-content">
+                    @Validアノテーションで自動バリデーション実行
+                </div>
+                <div class="step-code">
+@PostMapping("/students")<br>
+public String createStudent(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Valid @ModelAttribute StudentData studentData,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;BindingResult bindingResult) {
+                </div>
+            </div>
+
+            <div class="arrow-down">↓</div>
+
+            <div class="decision-point">
+                <div class="decision-title">🔍 バリデーション結果判定</div>
+                <div class="decision-code">
+if (bindingResult.hasErrors()) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// エラー時の処理<br>
+} else {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 成功時の処理<br>
+}
+                </div>
+            </div>
+
+            <div class="branch-container">
+                <div class="branch error-branch">
+                    <div class="branch-title">❌ エラー時</div>
+                    <div class="branch-code">
+return "students/form";<br>
+<br>
+// Week 9.4のエラー表示が<br>
+// 自動的に再表示される
+                    </div>
+                </div>
+
+                <div class="branch success-branch">
+                    <div class="branch-title">✅ 成功時</div>
+                    <div class="branch-code">
+Student student = <br>
+&nbsp;&nbsp;&nbsp;&nbsp;studentData.toEntity();<br>
+studentRepository.save(student);<br>
+return "redirect:/students";
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 9.1-9.5技術統合の全体像</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 1300px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .week-badge {
+            background: linear-gradient(135deg, #16a085, #138d75);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        .integration-overview {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .overview-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .overview-text {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .weeks-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .week-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .week-section:hover {
+            transform: translateX(10px);
+        }
+
+        .week91 {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            color: white;
+        }
+
+        .week92 {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            color: white;
+        }
+
+        .week93 {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            color: white;
+        }
+
+        .week94 {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            color: white;
+        }
+
+        .week95 {
+            background: linear-gradient(135deg, #16a085, #138d75);
+            color: white;
+        }
+
+        .week-number {
+            background: rgba(255,255,255,0.2);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .week-content {
+            flex: 1;
+        }
+
+        .week-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .week-description {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 12px;
+        }
+
+        .week-tech {
+            background: rgba(255,255,255,0.1);
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 12px;
+            display: inline-block;
+        }
+
+        .integration-diagram {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .diagram-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .tech-layers {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .tech-layer {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .layer-label {
+            background: linear-gradient(135deg, #16a085, #138d75);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .layer-components {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+
+        .component {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 12px;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+
+        .week91-comp { border-color: #f1c40f; }
+        .week92-comp { border-color: #f1c40f; }
+        .week93-comp { border-color: #f1c40f; }
+        .week94-comp { border-color: #f1c40f; }
+        .week95-comp { border-color: #16a085; }
+
+        .fullstack-achievement {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .achievement-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .achievement-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .achievement-text {
+            font-size: 16px;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        .integration-flow {
+            background: linear-gradient(135deg, #16a085, #138d75);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .flow-title {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .flow-code {
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            text-align: left;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="week-badge">Week 9.5</div>
+            <h1 class="title">Week 9.1-9.5技術統合の全体像</h1>
+        </div>
+
+        <div class="integration-overview">
+            <div class="overview-title">🎯 フォーム処理技術の集大成</div>
+            <div class="overview-text">
+                5週間で段階的に習得した技術が完全統合 → フルスタック実装の完成
+            </div>
+        </div>
+
+        <div class="weeks-timeline">
+            <div class="week-section week91">
+                <div class="week-number">9.1</div>
+                <div class="week-content">
+                    <div class="week-title">StudentDataクラス設計</div>
+                    <div class="week-description">フォーム専用DTOの必要性と設計原則</div>
+                    <div class="week-tech">toEntity()メソッド・責任分離設計</div>
+                </div>
+            </div>
+
+            <div class="week-section week92">
+                <div class="week-number">9.2</div>
+                <div class="week-content">
+                    <div class="week-title">新規登録画面作成</div>
+                    <div class="week-description">Thymeleafフォームの構築とMVCパターン</div>
+                    <div class="week-tech">form:action・th:object・th:field</div>
+                </div>
+            </div>
+
+            <div class="week-section week93">
+                <div class="week-number">9.3</div>
+                <div class="week-content">
+                    <div class="week-title">Bean Validation導入</div>
+                    <div class="week-description">入力チェックの自動化とアノテーション活用</div>
+                    <div class="week-tech">@NotBlank・@Email・@Min・@Valid</div>
+                </div>
+            </div>
+
+            <div class="week-section week94">
+                <div class="week-number">9.4</div>
+                <div class="week-content">
+                    <div class="week-title">エラー処理・UX改善</div>
+                    <div class="week-description">ユーザビリティ重視の設計とエラー表示</div>
+                    <div class="week-tech">th:errors・BindingResult・CSS装飾</div>
+                </div>
+            </div>
+
+            <div class="week-section week95">
+                <div class="week-number">9.5</div>
+                <div class="week-content">
+                    <div class="week-title">新規登録処理実装</div>
+                    <div class="week-description">@PostMapping・データ保存・PRGパターン</div>
+                    <div class="week-tech">@PostMapping・Repository.save()・redirect</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="integration-diagram">
+            <div class="diagram-title">🔧 技術統合レイヤー構成</div>
+            <div class="tech-layers">
+                <div class="tech-layer">
+                    <div class="layer-label">View層</div>
+                    <div class="layer-components">
+                        <div class="component week92-comp">Thymeleafフォーム</div>
+                        <div class="component week94-comp">エラー表示</div>
+                        <div class="component week94-comp">UX改善</div>
+                    </div>
+                </div>
+
+                <div class="tech-layer">
+                    <div class="layer-label">Controller層</div>
+                    <div class="layer-components">
+                        <div class="component week95-comp">@PostMapping</div>
+                        <div class="component week93-comp">@Valid実行</div>
+                        <div class="component week95-comp">PRGパターン</div>
+                    </div>
+                </div>
+
+                <div class="tech-layer">
+                    <div class="layer-label">Service層</div>
+                    <div class="layer-components">
+                        <div class="component week91-comp">toEntity()変換</div>
+                        <div class="component week93-comp">バリデーション</div>
+                        <div class="component week95-comp">ビジネスロジック</div>
+                    </div>
+                </div>
+
+                <div class="tech-layer">
+                    <div class="layer-label">Repository層</div>
+                    <div class="layer-components">
+                        <div class="component week95-comp">Repository.save()</div>
+                        <div class="component week95-comp">トランザクション</div>
+                        <div class="component week95-comp">データ永続化</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="integration-flow">
+            <div class="flow-title">🚀 Week 9.5 完全統合実装</div>
+            <div class="flow-code">
+@PostMapping("/students")  // Week 9.5<br>
+public String createStudent(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Valid @ModelAttribute StudentData studentData,  // Week 9.1 + 9.3<br>
+&nbsp;&nbsp;&nbsp;&nbsp;BindingResult bindingResult) {  // Week 9.4<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// Week 9.4: エラーハンドリング<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (bindingResult.hasErrors()) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return "students/form";  // Week 9.2画面に戻る<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// Week 9.1: DTO→Entity変換<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Student student = studentData.toEntity();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// Week 9.5: データ保存<br>
+&nbsp;&nbsp;&nbsp;&nbsp;studentRepository.save(student);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// Week 9.5: PRGパターン<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return "redirect:/students";<br>
+}
+            </div>
+        </div>
+
+        <div class="fullstack-achievement">
+            <div class="achievement-icon">🏆</div>
+            <div class="achievement-title">フルスタック実装技術の確立</div>
+            <div class="achievement-text">
+                フロントエンド（Thymeleaf・HTML・CSS）とバックエンド（Spring Boot・JPA）の<br>
+                完全統合により、実務レベルのWebアプリケーション開発技術を習得<br>
+                <strong>CRUD操作の基盤確立 → Week 9.6以降のさらなる発展へ</strong>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

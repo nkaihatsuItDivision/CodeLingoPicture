@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@PostMappingの詳細設計</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 1100px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .week-badge {
+            background: linear-gradient(135deg, #16a085, #138d75);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        .method-signature {
+            background: linear-gradient(135deg, #16a085, #138d75);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .signature-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .signature-code {
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            text-align: left;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .parameters-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .parameter-card {
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .parameter-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .valid-card {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+
+        .modelattribute-card {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+        }
+
+        .bindingresult-card {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        .model-card {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: white;
+        }
+
+        .param-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .param-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .param-icon {
+            font-size: 20px;
+        }
+
+        .param-purpose {
+            font-size: 14px;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        .param-code {
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 12px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 12px;
+            text-align: left;
+        }
+
+        .flow-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .flow-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .flow-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .flow-step {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #16a085, #138d75);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 auto 10px;
+        }
+
+        .step-text {
+            font-size: 14px;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+
+        .arrow-text {
+            color: #16a085;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="week-badge">Week 9.5</div>
+            <h1 class="title">@PostMappingの詳細設計</h1>
+        </div>
+
+        <div class="method-signature">
+            <div class="signature-title">📝 Week 9.5 新規登録処理メソッド</div>
+            <div class="signature-code">
+@PostMapping("/students")<br>
+public String createStudent(@Valid @ModelAttribute StudentData studentData,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BindingResult bindingResult,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Model model) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (bindingResult.hasErrors()) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return "students/form";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Student student = studentData.toEntity();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;studentRepository.save(student);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return "redirect:/students";<br>
+}
+            </div>
+        </div>
+
+        <div class="parameters-grid">
+            <div class="parameter-card valid-card">
+                <div class="param-header">
+                    <div class="param-name">@Valid</div>
+                    <div class="param-icon">✅</div>
+                </div>
+                <div class="param-purpose">バリデーション実行指示</div>
+                <div class="param-code">
+// Week 9.3技術を統合活用<br>
+@NotBlank(message = "名前は必須です")<br>
+@Email(message = "正しい形式で入力してください")<br>
+private String email;
+                </div>
+            </div>
+
+            <div class="parameter-card modelattribute-card">
+                <div class="param-header">
+                    <div class="param-name">@ModelAttribute</div>
+                    <div class="param-icon">📋</div>
+                </div>
+                <div class="param-purpose">フォームデータをDTOにバインド</div>
+                <div class="param-code">
+// Week 9.1のStudentDataクラス活用<br>
+StudentData studentData<br>
+↓<br>
+フォーム値を自動設定
+                </div>
+            </div>
+
+            <div class="parameter-card bindingresult-card">
+                <div class="param-header">
+                    <div class="param-name">BindingResult</div>
+                    <div class="param-icon">🚨</div>
+                </div>
+                <div class="param-purpose">バリデーション結果の格納</div>
+                <div class="param-code">
+if (bindingResult.hasErrors()) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// Week 9.4のエラー処理活用<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return "students/form";<br>
+}
+                </div>
+            </div>
+
+            <div class="parameter-card model-card">
+                <div class="param-header">
+                    <div class="param-name">Model</div>
+                    <div class="param-icon">🎯</div>
+                </div>
+                <div class="param-purpose">ビューへのデータ受け渡し</div>
+                <div class="param-code">
+// 必要に応じてエラー情報や<br>
+// 成功メッセージを設定<br>
+model.addAttribute("message", "登録完了");
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-section">
+            <div class="flow-title">🔄 @PostMapping処理フロー</div>
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-text">フォーム受信<br>@ModelAttribute</div>
+                </div>
+                <div class="arrow-text">→</div>
+                <div class="flow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-text">バリデーション<br>@Valid実行</div>
+                </div>
+                <div class="arrow-text">→</div>
+                <div class="flow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-text">エラー判定<br>BindingResult</div>
+                </div>
+                <div class="arrow-text">→</div>
+                <div class="flow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-text">DB保存<br>Repository</div>
+                </div>
+                <div class="arrow-text">→</div>
+                <div class="flow-step">
+                    <div class="step-number">5</div>
+                    <div class="step-text">リダイレクト<br>PRGパターン</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

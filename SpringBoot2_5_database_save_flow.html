@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>データベース保存処理の流れ</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .week-badge {
+            background: linear-gradient(135deg, #16a085, #138d75);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        .flow-overview {
+            background: linear-gradient(135deg, #16a085, #138d75);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .overview-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .overview-text {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .flow-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .flow-step {
+            display: flex;
+            align-items: center;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .flow-step:hover {
+            transform: translateX(10px);
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #16a085, #138d75);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-right: 25px;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .step-description {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .step-code {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            text-align: left;
+            border-left: 4px solid #16a085;
+            line-height: 1.4;
+        }
+
+        .repository-section {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .repository-title {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .repository-code {
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            text-align: left;
+            line-height: 1.6;
+        }
+
+        .safety-features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .safety-card {
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .transaction-card {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        .error-handling-card {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+        }
+
+        .safety-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .safety-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .safety-description {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+
+        .safety-code {
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 12px;
+            text-align: left;
+        }
+
+        .complete-example {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .example-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .example-code {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            text-align: left;
+            border-left: 4px solid #16a085;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="week-badge">Week 9.5</div>
+            <h1 class="title">データベース保存処理の流れ</h1>
+        </div>
+
+        <div class="flow-overview">
+            <div class="overview-title">🗃️ JPA Repository による安全な永続化</div>
+            <div class="overview-text">
+                エンティティの変換からデータベース保存まで完全自動化
+            </div>
+        </div>
+
+        <div class="flow-steps">
+            <div class="flow-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <div class="step-title">DTOからEntityへの変換</div>
+                    <div class="step-description">
+                        バリデーション済みのStudentDataをStudent Entityに変換
+                    </div>
+                    <div class="step-code">
+Student student = studentData.toEntity();<br>
+// Week 9.1で設計したtoEntity()メソッドを活用
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <div class="step-title">Repository インジェクション確認</div>
+                    <div class="step-description">
+                        Spring Boot が自動でStudentRepositoryをインジェクション
+                    </div>
+                    <div class="step-code">
+@Autowired<br>
+private StudentRepository studentRepository;<br>
+// Week 8.6で設定したJPA Repository
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <div class="step-title">トランザクション開始</div>
+                    <div class="step-description">
+                        Spring Bootが自動でトランザクション管理を実行
+                    </div>
+                    <div class="step-code">
+// @Transactionalアノテーションにより自動実行<br>
+// データ整合性を保証
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <div class="step-title">データベース保存実行</div>
+                    <div class="step-description">
+                        JPAによるINSERT文の自動生成・実行
+                    </div>
+                    <div class="step-code">
+Student savedStudent = studentRepository.save(student);<br>
+// 自動でIDが設定されたエンティティが返される
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-step">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                    <div class="step-title">トランザクション完了</div>
+                    <div class="step-description">
+                        正常終了時のコミット、エラー時の自動ロールバック
+                    </div>
+                    <div class="step-code">
+// 成功時：COMMIT実行<br>
+// 例外時：ROLLBACK実行（データ整合性維持）
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="repository-section">
+            <div class="repository-title">🔧 StudentRepository の役割</div>
+            <div class="repository-code">
+public interface StudentRepository extends JpaRepository&lt;Student, Long&gt; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// Week 8.6で作成したRepository<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// save()メソッドが自動で提供される<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// save()の動作：<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// - ID未設定 → INSERT文実行<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// - ID設定済み → UPDATE文実行<br>
+}
+            </div>
+        </div>
+
+        <div class="safety-features">
+            <div class="safety-card transaction-card">
+                <div class="safety-icon">🛡️</div>
+                <div class="safety-title">トランザクション管理</div>
+                <div class="safety-description">
+                    データ整合性を自動保証
+                </div>
+                <div class="safety-code">
+@Transactional<br>
+public String createStudent(...) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 例外発生時は自動ロールバック<br>
+&nbsp;&nbsp;&nbsp;&nbsp;studentRepository.save(student);<br>
+}
+                </div>
+            </div>
+
+            <div class="safety-card error-handling-card">
+                <div class="safety-icon">⚠️</div>
+                <div class="safety-title">エラーハンドリング</div>
+                <div class="safety-description">
+                    DB例外の適切な処理
+                </div>
+                <div class="safety-code">
+try {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;studentRepository.save(student);<br>
+} catch (DataAccessException e) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// エラー処理<br>
+&nbsp;&nbsp;&nbsp;&nbsp;log.error("DB保存エラー", e);<br>
+}
+                </div>
+            </div>
+        </div>
+
+        <div class="complete-example">
+            <div class="example-title">🎯 Week 9.5 完全実装例</div>
+            <div class="example-code">
+@PostMapping("/students")<br>
+public String createStudent(@Valid @ModelAttribute StudentData studentData,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BindingResult bindingResult) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// バリデーションエラーチェック<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (bindingResult.hasErrors()) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return "students/form";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;try {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// DTOからEntityへ変換<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Student student = studentData.toEntity();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// データベース保存<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Student savedStudent = studentRepository.save(student);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// PRGパターンでリダイレクト<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return "redirect:/students";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;} catch (DataAccessException e) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// DB例外時の処理<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bindingResult.reject("database.error", "保存に失敗しました");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return "students/form";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

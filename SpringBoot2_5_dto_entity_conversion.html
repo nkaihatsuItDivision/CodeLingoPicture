@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DTOからEntity変換処理</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .week-badge {
+            background: linear-gradient(135deg, #16a085, #138d75);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        .conversion-overview {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .overview-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .overview-text {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .conversion-flow {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .dto-section {
+            flex: 1;
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+        }
+
+        .entity-section {
+            flex: 1;
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .section-week {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: auto;
+        }
+
+        .section-description {
+            font-size: 14px;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        .code-example {
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            text-align: left;
+            line-height: 1.5;
+        }
+
+        .arrow-conversion {
+            font-size: 40px;
+            color: #16a085;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .toentity-method {
+            background: linear-gradient(135deg, #16a085, #138d75);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .method-title {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .method-code {
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            text-align: left;
+            line-height: 1.6;
+        }
+
+        .benefits-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .benefit-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .benefit-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .benefit-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .benefit-text {
+            font-size: 14px;
+            color: #7f8c8d;
+            line-height: 1.4;
+        }
+
+        .usage-example {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .usage-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .usage-code {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            text-align: left;
+            line-height: 1.6;
+            border-left: 4px solid #16a085;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="week-badge">Week 9.5</div>
+            <h1 class="title">DTOからEntity変換処理</h1>
+        </div>
+
+        <div class="conversion-overview">
+            <div class="overview-title">🔄 Week 9.1で設計したtoEntity()メソッドの実践活用</div>
+            <div class="overview-text">
+                フォーム専用DTO → データベース保存用Entity への安全な変換
+            </div>
+        </div>
+
+        <div class="conversion-flow">
+            <div class="dto-section">
+                <div class="section-header">
+                    <div class="section-icon">📋</div>
+                    <div class="section-title">StudentData (DTO)</div>
+                    <div class="section-week">Week 9.1</div>
+                </div>
+                <div class="section-description">
+                    フォーム入力専用データクラス
+                </div>
+                <div class="code-example">
+public class StudentData {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@NotBlank(message = "名前は必須")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private String name;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Email(message = "正しい形式で")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private String email;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Min(value = 0, message = "0以上")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private Integer age;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// getter/setter<br>
+}
+                </div>
+            </div>
+
+            <div class="arrow-conversion">→</div>
+
+            <div class="entity-section">
+                <div class="section-header">
+                    <div class="section-icon">🗃️</div>
+                    <div class="section-title">Student (Entity)</div>
+                    <div class="section-week">Week 8.5</div>
+                </div>
+                <div class="section-description">
+                    データベース保存用エンティティ
+                </div>
+                <div class="code-example">
+@Entity<br>
+@Table(name = "students")<br>
+public class Student {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Id<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@GeneratedValue(strategy = IDENTITY)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private Long id;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Column(nullable = false)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private String name;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private String email;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private Integer age;<br>
+}
+                </div>
+            </div>
+        </div>
+
+        <div class="toentity-method">
+            <div class="method-title">🔧 toEntity()メソッドの実装</div>
+            <div class="method-code">
+// StudentDataクラス内のtoEntity()メソッド<br>
+public Student toEntity() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Student student = new Student();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;student.setName(this.name);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;student.setEmail(this.email);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;student.setAge(this.age);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return student;<br>
+}
+            </div>
+        </div>
+
+        <div class="benefits-section">
+            <div class="benefit-card">
+                <div class="benefit-icon">🛡️</div>
+                <div class="benefit-title">セキュリティ向上</div>
+                <div class="benefit-text">
+                    フォーム入力とDB保存を分離<br>
+                    不正データの混入を防止
+                </div>
+            </div>
+
+            <div class="benefit-card">
+                <div class="benefit-icon">🔧</div>
+                <div class="benefit-title">保守性向上</div>
+                <div class="benefit-text">
+                    画面仕様とDB設計を独立<br>
+                    変更の影響範囲を限定
+                </div>
+            </div>
+
+            <div class="benefit-card">
+                <div class="benefit-icon">📊</div>
+                <div class="benefit-title">バリデーション分離</div>
+                <div class="benefit-text">
+                    入力チェックとDB制約を分離<br>
+                    適切な責任分担を実現
+                </div>
+            </div>
+        </div>
+
+        <div class="usage-example">
+            <div class="usage-title">🎯 Week 9.5での実践活用</div>
+            <div class="usage-code">
+@PostMapping("/students")<br>
+public String createStudent(@Valid @ModelAttribute StudentData studentData,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BindingResult bindingResult) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (bindingResult.hasErrors()) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return "students/form";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// Week 9.1で設計したtoEntity()メソッドを活用<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Student student = studentData.toEntity();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;studentRepository.save(student);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return "redirect:/students";<br>
+}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
