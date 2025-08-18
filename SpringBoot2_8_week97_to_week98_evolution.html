@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 9.7からWeek 9.8への技術発展図</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, #17a2b8, #6f42c1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .evolution-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+
+        .week-section {
+            flex: 1;
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .week97 {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+            color: white;
+        }
+
+        .week98 {
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+            color: white;
+        }
+
+        .week-header {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .achievement-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .tech-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .tech-item {
+            background: rgba(255,255,255,0.15);
+            margin-bottom: 12px;
+            padding: 15px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .tech-title {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .tech-description {
+            font-size: 13px;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        .evolution-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: #6f42c1;
+            font-weight: bold;
+            min-width: 60px;
+        }
+
+        .progress-section {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .progress-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .progress-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .progress-step {
+            flex: 1;
+            min-width: 200px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #17a2b8, #6f42c1);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 auto 10px auto;
+            font-size: 14px;
+        }
+
+        .step-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        .step-description {
+            font-size: 13px;
+            color: #6c757d;
+            line-height: 1.4;
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            margin-top: 15px;
+            overflow-x: auto;
+            text-align: left;
+        }
+
+        .highlight {
+            background: rgba(255,255,255,0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .enterprise-banner {
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .enterprise-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .enterprise-description {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .evolution-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .evolution-arrow {
+                transform: rotate(90deg);
+                margin: 10px 0;
+            }
+            
+            .progress-flow {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">🚀 Week 9.7からWeek 9.8への技術発展図</h1>
+        
+        <div class="evolution-container">
+            <!-- Week 9.7 セクション -->
+            <div class="week-section week97">
+                <div class="week-header">📋 Week 9.7 完了</div>
+                <div class="achievement-badge">✅ フィードバック機能完成</div>
+                
+                <ul class="tech-list">
+                    <li class="tech-item">
+                        <div class="tech-title">Flash属性管理</div>
+                        <div class="tech-description">RedirectAttributesによる一時メッセージ</div>
+                    </li>
+                    <li class="tech-item">
+                        <div class="tech-title">成功・エラーメッセージ統一</div>
+                        <div class="tech-description">MessageSourceによる拡張可能設計</div>
+                    </li>
+                    <li class="tech-item">
+                        <div class="tech-title">PRGパターン実装</div>
+                        <div class="tech-description">Post-Redirect-Getによる適切な画面遷移</div>
+                    </li>
+                    <li class="tech-item">
+                        <div class="tech-title">ユーザーフレンドリーUX</div>
+                        <div class="tech-description">プロフェッショナルレベルのフィードバック</div>
+                    </li>
+                </ul>
+
+                <div class="code-example">
+// Week 9.7 時点のController<br>
+@PostMapping("/students")<br>
+public String registerStudent(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Valid @ModelAttribute StudentData studentData,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;BindingResult bindingResult,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;RedirectAttributes redirectAttributes) {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// <span class="highlight">ビジネスロジックがController内に混在</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;Student student = studentData.toEntity();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;studentRepository.save(student);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// フィードバック機能は完成<br>
+&nbsp;&nbsp;&nbsp;&nbsp;redirectAttributes.addFlashAttribute(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"successMessage", "学生を登録しました");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return "redirect:/students";<br>
+}
+                </div>
+            </div>
+
+            <div class="evolution-arrow">➤</div>
+
+            <!-- Week 9.8 セクション -->
+            <div class="week-section week98">
+                <div class="week-header">🏗️ Week 9.8 実装</div>
+                <div class="achievement-badge">🎯 エンタープライズアーキテクチャ確立</div>
+                
+                <ul class="tech-list">
+                    <li class="tech-item">
+                        <div class="tech-title">@Service層実装</div>
+                        <div class="tech-description">ビジネスロジック専用レイヤー構築</div>
+                    </li>
+                    <li class="tech-item">
+                        <div class="tech-title">依存性注入（DI）</div>
+                        <div class="tech-description">@Autowiredによる疎結合設計</div>
+                    </li>
+                    <li class="tech-item">
+                        <div class="tech-title">@Transactional管理</div>
+                        <div class="tech-description">データベース操作の安全性確保</div>
+                    </li>
+                    <li class="tech-item">
+                        <div class="tech-title">例外処理統一化</div>
+                        <div class="tech-description">Service層での統一的エラーハンドリング</div>
+                    </li>
+                </ul>
+
+                <div class="code-example">
+// Week 9.8 リファクタリング後<br>
+@Controller<br>
+public class StudentController {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Autowired<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private StudentService studentService;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@PostMapping("/students")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public String registerStudent(...) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// <span class="highlight">ビジネスロジックはServiceに委譲</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;studentService.registerStudent(studentData);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// フィードバック機能継承<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;redirectAttributes.addFlashAttribute(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"successMessage", "学生を登録しました");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return "redirect:/students";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                </div>
+            </div>
+        </div>
+
+        <!-- 技術発展の流れ -->
+        <div class="progress-section">
+            <div class="progress-title">📈 技術発展の流れ</div>
+            <div class="progress-flow">
+                <div class="progress-step">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Week 9.7 基盤活用</div>
+                    <div class="step-description">フィードバック機能とPRGパターンの完成技術を継承</div>
+                </div>
+                
+                <div class="progress-step">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Controller肥大化解決</div>
+                    <div class="step-description">ビジネスロジックをService層に分離</div>
+                </div>
+                
+                <div class="progress-step">
+                    <div class="step-number">3</div>
+                    <div class="step-title">MVCアーキテクチャ確立</div>
+                    <div class="step-description">責任分離による保守性・拡張性向上</div>
+                </div>
+                
+                <div class="progress-step">
+                    <div class="step-number">4</div>
+                    <div class="step-title">エンタープライズ到達</div>
+                    <div class="step-description">実務レベルアーキテクチャ設計完成</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- エンタープライズアーキテクチャ確立バナー -->
+        <div class="enterprise-banner">
+            <div class="enterprise-title">🏆 エンタープライズアーキテクチャ確立</div>
+            <div class="enterprise-description">
+                Week 9.7のプロフェッショナル技術 → Week 9.8のエンタープライズ設計 → Week 10の高度機能実装基盤
+            </div>
+        </div>
+    </div>
+</body>
+</html>
