@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>完全な実装例図 - Week 9.6</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1400px;
+            width: 100%;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header::before {
+            content: '💻';
+            font-size: 2.5rem;
+            position: absolute;
+            left: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .overview-card {
+            background: linear-gradient(135deg, #fff, #f8f9fa);
+            border: 3px solid #e67e22;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .overview-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(230, 126, 34, 0.2);
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #e67e22;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .card-description {
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        .complete-controller {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 12px;
+            padding: 25px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            line-height: 1.5;
+            overflow-x: auto;
+            text-align: left;
+            margin: 20px 0;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .method-section {
+            background: linear-gradient(135deg, #fff5f0, #ffe0d6);
+            border: 2px solid #e67e22;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .method-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #e67e22;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .method-code {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.5;
+            overflow-x: auto;
+            text-align: left;
+            margin: 15px 0;
+        }
+
+        .method-explanation {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .explanation-item {
+            background: white;
+            border-left: 4px solid #e67e22;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .explanation-title {
+            font-weight: bold;
+            color: #e67e22;
+            margin-bottom: 5px;
+            font-size: 0.95rem;
+        }
+
+        .explanation-text {
+            font-size: 0.85rem;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .tech-integration {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .integration-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .integration-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .integration-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .integration-week {
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: #f1c40f;
+        }
+
+        .integration-tech {
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .file-structure {
+            background: linear-gradient(135deg, #8e44ad, #9b59b6);
+            color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .structure-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .file-tree {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .benefits-summary {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .summary-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #e67e22;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .benefit-item {
+            background: white;
+            border: 2px solid #e67e22;
+            padding: 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .benefit-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(230, 126, 34, 0.2);
+        }
+
+        .benefit-icon {
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .benefit-title {
+            font-weight: bold;
+            color: #e67e22;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .benefit-description {
+            font-size: 0.9rem;
+            color: #555;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        .next-steps {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .next-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .next-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .next-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .next-item-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .next-item-description {
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .overview-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .method-explanation {
+                grid-template-columns: 1fr;
+            }
+            
+            .integration-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .next-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header::before {
+                display: none;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .complete-controller {
+                font-size: 10px;
+                max-height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>完全な実装例図</h1>
+            <p>StudentControllerの編集機能統合コード - Week 9.6の集大成</p>
+        </div>
+
+        <div class="content">
+            <!-- 実装概要 -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span>🎯</span>
+                    Week 9.6編集機能の完全実装概要
+                </h2>
+                
+                <div class="overview-grid">
+                    <div class="overview-card">
+                        <div class="card-title">📝 編集画面表示</div>
+                        <div class="card-description">
+                            @GetMappingで編集フォームを表示し、既存データを初期値として設定
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <div class="card-title">🔄 更新処理実行</div>
+                        <div class="card-description">
+                            @PatchMappingで更新データを受信し、バリデーション・楽観ロック制御を実行
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <div class="card-title">⚠️ 例外処理</div>
+                        <div class="card-description">
+                            楽観ロック競合・バリデーションエラーなど、各種例外に対する適切な処理
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <div class="card-title">🎨 UX向上</div>
+                        <div class="card-description">
+                            エラー時の最新データ表示・適切なメッセージ・画面遷移の最適化
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 編集画面表示メソッド -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span>📝</span>
+                    編集画面表示メソッド（GET）
+                </h2>
+                
+                <div class="method-section">
+                    <div class="method-title">showEditForm() メソッドの完全実装</div>
+                    
+                    <div class="method-code">
+/**<br>
+&nbsp;* 編集画面表示処理<br>
+&nbsp;* @param id 編集対象のStudent ID<br>
+&nbsp;* @param model ビューに渡すデータモデル<br>
+&nbsp;* @return 編集画面のテンプレート名<br>
+&nbsp;*/<br>
+@GetMapping("/students/{id}/edit")<br>
+public String showEditForm(@PathVariable Long id, Model model) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;try {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 1. 指定されたIDのStudentエンティティを取得<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Student student = studentRepository.findById(id)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.orElseThrow(() -> new IllegalArgumentException(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Invalid student Id:" + id));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 2. Week 9.1のfromEntity()メソッドでDTO変換<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;StudentData studentData = StudentData.fromEntity(student);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 3. モデルに設定してビューに渡す<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;model.addAttribute("studentData", studentData);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return "students/edit";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;} catch (IllegalArgumentException e) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 存在しないIDが指定された場合<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;model.addAttribute("errorMessage", <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"指定されたデータが見つかりません。");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return "redirect:/students";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                    </div>
+                    
+                    <div class="method-explanation">
+                        <div class="explanation-item">
+                            <div class="explanation-title">@PathVariable活用</div>
+                            <div class="explanation-text">URLの{id}部分を自動的にLong型パラメータとして受け取り</div>
+                        </div>
+                        
+                        <div class="explanation-item">
+                            <div class="explanation-title">Week 9.1技術統合</div>
+                            <div class="explanation-text">fromEntity()メソッドでEntity→DTO変換を実現</div>
+                        </div>
+                        
+                        <div class="explanation-item">
+                            <div class="explanation-title">例外処理</div>
+                            <div class="explanation-text">存在しないIDに対する適切なエラーハンドリング</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 更新処理メソッド -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span>🔄</span>
+                    更新処理メソッド（PATCH）
+                </h2>
+                
+                <div class="method-section">
+                    <div class="method-title">updateStudent() メソッドの完全実装</div>
+                    
+                    <div class="method-code">
+/**<br>
+&nbsp;* 学生情報更新処理<br>
+&nbsp;* @param id 更新対象のStudent ID<br>
+&nbsp;* @param studentData フォームから送信されたデータ<br>
+&nbsp;* @param bindingResult バリデーション結果<br>
+&nbsp;* @param model ビューに渡すデータモデル<br>
+&nbsp;* @return 成功時は一覧画面、エラー時は編集画面<br>
+&nbsp;*/<br>
+@PatchMapping("/students/{id}")<br>
+public String updateStudent(@PathVariable Long id,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Valid @ModelAttribute StudentData studentData,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BindingResult bindingResult,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Model model) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 1. Week 9.3バリデーションエラーチェック<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (bindingResult.hasErrors()) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;model.addAttribute("errorMessage", <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"入力内容に不備があります。");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return "students/edit";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;try {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 2. DTOからEntityに変換<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Student student = studentData.toEntity();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;student.setId(id); // URLのIDを確実に設定<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 3. 楽観ロック制御付きでデータベース更新<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;studentRepository.save(student);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 4. 成功時は一覧画面にリダイレクト（PRGパターン）<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return "redirect:/students";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;} catch (OptimisticLockingFailureException e) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 5. 楽観ロック競合例外処理<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return handleOptimisticLockingFailure(id, model);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;} catch (Exception e) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 6. その他の予期しない例外<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;model.addAttribute("errorMessage",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"システムエラーが発生しました。");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return "students/edit";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}<br>
+<br>
+/**<br>
+&nbsp;* 楽観ロック例外処理の専用メソッド<br>
+&nbsp;*/<br>
+private String handleOptimisticLockingFailure(Long id, Model model) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;model.addAttribute("errorMessage",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"データが他のユーザーにより更新されています。<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;最新データを確認してから再度実行してください。");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;try {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 最新データを再取得<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Student latestStudent = studentRepository.findById(id)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.orElseThrow(() -> new IllegalArgumentException(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Invalid student Id:" + id));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;StudentData latestData = StudentData.fromEntity(latestStudent);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;model.addAttribute("studentData", latestData);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;} catch (IllegalArgumentException ex) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// レコードが削除されていた場合<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return "redirect:/students";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return "students/edit";<br>
+}
+                    </div>
+                    
+                    <div class="method-explanation">
+                        <div class="explanation-item">
+                            <div class="explanation-title">@PatchMapping活用</div>
+                            <div class="explanation-text">RESTful設計に基づく部分更新操作の実装</div>
+                        </div>
+                        
+                        <div class="explanation-item">
+                            <div class="explanation-title">多段階例外処理</div>
+                            <div class="explanation-text">バリデーション→楽観ロック→一般例外の順序で処理</div>
+                        </div>
+                        
+                        <div class="explanation-item">
+                            <div class="explanation-title">リカバリー機能</div>
+                            <div class="explanation-text">競合時の最新データ自動取得・表示機能</div>
+                        </div>
+                        
+                        <div class="explanation-item">
+                            <div class="explanation-title">PRGパターン</div>
+                            <div class="explanation-text">成功時のリダイレクトによる重複送信防止</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 技術統合 -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span>🔗</span>
+                    Week 9.1-9.6技術統合の実現
+                </h2>
+                
+                <div class="tech-integration">
+                    <div class="integration-title">編集機能で活用されるWeek別技術</div>
+                    
+                    <div class="integration-grid">
+                        <div class="integration-item">
+                            <div class="integration-week">Week 9.1</div>
+                            <div class="integration-tech">
+                                StudentDataクラス設計<br>
+                                fromEntity()メソッド<br>
+                                toEntity()メソッド
+                            </div>
+                        </div>
+                        
+                        <div class="integration-item">
+                            <div class="integration-week">Week 9.2</div>
+                            <div class="integration-tech">
+                                Thymeleafフォーム技術<br>
+                                th:field自動バインディング<br>
+                                編集フォーム構築
+                            </div>
+                        </div>
+                        
+                        <div class="integration-item">
+                            <div class="integration-week">Week 9.3</div>
+                            <div class="integration-tech">
+                                Bean Validation<br>
+                                @Valid自動実行<br>
+                                BindingResult活用
+                            </div>
+                        </div>
+                        
+                        <div class="integration-item">
+                            <div class="integration-week">Week 9.4</div>
+                            <div class="integration-tech">
+                                エラーハンドリング<br>
+                                UX向上技術<br>
+                                適切なメッセージ表示
+                            </div>
+                        </div>
+                        
+                        <div class="integration-item">
+                            <div class="integration-week">Week 9.5</div>
+                            <div class="integration-tech">
+                                Repository活用<br>
+                                データベース保存<br>
+                                リダイレクト処理
+                            </div>
+                        </div>
+                        
+                        <div class="integration-item">
+                            <div class="integration-week">Week 9.6</div>
+                            <div class="integration-tech">
+                                @PatchMapping<br>
+                                楽観ロック制御<br>
+                                編集機能統合
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ファイル構成 -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span>📁</span>
+                    プロジェクトファイル構成
+                </h2>
+                
+                <div class="file-structure">
+                    <div class="structure-title">Week 9.6完成時のファイル構成</div>
+                    
+                    <div class="file-tree">
+src/main/java/com/example/studentmgmt/<br>
+├── controller/<br>
+│   └── StudentController.java          ← 📝 編集機能完全実装<br>
+├── dto/<br>
+│   └── StudentData.java               ← Week 9.1で設計<br>
+├── entity/<br>
+│   └── Student.java                   ← @Version楽観ロック対応<br>
+├── repository/<br>
+│   └── StudentRepository.java         ← JPA Repository<br>
+└── StudentMgmtApplication.java<br>
+<br>
+src/main/resources/<br>
+├── templates/<br>
+│   └── students/<br>
+│       ├── list.html                  ← 一覧画面<br>
+│       ├── register.html              ← Week 9.5新規登録<br>
+│       └── edit.html                  ← 📝 編集画面<br>
+├── static/<br>
+│   ├── css/<br>
+│   └── js/<br>
+└── application.properties
+                    </div>
+                </div>
+            </div>
+
+            <!-- 実装完了メリット -->
+            <div class="section">
+                <div class="benefits-summary">
+                    <div class="summary-title">💯 Week 9.6編集機能実装による8つのメリット</div>
+                    
+                    <div class="benefits-grid">
+                        <div class="benefit-item">
+                            <div class="benefit-icon">🎯</div>
+                            <div class="benefit-title">CRUD操作基盤確立</div>
+                            <div class="benefit-description">
+                                Create（Week 9.5）・Update（Week 9.6）の統合によりCRUD基盤を確立
+                            </div>
+                        </div>
+                        
+                        <div class="benefit-item">
+                            <div class="benefit-icon">🔄</div>
+                            <div class="benefit-title">技術統合の実感</div>
+                            <div class="benefit-description">
+                                Week 9.1-9.5の学習技術が実際のシステムで活用される感動体験
+                            </div>
+                        </div>
+                        
+                        <div class="benefit-item">
+                            <div class="benefit-icon">🛡️</div>
+                            <div class="benefit-title">楽観ロック制御</div>
+                            <div class="benefit-description">
+                                並行更新制御によりエンタープライズレベルのデータ整合性を実現
+                            </div>
+                        </div>
+                        
+                        <div class="benefit-item">
+                            <div class="benefit-icon">⚡</div>
+                            <div class="benefit-title">RESTful設計</div>
+                            <div class="benefit-description">
+                                @PatchMappingによりREST原則に準拠したAPI設計を習得
+                            </div>
+                        </div>
+                        
+                        <div class="benefit-item">
+                            <div class="benefit-icon">📝</div>
+                            <div class="benefit-title">完全なエラー処理</div>
+                            <div class="benefit-description">
+                                多段階例外処理により実務レベルのエラーハンドリングを実現
+                            </div>
+                        </div>
+                        
+                        <div class="benefit-item">
+                            <div class="benefit-icon">👤</div>
+                            <div class="benefit-title">優れたUX</div>
+                            <div class="benefit-description">
+                                最新データ自動表示・適切なメッセージによりユーザビリティ向上
+                            </div>
+                        </div>
+                        
+                        <div class="benefit-item">
+                            <div class="benefit-icon">🎨</div>
+                            <div class="benefit-title">フォーム技術習得</div>
+                            <div class="benefit-description">
+                                初期値設定・hiddenフィールド・バリデーション統合の完全理解
+                            </div>
+                        </div>
+                        
+                        <div class="benefit-item">
+                            <div class="benefit-icon">📈</div>
+                            <div class="benefit-title">実務レベル技術</div>
+                            <div class="benefit-description">
+                                企業システム開発で実際に使用される更新処理技術を完全習得
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 次のステップ -->
+            <div class="section">
+                <div class="next-steps">
+                    <div class="next-title">🚀 Week 9.7以降への展望</div>
+                    
+                    <div class="next-grid">
+                        <div class="next-item">
+                            <div class="next-item-title">Week 9.7: 成功・失敗処理</div>
+                            <div class="next-item-description">
+                                フラッシュメッセージ・リダイレクト属性による適切なフィードバック実装
+                            </div>
+                        </div>
+                        
+                        <div class="next-item">
+                            <div class="next-item-title">Week 9.8: Service層分離</div>
+                            <div class="next-item-description">
+                                ビジネスロジックをService層に分離し、責任分担の明確化
+                            </div>
+                        </div>
+                        
+                        <div class="next-item">
+                            <div class="next-item-title">Week 9.9: 削除機能実装</div>
+                            <div class="next-item-description">
+                                @DeleteMappingによるCRUD操作の完全な実装
+                            </div>
+                        </div>
+                        
+                        <div class="next-item">
+                            <div class="next-item-title">Week 9.10: 総合仕上げ</div>
+                            <div class="next-item-description">
+                                CRUD機能の統合テスト・パフォーマンス最適化・運用準備
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

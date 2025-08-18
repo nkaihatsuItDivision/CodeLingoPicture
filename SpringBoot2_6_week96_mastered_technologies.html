@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 9.6習得技術まとめ図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1400px;
+            width: 100%;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header::before {
+            content: '🎓';
+            font-size: 2.5rem;
+            position: absolute;
+            left: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .achievement-banner {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .achievement-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255,255,255,0.05) 10px,
+                rgba(255,255,255,0.05) 20px
+            );
+            animation: shimmer 3s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .achievement-title {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .achievement-subtitle {
+            font-size: 1.2rem;
+            position: relative;
+            z-index: 1;
+            opacity: 0.95;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .tech-card {
+            background: linear-gradient(135deg, #fff, #f8f9fa);
+            border: 3px solid #e67e22;
+            border-radius: 16px;
+            padding: 25px;
+            position: relative;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .tech-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(230, 126, 34, 0.25);
+            border-color: #d35400;
+        }
+
+        .tech-number {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .tech-icon {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2.5rem;
+            opacity: 0.8;
+        }
+
+        .tech-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #e67e22;
+            margin-bottom: 15px;
+            margin-top: 10px;
+            padding-right: 60px;
+        }
+
+        .tech-description {
+            font-size: 1rem;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .tech-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .feature-tag {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .tech-code {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 8px;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            text-align: left;
+            margin-top: 10px;
+        }
+
+        .integration-matrix {
+            background: linear-gradient(135deg, #fff5f0, #ffe0d6);
+            border: 3px solid #e67e22;
+            border-radius: 16px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .matrix-title {
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #e67e22;
+            margin-bottom: 25px;
+        }
+
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .matrix-item {
+            background: white;
+            border: 2px solid #e67e22;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .matrix-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(230, 126, 34, 0.2);
+        }
+
+        .matrix-week {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #e67e22;
+            margin-bottom: 8px;
+        }
+
+        .matrix-tech {
+            font-size: 0.85rem;
+            color: #555;
+            line-height: 1.4;
+        }
+
+        .competency-levels {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .competency-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .levels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .level-item {
+            background: rgba(255,255,255,0.15);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .level-item:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-3px);
+        }
+
+        .level-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #f1c40f;
+        }
+
+        .level-description {
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .real-world-applications {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .applications-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .applications-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .application-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid #f1c40f;
+        }
+
+        .application-name {
+            font-size: 1rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .application-description {
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .learning-outcomes {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .outcomes-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #e67e22;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .outcomes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .outcome-category {
+            background: white;
+            border: 2px solid #e67e22;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .outcome-category:hover {
+            box-shadow: 0 10px 20px rgba(230, 126, 34, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .category-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #e67e22;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .outcome-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .outcome-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9rem;
+            color: #555;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .outcome-item:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .outcome-item:last-child {
+            border-bottom: none;
+        }
+
+        .next-journey {
+            background: linear-gradient(135deg, #8e44ad, #9b59b6);
+            color: white;
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .journey-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .journey-description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .journey-highlights {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .journey-highlight {
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .tech-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .matrix-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .levels-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .applications-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .outcomes-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .journey-highlights {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header::before {
+                display: none;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Week 9.6習得技術まとめ図</h1>
+            <p>今回習得した5つの技術要素 - 編集機能実装の完全マスター</p>
+        </div>
+
+        <div class="content">
+            <!-- 達成バナー -->
+            <div class="achievement-banner">
+                <div class="achievement-title">🎉 Week 9.6 編集機能実装 完全達成！</div>
+                <div class="achievement-subtitle">5つの核心技術を習得し、CRUD操作基盤を確立</div>
+            </div>
+
+            <!-- 5つの核心技術 -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span>🎯</span>
+                    Week 9.6で習得した5つの核心技術
+                </h2>
+                
+                <div class="tech-grid">
+                    <div class="tech-card">
+                        <div class="tech-number">1</div>
+                        <div class="tech-icon">📍</div>
+                        <div class="tech-title">@PathVariable による特定レコード取得</div>
+                        <div class="tech-description">
+                            URLパスからIDを抽出し、データベースから特定のレコードを安全に取得する技術
+                        </div>
+                        <div class="tech-features">
+                            <div class="feature-tag">URL設計</div>
+                            <div class="feature-tag">型安全性</div>
+                            <div class="feature-tag">RESTful</div>
+                        </div>
+                        <div class="tech-code">
+@GetMapping("/students/{id}/edit")<br>
+public String showEditForm(@PathVariable Long id, Model model)
+                        </div>
+                    </div>
+
+                    <div class="tech-card">
+                        <div class="tech-number">2</div>
+                        <div class="tech-icon">🔄</div>
+                        <div class="tech-title">Week 9.1 fromEntity() メソッド活用</div>
+                        <div class="tech-description">
+                            過去に設計したDTO変換メソッドを編集機能で実践活用し、学習技術の統合を実現
+                        </div>
+                        <div class="tech-features">
+                            <div class="feature-tag">技術統合</div>
+                            <div class="feature-tag">DTO変換</div>
+                            <div class="feature-tag">再利用性</div>
+                        </div>
+                        <div class="tech-code">
+StudentData studentData = StudentData.fromEntity(student);<br>
+model.addAttribute("studentData", studentData);
+                        </div>
+                    </div>
+
+                    <div class="tech-card">
+                        <div class="tech-number">3</div>
+                        <div class="tech-icon">📝</div>
+                        <div class="tech-title">編集フォーム構築技術</div>
+                        <div class="tech-description">
+                            初期値設定・hiddenフィールド・PATCHメソッド対応による編集専用フォームの構築
+                        </div>
+                        <div class="tech-features">
+                            <div class="feature-tag">初期値設定</div>
+                            <div class="feature-tag">Hidden Fields</div>
+                            <div class="feature-tag">PATCH Method</div>
+                        </div>
+                        <div class="tech-code">
+&lt;input type="hidden" name="_method" value="patch"&gt;<br>
+&lt;input type="hidden" th:field="*{id}"&gt;<br>
+&lt;input type="hidden" th:field="*{version}"&gt;
+                        </div>
+                    </div>
+
+                    <div class="tech-card">
+                        <div class="tech-number">4</div>
+                        <div class="tech-icon">⚡</div>
+                        <div class="tech-title">@PatchMapping による更新処理</div>
+                        <div class="tech-description">
+                            RESTful設計に基づく部分更新操作の実装とHTTPメソッドの適切な活用
+                        </div>
+                        <div class="tech-features">
+                            <div class="feature-tag">RESTful API</div>
+                            <div class="feature-tag">HTTP Method</div>
+                            <div class="feature-tag">部分更新</div>
+                        </div>
+                        <div class="tech-code">
+@PatchMapping("/students/{id}")<br>
+public String updateStudent(@PathVariable Long id,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Valid @ModelAttribute StudentData studentData)
+                        </div>
+                    </div>
+
+                    <div class="tech-card">
+                        <div class="tech-number">5</div>
+                        <div class="tech-icon">🔒</div>
+                        <div class="tech-title">楽観ロック実装と例外処理</div>
+                        <div class="tech-description">
+                            @Versionによるバージョン管理と競合検出、OptimisticLockingFailureException処理
+                        </div>
+                        <div class="tech-features">
+                            <div class="feature-tag">楽観ロック</div>
+                            <div class="feature-tag">競合検出</div>
+                            <div class="feature-tag">例外処理</div>
+                        </div>
+                        <div class="tech-code">
+} catch (OptimisticLockingFailureException e) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 最新データ再取得・エラー表示<br>
+}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 技術統合マトリックス -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span>🔗</span>
+                    Week 9.1-9.6 技術統合マトリックス
+                </h2>
+                
+                <div class="integration-matrix">
+                    <div class="matrix-title">編集機能で統合された過去Week技術</div>
+                    
+                    <div class="matrix-grid">
+                        <div class="matrix-item">
+                            <div class="matrix-week">Week 9.1</div>
+                            <div class="matrix-tech">
+                                StudentData設計<br>
+                                fromEntity()活用<br>
+                                toEntity()活用
+                            </div>
+                        </div>
+                        
+                        <div class="matrix-item">
+                            <div class="matrix-week">Week 9.2</div>
+                            <div class="matrix-tech">
+                                Thymeleafフォーム<br>
+                                th:field活用<br>
+                                動的URL生成
+                            </div>
+                        </div>
+                        
+                        <div class="matrix-item">
+                            <div class="matrix-week">Week 9.3</div>
+                            <div class="matrix-tech">
+                                Bean Validation<br>
+                                @Valid継続活用<br>
+                                エラー表示統合
+                            </div>
+                        </div>
+                        
+                        <div class="matrix-item">
+                            <div class="matrix-week">Week 9.4</div>
+                            <div class="matrix-tech">
+                                エラーハンドリング<br>
+                                UX向上技術<br>
+                                適切なメッセージ
+                            </div>
+                        </div>
+                        
+                        <div class="matrix-item">
+                            <div class="matrix-week">Week 9.5</div>
+                            <div class="matrix-tech">
+                                Repository活用<br>
+                                save()メソッド<br>
+                                リダイレクト処理
+                            </div>
+                        </div>
+                        
+                        <div class="matrix-item">
+                            <div class="matrix-week">Week 9.6</div>
+                            <div class="matrix-tech">
+                                @PatchMapping<br>
+                                楽観ロック制御<br>
+                                編集機能統合
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 習熟度レベル -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span>📊</span>
+                    Week 9.6完了時の習熟度レベル
+                </h2>
+                
+                <div class="competency-levels">
+                    <div class="competency-title">🌟 到達した技術習熟度</div>
+                    
+                    <div class="levels-grid">
+                        <div class="level-item">
+                            <div class="level-name">🎯 CRUD操作基盤 - 上級レベル</div>
+                            <div class="level-description">
+                                Create（新規登録）・Update（編集）の統合により、CRUD操作の核心技術を完全習得。実務レベルの開発基盤を確立。
+                            </div>
+                        </div>
+                        
+                        <div class="level-item">
+                            <div class="level-name">🔄 技術統合力 - エキスパートレベル</div>
+                            <div class="level-description">
+                                Week 9.1-9.5の学習技術を編集機能で実践統合。過去の学習成果を活用する技術統合力を獲得。
+                            </div>
+                        </div>
+                        
+                        <div class="level-item">
+                            <div class="level-name">🛡️ 排他制御 - 中級レベル</div>
+                            <div class="level-description">
+                                楽観ロックによる並行更新制御を理解・実装。エンタープライズ開発で必要な排他制御技術を習得。
+                            </div>
+                        </div>
+                        
+                        <div class="level-item">
+                            <div class="level-name">⚡ RESTful設計 - 中級レベル</div>
+                            <div class="level-description">
+                                @PatchMappingによる部分更新操作を実装。REST原則に基づくAPI設計技術を体得。
+                            </div>
+                        </div>
+                        
+                        <div class="level-item">
+                            <div class="level-name">📝 例外処理 - 上級レベル</div>
+                            <div class="level-description">
+                                多段階例外処理・リカバリー機能を実装。実務レベルのエラーハンドリング技術を完全習得。
+                            </div>
+                        </div>
+                        
+                        <div class="level-item">
+                            <div class="level-name">👤 UX設計 - 中級レベル</div>
+                            <div class="level-description">
+                                ユーザビリティを考慮した編集フォーム・エラー表示を実装。ユーザー体験向上の技術を獲得。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 実務応用例 -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span>🏢</span>
+                    実務での応用例
+                </h2>
+                
+                <div class="real-world-applications">
+                    <div class="applications-title">💼 企業システムでの活用場面</div>
+                    
+                    <div class="applications-grid">
+                        <div class="application-item">
+                            <div class="application-name">社員情報管理システム</div>
+                            <div class="application-description">
+                                社員データの編集機能で楽観ロック制御により複数人事担当者の同時編集を安全に制御
+                            </div>
+                        </div>
+                        
+                        <div class="application-item">
+                            <div class="application-name">商品マスタ管理</div>
+                            <div class="application-description">
+                                ECサイトの商品情報更新で在庫管理・価格変更時の競合状態を楽観ロックで適切に処理
+                            </div>
+                        </div>
+                        
+                        <div class="application-item">
+                            <div class="application-name">顧客情報システム</div>
+                            <div class="application-description">
+                                CRMシステムでの顧客データ編集機能、営業担当者間のデータ競合を自動検出・回避
+                            </div>
+                        </div>
+                        
+                        <div class="application-item">
+                            <div class="application-name">予約管理システム</div>
+                            <div class="application-description">
+                                ホテル・レストラン予約の変更処理で同時編集による予約競合を防止し、データ整合性を保証
+                            </div>
+                        </div>
+                        
+                        <div class="application-item">
+                            <div class="application-name">在庫管理システム</div>
+                            <div class="application-description">
+                                倉庫管理での在庫データ更新時、複数オペレーターの同時更新を楽観ロックで安全に制御
+                            </div>
+                        </div>
+                        
+                        <div class="application-item">
+                            <div class="application-name">文書管理システム</div>
+                            <div class="application-description">
+                                企業内文書の共同編集機能で文書の版管理・競合検出をバージョン管理で実現
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 学習成果 -->
+            <div class="section">
+                <div class="learning-outcomes">
+                    <div class="outcomes-title">📈 Week 9.6学習成果の詳細分析</div>
+                    
+                    <div class="outcomes-grid">
+                        <div class="outcome-category">
+                            <div class="category-title">🎯 技術的成果</div>
+                            <ul class="outcome-list">
+                                <li class="outcome-item">@PathVariableによるURL設計技術</li>
+                                <li class="outcome-item">@PatchMappingによるRESTful API実装</li>
+                                <li class="outcome-item">楽観ロック制御の理解と実装</li>
+                                <li class="outcome-item">多段階例外処理の完全習得</li>
+                                <li class="outcome-item">編集フォーム構築技術の習得</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="outcome-category">
+                            <div class="category-title">🔗 統合力成果</div>
+                            <ul class="outcome-list">
+                                <li class="outcome-item">Week 9.1-9.5技術の実践統合</li>
+                                <li class="outcome-item">DTO変換メソッドの効果的活用</li>
+                                <li class="outcome-item">Thymeleafフォーム技術の発展的活用</li>
+                                <li class="outcome-item">Bean Validationの継続的活用</li>
+                                <li class="outcome-item">エラーハンドリングの統合的実装</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="outcome-category">
+                            <div class="category-title">💡 設計力成果</div>
+                            <ul class="outcome-list">
+                                <li class="outcome-item">RESTful API設計原則の理解</li>
+                                <li class="outcome-item">ユーザビリティを考慮したUX設計</li>
+                                <li class="outcome-item">データ整合性を保証する制御設計</li>
+                                <li class="outcome-item">適切な例外処理フローの設計</li>
+                                <li class="outcome-item">保守性を考慮したコード構造設計</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="outcome-category">
+                            <div class="category-title">🏢 実務力成果</div>
+                            <ul class="outcome-list">
+                                <li class="outcome-item">エンタープライズレベルの編集機能実装</li>
+                                <li class="outcome-item">並行更新制御の実務的理解</li>
+                                <li class="outcome-item">実際の企業システムで使用される技術習得</li>
+                                <li class="outcome-item">運用を考慮したエラー処理実装</li>
+                                <li class="outcome-item">保守性・拡張性を備えたコード作成能力</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 次への展望 -->
+            <div class="section">
+                <div class="next-journey">
+                    <div class="journey-title">🚀 Week 9.7以降への学習展望</div>
+                    <div class="journey-description">
+                        Week 9.6で確立したCRUD操作基盤を基に、さらに高度な開発技術へステップアップ。
+                        実務レベルのWebアプリケーション開発技術の完全習得を目指します。
+                    </div>
+                    <div class="journey-highlights">
+                        <div class="journey-highlight">成功・失敗処理の実装</div>
+                        <div class="journey-highlight">Service層の分離設計</div>
+                        <div class="journey-highlight">削除機能の完全実装</div>
+                        <div class="journey-highlight">CRUD操作の統合仕上げ</div>
+                        <div class="journey-highlight">実務レベル開発技術の完成</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

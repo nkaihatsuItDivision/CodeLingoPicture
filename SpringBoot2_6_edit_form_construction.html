@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>編集フォーム構築図 - Week 9.6</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1400px;
+            width: 100%;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header::before {
+            content: '📝';
+            font-size: 2.5rem;
+            position: absolute;
+            left: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .form-box {
+            border-radius: 12px;
+            padding: 25px;
+            position: relative;
+            transition: all 0.3s ease;
+            border: 3px solid;
+        }
+
+        .new-form {
+            background: linear-gradient(135deg, #fff, #f8f9fa);
+            border-color: #16a085;
+        }
+
+        .edit-form {
+            background: linear-gradient(135deg, #fff5f0, #ffe0d6);
+            border-color: #e67e22;
+        }
+
+        .form-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .form-label {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            color: white;
+        }
+
+        .new-form .form-label {
+            background: linear-gradient(135deg, #16a085, #138d75);
+        }
+
+        .edit-form .form-label {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+        }
+
+        .form-description {
+            font-size: 1rem;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            margin-top: 15px;
+            overflow-x: auto;
+            text-align: left;
+        }
+
+        .form-structure {
+            background: linear-gradient(135deg, #fff5f0, #ffe0d6);
+            border: 3px solid #e67e22;
+            border-radius: 16px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .structure-title {
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #e67e22;
+            margin-bottom: 25px;
+        }
+
+        .field-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .field-item {
+            background: white;
+            border: 2px solid #e67e22;
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .field-type {
+            position: absolute;
+            top: -15px;
+            left: 15px;
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .field-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #e67e22;
+            margin-bottom: 10px;
+            margin-top: 5px;
+        }
+
+        .field-description {
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .hidden-fields {
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .hidden-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .hidden-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .hidden-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .hidden-field-name {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #f39c12;
+        }
+
+        .hidden-purpose {
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .thymeleaf-features {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .features-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .feature-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .feature-name {
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .feature-description {
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .implementation-flow {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .flow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .flow-step {
+            background: white;
+            border: 2px solid #e67e22;
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .flow-step:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(230, 126, 34, 0.2);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .step-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #e67e22;
+            margin-bottom: 10px;
+            margin-top: 5px;
+        }
+
+        .step-description {
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .benefits-container {
+            background: linear-gradient(135deg, #fff, #f8f9fa);
+            border: 2px solid #e67e22;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .benefits-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #e67e22;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .benefit-item {
+            background: linear-gradient(135deg, #fff5f0, #ffe0d6);
+            border-left: 4px solid #e67e22;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .benefit-icon {
+            font-size: 1.2rem;
+            margin-right: 8px;
+        }
+
+        .benefit-title {
+            font-weight: bold;
+            color: #e67e22;
+            margin-bottom: 5px;
+        }
+
+        .benefit-description {
+            font-size: 0.9rem;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .form-comparison {
+                grid-template-columns: 1fr;
+            }
+            
+            .field-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hidden-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .flow-steps {
+                grid-template-columns: 1fr;
+            }
+            
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header::before {
+                display: none;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>編集フォーム構築図</h1>
+            <p>初期値設定・hiddenフィールド・更新専用UI - Week 9.6の中核技術</p>
+        </div>
+
+        <div class="content">
+            <!-- 新規登録 vs 編集フォーム -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span>⚖️</span>
+                    新規登録フォーム vs 編集フォーム
+                </h2>
+                
+                <div class="form-comparison">
+                    <div class="form-box new-form">
+                        <div class="form-label">📋 新規登録フォーム (Week 9.5)</div>
+                        <div class="form-description">
+                            空の初期値でユーザーが入力、POSTメソッドでデータ作成
+                        </div>
+                        <div class="code-example">
+&lt;form th:action="@{/students}" th:object="${studentData}" <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;method="post"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;input type="text" th:field="*{name}" <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;placeholder="名前を入力"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;input type="email" th:field="*{email}" <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;placeholder="メールアドレス"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;button type="submit"&gt;登録&lt;/button&gt;<br>
+&lt;/form&gt;
+                        </div>
+                    </div>
+                    
+                    <div class="form-box edit-form">
+                        <div class="form-label">✏️ 編集フォーム (Week 9.6)</div>
+                        <div class="form-description">
+                            既存データを初期値として表示、PATCHメソッドでデータ更新
+                        </div>
+                        <div class="code-example">
+&lt;form th:action="@{/students/{id}(id=${studentData.id})}" <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;th:object="${studentData}" method="post"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;input type="hidden" name="_method" value="patch"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;input type="hidden" th:field="*{id}"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;input type="hidden" th:field="*{version}"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;input type="text" th:field="*{name}"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;input type="email" th:field="*{email}"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;button type="submit"&gt;更新&lt;/button&gt;<br>
+&lt;/form&gt;
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 編集フォームの構造 -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span>🏗️</span>
+                    編集フォームの詳細構造
+                </h2>
+                
+                <div class="form-structure">
+                    <div class="structure-title">編集フォームの5つの要素</div>
+                    
+                    <div class="field-grid">
+                        <div class="field-item">
+                            <div class="field-type">ACTION</div>
+                            <div class="field-title">フォームアクション</div>
+                            <div class="field-description">
+                                対象レコードのIDを含むURL設計
+                            </div>
+                            <div class="code-example">
+th:action="@{/students/{id}(id=${studentData.id})}"
+                            </div>
+                        </div>
+                        
+                        <div class="field-item">
+                            <div class="field-type">METHOD</div>
+                            <div class="field-title">HTTPメソッド</div>
+                            <div class="field-description">
+                                PATCHメソッドで更新操作を明示
+                            </div>
+                            <div class="code-example">
+&lt;input type="hidden" name="_method" value="patch"&gt;
+                            </div>
+                        </div>
+                        
+                        <div class="field-item">
+                            <div class="field-type">HIDDEN</div>
+                            <div class="field-title">隠しフィールド</div>
+                            <div class="field-description">
+                                ID・バージョン情報の確実な送信
+                            </div>
+                            <div class="code-example">
+&lt;input type="hidden" th:field="*{id}"&gt;<br>
+&lt;input type="hidden" th:field="*{version}"&gt;
+                            </div>
+                        </div>
+                        
+                        <div class="field-item">
+                            <div class="field-type">INPUT</div>
+                            <div class="field-title">入力フィールド</div>
+                            <div class="field-description">
+                                既存データが初期値として自動設定
+                            </div>
+                            <div class="code-example">
+&lt;input type="text" th:field="*{name}"&gt;<br>
+&lt;input type="email" th:field="*{email}"&gt;
+                            </div>
+                        </div>
+                        
+                        <div class="field-item">
+                            <div class="field-type">VALIDATION</div>
+                            <div class="field-title">バリデーション</div>
+                            <div class="field-description">
+                                Week 9.3のBean Validation継続活用
+                            </div>
+                            <div class="code-example">
+&lt;div th:if="${#fields.hasErrors('name')}" <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;class="text-danger"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;small th:errors="*{name}"&gt;&lt;/small&gt;<br>
+&lt;/div&gt;
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 隠しフィールドの詳細 -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span>🔒</span>
+                    隠しフィールドの重要性
+                </h2>
+                
+                <div class="hidden-fields">
+                    <div class="hidden-title">編集フォームに必須の3つの隠しフィールド</div>
+                    
+                    <div class="hidden-grid">
+                        <div class="hidden-item">
+                            <div class="hidden-field-name">_method="patch"</div>
+                            <div class="hidden-purpose">
+                                ブラウザがPATCHメソッドを直接サポートしないため、POSTで送信しつつPATCH操作を指示
+                            </div>
+                        </div>
+                        
+                        <div class="hidden-item">
+                            <div class="hidden-field-name">th:field="*{id}"</div>
+                            <div class="hidden-purpose">
+                                更新対象レコードのIDを確実に送信し、データベースの特定レコードを更新
+                            </div>
+                        </div>
+                        
+                        <div class="hidden-item">
+                            <div class="hidden-field-name">th:field="*{version}"</div>
+                            <div class="hidden-purpose">
+                                楽観ロック制御用のバージョン情報を送信し、並行更新時の競合を検出
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thymeleaf機能活用 -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span>🎨</span>
+                    Thymeleaf機能の活用
+                </h2>
+                
+                <div class="thymeleaf-features">
+                    <div class="features-title">編集フォームでのThymeleaf活用技術</div>
+                    
+                    <div class="features-grid">
+                        <div class="feature-item">
+                            <div class="feature-name">📝 th:field自動バインディング</div>
+                            <div class="feature-description">
+                                StudentDataの各フィールド値が自動的に初期値として設定される
+                            </div>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-name">🔗 th:action動的URL</div>
+                            <div class="feature-description">
+                                編集対象のIDを含むURLを動的に生成し、適切なエンドポイントへ送信
+                            </div>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-name">⚠️ th:errors継続活用</div>
+                            <div class="feature-description">
+                                Week 9.3のバリデーションエラー表示機能を編集フォームでも活用
+                            </div>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-name">🎯 th:object統合管理</div>
+                            <div class="feature-description">
+                                StudentDataオブジェクトとフォーム要素の完全な連携を実現
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 実装フロー -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span>⚡</span>
+                    編集フォーム実装フロー
+                </h2>
+                
+                <div class="implementation-flow">
+                    <div class="flow-steps">
+                        <div class="flow-step">
+                            <div class="step-number">1</div>
+                            <div class="step-title">データ取得</div>
+                            <div class="step-description">
+                                @PathVariableでIDを取得し、データベースからStudentエンティティを検索
+                            </div>
+                        </div>
+                        
+                        <div class="flow-step">
+                            <div class="step-number">2</div>
+                            <div class="step-title">DTO変換</div>
+                            <div class="step-description">
+                                Week 9.1のfromEntity()メソッドでStudentDataに変換
+                            </div>
+                        </div>
+                        
+                        <div class="flow-step">
+                            <div class="step-number">3</div>
+                            <div class="step-title">モデル設定</div>
+                            <div class="step-description">
+                                変換したStudentDataをModelに追加し、テンプレートに渡す
+                            </div>
+                        </div>
+                        
+                        <div class="flow-step">
+                            <div class="step-number">4</div>
+                            <div class="step-title">フォーム表示</div>
+                            <div class="step-description">
+                                Thymeleafが自動的に初期値を設定し、編集可能なフォームを表示
+                            </div>
+                        </div>
+                        
+                        <div class="flow-step">
+                            <div class="step-number">5</div>
+                            <div class="step-title">更新送信</div>
+                            <div class="step-description">
+                                PATCHメソッドで更新データと隠しフィールドを一緒に送信
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 実装メリット -->
+            <div class="section">
+                <div class="benefits-container">
+                    <div class="benefits-title">📈 編集フォーム構築による6つのメリット</div>
+                    
+                    <div class="benefits-grid">
+                        <div class="benefit-item">
+                            <div class="benefit-title">
+                                <span class="benefit-icon">👤</span>
+                                優れたUX
+                            </div>
+                            <div class="benefit-description">
+                                既存データが初期値として表示され、ユーザーは必要な部分のみ修正可能
+                            </div>
+                        </div>
+                        
+                        <div class="benefit-item">
+                            <div class="benefit-title">
+                                <span class="benefit-icon">🔒</span>
+                                データ整合性
+                            </div>
+                            <div class="benefit-description">
+                                隠しフィールドによりID・バージョン情報を確実に管理
+                            </div>
+                        </div>
+                        
+                        <div class="benefit-item">
+                            <div class="benefit-title">
+                                <span class="benefit-icon">⚡</span>
+                                RESTful設計
+                            </div>
+                            <div class="benefit-description">
+                                PATCHメソッド使用により、REST原則に準拠した更新操作
+                            </div>
+                        </div>
+                        
+                        <div class="benefit-item">
+                            <div class="benefit-title">
+                                <span class="benefit-icon">🔄</span>
+                                技術統合
+                            </div>
+                            <div class="benefit-description">
+                                Week 9.1-9.5の学習技術を編集機能で実践的に統合
+                            </div>
+                        </div>
+                        
+                        <div class="benefit-item">
+                            <div class="benefit-title">
+                                <span class="benefit-icon">🛡️</span>
+                                楽観ロック
+                            </div>
+                            <div class="benefit-description">
+                                versionフィールドにより並行更新時の競合を自動検出
+                            </div>
+                        </div>
+                        
+                        <div class="benefit-item">
+                            <div class="benefit-title">
+                                <span class="benefit-icon">📝</span>
+                                バリデーション継続
+                            </div>
+                            <div class="benefit-description">
+                                Week 9.3のBean Validationが編集時も確実に動作
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
