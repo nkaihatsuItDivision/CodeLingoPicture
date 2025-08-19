@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTTPSセキュリティ確認方法ガイド</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 1000px;
+            text-align: center;
+        }
+        
+        .title {
+            color: #333;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 40px;
+        }
+        
+        .security-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .security-type {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 20px;
+            padding: 30px;
+        }
+        
+        .danger-type {
+            border-color: #e74c3c;
+        }
+        
+        .safe-type {
+            border-color: #27ae60;
+        }
+        
+        .type-header {
+            margin-bottom: 25px;
+        }
+        
+        .type-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .danger-title {
+            color: #e74c3c;
+        }
+        
+        .safe-title {
+            color: #27ae60;
+        }
+        
+        .type-subtitle {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .browser-mockup {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .danger-mockup {
+            border-color: #e74c3c;
+        }
+        
+        .safe-mockup {
+            border-color: #27ae60;
+        }
+        
+        .browser-header {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .browser-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .browser-button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .close { background: #ff5f57; }
+        .minimize { background: #ffbd2e; }
+        .maximize { background: #28ca42; }
+        
+        .address-bar {
+            flex: 1;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .danger-bar {
+            border-color: #e74c3c;
+            color: #e74c3c;
+        }
+        
+        .safe-bar {
+            border-color: #27ae60;
+            color: #27ae60;
+        }
+        
+        .security-icon {
+            font-size: 16px;
+        }
+        
+        .url-text {
+            flex: 1;
+            text-align: left;
+        }
+        
+        .warning-section {
+            background: #fff5f5;
+            border: 1px solid #feb2b2;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 15px;
+        }
+        
+        .safe-section {
+            background: #f0fff4;
+            border: 1px solid #9ae6b4;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 15px;
+        }
+        
+        .section-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .danger-section-title {
+            color: #e74c3c;
+        }
+        
+        .safe-section-title {
+            color: #27ae60;
+        }
+        
+        .section-content {
+            font-size: 12px;
+            line-height: 1.4;
+        }
+        
+        .check-steps {
+            background: #ffffff;
+            border: 2px solid #e9ecef;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+        
+        .steps-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 25px;
+        }
+        
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .step-card {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .step-number {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0 auto 15px;
+        }
+        
+        .step-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .step-description {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        .detailed-checks {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+        
+        .checks-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 25px;
+        }
+        
+        .check-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .check-item {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .check-icon-container {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .safe-check {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+        }
+        
+        .danger-check {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+        }
+        
+        .check-content {
+            flex: 1;
+            text-align: left;
+        }
+        
+        .check-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .safe-title { color: #27ae60; }
+        .danger-title-text { color: #e74c3c; }
+        
+        .check-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        .check-example {
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 10px;
+            margin-top: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+        
+        .certificate-info {
+            background: #ffffff;
+            border: 2px solid #e9ecef;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+        
+        .cert-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 25px;
+        }
+        
+        .cert-demo {
+            background: #f8f9fa;
+            border: 2px solid #27ae60;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .cert-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .cert-lock-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+        }
+        
+        .cert-status {
+            flex: 1;
+        }
+        
+        .cert-status-title {
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 3px;
+        }
+        
+        .cert-status-text {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .cert-details {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            font-size: 12px;
+            text-align: left;
+        }
+        
+        .cert-detail-item {
+            margin: 5px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .cert-label {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .cert-value {
+            color: #666;
+        }
+        
+        .red-flags {
+            background: #fff5f5;
+            border: 2px solid #feb2b2;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .flags-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .flags-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .flag-item {
+            background: white;
+            border: 1px solid #feb2b2;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .flag-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .flag-title {
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .flag-description {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .best-practices {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+        
+        .practices-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .practices-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        .practice-item {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .practice-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .practice-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .practice-description {
+            font-size: 12px;
+            line-height: 1.3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">🔒 HTTPSセキュリティ確認方法ガイド</div>
+        
+        <div class="security-comparison">
+            <div class="security-type danger-type">
+                <div class="type-header">
+                    <div class="type-title danger-title">
+                        ⚠️ 危険：HTTP通信
+                    </div>
+                    <div class="type-subtitle">個人情報が丸見え状態</div>
+                </div>
+                
+                <div class="browser-mockup danger-mockup">
+                    <div class="browser-header">
+                        <div class="browser-buttons">
+                            <div class="browser-button close"></div>
+                            <div class="browser-button minimize"></div>
+                            <div class="browser-button maximize"></div>
+                        </div>
+                        <div class="address-bar danger-bar">
+                            <span class="security-icon">⚠️</span>
+                            <span class="url-text">http://example.com/login</span>
+                        </div>
+                    </div>
+                    
+                    <div class="warning-section">
+                        <div class="section-title danger-section-title">
+                            🚨 危険な状態
+                        </div>
+                        <div class="section-content">
+                            • パスワードが暗号化されずに送信<br>
+                            • 第三者に盗み見される可能性<br>
+                            • データの改ざんリスク<br>
+                            • 偽サイトの可能性
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="security-type safe-type">
+                <div class="type-header">
+                    <div class="type-title safe-title">
+                        🔒 安全：HTTPS通信
+                    </div>
+                    <div class="type-subtitle">情報が暗号化されて保護</div>
+                </div>
+                
+                <div class="browser-mockup safe-mockup">
+                    <div class="browser-header">
+                        <div class="browser-buttons">
+                            <div class="browser-button close"></div>
+                            <div class="browser-button minimize"></div>
+                            <div class="browser-button maximize"></div>
+                        </div>
+                        <div class="address-bar safe-bar">
+                            <span class="security-icon">🔒</span>
+                            <span class="url-text">https://example.com/login</span>
+                        </div>
+                    </div>
+                    
+                    <div class="safe-section">
+                        <div class="section-title safe-section-title">
+                            ✅ 安全な状態
+                        </div>
+                        <div class="section-content">
+                            • パスワードが暗号化されて送信<br>
+                            • 第三者による盗み見を防止<br>
+                            • データの改ざんを検知<br>
+                            • サイトの身元が確認済み
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="check-steps">
+            <div class="steps-title">🔍 HTTPSの確認手順（3ステップ）</div>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-title">URLを確認</div>
+                    <div class="step-description">
+                        アドレスバーのURLが<br>
+                        <strong>「https://」</strong><br>
+                        で始まっているかチェック
+                    </div>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-title">鍵マークを確認</div>
+                    <div class="step-description">
+                        アドレスバーに<br>
+                        <strong>🔒</strong> マークが<br>
+                        表示されているかチェック
+                    </div>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-title">証明書を確認</div>
+                    <div class="step-description">
+                        鍵マークをクリックして<br>
+                        <strong>「この接続は安全です」</strong><br>
+                        が表示されることを確認
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="detailed-checks">
+            <div class="checks-title">📋 詳細なセキュリティチェック項目</div>
+            <div class="check-list">
+                <div class="check-item">
+                    <div class="check-icon-container safe-check">🔒</div>
+                    <div class="check-content">
+                        <div class="check-title safe-title">HTTPS接続の確認</div>
+                        <div class="check-description">
+                            URLが「https://」で始まり、鍵マークが表示されている
+                        </div>
+                        <div class="check-example">
+                            ✅ https://www.google.com （安全）<br>
+                            ❌ http://www.example.com （危険）
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="check-item">
+                    <div class="check-icon-container safe-check">🏢</div>
+                    <div class="check-content">
+                        <div class="check-title safe-title">サイトの身元確認</div>
+                        <div class="check-description">
+                            公式サイトかどうか、ドメイン名に間違いがないかを確認
+                        </div>
+                        <div class="check-example">
+                            ✅ amazon.co.jp （正規）<br>
+                            ❌ amazom.co.jp （偽サイト）
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="check-item">
+                    <div class="check-icon-container danger-check">⚠️</div>
+                    <div class="check-content">
+                        <div class="check-title danger-title-text">警告メッセージの確認</div>
+                        <div class="check-description">
+                            「この接続ではプライバシーが保護されません」などの警告が出ていないか
+                        </div>
+                        <div class="check-example">
+                            ❌ 「安全ではありません」の表示<br>
+                            ❌ 「証明書が無効です」の警告
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="check-item">
+                    <div class="check-icon-container safe-check">🛡️</div>
+                    <div class="check-content">
+                        <div class="check-title safe-title">証明書の有効性</div>
+                        <div class="check-description">
+                            SSL証明書が有効で、発行者が信頼できる機関かを確認
+                        </div>
+                        <div class="check-example">
+                            鍵マークをクリック →「証明書（有効）」を確認
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="certificate-info">
+            <div class="cert-title">🏆 SSL証明書の詳細確認方法</div>
+            <div class="cert-demo">
+                <div class="cert-header">
+                    <div class="cert-lock-icon">🔒</div>
+                    <div class="cert-status">
+                        <div class="cert-status-title">この接続は安全です</div>
+                        <div class="cert-status-text">example.com の身元が確認されています</div>
+                    </div>
+                </div>
+                
+                <div class="cert-details">
+                    <div class="cert-detail-item">
+                        <span class="cert-label">証明書の発行者:</span>
+                        <span class="cert-value">Let's Encrypt</span>
+                    </div>
+                    <div class="cert-detail-item">
+                        <span class="cert-label">有効期限:</span>
+                        <span class="cert-value">2025年12月31日</span>
+                    </div>
+                    <div class="cert-detail-item">
+                        <span class="cert-label">暗号化:</span>
+                        <span class="cert-value">TLS 1.3、AES_128_GCM</span>
+                    </div>
+                    <div class="cert-detail-item">
+                        <span class="cert-label">証明書の種類:</span>
+                        <span class="cert-value">ドメイン認証（DV）</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="red-flags">
+            <div class="flags-title">
+                🚩 これらは危険信号！
+            </div>
+            <div class="flags-grid">
+                <div class="flag-item">
+                    <div class="flag-icon">⚠️</div>
+                    <div class="flag-title">「安全ではありません」表示</div>
+                    <div class="flag-description">
+                        アドレスバーに警告が出ている
+                    </div>
+                </div>
+                
+                <div class="flag-item">
+                    <div class="flag-icon">🔓</div>
+                    <div class="flag-title">鍵マークがない</div>
+                    <div class="flag-description">
+                        HTTPサイトで個人情報を入力
+                    </div>
+                </div>
+                
+                <div class="flag-item">
+                    <div class="flag-icon">📧</div>
+                    <div class="flag-title">怪しいメールのリンク</div>
+                    <div class="flag-description">
+                        身に覚えのないメールからのサイト
+                    </div>
+                </div>
+                
+                <div class="flag-item">
+                    <div class="flag-icon">🎭</div>
+                    <div class="flag-title">偽装サイト</div>
+                    <div class="flag-description">
+                        有名サイトに似せた偽のドメイン
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="best-practices">
+            <div class="practices-title">🛡️ 安全なフォーム送信のベストプラクティス</div>
+            <div class="practices-grid">
+                <div class="practice-item">
+                    <div class="practice-icon">🔒</div>
+                    <div class="practice-title">HTTPS必須</div>
+                    <div class="practice-description">
+                        個人情報を入力する際は<br>
+                        必ずHTTPSサイトを使用
+                    </div>
+                </div>
+                
+                <div class="practice-item">
+                    <div class="practice-icon">🏢</div>
+                    <div class="practice-title">公式サイト確認</div>
+                    <div class="practice-description">
+                        正規のサイトかどうか<br>
+                        ドメイン名を慎重に確認
+                    </div>
+                </div>
+                
+                <div class="practice-item">
+                    <div class="practice-icon">📱</div>
+                    <div class="practice-title">信頼できる環境</div>
+                    <div class="practice-description">
+                        公共Wi-Fi避ける<br>
+                        セキュアな環境で入力
+                    </div>
+                </div>
+                
+                <div class="practice-item">
+                    <div class="practice-icon">👀</div>
+                    <div class="practice-title">URLの確認</div>
+                    <div class="practice-description">
+                        送信前に必ずURLと<br>
+                        鍵マークを確認
+                    </div>
+                </div>
+                
+                <div class="practice-item">
+                    <div class="practice-icon">🚨</div>
+                    <div class="practice-title">警告に注意</div>
+                    <div class="practice-description">
+                        ブラウザの警告メッセージ<br>
+                        が出たら入力を中止
+                    </div>
+                </div>
+                
+                <div class="practice-item">
+                    <div class="practice-icon">🔄</div>
+                    <div class="practice-title">定期的な確認</div>
+                    <div class="practice-description">
+                        長時間の入力作業中も<br>
+                        定期的にセキュリティ確認
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

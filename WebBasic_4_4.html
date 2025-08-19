@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GET/POST使い分け判断基準表</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 1000px;
+            text-align: center;
+        }
+        
+        .title {
+            color: #333;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 40px;
+        }
+        
+        .quick-decision {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .quick-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .quick-rules {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .quick-rule {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 15px;
+            padding: 20px;
+        }
+        
+        .rule-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .rule-description {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .get-rule { border-left: 4px solid #74b9ff; }
+        .post-rule { border-left: 4px solid #00cec9; }
+        
+        .decision-matrix {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+        
+        .matrix-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 25px;
+        }
+        
+        .criteria-grid {
+            display: grid;
+            grid-template-columns: 250px 1fr 1fr;
+            gap: 2px;
+            background: #e9ecef;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        .criteria-header {
+            background: #333;
+            color: white;
+            padding: 20px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 16px;
+        }
+        
+        .criteria-header.aspect {
+            background: #667eea;
+        }
+        
+        .criteria-header.get {
+            background: #0984e3;
+        }
+        
+        .criteria-header.post {
+            background: #00b894;
+        }
+        
+        .criteria-cell {
+            background: #ffffff;
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+            line-height: 1.5;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .aspect-cell {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+            text-align: left;
+            padding-left: 25px;
+        }
+        
+        .get-cell {
+            border-left: 4px solid #0984e3;
+        }
+        
+        .post-cell {
+            border-left: 4px solid #00b894;
+        }
+        
+        .cell-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .get-color { color: #0984e3; }
+        .post-color { color: #00b894; }
+        
+        .cell-content {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .recommendation {
+            font-size: 12px;
+            margin-top: 8px;
+            padding: 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .get-recommendation {
+            background: #e3f2fd;
+            color: #0984e3;
+        }
+        
+        .post-recommendation {
+            background: #e8f5e8;
+            color: #00b894;
+        }
+        
+        .flowchart-section {
+            background: #ffffff;
+            border: 2px solid #e9ecef;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+        
+        .flowchart-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 25px;
+        }
+        
+        .flowchart {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .flow-step {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 20px;
+            max-width: 400px;
+            text-align: center;
+        }
+        
+        .flow-question {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .flow-decision {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            width: 100%;
+            max-width: 600px;
+        }
+        
+        .flow-answer {
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .get-answer {
+            background: #e3f2fd;
+            border: 2px solid #0984e3;
+            color: #0984e3;
+        }
+        
+        .post-answer {
+            background: #e8f5e8;
+            border: 2px solid #00b894;
+            color: #00b894;
+        }
+        
+        .flow-arrow {
+            font-size: 24px;
+            color: #667eea;
+        }
+        
+        .question-text {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .question-detail {
+            font-size: 14px;
+        }
+        
+        .answer-method {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .answer-detail {
+            font-size: 12px;
+        }
+        
+        .common-mistakes {
+            background: #fff5f5;
+            border: 2px solid #feb2b2;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .mistakes-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #e53e3e;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .mistakes-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .mistake-item {
+            background: white;
+            border: 1px solid #feb2b2;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .mistake-title {
+            font-weight: bold;
+            color: #e53e3e;
+            margin-bottom: 8px;
+        }
+        
+        .mistake-description {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .mistake-solution {
+            background: #f0fff4;
+            border: 1px solid #9ae6b4;
+            border-radius: 5px;
+            padding: 8px;
+            font-size: 12px;
+        }
+        
+        .solution-title {
+            font-weight: bold;
+            color: #38a169;
+            margin-bottom: 3px;
+        }
+        
+        .practical-examples {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .examples-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        .example-card {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .get-card {
+            border-left: 4px solid #0984e3;
+        }
+        
+        .post-card {
+            border-left: 4px solid #00b894;
+        }
+        
+        .example-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .example-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .example-method {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+        
+        .get-method {
+            background: #e3f2fd;
+            color: #0984e3;
+        }
+        
+        .post-method {
+            background: #e8f5e8;
+            color: #00b894;
+        }
+        
+        .example-reason {
+            font-size: 11px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">⚖️ GET/POST 使い分け判断基準表</div>
+        
+        <div class="quick-decision">
+            <div class="quick-title">🚀 まずはこれだけ覚えよう！</div>
+            <div class="quick-rules">
+                <div class="quick-rule get-rule">
+                    <div class="rule-title">GET を使う場面</div>
+                    <div class="rule-description">
+                        <strong>「探す」「見る」「取得」</strong><br>
+                        検索、一覧表示、データの閲覧など<br>
+                        <em>→ 情報を見ているだけ</em>
+                    </div>
+                </div>
+                <div class="quick-rule post-rule">
+                    <div class="rule-title">POST を使う場面</div>
+                    <div class="rule-description">
+                        <strong>「送る」「保存」「変更」</strong><br>
+                        ログイン、投稿、注文、登録など<br>
+                        <em>→ 何かを変更・追加している</em>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="decision-matrix">
+            <div class="matrix-title">📊 詳細判断基準マトリックス</div>
+            <div class="criteria-grid">
+                <div class="criteria-header aspect">判断基準</div>
+                <div class="criteria-header get">GET を選ぶ</div>
+                <div class="criteria-header post">POST を選ぶ</div>
+                
+                <div class="criteria-cell aspect-cell">
+                    目的・行動
+                </div>
+                <div class="criteria-cell get-cell">
+                    <div class="cell-title get-color">情報を取得・閲覧</div>
+                    <div class="cell-content">
+                        検索、一覧表示、詳細表示、<br>
+                        フィルタリング、ソート
+                    </div>
+                    <div class="recommendation get-recommendation">読み取り専用</div>
+                </div>
+                <div class="criteria-cell post-cell">
+                    <div class="cell-title post-color">情報を送信・変更</div>
+                    <div class="cell-content">
+                        登録、更新、削除、投稿、<br>
+                        ログイン、注文
+                    </div>
+                    <div class="recommendation post-recommendation">書き込み・変更</div>
+                </div>
+                
+                <div class="criteria-cell aspect-cell">
+                    個人情報・機密情報
+                </div>
+                <div class="criteria-cell get-cell">
+                    <div class="cell-title get-color">含まない</div>
+                    <div class="cell-content">
+                        検索キーワード、カテゴリ選択、<br>
+                        公開情報のフィルタ
+                    </div>
+                    <div class="recommendation get-recommendation">公開情報のみ</div>
+                </div>
+                <div class="criteria-cell post-cell">
+                    <div class="cell-title post-color">含む</div>
+                    <div class="cell-content">
+                        パスワード、メールアドレス、<br>
+                        氏名、住所、クレジットカード
+                    </div>
+                    <div class="recommendation post-recommendation">秘匿情報</div>
+                </div>
+                
+                <div class="criteria-cell aspect-cell">
+                    データサイズ
+                </div>
+                <div class="criteria-cell get-cell">
+                    <div class="cell-title get-color">小さい（2KB以下）</div>
+                    <div class="cell-content">
+                        検索キーワード、ID、<br>
+                        選択オプション
+                    </div>
+                    <div class="recommendation get-recommendation">短い文字列</div>
+                </div>
+                <div class="criteria-cell post-cell">
+                    <div class="cell-title post-color">大きい（制限なし）</div>
+                    <div class="cell-content">
+                        長文メッセージ、ファイル、<br>
+                        大量のフォームデータ
+                    </div>
+                    <div class="recommendation post-recommendation">大容量データ</div>
+                </div>
+                
+                <div class="criteria-cell aspect-cell">
+                    共有・ブックマーク
+                </div>
+                <div class="criteria-cell get-cell">
+                    <div class="cell-title get-color">必要</div>
+                    <div class="cell-content">
+                        検索結果、商品一覧、<br>
+                        記事ページ
+                    </div>
+                    <div class="recommendation get-recommendation">URLで共有</div>
+                </div>
+                <div class="criteria-cell post-cell">
+                    <div class="cell-title post-color">不要</div>
+                    <div class="cell-content">
+                        ログイン画面、投稿完了、<br>
+                        個人的な操作
+                    </div>
+                    <div class="recommendation post-recommendation">一回限りの操作</div>
+                </div>
+                
+                <div class="criteria-cell aspect-cell">
+                    繰り返し実行
+                </div>
+                <div class="criteria-cell get-cell">
+                    <div class="cell-title get-color">安全</div>
+                    <div class="cell-content">
+                        何度実行しても同じ結果、<br>
+                        副作用なし
+                    </div>
+                    <div class="recommendation get-recommendation">冪等性あり</div>
+                </div>
+                <div class="criteria-cell post-cell">
+                    <div class="cell-title post-color">注意が必要</div>
+                    <div class="cell-content">
+                        重複送信で問題が発生、<br>
+                        状態が変化する
+                    </div>
+                    <div class="recommendation post-recommendation">重複送信防止</div>
+                </div>
+                
+                <div class="criteria-cell aspect-cell">
+                    キャッシュ
+                </div>
+                <div class="criteria-cell get-cell">
+                    <div class="cell-title get-color">有効</div>
+                    <div class="cell-content">
+                        高速表示、サーバー負荷軽減、<br>
+                        同じ結果の再利用
+                    </div>
+                    <div class="recommendation get-recommendation">高速化</div>
+                </div>
+                <div class="criteria-cell post-cell">
+                    <div class="cell-title post-color">無効</div>
+                    <div class="cell-content">
+                        常に最新処理、<br>
+                        リアルタイム性重視
+                    </div>
+                    <div class="recommendation post-recommendation">最新性保証</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="flowchart-section">
+            <div class="flowchart-title">🌊 判断フローチャート</div>
+            <div class="flowchart">
+                <div class="flow-step flow-question">
+                    <div class="question-text">フォームで何をしたいですか？</div>
+                    <div class="question-detail">ユーザーの目的を明確にしましょう</div>
+                </div>
+                
+                <div class="flow-arrow">↓</div>
+                
+                <div class="flow-step flow-question">
+                    <div class="question-text">個人情報や機密情報が含まれますか？</div>
+                    <div class="question-detail">パスワード、氏名、メールアドレスなど</div>
+                </div>
+                
+                <div class="flow-arrow">↓</div>
+                
+                <div class="flow-decision">
+                    <div class="flow-answer post-answer">
+                        <div class="answer-method">含まれる → POST</div>
+                        <div class="answer-detail">安全性を優先<br>URLに表示されない</div>
+                    </div>
+                    <div class="flow-answer get-answer">
+                        <div class="answer-method">含まれない → 次へ</div>
+                        <div class="answer-detail">さらに詳細を確認</div>
+                    </div>
+                </div>
+                
+                <div class="flow-arrow">↓</div>
+                
+                <div class="flow-step flow-question">
+                    <div class="question-text">データの変更や保存が発生しますか？</div>
+                    <div class="question-detail">サーバー側の状態が変わるかどうか</div>
+                </div>
+                
+                <div class="flow-arrow">↓</div>
+                
+                <div class="flow-decision">
+                    <div class="flow-answer post-answer">
+                        <div class="answer-method">変更あり → POST</div>
+                        <div class="answer-detail">登録、更新、削除など<br>副作用のある操作</div>
+                    </div>
+                    <div class="flow-answer get-answer">
+                        <div class="answer-method">変更なし → GET</div>
+                        <div class="answer-detail">検索、表示、閲覧など<br>読み取り専用操作</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="common-mistakes">
+            <div class="mistakes-title">
+                ⚠️ よくある間違いと対策
+            </div>
+            <div class="mistakes-grid">
+                <div class="mistake-item">
+                    <div class="mistake-title">間違い 1: ログインでGETを使用</div>
+                    <div class="mistake-description">
+                        パスワードがURLに表示されてしまい、履歴やログに残る
+                    </div>
+                    <div class="mistake-solution">
+                        <div class="solution-title">正解:</div>
+                        ログインは必ずPOSTを使用。個人情報は常にPOST。
+                    </div>
+                </div>
+                
+                <div class="mistake-item">
+                    <div class="mistake-title">間違い 2: 検索でPOSTを使用</div>
+                    <div class="mistake-description">
+                        検索結果をブックマークできず、共有も困難
+                    </div>
+                    <div class="mistake-solution">
+                        <div class="solution-title">正解:</div>
+                        検索はGETを使用。結果の共有とブックマークを可能に。
+                    </div>
+                </div>
+                
+                <div class="mistake-item">
+                    <div class="mistake-title">間違い 3: 大容量データでGETを使用</div>
+                    <div class="mistake-description">
+                        URL長の制限に引っかかり、データが切り捨てられる
+                    </div>
+                    <div class="mistake-solution">
+                        <div class="solution-title">正解:</div>
+                        大容量データはPOSTを使用。制限を気にせず送信。
+                    </div>
+                </div>
+                
+                <div class="mistake-item">
+                    <div class="mistake-title">間違い 4: フォーム投稿でGETを使用</div>
+                    <div class="mistake-description">
+                        投稿内容がURLに表示され、重複投稿の可能性
+                    </div>
+                    <div class="mistake-solution">
+                        <div class="solution-title">正解:</div>
+                        投稿・送信はPOSTを使用。重複送信の防止機能も必要。
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="practical-examples">
+            <div class="examples-title">🎯 実践的な使い分け例</div>
+            <div class="examples-grid">
+                <div class="example-card get-card">
+                    <div class="example-icon">🔍</div>
+                    <div class="example-title">Google検索</div>
+                    <div class="example-method get-method">GET</div>
+                    <div class="example-reason">検索結果を共有・ブックマーク可能</div>
+                </div>
+                
+                <div class="example-card post-card">
+                    <div class="example-icon">🔐</div>
+                    <div class="example-title">ログイン</div>
+                    <div class="example-method post-method">POST</div>
+                    <div class="example-reason">パスワードの安全な送信</div>
+                </div>
+                
+                <div class="example-card get-card">
+                    <div class="example-icon">🛍️</div>
+                    <div class="example-title">商品一覧</div>
+                    <div class="example-method get-method">GET</div>
+                    <div class="example-reason">フィルタ結果の共有可能</div>
+                </div>
+                
+                <div class="example-card post-card">
+                    <div class="example-icon">💌</div>
+                    <div class="example-title">お問い合わせ</div>
+                    <div class="example-method post-method">POST</div>
+                    <div class="example-reason">長文メッセージと個人情報</div>
+                </div>
+                
+                <div class="example-card get-card">
+                    <div class="example-icon">📰</div>
+                    <div class="example-title">ニュース記事</div>
+                    <div class="example-method get-method">GET</div>
+                    <div class="example-reason">記事URLの共有とブックマーク</div>
+                </div>
+                
+                <div class="example-card post-card">
+                    <div class="example-icon">📁</div>
+                    <div class="example-title">ファイル投稿</div>
+                    <div class="example-method post-method">POST</div>
+                    <div class="example-reason">大容量ファイルの送信</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

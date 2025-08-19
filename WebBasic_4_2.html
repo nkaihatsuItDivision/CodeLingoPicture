@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>フォーム送信の5ステップフロー</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 1000px;
+            text-align: center;
+        }
+        
+        .title {
+            color: #333;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 40px;
+        }
+        
+        .flow-container {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+        
+        .flow-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .step {
+            display: flex;
+            align-items: center;
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .step-number {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        
+        .step-1 .step-number { background: linear-gradient(135deg, #74b9ff, #0984e3); }
+        .step-2 .step-number { background: linear-gradient(135deg, #00b894, #00cec9); }
+        .step-3 .step-number { background: linear-gradient(135deg, #fdcb6e, #e17055); }
+        .step-4 .step-number { background: linear-gradient(135deg, #fd79a8, #e84393); }
+        .step-5 .step-number { background: linear-gradient(135deg, #a29bfe, #6c5ce7); }
+        
+        .step-content {
+            flex: 1;
+            text-align: left;
+        }
+        
+        .step-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        
+        .step-description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+        
+        .step-details {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .step-visual {
+            width: 120px;
+            height: 80px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+            margin-left: 20px;
+            flex-shrink: 0;
+        }
+        
+        .visual-1 { background: linear-gradient(135deg, #e3f2fd, #bbdefb); }
+        .visual-2 { background: linear-gradient(135deg, #e8f5e8, #c8e6c9); }
+        .visual-3 { background: linear-gradient(135deg, #fff3e0, #ffcc80); }
+        .visual-4 { background: linear-gradient(135deg, #fce4ec, #f8bbd9); }
+        .visual-5 { background: linear-gradient(135deg, #f3e5f5, #ce93d8); }
+        
+        .arrow {
+            align-self: center;
+            font-size: 30px;
+            color: #667eea;
+            margin: 10px 0;
+        }
+        
+        .detailed-explanation {
+            background: #ffffff;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .explanation-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .explanation-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .explanation-item {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .explanation-header {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .step-1-detail .explanation-header { color: #0984e3; }
+        .step-2-detail .explanation-header { color: #00b894; }
+        .step-3-detail .explanation-header { color: #e17055; }
+        .step-4-detail .explanation-header { color: #e84393; }
+        .step-5-detail .explanation-header { color: #6c5ce7; }
+        
+        .explanation-content {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        .code-example {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            margin: 5px 0;
+        }
+        
+        .behind-scenes {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .behind-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .behind-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        .behind-item {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .behind-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .behind-item-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        
+        .behind-description {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.3;
+        }
+        
+        .timing-info {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+        
+        .timing-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .timing-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+        }
+        
+        .timing-step {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .timing-step-number {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .timing-duration {
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+        
+        .timing-description {
+            font-size: 10px;
+            line-height: 1.2;
+        }
+        
+        .user-location {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: #667eea;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .server-location {
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background: #fd79a8;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .step-1, .step-2, .step-5 {
+            border-left: 5px solid #667eea;
+        }
+        
+        .step-3, .step-4 {
+            border-left: 5px solid #fd79a8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">⚡ フォーム送信の5ステップ完全ガイド</div>
+        
+        <div class="flow-container">
+            <div class="flow-steps">
+                <div class="step step-1">
+                    <div class="user-location">👤 ユーザー側</div>
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <div class="step-title">フォームに入力</div>
+                        <div class="step-description">
+                            ユーザーが画面上のフォームに必要事項を入力
+                        </div>
+                        <div class="step-details">
+                            検索キーワード、名前、メールアドレス、メッセージなどを入力フィールドに記入
+                        </div>
+                    </div>
+                    <div class="step-visual visual-1">⌨️</div>
+                </div>
+                
+                <div class="arrow">↓</div>
+                
+                <div class="step step-2">
+                    <div class="user-location">👤 ユーザー側</div>
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <div class="step-title">送信ボタンをクリック</div>
+                        <div class="step-description">
+                            ブラウザがフォームの内容を読み取り、サーバーに送信準備
+                        </div>
+                        <div class="step-details">
+                            入力データの整理、文字エンコード、GET/POSTの判別、HTTPリクエストの生成
+                        </div>
+                    </div>
+                    <div class="step-visual visual-2">🖱️</div>
+                </div>
+                
+                <div class="arrow">↓</div>
+                
+                <div class="step step-3">
+                    <div class="server-location">🖥️ サーバー側</div>
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <div class="step-title">HTTPリクエストの送信</div>
+                        <div class="step-description">
+                            これまで学んだ「リクエスト」が自動で作成・送信される
+                        </div>
+                        <div class="step-details">
+                            GET/POSTメソッド、ヘッダー情報、フォームデータが適切な形式でサーバーに送信
+                        </div>
+                    </div>
+                    <div class="step-visual visual-3">📡</div>
+                </div>
+                
+                <div class="arrow">↓</div>
+                
+                <div class="step step-4">
+                    <div class="server-location">🖥️ サーバー側</div>
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <div class="step-title">サーバーでの処理</div>
+                        <div class="step-description">
+                            サーバーがフォームデータを受信し、適切な処理を実行
+                        </div>
+                        <div class="step-details">
+                            データベース検索、情報保存、メール送信、計算処理など目的に応じた処理
+                        </div>
+                    </div>
+                    <div class="step-visual visual-4">⚙️</div>
+                </div>
+                
+                <div class="arrow">↓</div>
+                
+                <div class="step step-5">
+                    <div class="user-location">👤 ユーザー側</div>
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <div class="step-title">結果の表示</div>
+                        <div class="step-description">
+                            サーバーからのレスポンスを受信し、結果をブラウザに表示
+                        </div>
+                        <div class="step-details">
+                            検索結果ページ、完了確認画面、エラーページなど処理結果に応じた画面表示
+                        </div>
+                    </div>
+                    <div class="step-visual visual-5">🖼️</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="detailed-explanation">
+            <div class="explanation-title">🔍 各ステップの詳細解説</div>
+            <div class="explanation-grid">
+                <div class="explanation-item step-1-detail">
+                    <div class="explanation-header">
+                        <span>1️⃣</span> フォーム入力の裏側
+                    </div>
+                    <div class="explanation-content">
+                        <strong>ブラウザが行うこと：</strong><br>
+                        • 入力値のリアルタイム検証<br>
+                        • 必須フィールドのチェック<br>
+                        • 文字数制限の確認<br>
+                        • 入力形式（メール、電話番号等）の判定
+                    </div>
+                </div>
+                
+                <div class="explanation-item step-2-detail">
+                    <div class="explanation-header">
+                        <span>2️⃣</span> 送信ボタンクリック後
+                    </div>
+                    <div class="explanation-content">
+                        <strong>自動で実行される処理：</strong><br>
+                        • フォームデータの収集<br>
+                        • 特殊文字のエンコード処理<br>
+                        • GET/POSTの判別<br>
+                        • HTTPヘッダーの生成
+                        <div class="code-example">Content-Type: application/x-www-form-urlencoded</div>
+                    </div>
+                </div>
+                
+                <div class="explanation-item step-3-detail">
+                    <div class="explanation-header">
+                        <span>3️⃣</span> HTTPリクエスト生成
+                    </div>
+                    <div class="explanation-content">
+                        <strong>作成される情報：</strong><br>
+                        • リクエストライン（GET/POST）<br>
+                        • ホスト情報<br>
+                        • User-Agent情報<br>
+                        • データの送信形式
+                        <div class="code-example">POST /contact HTTP/1.1<br>Host: example.com</div>
+                    </div>
+                </div>
+                
+                <div class="explanation-item step-4-detail">
+                    <div class="explanation-header">
+                        <span>4️⃣</span> サーバー処理
+                    </div>
+                    <div class="explanation-content">
+                        <strong>実行される処理：</strong><br>
+                        • データの受信・解析<br>
+                        • バリデーション（入力チェック）<br>
+                        • ビジネスロジックの実行<br>
+                        • データベース操作<br>
+                        • レスポンス生成
+                    </div>
+                </div>
+                
+                <div class="explanation-item step-5-detail">
+                    <div class="explanation-header">
+                        <span>5️⃣</span> 結果表示
+                    </div>
+                    <div class="explanation-content">
+                        <strong>ブラウザでの表示：</strong><br>
+                        • HTTPレスポンスの受信<br>
+                        • HTMLの解析・レンダリング<br>
+                        • CSSの適用<br>
+                        • JavaScriptの実行<br>
+                        • 最終的な画面表示
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="behind-scenes">
+            <div class="behind-title">🎭 舞台裏で起きていること</div>
+            <div class="behind-grid">
+                <div class="behind-item">
+                    <div class="behind-icon">🔄</div>
+                    <div class="behind-item-title">自動変換</div>
+                    <div class="behind-description">
+                        日本語や特殊文字を<br>
+                        適切な形式に自動変換<br>
+                        （URLエンコード等）
+                    </div>
+                </div>
+                
+                <div class="behind-item">
+                    <div class="behind-icon">🛡️</div>
+                    <div class="behind-item-title">セキュリティ</div>
+                    <div class="behind-description">
+                        HTTPSでの暗号化<br>
+                        XSS・CSRF攻撃の防御<br>
+                        データの安全な送信
+                    </div>
+                </div>
+                
+                <div class="behind-item">
+                    <div class="behind-icon">⚡</div>
+                    <div class="behind-item-title">最適化</div>
+                    <div class="behind-description">
+                        データの圧縮<br>
+                        キャッシュの活用<br>
+                        高速化処理
+                    </div>
+                </div>
+                
+                <div class="behind-item">
+                    <div class="behind-icon">🔍</div>
+                    <div class="behind-item-title">検証</div>
+                    <div class="behind-description">
+                        入力データの妥当性チェック<br>
+                        フォーマット確認<br>
+                        エラーハンドリング
+                    </div>
+                </div>
+                
+                <div class="behind-item">
+                    <div class="behind-icon">📊</div>
+                    <div class="behind-item-title">ログ記録</div>
+                    <div class="behind-description">
+                        アクセスログの記録<br>
+                        エラーログの管理<br>
+                        統計情報の収集
+                    </div>
+                </div>
+                
+                <div class="behind-item">
+                    <div class="behind-icon">🔁</div>
+                    <div class="behind-item-title">エラー処理</div>
+                    <div class="behind-description">
+                        タイムアウト処理<br>
+                        リトライ機能<br>
+                        エラー画面の表示
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="timing-info">
+            <div class="timing-title">⏱️ 各ステップの実行時間</div>
+            <div class="timing-grid">
+                <div class="timing-step">
+                    <div class="timing-step-number">ステップ 1</div>
+                    <div class="timing-duration">数秒〜数分</div>
+                    <div class="timing-description">ユーザーの入力時間による</div>
+                </div>
+                
+                <div class="timing-step">
+                    <div class="timing-step-number">ステップ 2</div>
+                    <div class="timing-duration">数ミリ秒</div>
+                    <div class="timing-description">ブラウザでの瞬時処理</div>
+                </div>
+                
+                <div class="timing-step">
+                    <div class="timing-step-number">ステップ 3</div>
+                    <div class="timing-duration">10〜500ms</div>
+                    <div class="timing-description">ネットワーク環境による</div>
+                </div>
+                
+                <div class="timing-step">
+                    <div class="timing-step-number">ステップ 4</div>
+                    <div class="timing-duration">数ミリ秒〜数秒</div>
+                    <div class="timing-description">処理の複雑さによる</div>
+                </div>
+                
+                <div class="timing-step">
+                    <div class="timing-step-number">ステップ 5</div>
+                    <div class="timing-duration">数十ミリ秒</div>
+                    <div class="timing-description">ブラウザでの描画時間</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

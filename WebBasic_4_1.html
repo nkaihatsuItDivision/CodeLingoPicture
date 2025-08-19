@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>リアルフォーム vs Webフォームの対比</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 1000px;
+            text-align: center;
+        }
+        
+        .title {
+            color: #333;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 40px;
+        }
+        
+        .comparison-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .form-type {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 20px;
+            padding: 30px;
+        }
+        
+        .form-header {
+            margin-bottom: 25px;
+        }
+        
+        .form-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .real-title {
+            color: #e17055;
+        }
+        
+        .web-title {
+            color: #0984e3;
+        }
+        
+        .form-subtitle {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .form-examples {
+            margin-bottom: 25px;
+        }
+        
+        .examples-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .example-item {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .example-icon {
+            font-size: 16px;
+        }
+        
+        .form-visual {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 20px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .real-form-visual {
+            border-color: #e17055;
+        }
+        
+        .web-form-visual {
+            border-color: #0984e3;
+        }
+        
+        .paper-form {
+            width: 180px;
+            height: 140px;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
+            border: 2px solid #e17055;
+            border-radius: 8px;
+            padding: 15px;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .paper-title {
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+            color: #e17055;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #e17055;
+            padding-bottom: 5px;
+        }
+        
+        .paper-field {
+            margin: 8px 0;
+            font-size: 10px;
+            color: #666;
+        }
+        
+        .paper-line {
+            border-bottom: 1px solid #ddd;
+            height: 15px;
+            margin: 3px 0;
+        }
+        
+        .web-form {
+            width: 200px;
+            background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+            border: 2px solid #0984e3;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .web-form-title {
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+            color: #0984e3;
+            margin-bottom: 15px;
+        }
+        
+        .web-input {
+            width: 100%;
+            height: 25px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin: 5px 0;
+            background: white;
+            font-size: 10px;
+            padding: 0 5px;
+            box-sizing: border-box;
+        }
+        
+        .web-button {
+            width: 100%;
+            height: 25px;
+            background: #0984e3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-size: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .process-flow {
+            background: #ffffff;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .flow-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 25px;
+        }
+        
+        .flow-comparison {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .flow-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .flow-step {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            font-size: 12px;
+        }
+        
+        .real-step {
+            border-left: 4px solid #e17055;
+        }
+        
+        .web-step {
+            border-left: 4px solid #0984e3;
+        }
+        
+        .step-number {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .step-description {
+            color: #666;
+        }
+        
+        .flow-arrow {
+            font-size: 24px;
+            color: #666;
+        }
+        
+        .key-differences {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .differences-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .differences-grid {
+            display: grid;
+            grid-template-columns: 200px 1fr 1fr;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .difference-aspect {
+            background: #ffffff;
+            border: 2px solid #e9ecef;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            color: #333;
+        }
+        
+        .difference-real, .difference-web {
+            background: #ffffff;
+            border: 1px solid #e9ecef;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        .difference-real {
+            border-left: 4px solid #e17055;
+        }
+        
+        .difference-web {
+            border-left: 4px solid #0984e3;
+        }
+        
+        .difference-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .real-color { color: #e17055; }
+        .web-color { color: #0984e3; }
+        
+        .difference-content {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .conclusion {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+        
+        .conclusion-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .conclusion-text {
+            font-size: 16px;
+            line-height: 1.5;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">📝 フォームの進化：リアル → Web</div>
+        
+        <div class="comparison-section">
+            <div class="form-type">
+                <div class="form-header">
+                    <div class="form-title real-title">
+                        📄 リアルフォーム
+                    </div>
+                    <div class="form-subtitle">紙に書いて提出する従来の方法</div>
+                </div>
+                
+                <div class="form-examples">
+                    <div class="examples-title">身近な例</div>
+                    <div class="example-grid">
+                        <div class="example-item">
+                            <span class="example-icon">🏦</span>
+                            <span>銀行の申込書</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="example-icon">📋</span>
+                            <span>アンケート用紙</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="example-icon">📦</span>
+                            <span>宅配便の伝票</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="example-icon">🏥</span>
+                            <span>病院の問診票</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-visual real-form-visual">
+                    <div class="paper-form">
+                        <div class="paper-title">申込書</div>
+                        <div class="paper-field">お名前</div>
+                        <div class="paper-line"></div>
+                        <div class="paper-field">住所</div>
+                        <div class="paper-line"></div>
+                        <div class="paper-field">電話番号</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-type">
+                <div class="form-header">
+                    <div class="form-title web-title">
+                        💻 Webフォーム
+                    </div>
+                    <div class="form-subtitle">オンラインで入力・送信する現代の方法</div>
+                </div>
+                
+                <div class="form-examples">
+                    <div class="examples-title">身近な例</div>
+                    <div class="example-grid">
+                        <div class="example-item">
+                            <span class="example-icon">🔍</span>
+                            <span>Google検索ボックス</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="example-icon">🔐</span>
+                            <span>ログイン画面</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="example-icon">💌</span>
+                            <span>お問い合わせページ</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="example-icon">🛒</span>
+                            <span>オンライン注文</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-visual web-form-visual">
+                    <div class="web-form">
+                        <div class="web-form-title">お問い合わせ</div>
+                        <input type="text" class="web-input" placeholder="お名前" readonly>
+                        <input type="text" class="web-input" placeholder="メールアドレス" readonly>
+                        <input type="text" class="web-input" placeholder="件名" readonly>
+                        <button class="web-button">送信</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="process-flow">
+            <div class="flow-title">📬 提出・送信の流れ比較</div>
+            <div class="flow-comparison">
+                <div class="flow-steps">
+                    <div class="flow-step real-step">
+                        <div class="step-number">1. 記入</div>
+                        <div class="step-description">ペンで用紙に書く</div>
+                    </div>
+                    <div class="flow-step real-step">
+                        <div class="step-number">2. 提出</div>
+                        <div class="step-description">手渡し・郵送</div>
+                    </div>
+                    <div class="flow-step real-step">
+                        <div class="step-number">3. 処理</div>
+                        <div class="step-description">相手が手作業で確認</div>
+                    </div>
+                </div>
+                
+                <div class="flow-arrow">⇔</div>
+                
+                <div class="flow-steps">
+                    <div class="flow-step web-step">
+                        <div class="step-number">1. 入力</div>
+                        <div class="step-description">キーボードで画面に入力</div>
+                    </div>
+                    <div class="flow-step web-step">
+                        <div class="step-number">2. 送信</div>
+                        <div class="step-description">ボタンクリックで瞬時送信</div>
+                    </div>
+                    <div class="flow-step web-step">
+                        <div class="step-number">3. 処理</div>
+                        <div class="step-description">サーバーが自動で処理</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="key-differences">
+            <div class="differences-title">🔍 主な違いを詳しく比較</div>
+            
+            <div class="differences-grid">
+                <div class="difference-aspect">スピード</div>
+                <div class="difference-real">
+                    <div class="difference-title real-color">数日〜数週間</div>
+                    <div class="difference-content">郵送・手作業処理により時間がかかる</div>
+                </div>
+                <div class="difference-web">
+                    <div class="difference-title web-color">瞬時〜数分</div>
+                    <div class="difference-content">即座に送信・自動処理で高速</div>
+                </div>
+                
+                <div class="difference-aspect">修正</div>
+                <div class="difference-real">
+                    <div class="difference-title real-color">困難</div>
+                    <div class="difference-content">書き直し・再提出が必要</div>
+                </div>
+                <div class="difference-web">
+                    <div class="difference-title web-color">簡単</div>
+                    <div class="difference-content">送信前なら何度でも修正可能</div>
+                </div>
+                
+                <div class="difference-aspect">保存</div>
+                <div class="difference-real">
+                    <div class="difference-title real-color">物理的保管</div>
+                    <div class="difference-content">ファイリング・倉庫保管</div>
+                </div>
+                <div class="difference-web">
+                    <div class="difference-title web-color">デジタル保存</div>
+                    <div class="difference-content">データベースで効率的管理</div>
+                </div>
+                
+                <div class="difference-aspect">コスト</div>
+                <div class="difference-real">
+                    <div class="difference-title real-color">高い</div>
+                    <div class="difference-content">用紙・印刷・郵送・人件費</div>
+                </div>
+                <div class="difference-web">
+                    <div class="difference-title web-color">低い</div>
+                    <div class="difference-content">システム構築後は低コスト</div>
+                </div>
+                
+                <div class="difference-aspect">エラー対策</div>
+                <div class="difference-real">
+                    <div class="difference-title real-color">事後対応</div>
+                    <div class="difference-content">提出後に記入漏れが判明</div>
+                </div>
+                <div class="difference-web">
+                    <div class="difference-title web-color">事前チェック</div>
+                    <div class="difference-content">送信前にリアルタイム検証</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="conclusion">
+            <div class="conclusion-title">💡 共通点と進化</div>
+            <div class="conclusion-text">
+                どちらも「情報を整理して相手に伝える」という目的は同じです。<br>
+                Webフォームは、リアルフォームの利便性を大幅に向上させた進化形と言えます。<br><br>
+                でも基本的な考え方は変わりません：<br>
+                <strong>「必要な情報を適切な形で相手に届ける」</strong>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
