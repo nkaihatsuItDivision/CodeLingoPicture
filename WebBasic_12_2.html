@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>カード型レイアウトの例 - padding/marginの効果</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            font-family: "游ゴシック", Arial, sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .diagram-container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            max-width: 900px;
+            width: 100%;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c5282;
+            margin-bottom: 30px;
+        }
+        
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
+        
+        .section {
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .section-title {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: white;
+            padding: 0 10px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .bad-section {
+            border-color: #fc8181;
+        }
+        
+        .bad-section .section-title {
+            color: #e53e3e;
+        }
+        
+        .good-section {
+            border-color: #68d391;
+        }
+        
+        .good-section .section-title {
+            color: #38a169;
+        }
+        
+        .cards-container {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            width: 200px;
+            position: relative;
+        }
+        
+        .card-bad {
+            padding: 5px;
+            margin: 5px;
+        }
+        
+        .card-good {
+            padding: 20px;
+            margin: 15px;
+        }
+        
+        .card-content {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .card-title {
+            font-weight: bold;
+            color: #2c5282;
+            margin-bottom: 8px;
+        }
+        
+        .padding-highlight {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(190, 227, 248, 0.3);
+            border: 2px dashed #3182ce;
+            border-radius: 6px;
+            pointer-events: none;
+        }
+        
+        .margin-highlight {
+            position: absolute;
+            top: -15px;
+            left: -15px;
+            right: -15px;
+            bottom: -15px;
+            background: rgba(254, 215, 215, 0.3);
+            border: 2px dashed #e53e3e;
+            border-radius: 8px;
+            pointer-events: none;
+        }
+        
+        .label {
+            position: absolute;
+            font-size: 12px;
+            font-weight: bold;
+            background: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            white-space: nowrap;
+        }
+        
+        .padding-label {
+            top: 2px;
+            left: 2px;
+            color: #2b6cb0;
+            border: 1px solid #bee3f8;
+        }
+        
+        .margin-label {
+            top: -12px;
+            left: -12px;
+            color: #e53e3e;
+            border: 1px solid #fed7d7;
+        }
+        
+        .code-example {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: "Courier New", monospace;
+            font-size: 13px;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        
+        .code-comment {
+            color: #9ca3af;
+        }
+        
+        .explanation {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border-left: 4px solid #3182ce;
+        }
+        
+        .explanation h4 {
+            margin: 0 0 10px 0;
+            color: #2c5282;
+            font-size: 14px;
+        }
+        
+        .explanation p {
+            margin: 0;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #4a5568;
+        }
+        
+        .highlight-red {
+            color: #e53e3e;
+            font-weight: bold;
+        }
+        
+        .highlight-green {
+            color: #38a169;
+            font-weight: bold;
+        }
+        
+        .visual-effect {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 14px;
+            color: #4a5568;
+        }
+        
+        .effect-arrow {
+            font-size: 20px;
+            color: #e53e3e;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="diagram-container">
+        <div class="title">カード型レイアウトの例 - padding/marginの効果</div>
+        
+        <div class="comparison">
+            <!-- 悪い例 -->
+            <div class="section bad-section">
+                <div class="section-title">❌ padding/margin が少ない場合</div>
+                
+                <div class="cards-container">
+                    <div class="card card-bad">
+                        <div class="padding-highlight">
+                            <div class="label padding-label">padding: 5px</div>
+                        </div>
+                        <div class="margin-highlight">
+                            <div class="label margin-label">margin: 5px</div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-title">カード1</div>
+                            <p>テキストが枠に近くて読みにくい。カード同士も詰まっている。</p>
+                        </div>
+                    </div>
+                    <div class="card card-bad">
+                        <div class="card-content">
+                            <div class="card-title">カード2</div>
+                            <p>余白が少ないため、窮屈に見える。</p>
+                        </div>
+                    </div>
+                    <div class="card card-bad">
+                        <div class="card-content">
+                            <div class="card-title">カード3</div>
+                            <p>プロフェッショナルな印象を与えにくい。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="code-example">
+.card {
+    <span class="highlight-red">padding: 5px;</span>     <span class="code-comment">/* 内側余白が少ない */</span>
+    <span class="highlight-red">margin: 5px;</span>      <span class="code-comment">/* 外側余白が少ない */</span>
+    border: 1px solid #e2e8f0;
+    background: white;
+}
+                </div>
+                
+                <div class="explanation">
+                    <h4>❌ 問題点：</h4>
+                    <p><strong>padding不足：</strong> テキストが枠線に近すぎて読みにくい<br>
+                    <strong>margin不足：</strong> カード同士が近すぎて区別しにくい</p>
+                </div>
+            </div>
+            
+            <div class="visual-effect">
+                <div class="effect-arrow">⬇️ padding と margin を増やすと...</div>
+            </div>
+            
+            <!-- 良い例 -->
+            <div class="section good-section">
+                <div class="section-title">✅ 適切な padding/margin を設定した場合</div>
+                
+                <div class="cards-container">
+                    <div class="card card-good">
+                        <div class="padding-highlight">
+                            <div class="label padding-label">padding: 20px</div>
+                        </div>
+                        <div class="margin-highlight">
+                            <div class="label margin-label">margin: 15px</div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-title">カード1</div>
+                            <p>テキストが読みやすく、余裕のあるレイアウトで見やすい。</p>
+                        </div>
+                    </div>
+                    <div class="card card-good">
+                        <div class="card-content">
+                            <div class="card-title">カード2</div>
+                            <p>適切な余白により、プロフェッショナルな印象。</p>
+                        </div>
+                    </div>
+                    <div class="card card-good">
+                        <div class="card-content">
+                            <div class="card-title">カード3</div>
+                            <p>カード同士が適度に離れて、それぞれが独立して見える。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="code-example">
+.card {
+    <span class="highlight-green">padding: 20px;</span>    <span class="code-comment">/* 内側に十分な余白 */</span>
+    <span class="highlight-green">margin: 15px;</span>     <span class="code-comment">/* カード間の適切な距離 */</span>
+    border: 1px solid #e2e8f0;
+    background: white;
+}
+                </div>
+                
+                <div class="explanation">
+                    <h4>✅ 改善効果：</h4>
+                    <p><strong>padding増加：</strong> コンテンツが見やすく、高級感が出る<br>
+                    <strong>margin増加：</strong> 各カードが独立して見え、情報が整理される</p>
+                </div>
+            </div>
+        </div>
+        
+        <div style="background: #fff3cd; padding: 20px; border-radius: 8px; border: 1px solid #ffeaa7; margin-top: 30px;">
+            <h3 style="margin: 0 0 10px 0; color: #533f03; font-size: 16px;">💡 余白設定のコツ</h3>
+            <ul style="margin: 0; color: #856404; font-size: 14px; line-height: 1.6;">
+                <li><strong>padding:</strong> コンテンツの重要度に応じて 15px〜30px</li>
+                <li><strong>margin:</strong> カード同士の関係性に応じて 10px〜20px</li>
+                <li><strong>一貫性:</strong> 同じレベルの要素は同じ余白を使用</li>
+                <li><strong>バランス:</strong> padding > margin の場合が多い</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

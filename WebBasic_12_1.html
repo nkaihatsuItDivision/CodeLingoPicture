@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ボックスモデルの実際のサイズ計算</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            font-family: "游ゴシック", Arial, sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .diagram-container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            max-width: 800px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c5282;
+            margin-bottom: 30px;
+        }
+        
+        .box-model {
+            position: relative;
+            margin: 40px auto;
+            width: 370px;
+            height: 210px;
+        }
+        
+        .margin-box {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #fed7d7;
+            border: 2px dashed #e53e3e;
+            border-radius: 8px;
+        }
+        
+        .border-box {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            width: 310px;
+            height: 150px;
+            background-color: #3182ce;
+            border-radius: 4px;
+        }
+        
+        .padding-box {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            width: 300px;
+            height: 140px;
+            background-color: #bee3f8;
+            border-radius: 2px;
+        }
+        
+        .content-box {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 260px;
+            height: 100px;
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #2c5282;
+            font-size: 16px;
+        }
+        
+        .label {
+            position: absolute;
+            font-size: 14px;
+            font-weight: bold;
+            color: #2d3748;
+            background: rgba(255,255,255,0.9);
+            padding: 4px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+        
+        .margin-label {
+            top: 5px;
+            left: 5px;
+            color: #e53e3e;
+        }
+        
+        .border-label {
+            top: 35px;
+            left: 35px;
+            color: #2b6cb0;
+        }
+        
+        .padding-label {
+            top: 40px;
+            left: 40px;
+            color: #2c5282;
+        }
+        
+        .calculation {
+            text-align: center;
+            margin: 40px 0;
+            padding: 20px;
+            background-color: #f7fafc;
+            border-radius: 8px;
+            border-left: 4px solid #3182ce;
+        }
+        
+        .calculation h3 {
+            margin: 0 0 15px 0;
+            color: #2c5282;
+            font-size: 18px;
+        }
+        
+        .calc-step {
+            margin: 10px 0;
+            font-size: 16px;
+            color: #4a5568;
+        }
+        
+        .calc-formula {
+            font-family: "Courier New", monospace;
+            background-color: #e6fffa;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin: 8px 0;
+            font-weight: bold;
+            color: #2c7a7b;
+        }
+        
+        .result {
+            font-size: 18px;
+            font-weight: bold;
+            color: #e53e3e;
+            margin-top: 15px;
+        }
+        
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .comparison-item {
+            text-align: center;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .specified {
+            background-color: #f0fff4;
+            border: 2px solid #68d391;
+        }
+        
+        .actual {
+            background-color: #fff5f5;
+            border: 2px solid #fc8181;
+        }
+        
+        .comparison h4 {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+        }
+        
+        .comparison .size {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .dimensions {
+            position: absolute;
+            font-size: 12px;
+            font-weight: bold;
+            color: #4a5568;
+        }
+        
+        .width-dim {
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .height-dim {
+            right: -60px;
+            top: 50%;
+            transform: translateY(-50%);
+            writing-mode: vertical-rl;
+        }
+        
+        .arrow {
+            position: absolute;
+            color: #4a5568;
+        }
+        
+        .arrow-top {
+            top: -20px;
+            left: 30px;
+            right: 30px;
+            height: 0;
+            border-top: 1px solid #4a5568;
+        }
+        
+        .arrow-top::before,
+        .arrow-top::after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            width: 6px;
+            height: 6px;
+            border-top: 1px solid #4a5568;
+        }
+        
+        .arrow-top::before {
+            left: 0;
+            border-left: 1px solid #4a5568;
+            transform: rotate(45deg);
+        }
+        
+        .arrow-top::after {
+            right: 0;
+            border-right: 1px solid #4a5568;
+            transform: rotate(-45deg);
+        }
+        
+        .note {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #856404;
+        }
+        
+        .note strong {
+            color: #533f03;
+        }
+    </style>
+</head>
+<body>
+    <div class="diagram-container">
+        <div class="title">ボックスモデルの実際のサイズ計算</div>
+        
+        <div class="box-model">
+            <div class="margin-box">
+                <div class="label margin-label">margin: 30px</div>
+            </div>
+            <div class="border-box">
+                <div class="label border-label">border: 5px</div>
+                <div class="padding-box">
+                    <div class="label padding-label">padding: 20px</div>
+                    <div class="content-box">
+                        width: 200px<br>
+                        height: 100px
+                    </div>
+                </div>
+            </div>
+            <div class="arrow-top"></div>
+            <div class="dimensions width-dim">実際の幅: 250px</div>
+            <div class="dimensions height-dim">実際の高さ: 150px</div>
+        </div>
+        
+        <div class="calculation">
+            <h3>📐 サイズ計算の流れ</h3>
+            <div class="calc-step">
+                <strong>幅の計算：</strong>
+                <div class="calc-formula">200px (content) + 20px×2 (padding) + 5px×2 (border) = 250px</div>
+            </div>
+            <div class="calc-step">
+                <strong>高さの計算：</strong>
+                <div class="calc-formula">100px (content) + 20px×2 (padding) + 5px×2 (border) = 150px</div>
+            </div>
+            <div class="calc-step">
+                <strong>隣の要素との距離：</strong>
+                <div class="calc-formula">250px (実際の幅) + 30px×2 (margin) = 310px</div>
+            </div>
+            <div class="result">⚠️ 指定した200pxより実際は50px大きくなる！</div>
+        </div>
+        
+        <div class="comparison">
+            <div class="comparison-item specified">
+                <h4>💻 開発者が指定したサイズ</h4>
+                <div class="size" style="color: #38a169;">200px × 100px</div>
+                <div>CSS: width: 200px; height: 100px;</div>
+            </div>
+            <div class="comparison-item actual">
+                <h4>🌐 ブラウザが実際に使用するサイズ</h4>
+                <div class="size" style="color: #e53e3e;">250px × 150px</div>
+                <div>padding + border が追加される</div>
+            </div>
+        </div>
+        
+        <div class="note">
+            <strong>💡 解決方法：</strong> <code>box-sizing: border-box;</code> を使用すると、paddingとborderを含めてwidthを計算してくれるので、指定したサイズ通りになります。
+        </div>
+    </div>
+</body>
+</html>
