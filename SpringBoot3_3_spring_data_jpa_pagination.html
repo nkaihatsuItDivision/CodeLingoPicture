@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spring Data JPAページネーション図</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hiragino+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --week-10-3-color: linear-gradient(135deg, #28a745, #1e7e34);
+            --week-10-1-color: linear-gradient(135deg, #007bff, #0056b3);
+            --accent-color: #ffc107;
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
+            --bg-light: #f8f9fa;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: var(--bg-light);
+            line-height: 1.6;
+            color: var(--text-dark);
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .main-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--week-10-3-color);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+
+        .architecture-flow {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .flow-step {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            position: relative;
+            border-top: 4px solid;
+        }
+
+        .flow-step:nth-child(1) { border-top-color: #007bff; }
+        .flow-step:nth-child(2) { border-top-color: #28a745; }
+        .flow-step:nth-child(3) { border-top-color: #17a2b8; }
+        .flow-step:nth-child(4) { border-top-color: #6f42c1; }
+
+        .flow-step:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: var(--week-10-3-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .step-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .step-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .step-description {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .code-snippet {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 0.75rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            color: #495057;
+        }
+
+        .pageable-details {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: var(--shadow);
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .detail-section {
+            background: var(--bg-light);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .detail-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .parameter-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .parameter-list li {
+            background: white;
+            margin-bottom: 0.5rem;
+            padding: 0.75rem;
+            border-radius: 6px;
+            border-left: 4px solid #28a745;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .param-name {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .param-type {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            background: #e9ecef;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .benefits-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .benefit-card {
+            background: var(--bg-light);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .benefit-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: var(--week-10-3-color);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .benefit-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .connector-line {
+            text-align: center;
+            margin: 1rem 0;
+            font-size: 1.5rem;
+            color: var(--text-light);
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 1rem;
+            }
+
+            .main-title {
+                font-size: 1.8rem;
+            }
+
+            .architecture-flow {
+                grid-template-columns: 1fr;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .connector-line {
+                transform: rotate(90deg);
+                margin: 0.5rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="header-section">
+            <h1 class="main-title">
+                <i class="fas fa-database"></i> Spring Data JPAページネーション構成
+            </h1>
+            <p class="subtitle">
+                Pageable・Page・Sortを活用した効率的なデータ処理アーキテクチャ
+            </p>
+        </div>
+
+        <div class="architecture-flow">
+            <div class="flow-step">
+                <div class="step-number">1</div>
+                <div class="step-icon">
+                    <i class="fas fa-desktop" style="color: #007bff;"></i>
+                </div>
+                <div class="step-title">Controller</div>
+                <div class="step-description">
+                    リクエストパラメータからPageableオブジェクトを自動生成
+                </div>
+                <div class="code-snippet">
+                    @GetMapping("/students")<br>
+                    public String list(<br>
+                    &nbsp;&nbsp;Pageable pageable,<br>
+                    &nbsp;&nbsp;Model model)
+                </div>
+            </div>
+
+            <div class="flow-step">
+                <div class="step-number">2</div>
+                <div class="step-icon">
+                    <i class="fas fa-cogs" style="color: #28a745;"></i>
+                </div>
+                <div class="step-title">Service Layer</div>
+                <div class="step-description">
+                    PageableをRepositoryに渡してビジネスロジックを処理
+                </div>
+                <div class="code-snippet">
+                    public Page&lt;Student&gt;<br>
+                    findAllWithPaging(<br>
+                    &nbsp;&nbsp;Pageable pageable)
+                </div>
+            </div>
+
+            <div class="flow-step">
+                <div class="step-number">3</div>
+                <div class="step-icon">
+                    <i class="fas fa-layer-group" style="color: #17a2b8;"></i>
+                </div>
+                <div class="step-title">Repository</div>
+                <div class="step-description">
+                    Spring Data JPAが自動でページング機能を提供
+                </div>
+                <div class="code-snippet">
+                    Page&lt;Student&gt; findAll(<br>
+                    &nbsp;&nbsp;Pageable pageable);<br>
+                    // 自動実装される
+                </div>
+            </div>
+
+            <div class="flow-step">
+                <div class="step-number">4</div>
+                <div class="step-icon">
+                    <i class="fas fa-database" style="color: #6f42c1;"></i>
+                </div>
+                <div class="step-title">Database</div>
+                <div class="step-description">
+                    LIMIT・OFFSET句を使用した効率的なクエリ実行
+                </div>
+                <div class="code-snippet">
+                    SELECT * FROM students<br>
+                    ORDER BY id<br>
+                    LIMIT 10 OFFSET 20
+                </div>
+            </div>
+        </div>
+
+        <div class="pageable-details">
+            <h2 class="text-center mb-4">
+                <i class="fas fa-puzzle-piece"></i> Pageable・Page・Sort詳細構成
+            </h2>
+            <div class="details-grid">
+                <div class="detail-section">
+                    <div class="detail-title">
+                        <i class="fas fa-sliders-h"></i> Pageableパラメータ
+                    </div>
+                    <ul class="parameter-list">
+                        <li>
+                            <span class="param-name">page</span>
+                            <span class="param-type">int</span>
+                        </li>
+                        <li>
+                            <span class="param-name">size</span>
+                            <span class="param-type">int</span>
+                        </li>
+                        <li>
+                            <span class="param-name">sort</span>
+                            <span class="param-type">String[]</span>
+                        </li>
+                    </ul>
+                    <div class="code-snippet mt-3">
+                        ?page=0&size=10<br>
+                        &sort=name,asc<br>
+                        &sort=age,desc
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <div class="detail-title">
+                        <i class="fas fa-file-alt"></i> Pageオブジェクト情報
+                    </div>
+                    <ul class="parameter-list">
+                        <li>
+                            <span class="param-name">content</span>
+                            <span class="param-type">List&lt;T&gt;</span>
+                        </li>
+                        <li>
+                            <span class="param-name">totalElements</span>
+                            <span class="param-type">long</span>
+                        </li>
+                        <li>
+                            <span class="param-name">totalPages</span>
+                            <span class="param-type">int</span>
+                        </li>
+                        <li>
+                            <span class="param-name">number</span>
+                            <span class="param-type">int</span>
+                        </li>
+                        <li>
+                            <span class="param-name">size</span>
+                            <span class="param-type">int</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="benefits-section">
+            <h2 class="text-center mb-2">
+                <i class="fas fa-rocket"></i> ページネーション実装のメリット
+            </h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <div class="benefit-title">パフォーマンス向上</div>
+                    <p class="mb-0">必要なデータのみ取得し、メモリ使用量を最小化</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="benefit-title">ユーザビリティ</div>
+                    <p class="mb-0">大量データも見やすく、操作しやすい形で表示</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </div>
+                    <div class="benefit-title">スケーラビリティ</div>
+                    <p class="mb-0">データ量増加に対応し、安定した動作を保証</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <div class="benefit-title">実装の簡単さ</div>
+                    <p class="mb-0">Spring Data JPAによる自動実装で開発効率向上</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

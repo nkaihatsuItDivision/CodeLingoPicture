@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>並び替え機能実装図</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hiragino+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --week-10-3-color: linear-gradient(135deg, #28a745, #1e7e34);
+            --week-10-1-color: linear-gradient(135deg, #007bff, #0056b3);
+            --accent-color: #ffc107;
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
+            --bg-light: #f8f9fa;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: var(--bg-light);
+            line-height: 1.6;
+            color: var(--text-dark);
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .main-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--week-10-3-color);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+
+        .sort-demo-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 3rem;
+        }
+
+        .demo-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .sort-state-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid #dee2e6;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }
+
+        .sort-state-btn:hover {
+            border-color: #28a745;
+            background: #f8fff8;
+        }
+
+        .sort-state-btn.active {
+            background: var(--week-10-3-color);
+            color: white;
+            border-color: #1e7e34;
+        }
+
+        .table-demo {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #dee2e6;
+        }
+
+        .demo-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .demo-table th {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-bottom: 2px solid #dee2e6;
+            text-align: left;
+            font-weight: 600;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .demo-table th:hover {
+            background: #e9ecef;
+        }
+
+        .demo-table th.sortable-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .sort-indicator {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .sort-indicator.asc {
+            color: #28a745;
+        }
+
+        .sort-indicator.desc {
+            color: #dc3545;
+        }
+
+        .demo-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .demo-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .sort-state-info {
+            background: #e8f5e8;
+            border-left: 4px solid #28a745;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 4px;
+        }
+
+        .implementation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .implementation-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border-top: 4px solid;
+        }
+
+        .implementation-card:nth-child(1) { border-top-color: #007bff; }
+        .implementation-card:nth-child(2) { border-top-color: #28a745; }
+        .implementation-card:nth-child(3) { border-top-color: #17a2b8; }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .code-example {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+
+        .code-content {
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: #495057;
+            line-height: 1.4;
+        }
+
+        .url-example {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            padding: 0.75rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #856404;
+            margin: 0.5rem 0;
+        }
+
+        .multi-sort-demo {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 3rem;
+        }
+
+        .sort-priority-list {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .priority-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            background: white;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            border-left: 4px solid;
+        }
+
+        .priority-item:nth-child(1) { border-left-color: #dc3545; }
+        .priority-item:nth-child(2) { border-left-color: #ffc107; }
+        .priority-item:nth-child(3) { border-left-color: #28a745; }
+
+        .priority-number {
+            background: #6c757d;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .priority-field {
+            flex: 1;
+            font-weight: 600;
+        }
+
+        .priority-direction {
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .asc-badge {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .desc-badge {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .benefits-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .benefit-card {
+            background: var(--bg-light);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .benefit-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: var(--week-10-3-color);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .benefit-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 1rem;
+            }
+
+            .main-title {
+                font-size: 1.8rem;
+            }
+
+            .demo-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .demo-table {
+                font-size: 0.8rem;
+            }
+
+            .demo-table th,
+            .demo-table td {
+                padding: 0.5rem 0.25rem;
+            }
+
+            .implementation-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .priority-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="header-section">
+            <h1 class="main-title">
+                <i class="fas fa-sort"></i> 並び替え機能実装図
+            </h1>
+            <p class="subtitle">
+                列ヘッダークリック・昇順降順・複数項目対応の実装説明
+            </p>
+        </div>
+
+        <div class="sort-demo-section">
+            <h2 class="text-center mb-4">
+                <i class="fas fa-mouse-pointer"></i> インタラクティブ並び替えデモ
+            </h2>
+            
+            <div class="demo-controls">
+                <button class="sort-state-btn active" data-sort="none">
+                    <i class="fas fa-list"></i> 並び替えなし
+                </button>
+                <button class="sort-state-btn" data-sort="name-asc">
+                    <i class="fas fa-sort-alpha-down"></i> 名前（昇順）
+                </button>
+                <button class="sort-state-btn" data-sort="name-desc">
+                    <i class="fas fa-sort-alpha-up"></i> 名前（降順）
+                </button>
+                <button class="sort-state-btn" data-sort="age-asc">
+                    <i class="fas fa-sort-numeric-down"></i> 年齢（昇順）
+                </button>
+                <button class="sort-state-btn" data-sort="age-desc">
+                    <i class="fas fa-sort-numeric-up"></i> 年齢（降順）
+                </button>
+            </div>
+
+            <div class="table-demo">
+                <table class="demo-table">
+                    <thead>
+                        <tr>
+                            <th data-column="id">
+                                ID
+                                <i class="fas fa-sort sort-indicator"></i>
+                            </th>
+                            <th data-column="name">
+                                学生名
+                                <i class="fas fa-sort sort-indicator"></i>
+                            </th>
+                            <th data-column="age">
+                                年齢
+                                <i class="fas fa-sort sort-indicator"></i>
+                            </th>
+                            <th data-column="grade">
+                                学年
+                                <i class="fas fa-sort sort-indicator"></i>
+                            </th>
+                            <th data-column="major">
+                                専攻
+                                <i class="fas fa-sort sort-indicator"></i>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="demo-table-body">
+                        <tr>
+                            <td>1001</td>
+                            <td>田中 太郎</td>
+                            <td>20</td>
+                            <td>2年生</td>
+                            <td>情報工学</td>
+                        </tr>
+                        <tr>
+                            <td>1002</td>
+                            <td>佐藤 花子</td>
+                            <td>22</td>
+                            <td>3年生</td>
+                            <td>経済学</td>
+                        </tr>
+                        <tr>
+                            <td>1003</td>
+                            <td>鈴木 次郎</td>
+                            <td>19</td>
+                            <td>1年生</td>
+                            <td>機械工学</td>
+                        </tr>
+                        <tr>
+                            <td>1004</td>
+                            <td>高橋 美咲</td>
+                            <td>21</td>
+                            <td>2年生</td>
+                            <td>情報工学</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="sort-state-info">
+                <strong id="current-sort-info">現在の状態: 並び替えなし（初期順序）</strong>
+                <div id="current-url-info" class="url-example mt-2">
+                    URL: /students?page=0&size=10
+                </div>
+            </div>
+        </div>
+
+        <div class="implementation-grid">
+            <div class="implementation-card">
+                <div class="card-title">
+                    <i class="fas fa-link"></i> Thymeleafでのソートリンク
+                </div>
+                <div class="code-example">
+                    <div class="code-content">
+&lt;th&gt;<br>
+&nbsp;&nbsp;&lt;a th:href="@{/students(page=${page.number}, size=${page.size}, sort='name,asc')}"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;th:class="${page.sort.getOrderFor('name')?.direction?.name() == 'ASC'} ? 'sort-active' : ''"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;学生名<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;i th:if="${page.sort.getOrderFor('name')?.direction?.name() == 'ASC'}"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;class="fas fa-sort-up"&gt;&lt;/i&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;i th:if="${page.sort.getOrderFor('name')?.direction?.name() == 'DESC'}"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;class="fas fa-sort-down"&gt;&lt;/i&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;i th:unless="${page.sort.getOrderFor('name')}"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;class="fas fa-sort"&gt;&lt;/i&gt;<br>
+&nbsp;&nbsp;&lt;/a&gt;<br>
+&lt;/th&gt;
+                    </div>
+                </div>
+                <p class="text-muted">列ヘッダーに動的なソートリンクを生成し、現在のソート状態をアイコンで表示</p>
+            </div>
+
+            <div class="implementation-card">
+                <div class="card-title">
+                    <i class="fas fa-server"></i> Controllerでのソート処理
+                </div>
+                <div class="code-example">
+                    <div class="code-content">
+@GetMapping("/students")<br>
+public String list(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@RequestParam(defaultValue = "0") int page,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@RequestParam(defaultValue = "10") int size,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@RequestParam(defaultValue = "id") String sort,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@RequestParam(defaultValue = "asc") String direction,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Model model) {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Sort.Direction dir = Sort.Direction.fromString(direction);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Sort sortObj = Sort.by(dir, sort);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Pageable pageable = PageRequest.of(page, size, sortObj);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Page&lt;Student&gt; students = studentService.findAll(pageable);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;model.addAttribute("page", students);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return "students/list";<br>
+}
+                    </div>
+                </div>
+                <p class="text-muted">リクエストパラメータからSortオブジェクトを生成し、Pageableに適用</p>
+            </div>
+
+            <div class="implementation-card">
+                <div class="card-title">
+                    <i class="fas fa-database"></i> Repository自動対応
+                </div>
+                <div class="code-example">
+                    <div class="code-content">
+public interface StudentRepository extends JpaRepository&lt;Student, Long&gt; {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// Spring Data JPAが自動でソート機能を提供<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Page&lt;Student&gt; findAll(Pageable pageable);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// カスタム検索でもソート対応<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Page&lt;Student&gt; findByNameContaining(String name, Pageable pageable);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// @Query使用時もソート対応<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Query("SELECT s FROM Student s WHERE s.grade = :grade")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Page&lt;Student&gt; findByGrade(@Param("grade") String grade, Pageable pageable);<br>
+}
+                    </div>
+                </div>
+                <p class="text-muted">Repositoryでは特別な実装不要。PageableでSort情報が自動的に処理される</p>
+            </div>
+        </div>
+
+        <div class="multi-sort-demo">
+            <h2 class="text-center mb-4">
+                <i class="fas fa-layer-group"></i> 複数項目並び替え実装
+            </h2>
+            
+            <div class="sort-priority-list">
+                <h5 class="mb-3">現在の並び替え優先順位:</h5>
+                <div class="priority-item">
+                    <div class="priority-number">1</div>
+                    <div class="priority-field">学年</div>
+                    <div class="priority-direction desc-badge">降順</div>
+                </div>
+                <div class="priority-item">
+                    <div class="priority-number">2</div>
+                    <div class="priority-field">年齢</div>
+                    <div class="priority-direction asc-badge">昇順</div>
+                </div>
+                <div class="priority-item">
+                    <div class="priority-number">3</div>
+                    <div class="priority-field">学生名</div>
+                    <div class="priority-direction asc-badge">昇順</div>
+                </div>
+            </div>
+
+            <div class="code-example">
+                <h6>複数ソートのURL例:</h6>
+                <div class="url-example">
+                    /students?sort=grade,desc&sort=age,asc&sort=name,asc
+                </div>
+            </div>
+
+            <div class="code-example">
+                <h6>複数ソートのJava実装:</h6>
+                <div class="code-content">
+// 複数ソート条件の構築<br>
+Sort sort = Sort.by(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Sort.Order.desc("grade"),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Sort.Order.asc("age"),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Sort.Order.asc("name")<br>
+);<br>
+<br>
+Pageable pageable = PageRequest.of(page, size, sort);<br>
+Page&lt;Student&gt; result = studentRepository.findAll(pageable);
+                </div>
+            </div>
+        </div>
+
+        <div class="benefits-section">
+            <h2 class="text-center mb-2">
+                <i class="fas fa-trophy"></i> 並び替え機能の効果
+            </h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="benefit-title">データ発見性向上</div>
+                    <p class="mb-0">ユーザーが求める情報を素早く見つけることができる</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="benefit-title">分析効率化</div>
+                    <p class="mb-0">データの傾向や異常値を視覚的に把握しやすくなる</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="benefit-title">ユーザビリティ向上</div>
+                    <p class="mb-0">直感的な操作で目的の情報にアクセス可能</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <div class="benefit-title">実装の簡単さ</div>
+                    <p class="mb-0">Spring Data JPAの機能活用で効率的な開発を実現</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // デモ用のインタラクティブ機能
+        document.addEventListener('DOMContentLoaded', function() {
+            const sortButtons = document.querySelectorAll('.sort-state-btn');
+            const sortInfo = document.getElementById('current-sort-info');
+            const urlInfo = document.getElementById('current-url-info');
+            const tableHeaders = document.querySelectorAll('.demo-table th');
+
+            sortButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // ボタンの状態更新
+                    sortButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+
+                    // ヘッダーの状態リセット
+                    tableHeaders.forEach(th => {
+                        th.classList.remove('sortable-active');
+                        const icon = th.querySelector('.sort-indicator');
+                        if (icon) {
+                            icon.className = 'fas fa-sort sort-indicator';
+                        }
+                    });
+
+                    const sortType = this.dataset.sort;
+                    let infoText = '';
+                    let urlText = 'URL: /students?page=0&size=10';
+
+                    switch(sortType) {
+                        case 'none':
+                            infoText = '現在の状態: 並び替えなし（初期順序）';
+                            break;
+                        case 'name-asc':
+                            infoText = '現在の状態: 学生名で昇順並び替え（A→Z）';
+                            urlText += '&sort=name,asc';
+                            updateHeaderState('name', 'asc');
+                            break;
+                        case 'name-desc':
+                            infoText = '現在の状態: 学生名で降順並び替え（Z→A）';
+                            urlText += '&sort=name,desc';
+                            updateHeaderState('name', 'desc');
+                            break;
+                        case 'age-asc':
+                            infoText = '現在の状態: 年齢で昇順並び替え（若い順）';
+                            urlText += '&sort=age,asc';
+                            updateHeaderState('age', 'asc');
+                            break;
+                        case 'age-desc':
+                            infoText = '現在の状態: 年齢で降順並び替え（年上順）';
+                            urlText += '&sort=age,desc';
+                            updateHeaderState('age', 'desc');
+                            break;
+                    }
+
+                    sortInfo.textContent = infoText;
+                    urlInfo.textContent = urlText;
+                });
+            });
+
+            function updateHeaderState(column, direction) {
+                const header = document.querySelector(`th[data-column="${column}"]`);
+                if (header) {
+                    header.classList.add('sortable-active');
+                    const icon = header.querySelector('.sort-indicator');
+                    if (icon) {
+                        if (direction === 'asc') {
+                            icon.className = 'fas fa-sort-up sort-indicator asc';
+                        } else {
+                            icon.className = 'fas fa-sort-down sort-indicator desc';
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

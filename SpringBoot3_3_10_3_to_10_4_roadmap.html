@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 10.3-10.4ロードマップ図</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hiragino+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --week-10-3-color: linear-gradient(135deg, #28a745, #1e7e34);
+            --week-10-4-color: linear-gradient(135deg, #fd7e14, #e55100);
+            --week-10-1-color: linear-gradient(135deg, #007bff, #0056b3);
+            --accent-color: #ffc107;
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
+            --bg-light: #f8f9fa;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: var(--bg-light);
+            line-height: 1.6;
+            color: var(--text-dark);
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .main-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--week-10-3-color);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+
+        .roadmap-timeline {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .timeline-connector {
+            position: absolute;
+            top: 50%;
+            left: 25%;
+            right: 25%;
+            height: 4px;
+            background: linear-gradient(to right, #28a745, #fd7e14);
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .week-milestone {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: var(--shadow-hover);
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+            flex: 1;
+            border-top: 6px solid;
+        }
+
+        .week-milestone:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .week-10-3 {
+            border-top-color: #28a745;
+        }
+
+        .week-10-4 {
+            border-top-color: #fd7e14;
+        }
+
+        .week-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .badge-10-3 {
+            background: var(--week-10-3-color);
+        }
+
+        .badge-10-4 {
+            background: var(--week-10-4-color);
+        }
+
+        .week-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .week-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+        }
+
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-upcoming {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .achievements-list {
+            list-style: none;
+            padding: 0;
+            margin: 1.5rem 0;
+        }
+
+        .achievements-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f8f9fa;
+        }
+
+        .achievements-list li:last-child {
+            border-bottom: none;
+        }
+
+        .achievement-icon {
+            color: #28a745;
+            font-size: 1.1rem;
+            min-width: 20px;
+        }
+
+        .upcoming-icon {
+            color: #fd7e14;
+            font-size: 1.1rem;
+            min-width: 20px;
+        }
+
+        .tech-skills {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .skill-tag {
+            display: inline-block;
+            background: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin: 0.25rem;
+            border: 1px solid #dee2e6;
+            color: var(--text-dark);
+        }
+
+        .comparison-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 3rem;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 2rem;
+            align-items: center;
+            margin-top: 2rem;
+        }
+
+        .comparison-card {
+            background: var(--bg-light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .vs-connector {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-light);
+            background: white;
+            border: 3px solid #dee2e6;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+        }
+
+        .feature-comparison {
+            margin-top: 2rem;
+        }
+
+        .feature-row {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 1rem;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f8f9fa;
+        }
+
+        .feature-row:last-child {
+            border-bottom: none;
+        }
+
+        .feature-left {
+            text-align: right;
+            padding-right: 1rem;
+        }
+
+        .feature-right {
+            text-align: left;
+            padding-left: 1rem;
+        }
+
+        .feature-center {
+            width: 40px;
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--text-light);
+        }
+
+        .roadmap-benefits {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 3rem;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .benefit-card {
+            background: var(--bg-light);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            border-left: 4px solid;
+        }
+
+        .benefit-card:nth-child(1) { border-left-color: #28a745; }
+        .benefit-card:nth-child(2) { border-left-color: #fd7e14; }
+        .benefit-card:nth-child(3) { border-left-color: #007bff; }
+        .benefit-card:nth-child(4) { border-left-color: #6f42c1; }
+
+        .benefit-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .benefit-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: var(--week-10-3-color);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .benefit-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .motivation-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: var(--shadow-hover);
+        }
+
+        .motivation-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .confidence-meter {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            height: 40px;
+            margin: 2rem auto;
+            max-width: 400px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(to right, #28a745, #fd7e14);
+            border-radius: 20px;
+            width: 85%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            animation: fillProgress 2s ease-out;
+        }
+
+        @keyframes fillProgress {
+            from { width: 0%; }
+            to { width: 85%; }
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 1rem;
+            }
+
+            .main-title {
+                font-size: 1.8rem;
+            }
+
+            .roadmap-timeline {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .timeline-connector {
+                display: none;
+            }
+
+            .comparison-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .vs-connector {
+                transform: rotate(90deg);
+            }
+
+            .feature-row {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .feature-left,
+            .feature-right {
+                text-align: center;
+                padding: 0;
+            }
+
+            .feature-center {
+                display: none;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .confidence-meter {
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="header-section">
+            <h1 class="main-title">
+                <i class="fas fa-route"></i> Week 10.3-10.4 ロードマップ
+            </h1>
+            <p class="subtitle">
+                検索結果表示完成から高度検索機能への確実な道筋
+            </p>
+        </div>
+
+        <div class="roadmap-timeline">
+            <div class="timeline-connector"></div>
+            
+            <div class="week-milestone week-10-3">
+                <div class="week-badge badge-10-3">Week 10.3</div>
+                <h3 class="week-title">検索結果表示の完成</h3>
+                <div class="week-status status-completed">
+                    <i class="fas fa-check-circle"></i>
+                    <span>学習完了・実装完成</span>
+                </div>
+                
+                <ul class="achievements-list">
+                    <li>
+                        <i class="fas fa-check achievement-icon"></i>
+                        <span>ページネーション機能完全実装</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-check achievement-icon"></i>
+                        <span>並び替え機能（昇順・降順・複数項目）</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-check achievement-icon"></i>
+                        <span>検索結果の詳細表示・ナビゲーション</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-check achievement-icon"></i>
+                        <span>レスポンシブ対応の企業レベルUI</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-check achievement-icon"></i>
+                        <span>Spring Data JPA活用の効率実装</span>
+                    </li>
+                </ul>
+
+                <div class="tech-skills">
+                    <strong>習得技術:</strong><br>
+                    <span class="skill-tag">Pageable</span>
+                    <span class="skill-tag">Page&lt;T&gt;</span>
+                    <span class="skill-tag">Sort機能</span>
+                    <span class="skill-tag">Thymeleaf活用</span>
+                    <span class="skill-tag">Bootstrap UI</span>
+                </div>
+            </div>
+
+            <div class="week-milestone week-10-4">
+                <div class="week-badge badge-10-4">Week 10.4</div>
+                <h3 class="week-title">高度検索機能の実装</h3>
+                <div class="week-status status-upcoming">
+                    <i class="fas fa-clock"></i>
+                    <span>次週実装予定・基盤完成済み</span>
+                </div>
+                
+                <ul class="achievements-list">
+                    <li>
+                        <i class="fas fa-star upcoming-icon"></i>
+                        <span>複合条件検索（AND・OR組み合わせ）</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-star upcoming-icon"></i>
+                        <span>日付範囲検索・数値範囲検索</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-star upcoming-icon"></i>
+                        <span>動的フィルタリング機能</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-star upcoming-icon"></i>
+                        <span>検索履歴・お気に入り検索</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-star upcoming-icon"></i>
+                        <span>高度検索フォームUI</span>
+                    </li>
+                </ul>
+
+                <div class="tech-skills">
+                    <strong>習得予定技術:</strong><br>
+                    <span class="skill-tag">Criteria API</span>
+                    <span class="skill-tag">Specification</span>
+                    <span class="skill-tag">@Query拡張</span>
+                    <span class="skill-tag">動的クエリ</span>
+                    <span class="skill-tag">複合条件処理</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="comparison-section">
+            <h2 class="text-center mb-4">
+                <i class="fas fa-balance-scale"></i> Week 10.3 vs Week 10.4 機能比較
+            </h2>
+            
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h4 style="color: #28a745;">Week 10.3 完成機能</h4>
+                    <p>基本検索 + 結果表示</p>
+                </div>
+                <div class="vs-connector">VS</div>
+                <div class="comparison-card">
+                    <h4 style="color: #fd7e14;">Week 10.4 発展機能</h4>
+                    <p>高度検索 + 複合条件</p>
+                </div>
+            </div>
+
+            <div class="feature-comparison">
+                <div class="feature-row">
+                    <div class="feature-left">
+                        <strong>シンプル検索フォーム</strong><br>
+                        <small>1-2項目での基本検索</small>
+                    </div>
+                    <div class="feature-center">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                    <div class="feature-right">
+                        <strong>高度検索フォーム</strong><br>
+                        <small>複数項目・複合条件の詳細検索</small>
+                    </div>
+                </div>
+
+                <div class="feature-row">
+                    <div class="feature-left">
+                        <strong>基本ページネーション</strong><br>
+                        <small>ページ分割・件数表示</small>
+                    </div>
+                    <div class="feature-center">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                    <div class="feature-right">
+                        <strong>動的フィルタリング</strong><br>
+                        <small>リアルタイム絞り込み</small>
+                    </div>
+                </div>
+
+                <div class="feature-row">
+                    <div class="feature-left">
+                        <strong>列ソート機能</strong><br>
+                        <small>昇順・降順切り替え</small>
+                    </div>
+                    <div class="feature-center">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                    <div class="feature-right">
+                        <strong>複合ソート + 保存</strong><br>
+                        <small>多項目ソート・設定保存</small>
+                    </div>
+                </div>
+
+                <div class="feature-row">
+                    <div class="feature-left">
+                        <strong>基本結果表示</strong><br>
+                        <small>テーブル形式・操作ボタン</small>
+                    </div>
+                    <div class="feature-center">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                    <div class="feature-right">
+                        <strong>カスタム表示 + エクスポート</strong><br>
+                        <small>表示項目選択・CSV出力</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="roadmap-benefits">
+            <h2 class="text-center mb-2">
+                <i class="fas fa-rocket"></i> ロードマップ完走による成長効果
+            </h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="benefit-title">技術的成長</div>
+                    <p class="mb-0">Week 10.3の基盤技術が10.4の高度機能実装を支える確実な技術習得プロセス</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <div class="benefit-title">企業レベル実装</div>
+                    <p class="mb-0">実際のビジネスシステムで求められる検索機能を段階的に完全習得</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-puzzle-piece"></i>
+                    </div>
+                    <div class="benefit-title">設計思考習得</div>
+                    <p class="mb-0">基本機能から高度機能への発展設計を通じた本格的なアーキテクチャ思考</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="benefit-title">自信とモチベーション</div>
+                    <p class="mb-0">確実な成果の積み重ねによる技術的自信と次レベルへの期待感醸成</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="motivation-section">
+            <div class="motivation-title">
+                <i class="fas fa-trophy"></i> Week 10.4への準備完了度
+            </div>
+            <p class="mb-4">
+                Week 10.3での学習により、Week 10.4の高度検索機能実装に必要な技術基盤が完全に確立されました。
+            </p>
+            
+            <div class="confidence-meter">
+                <div class="confidence-fill">
+                    準備完了度 85%
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-4 mb-3">
+                    <h5><i class="fas fa-database"></i> データ処理基盤</h5>
+                    <p class="mb-0">Spring Data JPA・ページネーション技術の完全習得</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5><i class="fas fa-paint-brush"></i> UI/UX設計</h5>
+                    <p class="mb-0">企業レベルの検索画面設計・レスポンシブ対応</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5><i class="fas fa-cogs"></i> 実装パターン</h5>
+                    <p class="mb-0">Controller・Service・Repository設計思考</p>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <h4><i class="fas fa-star"></i> Week 10.4で実現する価値</h4>
+                <p class="mt-3">
+                    <strong>「基本的な検索ができる開発者」</strong>から<br>
+                    <strong>「企業システムの高度検索機能を設計・実装できるエンジニア」</strong>へ
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

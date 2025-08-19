@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ページネーション情報の詳細表示</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hiragino+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --week-10-3-color: linear-gradient(135deg, #28a745, #1e7e34);
+            --week-10-1-color: linear-gradient(135deg, #007bff, #0056b3);
+            --accent-color: #ffc107;
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
+            --bg-light: #f8f9fa;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: var(--bg-light);
+            line-height: 1.6;
+            color: var(--text-dark);
+        }
+
+        .main-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .main-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--week-10-3-color);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+
+        .pagination-examples {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .example-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            border-top: 4px solid;
+        }
+
+        .example-card:nth-child(1) { border-top-color: #007bff; }
+        .example-card:nth-child(2) { border-top-color: #28a745; }
+        .example-card:nth-child(3) { border-top-color: #17a2b8; }
+        .example-card:nth-child(4) { border-top-color: #ffc107; }
+
+        .example-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .example-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pagination-display {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid #dee2e6;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            padding: 0.5rem;
+            background: white;
+            border-radius: 6px;
+        }
+
+        .info-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-value {
+            font-weight: 700;
+            color: #28a745;
+            font-size: 1.1rem;
+        }
+
+        .page-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .page-btn {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #dee2e6;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: var(--text-dark);
+        }
+
+        .page-btn:hover {
+            background: #e9ecef;
+            color: var(--text-dark);
+            text-decoration: none;
+        }
+
+        .page-btn.active {
+            background: var(--week-10-3-color);
+            color: white;
+            border-color: #1e7e34;
+        }
+
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .size-selector {
+            margin-top: 1rem;
+            text-align: center;
+            padding-top: 1rem;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .size-select {
+            padding: 0.5rem;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            margin: 0 0.5rem;
+            background: white;
+        }
+
+        .scenario-description {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: #fff3cd;
+            border-radius: 6px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .implementation-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 3rem;
+        }
+
+        .code-example {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+
+        .code-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .code-content {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #495057;
+            line-height: 1.4;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .benefit-card {
+            background: var(--bg-light);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .benefit-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: var(--week-10-3-color);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .benefit-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-indicator {
+            margin: 1rem 0;
+        }
+
+        .progress-bar-custom {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 20px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--week-10-3-color);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 1rem;
+            }
+
+            .main-title {
+                font-size: 1.8rem;
+            }
+
+            .pagination-examples {
+                grid-template-columns: 1fr;
+            }
+
+            .info-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .page-controls {
+                gap: 0.25rem;
+            }
+
+            .page-btn {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.8rem;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="header-section">
+            <h1 class="main-title">
+                <i class="fas fa-list-ol"></i> ページネーション情報の詳細表示
+            </h1>
+            <p class="subtitle">
+                総件数・現在ページ・ページ範囲の分かりやすい表示方法
+            </p>
+        </div>
+
+        <div class="pagination-examples">
+            <!-- 基本パターン -->
+            <div class="example-card">
+                <div class="example-title">
+                    <i class="fas fa-list"></i> 基本表示パターン
+                </div>
+                <div class="scenario-description">
+                    通常の検索結果表示（67件中1-10件目を表示）
+                </div>
+                <div class="pagination-display">
+                    <div class="info-row">
+                        <div class="info-label">
+                            <i class="fas fa-database"></i> 検索結果
+                        </div>
+                        <div class="info-value">67件</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">
+                            <i class="fas fa-eye"></i> 表示範囲
+                        </div>
+                        <div class="info-value">1-10件目</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">
+                            <i class="fas fa-file-alt"></i> ページ情報
+                        </div>
+                        <div class="info-value">1/7ページ</div>
+                    </div>
+                    <div class="progress-indicator">
+                        <div class="progress-bar-custom">
+                            <div class="progress-fill" style="width: 14.9%;">14.9%</div>
+                        </div>
+                        <small class="text-muted">検索結果の表示進捗</small>
+                    </div>
+                </div>
+                <div class="page-controls">
+                    <button class="page-btn" disabled>最初</button>
+                    <button class="page-btn" disabled>前へ</button>
+                    <button class="page-btn active">1</button>
+                    <button class="page-btn">2</button>
+                    <button class="page-btn">3</button>
+                    <button class="page-btn">次へ</button>
+                    <button class="page-btn">最後</button>
+                </div>
+                <div class="size-selector">
+                    表示件数: 
+                    <select class="size-select">
+                        <option>5件</option>
+                        <option selected>10件</option>
+                        <option>20件</option>
+                        <option>50件</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 中間ページ -->
+            <div class="example-card">
+                <div class="example-title">
+                    <i class="fas fa-forward"></i> 中間ページ表示
+                </div>
+                <div class="scenario-description">
+                    中間ページでの表示（67件中21-30件目、ページ3/7）
+                </div>
+                <div class="pagination-display">
+                    <div class="info-row">
+                        <div class="info-label">
+                            <i class="fas fa-database"></i> 検索結果
+                        </div>
+                        <div class="info-value">67件</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">
+                            <i class="fas fa-eye"></i> 表示範囲
+                        </div>
+                        <div class="info-value">21-30件目</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">
+                            <i class="fas fa-file-alt"></i> ページ情報
+                        </div>
+                        <div class="info-value">3/7ページ</div>
+                    </div>
+                    <div class="progress-indicator">
+                        <div class="progress-bar-custom">
+                            <div class="progress-fill" style="width: 44.8%;">44.8%</div>
+                        </div>
+                        <small class="text-muted">検索結果の表示進捗</small>
+                    </div>
+                </div>
+                <div class="page-controls">
+                    <button class="page-btn">最初</button>
+                    <button class="page-btn">前へ</button>
+                    <button class="page-btn">1</button>
+                    <button class="page-btn">2</button>
+                    <button class="page-btn active">3</button>
+                    <button class="page-btn">4</button>
+                    <button class="page-btn">5</button>
+                    <button class="page-btn">次へ</button>
+                    <button class="page-btn">最後</button>
+                </div>
+                <div class="size-selector">
+                    表示件数: 
+                    <select class="size-select">
+                        <option>5件</option>
+                        <option selected>10件</option>
+                        <option>20件</option>
+                        <option>50件</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 最終ページ -->
+            <div class="example-card">
+                <div class="example-title">
+                    <i class="fas fa-flag-checkered"></i> 最終ページ表示
+                </div>
+                <div class="scenario-description">
+                    最終ページでの表示（67件中61-67件目、ページ7/7）
+                </div>
+                <div class="pagination-display">
+                    <div class="info-row">
+                        <div class="info-label">
+                            <i class="fas fa-database"></i> 検索結果
+                        </div>
+                        <div class="info-value">67件</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">
+                            <i class="fas fa-eye"></i> 表示範囲
+                        </div>
+                        <div class="info-value">61-67件目</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">
+                            <i class="fas fa-file-alt"></i> ページ情報
+                        </div>
+                        <div class="info-value">7/7ページ</div>
+                    </div>
+                    <div class="progress-indicator">
+                        <div class="progress-bar-custom">
+                            <div class="progress-fill" style="width: 100%;">100%</div>
+                        </div>
+                        <small class="text-muted">検索結果の表示進捗</small>
+                    </div>
+                </div>
+                <div class="page-controls">
+                    <button class="page-btn">最初</button>
+                    <button class="page-btn">前へ</button>
+                    <button class="page-btn">5</button>
+                    <button class="page-btn">6</button>
+                    <button class="page-btn active">7</button>
+                    <button class="page-btn" disabled>次へ</button>
+                    <button class="page-btn" disabled>最後</button>
+                </div>
+                <div class="size-selector">
+                    表示件数: 
+                    <select class="size-select">
+                        <option>5件</option>
+                        <option selected>10件</option>
+                        <option>20件</option>
+                        <option>50件</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 大量データパターン -->
+            <div class="example-card">
+                <div class="example-title">
+                    <i class="fas fa-chart-line"></i> 大量データ表示
+                </div>
+                <div class="scenario-description">
+                    大量データでの表示（10,847件中201-250件目、ページ5/217）
+                </div>
+                <div class="pagination-display">
+                    <div class="info-row">
+                        <div class="info-label">
+                            <i class="fas fa-database"></i> 検索結果
+                        </div>
+                        <div class="info-value">10,847件</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">
+                            <i class="fas fa-eye"></i> 表示範囲
+                        </div>
+                        <div class="info-value">201-250件目</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">
+                            <i class="fas fa-file-alt"></i> ページ情報
+                        </div>
+                        <div class="info-value">5/217ページ</div>
+                    </div>
+                    <div class="progress-indicator">
+                        <div class="progress-bar-custom">
+                            <div class="progress-fill" style="width: 2.3%;">2.3%</div>
+                        </div>
+                        <small class="text-muted">検索結果の表示進捗</small>
+                    </div>
+                </div>
+                <div class="page-controls">
+                    <button class="page-btn">最初</button>
+                    <button class="page-btn">前へ</button>
+                    <button class="page-btn">3</button>
+                    <button class="page-btn">4</button>
+                    <button class="page-btn active">5</button>
+                    <button class="page-btn">6</button>
+                    <button class="page-btn">7</button>
+                    <button class="page-btn">次へ</button>
+                    <button class="page-btn">最後</button>
+                </div>
+                <div class="size-selector">
+                    表示件数: 
+                    <select class="size-select">
+                        <option>10件</option>
+                        <option>20件</option>
+                        <option selected>50件</option>
+                        <option>100件</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="implementation-section">
+            <h2 class="text-center mb-4">
+                <i class="fas fa-code"></i> 実装例：Thymeleafテンプレート
+            </h2>
+            
+            <div class="code-example">
+                <div class="code-title">
+                    <i class="fas fa-file-code"></i> ページネーション情報の表示
+                </div>
+                <div class="code-content">
+&lt;div class="pagination-info"&gt;<br>
+&nbsp;&nbsp;&lt;div class="info-row"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;span class="info-label"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;i class="fas fa-database"&gt;&lt;/i&gt; 検索結果<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/span&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;strong th:text="|${page.totalElements}件|"&gt;&lt;/strong&gt;<br>
+&nbsp;&nbsp;&lt;/div&gt;<br>
+<br>
+&nbsp;&nbsp;&lt;div class="info-row"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;span class="info-label"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;i class="fas fa-eye"&gt;&lt;/i&gt; 表示範囲<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/span&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;strong th:text="|${page.number * page.size + 1}-${page.number * page.size + page.numberOfElements}件目|"&gt;&lt;/strong&gt;<br>
+&nbsp;&nbsp;&lt;/div&gt;<br>
+<br>
+&nbsp;&nbsp;&lt;div class="info-row"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;span class="info-label"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;i class="fas fa-file-alt"&gt;&lt;/i&gt; ページ情報<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/span&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;strong th:text="|${page.number + 1}/${page.totalPages}ページ|"&gt;&lt;/strong&gt;<br>
+&nbsp;&nbsp;&lt;/div&gt;<br>
+&lt;/div&gt;
+                </div>
+            </div>
+
+            <div class="code-example">
+                <div class="code-title">
+                    <i class="fas fa-cogs"></i> 進捗バーの計算
+                </div>
+                <div class="code-content">
+&lt;div class="progress-indicator"&gt;<br>
+&nbsp;&nbsp;&lt;div class="progress-bar-custom"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="progress-fill" <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;th:style="|width: ${(page.number * page.size + page.numberOfElements) * 100.0 / page.totalElements}%|"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;th:text="|${#numbers.formatDecimal((page.number * page.size + page.numberOfElements) * 100.0 / page.totalElements, 1, 1)}%|"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;<br>
+&nbsp;&nbsp;&lt;/div&gt;<br>
+&nbsp;&nbsp;&lt;small class="text-muted"&gt;検索結果の表示進捗&lt;/small&gt;<br>
+&lt;/div&gt;
+                </div>
+            </div>
+        </div>
+
+        <div class="implementation-section">
+            <h2 class="text-center mb-2">
+                <i class="fas fa-star"></i> ユーザビリティ向上のポイント
+            </h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <div class="benefit-title">視覚的な分かりやすさ</div>
+                    <p class="mb-0">アイコンと色分けで情報を瞬時に理解できる表示</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <div class="benefit-title">進捗の可視化</div>
+                    <p class="mb-0">プログレスバーで全体に対する現在位置を直感的に表示</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-sliders-h"></i>
+                    </div>
+                    <div class="benefit-title">柔軟な表示件数</div>
+                    <p class="mb-0">ユーザーの好みに応じて表示件数を動的に変更可能</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div class="benefit-title">レスポンシブ対応</div>
+                    <p class="mb-0">デスクトップからモバイルまで最適な表示を実現</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
