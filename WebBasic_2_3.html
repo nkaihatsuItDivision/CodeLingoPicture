@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTTPとHTTPS - 葉書と封筒の比較</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 1000px;
+            text-align: center;
+        }
+        
+        .title {
+            color: #333;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 40px;
+        }
+        
+        .comparison-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .mail-scenario {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 20px;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .scenario-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .http-scenario {
+            border-color: #fbb6ce;
+        }
+        
+        .http-scenario .scenario-title {
+            color: #e53e3e;
+        }
+        
+        .https-scenario {
+            border-color: #9ae6b4;
+        }
+        
+        .https-scenario .scenario-title {
+            color: #38a169;
+        }
+        
+        .mail-visual {
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .postcard {
+            width: 200px;
+            height: 120px;
+            background: linear-gradient(135deg, #fed7e2 0%, #fbb6ce 100%);
+            border: 2px solid #e53e3e;
+            border-radius: 10px;
+            margin: 0 auto;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .envelope {
+            width: 200px;
+            height: 120px;
+            background: linear-gradient(135deg, #c6f6d5 0%, #9ae6b4 100%);
+            border: 2px solid #38a169;
+            border-radius: 10px;
+            margin: 0 auto;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .envelope::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: linear-gradient(135deg, #a7f3d0 0%, #6ee7b7 100%);
+            border-radius: 8px 8px 0 0;
+            border-bottom: 1px solid #38a169;
+        }
+        
+        .envelope::after {
+            content: '🔒';
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+        }
+        
+        .postcard-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 12px;
+            color: #2d3748;
+            text-align: center;
+            line-height: 1.2;
+        }
+        
+        .envelope-content {
+            position: absolute;
+            top: 65%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 10px;
+            color: #2d3748;
+            text-align: center;
+            opacity: 0.3;
+        }
+        
+        .warning-icon {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #fed7d7;
+            color: #e53e3e;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+        
+        .security-icon {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #c6f6d5;
+            color: #38a169;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+        
+        .characteristics {
+            margin-top: 20px;
+        }
+        
+        .characteristic-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 8px 0;
+            font-size: 14px;
+        }
+        
+        .characteristic-icon {
+            margin-right: 8px;
+            font-size: 16px;
+        }
+        
+        .http-characteristic {
+            color: #e53e3e;
+        }
+        
+        .https-characteristic {
+            color: #38a169;
+        }
+        
+        .detailed-comparison {
+            background: #ffffff;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .comparison-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .comparison-table {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            align-items: start;
+        }
+        
+        .comparison-header {
+            font-weight: bold;
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .aspect-header {
+            background: #f7fafc;
+            color: #2d3748;
+        }
+        
+        .http-header {
+            background: #fed7e2;
+            color: #e53e3e;
+        }
+        
+        .https-header {
+            background: #c6f6d5;
+            color: #38a169;
+        }
+        
+        .comparison-row {
+            display: contents;
+        }
+        
+        .comparison-cell {
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 14px;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+        
+        .aspect-cell {
+            background: #f7fafc;
+            font-weight: bold;
+            color: #2d3748;
+        }
+        
+        .http-cell {
+            background: #fef5e7;
+            color: #744210;
+        }
+        
+        .https-cell {
+            background: #f0fff4;
+            color: #22543d;
+        }
+        
+        .danger-examples {
+            background: #fff5f5;
+            border: 2px solid #feb2b2;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .danger-title {
+            color: #e53e3e;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .danger-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .danger-item {
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #feb2b2;
+            text-align: left;
+        }
+        
+        .danger-item-title {
+            font-weight: bold;
+            color: #e53e3e;
+            margin-bottom: 5px;
+        }
+        
+        .danger-item-desc {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .current-status {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+        
+        .status-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .status-content {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .status-item {
+            text-align: center;
+        }
+        
+        .status-icon {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+        
+        .status-text {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">HTTPとHTTPS - 葉書と封筒で理解しよう</div>
+        
+        <div class="comparison-section">
+            <div class="mail-scenario http-scenario">
+                <div class="scenario-title">📮 HTTP = 葉書</div>
+                
+                <div class="mail-visual">
+                    <div class="postcard">
+                        <div class="warning-icon">⚠️</div>
+                        <div class="postcard-content">
+                            パスワード: abc123<br>
+                            クレジット番号: 1234-5678<br>
+                            個人情報が丸見え...
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="characteristics">
+                    <div class="characteristic-item http-characteristic">
+                        <span class="characteristic-icon">👀</span>
+                        誰でも内容を読める
+                    </div>
+                    <div class="characteristic-item http-characteristic">
+                        <span class="characteristic-icon">✂️</span>
+                        改ざんされる可能性
+                    </div>
+                    <div class="characteristic-item http-characteristic">
+                        <span class="characteristic-icon">❓</span>
+                        送り主が本物か不明
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mail-scenario https-scenario">
+                <div class="scenario-title">✉️ HTTPS = 封筒</div>
+                
+                <div class="mail-visual">
+                    <div class="envelope">
+                        <div class="security-icon">🛡️</div>
+                        <div class="envelope-content">
+                            暗号化された内容<br>
+                            安全に保護中...
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="characteristics">
+                    <div class="characteristic-item https-characteristic">
+                        <span class="characteristic-icon">🔒</span>
+                        内容が暗号化されて安全
+                    </div>
+                    <div class="characteristic-item https-characteristic">
+                        <span class="characteristic-icon">🛡️</span>
+                        改ざんを検知できる
+                    </div>
+                    <div class="characteristic-item https-characteristic">
+                        <span class="characteristic-icon">✅</span>
+                        送り主の身元が確認済み
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="detailed-comparison">
+            <div class="comparison-title">📊 詳細比較表</div>
+            <div class="comparison-table">
+                <div class="comparison-header aspect-header">比較項目</div>
+                <div class="comparison-header http-header">HTTP（葉書）</div>
+                <div class="comparison-header https-header">HTTPS（封筒）</div>
+                
+                <div class="comparison-row">
+                    <div class="comparison-cell aspect-cell">セキュリティ</div>
+                    <div class="comparison-cell http-cell">なし<br>内容が丸見え</div>
+                    <div class="comparison-cell https-cell">高い<br>暗号化で保護</div>
+                </div>
+                
+                <div class="comparison-row">
+                    <div class="comparison-cell aspect-cell">個人情報</div>
+                    <div class="comparison-cell http-cell">危険<br>盗まれる可能性</div>
+                    <div class="comparison-cell https-cell">安全<br>暗号化されて保護</div>
+                </div>
+                
+                <div class="comparison-row">
+                    <div class="comparison-cell aspect-cell">サイト確認</div>
+                    <div class="comparison-cell http-cell">不明<br>偽サイトの可能性</div>
+                    <div class="comparison-cell https-cell">確実<br>証明書で確認済み</div>
+                </div>
+                
+                <div class="comparison-row">
+                    <div class="comparison-cell aspect-cell">URL表示</div>
+                    <div class="comparison-cell http-cell">http://...</div>
+                    <div class="comparison-cell https-cell">https://... 🔒</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="danger-examples">
+            <div class="danger-title">
+                ⚠️ HTTPの具体的な危険性
+            </div>
+            <div class="danger-list">
+                <div class="danger-item">
+                    <div class="danger-item-title">パスワード漏洩</div>
+                    <div class="danger-item-desc">ログイン時のパスワードが第三者に見られる</div>
+                </div>
+                <div class="danger-item">
+                    <div class="danger-item-title">クレジット情報盗難</div>
+                    <div class="danger-item-desc">決済情報が暗号化されずに送信される</div>
+                </div>
+                <div class="danger-item">
+                    <div class="danger-item-title">個人情報流出</div>
+                    <div class="danger-item-desc">名前・住所・電話番号などが丸見え</div>
+                </div>
+                <div class="danger-item">
+                    <div class="danger-item-title">偽サイトへ誘導</div>
+                    <div class="danger-item-desc">本物と見分けがつかない偽のサイトに騙される</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="current-status">
+            <div class="status-title">🌐 現在（2024年）の状況</div>
+            <div style="text-align: center; margin-bottom: 15px;">
+                現在はHTTPSが標準となっています
+            </div>
+            <div class="status-content">
+                <div class="status-item">
+                    <div class="status-icon">🌍</div>
+                    <div class="status-text">ほとんどのWebサイト<br>がHTTPS対応済み</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-icon">🚨</div>
+                    <div class="status-text">ブラウザがHTTPサイト<br>に警告を表示</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-icon">🔍</div>
+                    <div class="status-text">Google検索でも<br>HTTPSサイトが優遇</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URLの構造分解図</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 1000px;
+            text-align: center;
+        }
+        
+        .title {
+            color: #333;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 40px;
+        }
+        
+        .url-display {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .url-container {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        
+        .url-part {
+            display: inline;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .protocol {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .domain {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+        
+        .port {
+            background: #e8f5e8;
+            color: #388e3c;
+        }
+        
+        .path {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+        
+        .query {
+            background: #fce4ec;
+            color: #c2185b;
+        }
+        
+        .fragment {
+            background: #f1f8e9;
+            color: #689f38;
+        }
+        
+        .url-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .part-explanation {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: left;
+        }
+        
+        .part-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .part-example {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            background: #f8f9fa;
+            padding: 8px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid;
+        }
+        
+        .protocol-section .part-title {
+            color: #1976d2;
+        }
+        
+        .protocol-section .part-example {
+            border-left-color: #1976d2;
+        }
+        
+        .domain-section .part-title {
+            color: #7b1fa2;
+        }
+        
+        .domain-section .part-example {
+            border-left-color: #7b1fa2;
+        }
+        
+        .port-section .part-title {
+            color: #388e3c;
+        }
+        
+        .port-section .part-example {
+            border-left-color: #388e3c;
+        }
+        
+        .path-section .part-title {
+            color: #f57c00;
+        }
+        
+        .path-section .part-example {
+            border-left-color: #f57c00;
+        }
+        
+        .query-section .part-title {
+            color: #c2185b;
+        }
+        
+        .query-section .part-example {
+            border-left-color: #c2185b;
+        }
+        
+        .fragment-section .part-title {
+            color: #689f38;
+        }
+        
+        .fragment-section .part-example {
+            border-left-color: #689f38;
+        }
+        
+        .part-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+        
+        .part-note {
+            font-size: 12px;
+            color: #999;
+            font-style: italic;
+        }
+        
+        .real-examples {
+            background: #ffffff;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .examples-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .example-item {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: left;
+        }
+        
+        .example-description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .example-url {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #e9ecef;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        
+        .analysis-exercise {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+        
+        .exercise-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .exercise-url {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            margin: 15px 0;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .exercise-instruction {
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .answer-section {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            text-align: left;
+        }
+        
+        .answer-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .answer-item {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        
+        .highlight-legend {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .legend-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+        }
+        
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">📝 URLの構造を詳しく分解してみよう</div>
+        
+        <div class="url-display">
+            <div class="url-container">
+                <span class="url-part protocol">https://</span><span class="url-part domain">www.example.com</span><span class="url-part port">:443</span><span class="url-part path">/products/smartphones.html</span><span class="url-part query">?color=red&size=large</span><span class="url-part fragment">#features</span>
+            </div>
+            
+            <div class="highlight-legend">
+                <div class="legend-title">🎨 色分け凡例</div>
+                <div class="legend-grid">
+                    <div class="legend-item">
+                        <div class="legend-color protocol"></div>
+                        <span>プロトコル</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color domain"></div>
+                        <span>ドメイン名</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color port"></div>
+                        <span>ポート番号</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color path"></div>
+                        <span>パス</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color query"></div>
+                        <span>クエリ</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color fragment"></div>
+                        <span>フラグメント</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="url-breakdown">
+            <div class="part-explanation protocol-section">
+                <div class="part-title">
+                    🔗 1. プロトコル
+                </div>
+                <div class="part-example">https://</div>
+                <div class="part-description">
+                    <strong>意味：</strong>「この方式で通信します」<br>
+                    <strong>種類：</strong><br>
+                    • http:// = 普通の通信<br>
+                    • https:// = 安全な通信（推奨）
+                </div>
+                <div class="part-note">
+                    現在はセキュリティのためHTTPSが標準
+                </div>
+            </div>
+            
+            <div class="part-explanation domain-section">
+                <div class="part-title">
+                    🌐 2. ドメイン名
+                </div>
+                <div class="part-example">www.example.com</div>
+                <div class="part-description">
+                    <strong>意味：</strong>「この会社のサーバー」<br>
+                    <strong>構成：</strong><br>
+                    • www = サブドメイン<br>
+                    • example = 会社・サービス名<br>
+                    • .com = トップレベルドメイン
+                </div>
+                <div class="part-note">
+                    インターネット上の住所のようなもの
+                </div>
+            </div>
+            
+            <div class="part-explanation port-section">
+                <div class="part-title">
+                    🚪 3. ポート番号
+                </div>
+                <div class="part-example">:443</div>
+                <div class="part-description">
+                    <strong>意味：</strong>「サーバーの窓口番号」<br>
+                    <strong>標準：</strong><br>
+                    • HTTP = :80（省略可）<br>
+                    • HTTPS = :443（省略可）
+                </div>
+                <div class="part-note">
+                    通常は表示されない（自動で設定）
+                </div>
+            </div>
+            
+            <div class="part-explanation path-section">
+                <div class="part-title">
+                    📁 4. パス
+                </div>
+                <div class="part-example">/products/smartphones.html</div>
+                <div class="part-description">
+                    <strong>意味：</strong>「サーバー内の場所」<br>
+                    <strong>構造：</strong><br>
+                    • / = ルート（トップページ）<br>
+                    • /products/ = フォルダ<br>
+                    • smartphones.html = ファイル
+                </div>
+                <div class="part-note">
+                    フォルダ階層を表現（実際のファイルとは限らない）
+                </div>
+            </div>
+            
+            <div class="part-explanation query-section">
+                <div class="part-title">
+                    ❓ 5. クエリパラメータ
+                </div>
+                <div class="part-example">?color=red&size=large</div>
+                <div class="part-description">
+                    <strong>意味：</strong>「追加の条件・情報」<br>
+                    <strong>構造：</strong><br>
+                    • ? = パラメータ開始<br>
+                    • & = 複数パラメータの区切り<br>
+                    • color=red = 色の指定
+                </div>
+                <div class="part-note">
+                    検索条件、設定、オプションなどに使用
+                </div>
+            </div>
+            
+            <div class="part-explanation fragment-section">
+                <div class="part-title">
+                    🎯 6. フラグメント
+                </div>
+                <div class="part-example">#features</div>
+                <div class="part-description">
+                    <strong>意味：</strong>「ページ内の特定場所」<br>
+                    <strong>用途：</strong><br>
+                    • ページ内リンク<br>
+                    • 目次からの直接ジャンプ<br>
+                    • アンカーリンク
+                </div>
+                <div class="part-note">
+                    ページが読み込まれた後に該当箇所にスクロール
+                </div>
+            </div>
+        </div>
+        
+        <div class="real-examples">
+            <div class="examples-title">🌍 実際のURLの例</div>
+            
+            <div class="example-item">
+                <div class="example-description">
+                    <strong>Google検索の場合：</strong>
+                </div>
+                <div class="example-url">
+                    <span class="url-part protocol">https://</span><span class="url-part domain">www.google.com</span><span class="url-part path">/search</span><span class="url-part query">?q=プログラミング学習</span>
+                </div>
+            </div>
+            
+            <div class="example-item">
+                <div class="example-description">
+                    <strong>YouTubeの動画ページ：</strong>
+                </div>
+                <div class="example-url">
+                    <span class="url-part protocol">https://</span><span class="url-part domain">www.youtube.com</span><span class="url-part path">/watch</span><span class="url-part query">?v=dQw4w9WgXcQ</span><span class="url-part fragment">#t=30s</span>
+                </div>
+            </div>
+            
+            <div class="example-item">
+                <div class="example-description">
+                    <strong>オンラインショップの商品ページ：</strong>
+                </div>
+                <div class="example-url">
+                    <span class="url-part protocol">https://</span><span class="url-part domain">shop.example.jp</span><span class="url-part path">/category/electronics/laptops</span><span class="url-part query">?brand=apple&price_max=200000</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="analysis-exercise">
+            <div class="exercise-title">🧩 演習：URLを分解してみよう</div>
+            <div class="exercise-instruction">
+                以下のURLを各部分に分解してみましょう：
+            </div>
+            <div class="exercise-url">
+                https://search.yahoo.co.jp/search?p=Web開発&x=wrt#results
+            </div>
+            
+            <div class="answer-section">
+                <div class="answer-title">💡 答え：</div>
+                <div class="answer-item">• プロトコル：<code>https://</code></div>
+                <div class="answer-item">• ドメイン名：<code>search.yahoo.co.jp</code></div>
+                <div class="answer-item">• パス：<code>/search</code></div>
+                <div class="answer-item">• クエリ：<code>?p=Web開発&x=wrt</code></div>
+                <div class="answer-item">• フラグメント：<code>#results</code></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
