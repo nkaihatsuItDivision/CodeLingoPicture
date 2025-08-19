@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 10.2 - 検索フォーム設計構成図</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #28a745;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #6c757d;
+            margin-bottom: 40px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .form-design-section {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .form-design-section h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-design-section h3::before {
+            content: "📝";
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .validation-section {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(253, 126, 20, 0.3);
+        }
+
+        .validation-section h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .validation-section h3::before {
+            content: "✅";
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            margin: 10px 0;
+            padding: 8px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            border-left: 4px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .code-section {
+            margin: 30px 0;
+        }
+
+        .code-header {
+            background: #495057;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px 8px 0 0;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .code-header::before {
+            content: "💻";
+            margin-right: 10px;
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 0 0 8px 8px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            text-align: left;
+            overflow-x: auto;
+            border-left: 4px solid #28a745;
+        }
+
+        .thymeleaf-section {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+            box-shadow: 0 5px 15px rgba(23, 162, 184, 0.3);
+        }
+
+        .thymeleaf-section h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .thymeleaf-section h3::before {
+            content: "🔗";
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .architecture-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border: 2px solid #28a745;
+        }
+
+        .flow-item {
+            text-align: center;
+            flex: 1;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            margin: 0 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .flow-item h4 {
+            color: #28a745;
+            margin: 0 0 10px 0;
+            font-size: 16px;
+        }
+
+        .flow-item p {
+            color: #6c757d;
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .arrow {
+            font-size: 24px;
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .responsive-note {
+            background: #e7f3ff;
+            border-left: 4px solid #007bff;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .responsive-note h4 {
+            color: #007bff;
+            margin: 0 0 10px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .responsive-note h4::before {
+            content: "📱";
+            margin-right: 10px;
+        }
+
+        .highlight {
+            background: linear-gradient(45deg, #fff3cd, #ffeaa7);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+            margin: 20px 0;
+        }
+
+        .highlight strong {
+            color: #856404;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+            
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .architecture-flow {
+                flex-direction: column;
+            }
+            
+            .flow-item {
+                margin: 10px 0;
+            }
+            
+            .arrow {
+                transform: rotate(90deg);
+                margin: 10px 0;
+            }
+            
+            .code-example {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Week 10.2 検索フォーム設計構成図</h1>
+        <p class="subtitle">複数条件入力・Bean Validation・Thymeleafバインディングによる企業システムレベルUI実装</p>
+
+        <div class="main-content">
+            <div class="form-design-section">
+                <h3>フォーム設計要素</h3>
+                <ul class="feature-list">
+                    <li><strong>複数条件入力対応</strong><br>名前・学年・メール・検索タイプ</li>
+                    <li><strong>Bean Validation統合</strong><br>@Size, @Min/@Max, @Email</li>
+                    <li><strong>検索タイプ選択</strong><br>部分一致・完全一致切り替え</li>
+                    <li><strong>レスポンシブ対応</strong><br>モバイル・タブレット最適化</li>
+                </ul>
+            </div>
+
+            <div class="validation-section">
+                <h3>バリデーション機能</h3>
+                <ul class="feature-list">
+                    <li><strong>サーバーサイド検証</strong><br>Bean Validation @annotations</li>
+                    <li><strong>エラーメッセージ表示</strong><br>Thymeleaf th:errors統合</li>
+                    <li><strong>入力値保持</strong><br>バリデーション後の値維持</li>
+                    <li><strong>UXフィードバック</strong><br>Bootstrap invalid-feedback</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="code-section">
+            <div class="code-header">StudentSearchForm.java - Bean Validation設計</div>
+            <div class="code-example">
+@Component<br>
+public class StudentSearchForm {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Size(max = 100, message = "学生名は100文字以内で入力してください")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private String name;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Min(value = 1, message = "学年は1以上で入力してください")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Max(value = 6, message = "学年は6以下で入力してください")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private Integer grade;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Email(message = "正しいメールアドレス形式で入力してください")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private String email;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Pattern(regexp = "^(partial|exact)$", message = "検索タイプが不正です")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private String nameSearchType = "partial";<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// Week 10.1のStudentSearchCriteriaへの変換<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public StudentSearchCriteria toCriteria() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return StudentSearchCriteria.builder()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.name(this.name)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.grade(this.grade)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.email(this.email)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.nameSearchType(this.nameSearchType)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.build();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+            </div>
+        </div>
+
+        <div class="thymeleaf-section">
+            <h3>Thymeleafバインディング設計</h3>
+            <div class="code-example" style="background: #2c3e50; margin-top: 15px;">
+&lt;form th:action="@{/students/search}" th:object="${searchForm}" method="post"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="row"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;!-- 学生名入力 --&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="col-md-6"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;label class="form-label"&gt;学生名&lt;/label&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;input type="text" th:field="*{name}" <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;class="form-control" <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;placeholder="学生名を入力" /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div th:if="${#fields.hasErrors('name')}" class="invalid-feedback"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;span th:errors="*{name}"&gt;&lt;/span&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;!-- 検索タイプ選択 --&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="col-md-6"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;label class="form-label"&gt;検索タイプ&lt;/label&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="form-check-inline"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;input type="radio" th:field="*{nameSearchType}" <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value="partial" class="form-check-input" /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;label class="form-check-label"&gt;部分一致&lt;/label&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;<br>
+&lt;/form&gt;
+            </div>
+        </div>
+
+        <div class="architecture-flow">
+            <div class="flow-item">
+                <h4>フォーム設計</h4>
+                <p>Bean Validation<br>複数条件対応</p>
+            </div>
+            <div class="arrow">→</div>
+            <div class="flow-item">
+                <h4>Thymeleaf統合</h4>
+                <p>データバインディング<br>エラー表示</p>
+            </div>
+            <div class="arrow">→</div>
+            <div class="flow-item">
+                <h4>Week 10.1連携</h4>
+                <p>SearchCriteria変換<br>検索基盤活用</p>
+            </div>
+        </div>
+
+        <div class="responsive-note">
+            <h4>レスポンシブ対応設計</h4>
+            <p>Bootstrap Grid System活用により、デスクトップ（col-md-6）からモバイル（col-12）まで最適化。フォーム要素の配置・サイズ・操作性を全デバイスで確保し、企業システムレベルのUXを実現します。</p>
+        </div>
+
+        <div class="highlight">
+            <strong>Week 10.2の価値：</strong> Week 10.1の検索基盤を活用し、Bean ValidationとThymeleafを統合した企業システムレベルの検索フォームを実装。実務で即活用できる複数条件検索UI技術を習得できます。
+        </div>
+    </div>
+</body>
+</html>

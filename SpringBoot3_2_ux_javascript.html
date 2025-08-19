@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 10.2 - UX向上機能とJavaScript連携図</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #28a745;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #6c757d;
+            margin-bottom: 40px;
+        }
+
+        .ux-features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .ux-feature {
+            background: linear-gradient(135deg, #ffc107, #e0a800);
+            color: #212529;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ux-feature::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s;
+        }
+
+        .ux-feature:hover::before {
+            animation: shimmer 1.5s ease-in-out;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .ux-feature h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .realtime-validation h3::before {
+            content: "⚡";
+            margin-right: 10px;
+            font-size: 22px;
+        }
+
+        .search-type-toggle h3::before {
+            content: "🔄";
+            margin-right: 10px;
+            font-size: 22px;
+        }
+
+        .condition-reset h3::before {
+            content: "🔄";
+            margin-right: 10px;
+            font-size: 22px;
+        }
+
+        .autocomplete h3::before {
+            content: "💡";
+            margin-right: 10px;
+            font-size: 22px;
+        }
+
+        .feature-details {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .feature-benefits {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(33, 37, 41, 0.2);
+        }
+
+        .feature-benefits strong {
+            color: #495057;
+        }
+
+        .javascript-integration {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+            box-shadow: 0 5px 15px rgba(253, 126, 20, 0.3);
+        }
+
+        .javascript-integration h3 {
+            font-size: 22px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+        }
+
+        .javascript-integration h3::before {
+            content: "🟨";
+            margin-right: 10px;
+            font-size: 26px;
+        }
+
+        .js-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .js-feature {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .js-feature h4 {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .js-feature p {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        .code-section {
+            margin: 30px 0;
+        }
+
+        .code-tabs {
+            display: flex;
+            background: #495057;
+            border-radius: 8px 8px 0 0;
+            overflow: hidden;
+        }
+
+        .code-tab {
+            flex: 1;
+            padding: 12px 20px;
+            color: white;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .code-tab.realtime {
+            background: #28a745;
+        }
+
+        .code-tab.toggle {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .code-tab.ajax {
+            background: #fd7e14;
+        }
+
+        .code-tab::before {
+            margin-right: 8px;
+        }
+
+        .code-tab.realtime::before {
+            content: "⚡";
+        }
+
+        .code-tab.toggle::before {
+            content: "🔄";
+        }
+
+        .code-tab.ajax::before {
+            content: "🌐";
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 0 0 8px 8px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            text-align: left;
+            overflow-x: auto;
+            border-left: 4px solid #28a745;
+        }
+
+        .bootstrap-integration {
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+            box-shadow: 0 5px 15px rgba(111, 66, 193, 0.3);
+        }
+
+        .bootstrap-integration h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .bootstrap-integration h3::before {
+            content: "🎨";
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .bootstrap-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .bootstrap-feature {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .performance-optimization {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 2px solid #28a745;
+        }
+
+        .performance-optimization h3 {
+            color: #28a745;
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .performance-optimization h3::before {
+            content: "🚀";
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .performance-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .performance-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid #28a745;
+        }
+
+        .performance-item h4 {
+            color: #28a745;
+            margin: 0 0 10px 0;
+            font-size: 16px;
+        }
+
+        .performance-item p {
+            color: #6c757d;
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .highlight {
+            background: linear-gradient(45deg, #fff3cd, #ffeaa7);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+            margin: 20px 0;
+        }
+
+        .highlight strong {
+            color: #856404;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+            
+            .ux-features-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .js-features {
+                grid-template-columns: 1fr;
+            }
+            
+            .bootstrap-features {
+                grid-template-columns: 1fr;
+            }
+            
+            .performance-items {
+                grid-template-columns: 1fr;
+            }
+            
+            .code-tabs {
+                flex-direction: column;
+            }
+            
+            .code-example {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Week 10.2 UX向上機能とJavaScript連携図</h1>
+        <p class="subtitle">部分一致切り替え・条件リセット・リアルタイムバリデーション・Ajax連携による企業システムレベルUX実現</p>
+
+        <div class="ux-features-grid">
+            <div class="ux-feature realtime-validation">
+                <h3>リアルタイムバリデーション</h3>
+                <div class="feature-details">
+                    入力値変更時の即座フィードバック表示機能
+                    <div class="feature-benefits">
+                        <strong>メリット：</strong>ユーザーが送信前にエラーを発見・修正可能、UX大幅向上
+                    </div>
+                </div>
+            </div>
+
+            <div class="ux-feature search-type-toggle">
+                <h3>検索タイプ動的切り替え</h3>
+                <div class="feature-details">
+                    部分一致・完全一致のラジオボタン連動UI制御
+                    <div class="feature-benefits">
+                        <strong>メリット：</strong>プレースホルダー・ヘルプテキスト動的変更、直感的操作
+                    </div>
+                </div>
+            </div>
+
+            <div class="ux-feature condition-reset">
+                <h3>条件リセット・保存機能</h3>
+                <div class="feature-details">
+                    検索条件の一括クリア・ローカル保存機能
+                    <div class="feature-benefits">
+                        <strong>メリット：</strong>作業効率向上、頻用条件の再利用、操作ミス回復
+                    </div>
+                </div>
+            </div>
+
+            <div class="ux-feature autocomplete">
+                <h3>オートコンプリート</h3>
+                <div class="feature-details">
+                    既存データを活用した入力候補表示機能
+                    <div class="feature-benefits">
+                        <strong>メリット：</strong>入力時間短縮、スペルミス防止、データ一貫性向上
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="javascript-integration">
+            <h3>JavaScript統合技術</h3>
+            <div class="js-features">
+                <div class="js-feature">
+                    <h4>addEventListener活用</h4>
+                    <p>DOM要素のイベント監視<br>input, change, click等の制御</p>
+                </div>
+                <div class="js-feature">
+                    <h4>Fetch API連携</h4>
+                    <p>非同期通信によるAjax検索<br>ページ遷移なしでの結果取得</p>
+                </div>
+                <div class="js-feature">
+                    <h4>DOM操作制御</h4>
+                    <p>動的UI変更・要素表示制御<br>classList, innerHTML活用</p>
+                </div>
+                <div class="js-feature">
+                    <h4>LocalStorage活用</h4>
+                    <p>検索条件の保存・復元<br>ユーザー設定の永続化</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="code-section">
+            <div class="code-tabs">
+                <div class="code-tab realtime">リアルタイムバリデーション</div>
+                <div class="code-tab toggle">検索タイプ切り替え</div>
+                <div class="code-tab ajax">Ajax検索実装</div>
+            </div>
+            <div class="code-example">
+// リアルタイムバリデーション実装<br>
+document.addEventListener('DOMContentLoaded', function() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const nameInput = document.getElementById('name');<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const emailInput = document.getElementById('email');<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const gradeInput = document.getElementById('grade');<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 学生名のリアルタイムチェック<br>
+&nbsp;&nbsp;&nbsp;&nbsp;nameInput.addEventListener('input', function() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const value = this.value.trim();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const feedback = this.nextElementSibling;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (value.length &gt; 100) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;showValidationError(this, '学生名は100文字以内で入力してください');<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else if (value.length &gt; 0) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;showValidationSuccess(this, '入力形式が正しいです');<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;clearValidation(this);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 検索タイプ切り替え<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const searchTypeRadios = document.querySelectorAll('input[name="nameSearchType"]');<br>
+&nbsp;&nbsp;&nbsp;&nbsp;searchTypeRadios.forEach(radio =&gt; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;radio.addEventListener('change', function() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;updateSearchTypePlaceholder(this.value);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;updateHelpText(this.value);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// Ajax検索実装<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const searchForm = document.getElementById('searchForm');<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const ajaxSearchBtn = document.getElementById('ajaxSearch');<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ajaxSearchBtn.addEventListener('click', async function(e) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.preventDefault();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const formData = new FormData(searchForm);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const searchData = Object.fromEntries(formData);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;showLoadingIndicator();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const response = await fetch('/students/search', {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;method: 'POST',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;headers: { 'Content-Type': 'application/json' },<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;body: JSON.stringify(searchData)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const result = await response.json();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;updateSearchResults(result);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hideLoadingIndicator();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} catch (error) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.error('Ajax検索エラー:', error);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;showErrorMessage('検索中にエラーが発生しました');<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hideLoadingIndicator();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+});
+            </div>
+        </div>
+
+        <div class="bootstrap-integration">
+            <h3>Bootstrap CSS統合</h3>
+            <div class="bootstrap-features">
+                <div class="bootstrap-feature">
+                    <h4>is-valid/is-invalid</h4>
+                    <p>入力状態の視覚的フィードバック</p>
+                </div>
+                <div class="bootstrap-feature">
+                    <h4>form-control</h4>
+                    <p>統一された入力要素デザイン</p>
+                </div>
+                <div class="bootstrap-feature">
+                    <h4>btn-group</h4>
+                    <p>検索タイプ選択の視覚的表現</p>
+                </div>
+                <div class="bootstrap-feature">
+                    <h4>modal</h4>
+                    <p>条件保存・ヘルプ表示UI</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="performance-optimization">
+            <h3>パフォーマンス最適化</h3>
+            <div class="performance-items">
+                <div class="performance-item">
+                    <h4>デバウンス処理</h4>
+                    <p>入力頻度制御によるサーバー負荷軽減。連続入力時の無駄なリクエスト防止。</p>
+                </div>
+                <div class="performance-item">
+                    <h4>キャッシュ活用</h4>
+                    <p>検索結果の一時保存。同条件での再検索時の高速レスポンス実現。</p>
+                </div>
+                <div class="performance-item">
+                    <h4>非同期処理</h4>
+                    <p>Ajax活用によるページ遷移なし検索。ユーザー待機時間の大幅短縮。</p>
+                </div>
+                <div class="performance-item">
+                    <h4>プログレッシブ強化</h4>
+                    <p>JavaScript無効環境での基本機能保証。アクセシビリティ確保。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="highlight">
+            <strong>UX・JavaScript連携価値：</strong> リアルタイムバリデーション、動的UI制御、Ajax通信により企業システムレベルのユーザーエクスペリエンスを実現。従来のWebアプリケーションを超越した、モダンで直感的な検索インターフェースを構築できます。
+        </div>
+    </div>
+</body>
+</html>

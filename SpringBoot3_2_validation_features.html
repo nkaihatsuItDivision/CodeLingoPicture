@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 10.2 - 検索条件バリデーション機能図</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #28a745;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #6c757d;
+            margin-bottom: 40px;
+        }
+
+        .validation-layers {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .server-validation {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .client-validation {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(253, 126, 20, 0.3);
+        }
+
+        .validation-header {
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .server-validation .validation-header::before {
+            content: "🛡️";
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .client-validation .validation-header::before {
+            content: "⚡";
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .feature-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .feature-item h4 {
+            margin: 0 0 8px 0;
+            font-size: 16px;
+        }
+
+        .feature-item p {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .code-section {
+            margin: 30px 0;
+        }
+
+        .code-tabs {
+            display: flex;
+            background: #495057;
+            border-radius: 8px 8px 0 0;
+            overflow: hidden;
+        }
+
+        .code-tab {
+            flex: 1;
+            padding: 12px 20px;
+            color: white;
+            text-align: center;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .code-tab.server {
+            background: #28a745;
+        }
+
+        .code-tab.client {
+            background: #fd7e14;
+        }
+
+        .code-tab::before {
+            margin-right: 8px;
+        }
+
+        .code-tab.server::before {
+            content: "☕";
+        }
+
+        .code-tab.client::before {
+            content: "🟨";
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 0 0 8px 8px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            text-align: left;
+            overflow-x: auto;
+        }
+
+        .validation-flow {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 2px solid #28a745;
+        }
+
+        .flow-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #28a745;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .flow-title::before {
+            content: "🔄";
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .flow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .flow-step {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .flow-step::after {
+            content: "→";
+            position: absolute;
+            right: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .flow-step:last-child::after {
+            display: none;
+        }
+
+        .flow-step-number {
+            width: 30px;
+            height: 30px;
+            background: #28a745;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-weight: bold;
+        }
+
+        .flow-step h4 {
+            color: #28a745;
+            margin: 0 0 8px 0;
+            font-size: 16px;
+        }
+
+        .flow-step p {
+            color: #6c757d;
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .error-handling {
+            background: linear-gradient(135deg, #dc3545, #bd2130);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+        }
+
+        .error-handling h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .error-handling h3::before {
+            content: "🚨";
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .error-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .error-type {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .ux-feedback {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+            box-shadow: 0 5px 15px rgba(23, 162, 184, 0.3);
+        }
+
+        .ux-feedback h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .ux-feedback h3::before {
+            content: "💫";
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .highlight {
+            background: linear-gradient(45deg, #fff3cd, #ffeaa7);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+            margin: 20px 0;
+        }
+
+        .highlight strong {
+            color: #856404;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+            
+            .validation-layers {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .flow-steps {
+                grid-template-columns: 1fr;
+            }
+            
+            .flow-step::after {
+                content: "↓";
+                position: static;
+                display: block;
+                margin: 10px auto;
+                transform: none;
+            }
+            
+            .error-types {
+                grid-template-columns: 1fr;
+            }
+            
+            .code-example {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Week 10.2 検索条件バリデーション機能図</h1>
+        <p class="subtitle">Bean Validation・エラーハンドリング・リアルタイムチェック・UXフィードバックによる堅牢性確保</p>
+
+        <div class="validation-layers">
+            <div class="server-validation">
+                <h3 class="validation-header">サーバーサイドバリデーション</h3>
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <h4>Bean Validation</h4>
+                        <p>@Size, @Email, @Min/@Max等のアノテーション活用</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>@Valid統合</h4>
+                        <p>Controller層での自動バリデーション実行</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>BindingResult</h4>
+                        <p>バリデーション結果の詳細取得・制御</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>カスタムバリデーション</h4>
+                        <p>業務ロジック固有の検証ルール実装</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="client-validation">
+                <h3 class="validation-header">クライアントサイドバリデーション</h3>
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <h4>リアルタイム検証</h4>
+                        <p>入力値変更時の即座フィードバック</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>JavaScript連携</h4>
+                        <p>動的UI制御・条件切り替え対応</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>Bootstrap統合</h4>
+                        <p>is-valid/is-invalidクラス活用</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>UX最適化</h4>
+                        <p>ユーザビリティ向上・操作性改善</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="code-section">
+            <div class="code-tabs">
+                <div class="code-tab server">Controller - @Valid & BindingResult</div>
+                <div class="code-tab client">JavaScript - リアルタイムバリデーション</div>
+            </div>
+            <div class="code-example">
+@PostMapping("/search")<br>
+public String executeSearch(@Valid @ModelAttribute("searchForm") StudentSearchForm searchForm,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BindingResult bindingResult,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RedirectAttributes redirectAttributes,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Model model) {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// バリデーションエラーチェック<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (bindingResult.hasErrors()) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// エラー情報をモデルに追加<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;model.addAttribute("searchForm", searchForm);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;model.addAttribute("validationErrors", bindingResult.getAllErrors());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return "students/search"; // 検索画面に戻る<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// バリデーション成功時の処理<br>
+&nbsp;&nbsp;&nbsp;&nbsp;StudentSearchCriteria criteria = searchForm.toCriteria();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;List&lt;StudentDto&gt; results = studentSearchService.searchStudents(criteria);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// PRGパターンでリダイレクト<br>
+&nbsp;&nbsp;&nbsp;&nbsp;redirectAttributes.addFlashAttribute("searchResults", results);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return "redirect:/students/search/results";<br>
+}<br>
+<br>
+// JavaScript - リアルタイムバリデーション<br>
+document.addEventListener('DOMContentLoaded', function() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const nameInput = document.getElementById('name');<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const gradeInput = document.getElementById('grade');<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 学生名のリアルタイムチェック<br>
+&nbsp;&nbsp;&nbsp;&nbsp;nameInput.addEventListener('input', function() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const value = this.value;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (value.length &gt; 100) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;showValidationError(this, '学生名は100文字以内で入力してください');<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;showValidationSuccess(this);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+});
+            </div>
+        </div>
+
+        <div class="validation-flow">
+            <h3 class="flow-title">バリデーション実行フロー</h3>
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="flow-step-number">1</div>
+                    <h4>入力値取得</h4>
+                    <p>フォーム送信時<br>@ModelAttribute</p>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-number">2</div>
+                    <h4>Bean Validation</h4>
+                    <p>@Valid実行<br>アノテーション検証</p>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-number">3</div>
+                    <h4>結果判定</h4>
+                    <p>BindingResult<br>エラー有無確認</p>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-number">4</div>
+                    <h4>結果処理</h4>
+                    <p>成功→検索実行<br>失敗→エラー表示</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="error-handling">
+            <h3>エラーハンドリング戦略</h3>
+            <div class="error-types">
+                <div class="error-type">
+                    <h4>入力形式エラー</h4>
+                    <p><strong>対象：</strong>@Size, @Email, @Pattern<br>
+                    <strong>処理：</strong>即座にフィードバック表示<br>
+                    <strong>UX：</strong>赤色ボーダー + メッセージ</p>
+                </div>
+                <div class="error-type">
+                    <h4>範囲エラー</h4>
+                    <p><strong>対象：</strong>@Min, @Max, @Range<br>
+                    <strong>処理：</strong>許可値範囲の案内<br>
+                    <strong>UX：</strong>ヘルプテキスト表示</p>
+                </div>
+                <div class="error-type">
+                    <h4>業務ロジックエラー</h4>
+                    <p><strong>対象：</strong>カスタムValidator<br>
+                    <strong>処理：</strong>詳細説明とガイダンス<br>
+                    <strong>UX：</strong>モーダル + 修正案内</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="ux-feedback">
+            <h3>UXフィードバック機能</h3>
+            <div class="code-example" style="background: #2c3e50; margin-top: 15px;">
+&lt;!-- Thymeleaf - 動的エラー表示 --&gt;<br>
+&lt;input type="text" th:field="*{name}" <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;class="form-control" <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;th:placeholder="${nameSearchType == 'partial'} ? '部分一致で検索' : '完全一致で検索'" /&gt;<br>
+<br>
+&lt;div th:if="${#fields.hasErrors('name')}" class="invalid-feedback"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;span th:errors="*{name}"&gt;&lt;/span&gt;<br>
+&lt;/div&gt;<br>
+<br>
+&lt;!-- 成功フィードバック --&gt;<br>
+&lt;div th:unless="${#fields.hasErrors('name')}" <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;th:if="${not #strings.isEmpty(searchForm.name)}" <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;class="valid-feedback"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;入力形式が正しいです<br>
+&lt;/div&gt;
+            </div>
+        </div>
+
+        <div class="highlight">
+            <strong>Week 10.2バリデーション価値：</strong> サーバーサイド（Bean Validation + BindingResult）とクライアントサイド（JavaScript + Bootstrap）の二重防御により、企業システムレベルの堅牢性とUXを両立。実務で求められる高品質な検索機能を実装できます。
+        </div>
+    </div>
+</body>
+</html>

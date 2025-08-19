@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 10.1→10.2技術発展図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #28a745;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #6c757d;
+            margin-bottom: 40px;
+        }
+
+        .evolution-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .week-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .week-number {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: bold;
+            flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(0,123,255,0.3);
+        }
+
+        .week-number.week102 {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            box-shadow: 0 4px 15px rgba(40,167,69,0.3);
+        }
+
+        .week-content {
+            flex: 1;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #007bff;
+        }
+
+        .week-content.week102 {
+            border-left-color: #28a745;
+        }
+
+        .week-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .week-description {
+            font-size: 14px;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+
+        .tech-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px;
+        }
+
+        .tech-item {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+
+        .tech-item:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .tech-item strong {
+            color: #007bff;
+        }
+
+        .tech-item.week102 strong {
+            color: #28a745;
+        }
+
+        .evolution-arrow {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .evolution-text {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(23,162,184,0.3);
+        }
+
+        .connection-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px dashed #6c757d;
+            margin: 30px 0;
+        }
+
+        .flow-item {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .flow-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .flow-description {
+            font-size: 12px;
+            color: #6c757d;
+        }
+
+        .flow-separator {
+            font-size: 24px;
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .achievement-box {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .achievement-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .achievement-description {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+            
+            .week-section {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .week-number {
+                width: 60px;
+                height: 60px;
+                font-size: 14px;
+            }
+            
+            .tech-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .connection-flow {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Week 10.1→10.2 技術発展図</h1>
+        <p class="subtitle">検索機能基盤から検索画面実装への確実な技術進化</p>
+
+        <div class="evolution-container">
+            <!-- Week 10.1 Section -->
+            <div class="week-section">
+                <div class="week-number">
+                    Week<br>10.1
+                </div>
+                <div class="week-content">
+                    <div class="week-title">検索機能基盤：動的クエリとRepository拡張</div>
+                    <div class="week-description">サーバーサイドの検索技術基盤を完全確立</div>
+                    <div class="tech-list">
+                        <div class="tech-item">
+                            <strong>Spring Data JPA:</strong> @Query・JPQL・ネイティブクエリの実践活用
+                        </div>
+                        <div class="tech-item">
+                            <strong>動的検索条件:</strong> Criteria API・Specificationパターンの実装
+                        </div>
+                        <div class="tech-item">
+                            <strong>Repository拡張:</strong> カスタムリポジトリ・複合条件検索の実装
+                        </div>
+                        <div class="tech-item">
+                            <strong>Service層設計:</strong> Week 9アーキテクチャでの検索機能統合
+                        </div>
+                        <div class="tech-item">
+                            <strong>パフォーマンス最適化:</strong> インデックス活用・効率的クエリ設計
+                        </div>
+                        <div class="tech-item">
+                            <strong>エラーハンドリング:</strong> ServiceException・トランザクション管理
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Evolution Arrow -->
+            <div class="evolution-arrow">
+                <div class="evolution-text">
+                    🚀 検索基盤を実用化 → 企業システムレベル検索UI実装
+                </div>
+            </div>
+
+            <!-- Week 10.2 Section -->
+            <div class="week-section">
+                <div class="week-number week102">
+                    Week<br>10.2
+                </div>
+                <div class="week-content week102">
+                    <div class="week-title">検索画面作成：フォーム設計と条件入力UI</div>
+                    <div class="week-description">Week 10.1基盤を活用した実用的な検索画面実装</div>
+                    <div class="tech-list">
+                        <div class="tech-item week102">
+                            <strong>検索フォーム設計:</strong> 複数条件・Bean Validation・レスポンシブ対応
+                        </div>
+                        <div class="tech-item week102">
+                            <strong>Thymeleaf統合:</strong> フォームバインディング・動的画面生成・エラー表示
+                        </div>
+                        <div class="tech-item week102">
+                            <strong>Controller実装:</strong> Week 10.1サービス統合・PRGパターン活用
+                        </div>
+                        <div class="tech-item week102">
+                            <strong>UX向上機能:</strong> 部分一致切り替え・条件リセット・検索履歴
+                        </div>
+                        <div class="tech-item week102">
+                            <strong>JavaScript連携:</strong> リアルタイムバリデーション・Ajax・動的UI
+                        </div>
+                        <div class="tech-item week102">
+                            <strong>企業システムUI:</strong> 実務レベル検索画面・保守性・拡張性
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Connection Flow -->
+        <div class="connection-flow">
+            <div class="flow-item">
+                <div class="flow-title">検索基盤</div>
+                <div class="flow-description">動的クエリ<br>Repository拡張</div>
+            </div>
+            <div class="flow-separator">→</div>
+            <div class="flow-item">
+                <div class="flow-title">検索フォーム</div>
+                <div class="flow-description">複合条件入力<br>バリデーション</div>
+            </div>
+            <div class="flow-separator">→</div>
+            <div class="flow-item">
+                <div class="flow-title">Controller統合</div>
+                <div class="flow-description">サービス連携<br>PRGパターン</div>
+            </div>
+            <div class="flow-separator">→</div>
+            <div class="flow-item">
+                <div class="flow-title">UX機能</div>
+                <div class="flow-description">JavaScript連携<br>リアルタイム処理</div>
+            </div>
+        </div>
+
+        <!-- Achievement Box -->
+        <div class="achievement-box">
+            <div class="achievement-title">🎯 Week 10.2完了で実現される技術レベル</div>
+            <div class="achievement-description">
+                Week 10.1の検索基盤を完全に実用化し、企業システムレベルの検索画面実装技術を習得。<br>
+                Week 10.3の検索結果表示・ページネーションへの確実な基盤を構築し、<br>
+                フルスタック検索機能開発者としてのプロフェッショナル技術を完成。
+            </div>
+        </div>
+    </div>
+</body>
+</html>

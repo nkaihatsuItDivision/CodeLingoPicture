@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 10.2 - Controller統合処理図</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #28a745;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #6c757d;
+            margin-bottom: 40px;
+        }
+
+        .integration-overview {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .week-connection {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+            position: relative;
+        }
+
+        .week-connection::after {
+            content: "→";
+            position: absolute;
+            right: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 30px;
+            color: #28a745;
+            font-weight: bold;
+            background: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #28a745;
+        }
+
+        .week-connection h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .week-connection h3::before {
+            content: "🔧";
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+        .controller-layer {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .controller-layer h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .controller-layer h3::before {
+            content: "🎯";
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            margin: 8px 0;
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            border-left: 3px solid rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+        }
+
+        .processing-flow {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 2px solid #28a745;
+        }
+
+        .flow-title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: #28a745;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .flow-title::before {
+            content: "⚙️";
+            margin-right: 10px;
+            font-size: 26px;
+        }
+
+        .flow-sequence {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .flow-step {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-left: 5px solid #28a745;
+            position: relative;
+        }
+
+        .flow-step::after {
+            content: "↓";
+            position: absolute;
+            bottom: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .flow-step:last-child::after {
+            display: none;
+        }
+
+        .step-number {
+            width: 35px;
+            height: 35px;
+            background: #28a745;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .step-title {
+            color: #28a745;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .step-detail {
+            color: #6c757d;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .code-section {
+            margin: 30px 0;
+        }
+
+        .code-header {
+            background: #495057;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px 8px 0 0;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .code-header::before {
+            content: "📋";
+            margin-right: 10px;
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 0 0 8px 8px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            text-align: left;
+            overflow-x: auto;
+            border-left: 4px solid #28a745;
+        }
+
+        .prg-pattern {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+            box-shadow: 0 5px 15px rgba(23, 162, 184, 0.3);
+        }
+
+        .prg-pattern h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .prg-pattern h3::before {
+            content: "🔄";
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .prg-benefits {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .prg-benefit {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .ajax-support {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+            box-shadow: 0 5px 15px rgba(253, 126, 20, 0.3);
+        }
+
+        .ajax-support h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .ajax-support h3::before {
+            content: "⚡";
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .highlight {
+            background: linear-gradient(45deg, #fff3cd, #ffeaa7);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+            margin: 20px 0;
+        }
+
+        .highlight strong {
+            color: #856404;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+            
+            .integration-overview {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .week-connection::after {
+                content: "↓";
+                position: static;
+                display: block;
+                margin: 15px auto;
+                transform: none;
+                border: none;
+                background: none;
+                color: #28a745;
+                width: auto;
+                height: auto;
+            }
+            
+            .flow-sequence {
+                grid-template-columns: 1fr;
+            }
+            
+            .flow-step::after {
+                content: "↓";
+                position: static;
+                display: block;
+                margin: 15px auto 0;
+                transform: none;
+            }
+            
+            .prg-benefits {
+                grid-template-columns: 1fr;
+            }
+            
+            .code-example {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Week 10.2 Controller統合処理図</h1>
+        <p class="subtitle">Week 10.1サービス統合・PRGパターン・Ajax対応による企業システムレベル制御層実装</p>
+
+        <div class="integration-overview">
+            <div class="week-connection">
+                <h3>Week 10.1 基盤活用</h3>
+                <ul class="feature-list">
+                    <li>StudentSearchService統合</li>
+                    <li>StudentSearchCriteria活用</li>
+                    <li>動的クエリ機能連携</li>
+                    <li>Repository層呼び出し</li>
+                </ul>
+            </div>
+
+            <div class="controller-layer">
+                <h3>Week 10.2 Controller実装</h3>
+                <ul class="feature-list">
+                    <li>@PostMapping設計</li>
+                    <li>@Valid & BindingResult</li>
+                    <li>RedirectAttributes活用</li>
+                    <li>Ajax/非同期対応</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="processing-flow">
+            <h3 class="flow-title">Controller統合処理フロー</h3>
+            <div class="flow-sequence">
+                <div class="flow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-title">リクエスト受信</div>
+                    <div class="step-detail">
+                        @PostMapping("/search")<br>
+                        フォームデータ受信<br>
+                        @ModelAttribute binding
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-title">バリデーション実行</div>
+                    <div class="step-detail">
+                        @Valid適用<br>
+                        BindingResult確認<br>
+                        エラー処理分岐
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-title">基盤サービス呼び出し</div>
+                    <div class="step-detail">
+                        StudentSearchForm→Criteria変換<br>
+                        Week 10.1 Service活用<br>
+                        検索実行・結果取得
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-title">PRGパターン適用</div>
+                    <div class="step-detail">
+                        RedirectAttributes設定<br>
+                        Flash scope活用<br>
+                        結果画面リダイレクト
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="code-section">
+            <div class="code-header">StudentSearchController.java - Week 10.1/10.2統合実装</div>
+            <div class="code-example">
+@Controller<br>
+@RequestMapping("/students")<br>
+@Slf4j<br>
+public class StudentSearchController {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Autowired<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private StudentSearchService studentSearchService; // Week 10.1基盤サービス<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@GetMapping("/search")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public String showSearchForm(Model model) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;model.addAttribute("searchForm", new StudentSearchForm());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return "students/search";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@PostMapping("/search")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public String executeSearch(@Valid @ModelAttribute("searchForm") StudentSearchForm searchForm,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BindingResult bindingResult,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RedirectAttributes redirectAttributes,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Model model) {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;log.info("検索リクエスト受信: {}", searchForm);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// バリデーションエラーチェック<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (bindingResult.hasErrors()) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;log.warn("バリデーションエラー: {}", bindingResult.getAllErrors());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;model.addAttribute("searchForm", searchForm);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return "students/search"; // エラー時は検索画面に戻る<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Week 10.1基盤サービス活用<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;StudentSearchCriteria criteria = searchForm.toCriteria();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;List&lt;StudentDto&gt; searchResults = studentSearchService.searchStudents(criteria);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;log.info("検索完了: {}件のデータを取得", searchResults.size());<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// PRGパターン適用<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;redirectAttributes.addFlashAttribute("searchResults", searchResults);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;redirectAttributes.addFlashAttribute("searchCriteria", criteria);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;redirectAttributes.addFlashAttribute("resultCount", searchResults.size());<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return "redirect:/students/search/results";<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} catch (Exception e) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;log.error("検索処理中にエラーが発生", e);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;model.addAttribute("errorMessage", "検索処理中にエラーが発生しました");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return "students/search";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+            </div>
+        </div>
+
+        <div class="prg-pattern">
+            <h3>PRGパターン（Post-Redirect-Get）実装</h3>
+            <div class="prg-benefits">
+                <div class="prg-benefit">
+                    <h4>重複送信防止</h4>
+                    <p>ブラウザ戻るボタンやF5更新での重複検索防止</p>
+                </div>
+                <div class="prg-benefit">
+                    <h4>URL状態管理</h4>
+                    <p>検索結果画面の独立したURL提供</p>
+                </div>
+                <div class="prg-benefit">
+                    <h4>データ保持</h4>
+                    <p>RedirectAttributesによるFlash scope活用</p>
+                </div>
+                <div class="prg-benefit">
+                    <h4>UX向上</h4>
+                    <p>ブックマーク可能な結果画面</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="ajax-support">
+            <h3>Ajax対応・非同期処理サポート</h3>
+            <div class="code-example" style="background: #2c3e50; margin-top: 15px;">
+@PostMapping(value = "/search", produces = "application/json")<br>
+@ResponseBody<br>
+public ResponseEntity&lt;SearchResultResponse&gt; executeSearchAjax(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Valid @RequestBody StudentSearchForm searchForm,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BindingResult bindingResult) {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (bindingResult.hasErrors()) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return ResponseEntity.badRequest()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.body(SearchResultResponse.error(bindingResult.getAllErrors()));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// Week 10.1サービス活用<br>
+&nbsp;&nbsp;&nbsp;&nbsp;StudentSearchCriteria criteria = searchForm.toCriteria();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;List&lt;StudentDto&gt; results = studentSearchService.searchStudents(criteria);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return ResponseEntity.ok(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SearchResultResponse.success(results, criteria));<br>
+}<br>
+<br>
+// JavaScript - Ajax検索実装<br>
+async function executeAjaxSearch() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const formData = new FormData(document.getElementById('searchForm'));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const searchData = Object.fromEntries(formData);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;try {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const response = await fetch('/students/search', {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;method: 'POST',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;headers: { 'Content-Type': 'application/json' },<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;body: JSON.stringify(searchData)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const result = await response.json();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;updateSearchResults(result);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;} catch (error) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.error('検索エラー:', error);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+            </div>
+        </div>
+
+        <div class="highlight">
+            <strong>Controller統合価値：</strong> Week 10.1の検索基盤をWeek 10.2のController層で統合活用し、PRGパターンとAjax対応により企業システムレベルの制御層を実装。バリデーション・検索実行・結果表示の全工程を連携制御できます。
+        </div>
+    </div>
+</body>
+</html>

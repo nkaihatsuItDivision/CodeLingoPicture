@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 10全体進捗管理図</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #28a745;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #6c757d;
+            margin-bottom: 40px;
+        }
+
+        .progress-overview {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(44, 62, 80, 0.3);
+        }
+
+        .overview-title {
+            font-size: 24px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overview-title::before {
+            content: "📊";
+            margin-right: 15px;
+            font-size: 28px;
+        }
+
+        .overview-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        .week-timeline {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .week-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .week-item {
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .week-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .week-10-1 {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+        }
+
+        .week-10-2 {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            border: 3px solid #ffd700;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2), 0 0 20px rgba(255, 215, 0, 0.4);
+        }
+
+        .week-10-3, .week-10-4 {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+        }
+
+        .week-10-5, .week-10-6 {
+            background: linear-gradient(135deg, #dc3545, #bd2130);
+        }
+
+        .week-10-7, .week-10-8 {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+        }
+
+        .week-10-9, .week-10-10 {
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+        }
+
+        .week-number {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .week-title {
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .week-status {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            display: inline-block;
+        }
+
+        .week-10-2::before {
+            content: "🏆 進行中";
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ffd700;
+            color: #2c3e50;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .phase-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .phase-section {
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid;
+        }
+
+        .search-foundation {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border-left-color: #007bff;
+        }
+
+        .search-implementation {
+            background: linear-gradient(135deg, #e8f5e8, #c8e6c9);
+            border-left-color: #28a745;
+        }
+
+        .delete-features {
+            background: linear-gradient(135deg, #ffebee, #ffcdd2);
+            border-left-color: #dc3545;
+        }
+
+        .advanced-features {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            border-left-color: #fd7e14;
+        }
+
+        .optimization {
+            background: linear-gradient(135deg, #f3e5f5, #e1bee7);
+            border-left-color: #6f42c1;
+        }
+
+        .phase-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .phase-weeks {
+            font-size: 14px;
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+
+        .phase-description {
+            font-size: 14px;
+            color: #495057;
+            line-height: 1.5;
+        }
+
+        .current-milestone {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 40px 0;
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .current-milestone::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .milestone-title {
+            font-size: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .milestone-title::before {
+            content: "🎯";
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .milestone-achievements {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .achievement {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .achievement h4 {
+            margin: 0 0 8px 0;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .achievement p {
+            margin: 0;
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .next-steps {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 40px 0;
+            border: 2px solid #28a745;
+        }
+
+        .next-title {
+            color: #28a745;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .next-title::before {
+            content: "🚀";
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .next-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .next-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid #28a745;
+        }
+
+        .next-item h4 {
+            color: #28a745;
+            margin: 0 0 10px 0;
+            font-size: 16px;
+        }
+
+        .next-item p {
+            color: #6c757d;
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .highlight {
+            background: linear-gradient(45deg, #fff3cd, #ffeaa7);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+            margin: 30px 0;
+        }
+
+        .highlight strong {
+            color: #856404;
+            font-size: 18px;
+        }
+
+        .highlight p {
+            color: #856404;
+            margin: 10px 0 0 0;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+            
+            .week-timeline {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .week-group {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            
+            .overview-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .phase-sections {
+                grid-template-columns: 1fr;
+            }
+            
+            .milestone-achievements {
+                grid-template-columns: 1fr;
+            }
+            
+            .next-items {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Week 10全体進捗管理図</h1>
+        <p class="subtitle">Week 10.1-10.10の全体進捗・10.2の位置づけ・検索・削除機能完成への段階的実装</p>
+
+        <div class="progress-overview">
+            <h2 class="overview-title">Week 10 総合進捗状況</h2>
+            <p>検索・削除機能を軸とした企業システムレベル機能実装の完全マスター</p>
+            <div class="overview-stats">
+                <div class="stat">
+                    <div class="stat-value">10</div>
+                    <div class="stat-label">週間カリキュラム</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">2/10</div>
+                    <div class="stat-label">完了週数</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">20%</div>
+                    <div class="stat-label">全体進捗率</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">5</div>
+                    <div class="stat-label">主要フェーズ</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="week-timeline">
+            <div class="week-group">
+                <div class="week-item week-10-1">
+                    <div class="week-number">Week 10.1</div>
+                    <div class="week-title">検索機能基盤</div>
+                    <div class="week-status">✅ 完了</div>
+                </div>
+                <div class="week-item week-10-2">
+                    <div class="week-number">Week 10.2</div>
+                    <div class="week-title">検索画面作成</div>
+                    <div class="week-status">🔥 進行中</div>
+                </div>
+            </div>
+
+            <div class="week-group">
+                <div class="week-item week-10-3">
+                    <div class="week-number">Week 10.3</div>
+                    <div class="week-title">検索結果表示</div>
+                    <div class="week-status">⏳ 待機中</div>
+                </div>
+                <div class="week-item week-10-4">
+                    <div class="week-number">Week 10.4</div>
+                    <div class="week-title">ページネーション</div>
+                    <div class="week-status">⏳ 待機中</div>
+                </div>
+            </div>
+
+            <div class="week-group">
+                <div class="week-item week-10-5">
+                    <div class="week-number">Week 10.5</div>
+                    <div class="week-title">削除機能基盤</div>
+                    <div class="week-status">📋 予定</div>
+                </div>
+                <div class="week-item week-10-6">
+                    <div class="week-number">Week 10.6</div>
+                    <div class="week-title">削除UI実装</div>
+                    <div class="week-status">📋 予定</div>
+                </div>
+            </div>
+
+            <div class="week-group">
+                <div class="week-item week-10-7">
+                    <div class="week-number">Week 10.7</div>
+                    <div class="week-title">高度検索機能</div>
+                    <div class="week-status">🔮 構想中</div>
+                </div>
+                <div class="week-item week-10-8">
+                    <div class="week-number">Week 10.8</div>
+                    <div class="week-title">一括操作機能</div>
+                    <div class="week-status">🔮 構想中</div>
+                </div>
+            </div>
+
+            <div class="week-group">
+                <div class="week-item week-10-9">
+                    <div class="week-number">Week 10.9</div>
+                    <div class="week-title">パフォーマンス最適化</div>
+                    <div class="week-status">💎 上級</div>
+                </div>
+                <div class="week-item week-10-10">
+                    <div class="week-number">Week 10.10</div>
+                    <div class="week-title">総合テスト・デプロイ</div>
+                    <div class="week-status">💎 上級</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="phase-sections">
+            <div class="phase-section search-foundation">
+                <div class="phase-title">検索基盤フェーズ</div>
+                <div class="phase-weeks">Week 10.1-10.2</div>
+                <div class="phase-description">
+                    動的検索クエリ・Repository拡張からUI実装まで、検索機能の土台となる技術を完全習得。Bean ValidationとThymeleaf統合による堅牢な検索システム基盤を構築。
+                </div>
+            </div>
+
+            <div class="phase-section search-implementation">
+                <div class="phase-title">検索実装フェーズ</div>
+                <div class="phase-weeks">Week 10.3-10.4</div>
+                <div class="phase-description">
+                    検索結果表示・ページネーション・ソート機能実装により、企業システムレベルの完全な検索機能を実現。大量データ処理と UX最適化を両立。
+                </div>
+            </div>
+
+            <div class="phase-section delete-features">
+                <div class="phase-title">削除機能フェーズ</div>
+                <div class="phase-weeks">Week 10.5-10.6</div>
+                <div class="phase-description">
+                    安全な削除機能実装。確認ダイアログ・論理削除・物理削除の使い分け、削除権限制御など、実務で必須となる削除機能の完全実装。
+                </div>
+            </div>
+
+            <div class="phase-section advanced-features">
+                <div class="phase-title">高度機能フェーズ</div>
+                <div class="phase-weeks">Week 10.7-10.8</div>
+                <div class="phase-description">
+                    高度検索機能・一括操作・エクスポート機能など、企業システムで求められる上級機能を実装。ユーザビリティと業務効率を最大化。
+                </div>
+            </div>
+
+            <div class="phase-section optimization">
+                <div class="phase-title">最適化フェーズ</div>
+                <div class="phase-weeks">Week 10.9-10.10</div>
+                <div class="phase-description">
+                    パフォーマンス最適化・セキュリティ強化・テスト実装・デプロイ準備まで、プロダクション環境で通用する品質へ完成度を高める。
+                </div>
+            </div>
+        </div>
+
+        <div class="current-milestone">
+            <h3 class="milestone-title">Week 10.2 現在の達成マイルストーン</h3>
+            <div class="milestone-achievements">
+                <div class="achievement">
+                    <h4>検索フォーム設計完了</h4>
+                    <p>Bean Validation・Thymeleaf統合による堅牢な入力システム</p>
+                </div>
+                <div class="achievement">
+                    <h4>バリデーション機能実装</h4>
+                    <p>サーバー・クライアント二重防御システム構築</p>
+                </div>
+                <div class="achievement">
+                    <h4>Controller統合処理</h4>
+                    <p>Week 10.1サービスとの完全連携・PRGパターン適用</p>
+                </div>
+                <div class="achievement">
+                    <h4>JavaScript UX向上</h4>
+                    <p>リアルタイムバリデーション・Ajax・動的UI制御</p>
+                </div>
+                <div class="achievement">
+                    <h4>レスポンシブ対応</h4>
+                    <p>全デバイス最適化・企業システムレベルUX実現</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="next-steps">
+            <h3 class="next-title">次のステップ - Week 10.3への道筋</h3>
+            <div class="next-items">
+                <div class="next-item">
+                    <h4>検索結果表示システム</h4>
+                    <p>Week 10.2の検索基盤を活用し、動的テーブル・ソート機能による結果表示システムを構築</p>
+                </div>
+                <div class="next-item">
+                    <h4>ページネーション実装</h4>
+                    <p>Spring Data Pageable活用による効率的データ分割・ナビゲーション機能の実装</p>
+                </div>
+                <div class="next-item">
+                    <h4>パフォーマンス最適化</h4>
+                    <p>大量データ対応・遅延読み込み・部分更新によるレスポンス性能向上</p>
+                </div>
+                <div class="next-item">
+                    <h4>Week 10.4への準備</h4>
+                    <p>Week 10.3で完成する検索機能をベースとした、さらなる機能拡張の土台構築</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="highlight">
+            <strong>Week 10全体進捗の戦略的価値</strong>
+            <p>
+                Week 10は単なる機能実装ではなく、企業システム開発の核となる検索・削除機能を段階的に完全習得するための戦略的カリキュラムです。
+                Week 10.2で確立した検索UI基盤は、残り8週間の学習すべての土台となり、最終的には実務で即戦力として活躍できる
+                フルスタック開発力・システム設計力・問題解決能力を総合的に獲得できます。
+                現在の20%進捗から100%完成まで、着実な技術向上と実用価値の最大化を実現していきます。
+            </p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 10.2-10.3 ロードマップ図</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #28a745;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #6c757d;
+            margin-bottom: 40px;
+        }
+
+        .roadmap-header {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .roadmap-header h3 {
+            font-size: 22px;
+            margin: 0 0 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .roadmap-header h3::before {
+            content: "🚀";
+            margin-right: 10px;
+            font-size: 26px;
+        }
+
+        .roadmap-flow {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 30px;
+            align-items: start;
+            margin: 40px 0;
+        }
+
+        .week-section {
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .week-10-2 {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+        }
+
+        .week-10-3 {
+            background: linear-gradient(135deg, #20c997, #1aa179);
+            color: white;
+        }
+
+        .week-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .week-title::before {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .week-10-2 .week-title::before {
+            content: "📝";
+        }
+
+        .week-10-3 .week-title::before {
+            content: "📊";
+        }
+
+        .week-achievements {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .week-achievements li {
+            margin: 12px 0;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            border-left: 4px solid rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+        }
+
+        .connection-arrow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 0;
+        }
+
+        .arrow-icon {
+            font-size: 40px;
+            color: #28a745;
+            margin: 10px 0;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .connection-text {
+            background: #28a745;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .technology-bridge {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 2px solid #28a745;
+        }
+
+        .bridge-title {
+            color: #28a745;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .bridge-title::before {
+            content: "🌉";
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .bridge-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .bridge-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid #28a745;
+        }
+
+        .bridge-item h4 {
+            color: #28a745;
+            margin: 0 0 10px 0;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .bridge-item h4::before {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+
+        .bridge-item.search-form h4::before {
+            content: "📝";
+        }
+
+        .bridge-item.result-display h4::before {
+            content: "📊";
+        }
+
+        .bridge-item.pagination h4::before {
+            content: "📄";
+        }
+
+        .bridge-item.performance h4::before {
+            content: "⚡";
+        }
+
+        .bridge-item p {
+            color: #6c757d;
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .implementation-timeline {
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+            box-shadow: 0 5px 15px rgba(111, 66, 193, 0.3);
+        }
+
+        .timeline-title {
+            font-size: 20px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+        }
+
+        .timeline-title::before {
+            content: "⏱️";
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .timeline-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .timeline-step {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid rgba(255, 255, 255, 0.5);
+            text-align: center;
+        }
+
+        .step-week {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #ffc107;
+        }
+
+        .step-focus {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .step-time {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .benefits-section {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+            box-shadow: 0 5px 15px rgba(253, 126, 20, 0.3);
+        }
+
+        .benefits-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .benefits-title::before {
+            content: "🎯";
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .benefit-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .benefit-item h4 {
+            margin: 0 0 8px 0;
+            font-size: 16px;
+        }
+
+        .benefit-item p {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .highlight {
+            background: linear-gradient(45deg, #fff3cd, #ffeaa7);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+            margin: 20px 0;
+        }
+
+        .highlight strong {
+            color: #856404;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+            
+            .roadmap-flow {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .connection-arrow {
+                order: 0;
+                padding: 10px 0;
+            }
+            
+            .arrow-icon {
+                transform: rotate(90deg);
+                font-size: 30px;
+            }
+            
+            .week-10-2 {
+                order: 1;
+            }
+            
+            .week-10-3 {
+                order: 2;
+            }
+            
+            .bridge-items {
+                grid-template-columns: 1fr;
+            }
+            
+            .timeline-steps {
+                grid-template-columns: 1fr;
+            }
+            
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Week 10.2-10.3 ロードマップ図</h1>
+        <p class="subtitle">検索画面完成から検索結果表示・ページネーション基盤への発展的実装フロー</p>
+
+        <div class="roadmap-header">
+            <h3>検索機能完全制覇への道筋</h3>
+            <p>Week 10.2で構築した検索UI基盤をWeek 10.3で検索結果表示・ページネーション機能へ発展させ、企業システムレベルの完全な検索機能を実現</p>
+        </div>
+
+        <div class="roadmap-flow">
+            <div class="week-section week-10-2">
+                <h3 class="week-title">Week 10.2 完成成果</h3>
+                <ul class="week-achievements">
+                    <li><strong>検索フォーム設計完了</strong><br>Bean Validation & Thymeleaf統合</li>
+                    <li><strong>バリデーション機能実装</strong><br>リアルタイム & サーバーサイド</li>
+                    <li><strong>Controller統合処理</strong><br>Week 10.1サービス活用・PRGパターン</li>
+                    <li><strong>JavaScript UX向上</strong><br>動的制御・Ajax対応・条件切り替え</li>
+                    <li><strong>レスポンシブ対応</strong><br>全デバイス最適化完了</li>
+                </ul>
+            </div>
+
+            <div class="connection-arrow">
+                <div class="arrow-icon">🚀</div>
+                <div class="connection-text">発展実装</div>
+            </div>
+
+            <div class="week-section week-10-3">
+                <h3 class="week-title">Week 10.3 目標達成</h3>
+                <ul class="week-achievements">
+                    <li><strong>検索結果表示システム</strong><br>動的テーブル・ソート機能</li>
+                    <li><strong>ページネーション実装</strong><br>効率的データ分割・ナビゲーション</li>
+                    <li><strong>結果フィルタリング</strong><br>検索後の絞り込み・並び替え</li>
+                    <li><strong>パフォーマンス最適化</strong><br>大量データ対応・遅延読み込み</li>
+                    <li><strong>エクスポート機能</strong><br>CSV・Excel出力対応</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="technology-bridge">
+            <h3 class="bridge-title">Week 10.2→10.3 技術連携ポイント</h3>
+            <div class="bridge-items">
+                <div class="bridge-item search-form">
+                    <h4>検索フォーム基盤活用</h4>
+                    <p>Week 10.2のStudentSearchFormとバリデーション機能をWeek 10.3の結果表示で継続活用。検索条件の保持・再検索機能を実現。</p>
+                </div>
+                <div class="bridge-item result-display">
+                    <h4>結果表示システム構築</h4>
+                    <p>Week 10.1の検索サービス結果を動的テーブルで表示。ソート・フィルタリング・詳細表示機能を追加実装。</p>
+                </div>
+                <div class="bridge-item pagination">
+                    <h4>ページネーション統合</h4>
+                    <p>大量検索結果の効率的表示。Spring Data Pageable活用により、パフォーマンスを維持した分割表示を実現。</p>
+                </div>
+                <div class="bridge-item performance">
+                    <h4>パフォーマンス強化</h4>
+                    <p>Week 10.2のAjax機能を拡張し、ページング・ソート時の部分更新を実装。ユーザー体験の大幅向上。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="implementation-timeline">
+            <h3 class="timeline-title">実装タイムライン</h3>
+            <div class="timeline-steps">
+                <div class="timeline-step">
+                    <div class="step-week">Week 10.2 完成</div>
+                    <div class="step-focus">検索UI基盤確立</div>
+                    <div class="step-time">約70-80分</div>
+                </div>
+                <div class="timeline-step">
+                    <div class="step-week">Week 10.3 前半</div>
+                    <div class="step-focus">結果表示システム</div>
+                    <div class="step-time">約40分</div>
+                </div>
+                <div class="timeline-step">
+                    <div class="step-week">Week 10.3 後半</div>
+                    <div class="step-focus">ページネーション</div>
+                    <div class="step-time">約40分</div>
+                </div>
+                <div class="timeline-step">
+                    <div class="step-week">Week 10.3 完成</div>
+                    <div class="step-focus">最適化・統合テスト</div>
+                    <div class="step-time">約20分</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="benefits-section">
+            <h3 class="benefits-title">Week 10.2→10.3 発展による獲得価値</h3>
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <h4>完全な検索システム</h4>
+                    <p>入力→検索→結果表示→ページングまでの企業システム完全実装</p>
+                </div>
+                <div class="benefit-item">
+                    <h4>実務即戦力技術</h4>
+                    <p>現場で即活用できるフルスタック検索機能開発スキル</p>
+                </div>
+                <div class="benefit-item">
+                    <h4>UX設計能力</h4>
+                    <p>ユーザー視点での使いやすさを追求した機能設計力</p>
+                </div>
+                <div class="benefit-item">
+                    <h4>パフォーマンス意識</h4>
+                    <p>大量データ処理における効率的実装手法の習得</p>
+                </div>
+                <div class="benefit-item">
+                    <h4>アーキテクチャ理解</h4>
+                    <p>フロントエンド・バックエンド統合設計の深い理解</p>
+                </div>
+                <div class="benefit-item">
+                    <h4>保守性重視</h4>
+                    <p>拡張・メンテナンスしやすいコード構造設計力</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="highlight">
+            <strong>Week 10.2→10.3 ロードマップ価値：</strong> Week 10.2で確立した検索UI基盤をWeek 10.3の結果表示・ページネーション機能へ発展させることで、企業システムレベルの完全な検索機能を段階的に構築。実務で即活用できる実装スキルと設計思想を体系的に習得できます。
+        </div>
+    </div>
+</body>
+</html>
