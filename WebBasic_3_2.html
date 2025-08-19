@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>レストランの注文とHTTPリクエストの対比</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 1000px;
+            text-align: center;
+        }
+        
+        .title {
+            color: #333;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 40px;
+        }
+        
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .scenario {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 20px;
+            padding: 30px;
+        }
+        
+        .scenario-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .restaurant-title {
+            color: #e17055;
+        }
+        
+        .web-title {
+            color: #0984e3;
+        }
+        
+        .scene {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .scene-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .character {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .character-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            margin-bottom: 5px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .customer-icon {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+        }
+        
+        .waiter-icon {
+            background: linear-gradient(135deg, #fd79a8, #e84393);
+        }
+        
+        .browser-icon {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+        
+        .server-icon {
+            background: linear-gradient(135deg, #00b894, #00cec9);
+        }
+        
+        .character-label {
+            font-size: 12px;
+            color: #666;
+            font-weight: bold;
+        }
+        
+        .communication-arrow {
+            font-size: 24px;
+            color: #666;
+        }
+        
+        .request-details {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        
+        .detail-item {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            font-size: 13px;
+        }
+        
+        .detail-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 10px;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        
+        .restaurant-detail {
+            background: #ffeaa7;
+            color: #d63031;
+        }
+        
+        .web-detail {
+            background: #81ecec;
+            color: #00b894;
+        }
+        
+        .detail-text {
+            flex: 1;
+            text-align: left;
+        }
+        
+        .mapping-table {
+            background: #ffffff;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .mapping-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .mapping-grid {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .mapping-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #e9ecef;
+            text-align: center;
+        }
+        
+        .restaurant-item {
+            border-left: 4px solid #e17055;
+        }
+        
+        .web-item {
+            border-left: 4px solid #0984e3;
+        }
+        
+        .mapping-arrow {
+            color: #666;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .item-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .restaurant-color { color: #e17055; }
+        .web-color { color: #0984e3; }
+        
+        .item-description {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.3;
+        }
+        
+        .detailed-comparison {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .comparison-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .comparison-rows {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .comparison-row {
+            display: grid;
+            grid-template-columns: 200px 1fr 1fr;
+            gap: 15px;
+            align-items: start;
+        }
+        
+        .aspect-label {
+            background: #ffffff;
+            border: 2px solid #e9ecef;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            text-align: center;
+            color: #333;
+        }
+        
+        .restaurant-example, .web-example {
+            background: #ffffff;
+            border: 1px solid #e9ecef;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        
+        .restaurant-example {
+            border-left: 4px solid #e17055;
+        }
+        
+        .web-example {
+            border-left: 4px solid #0984e3;
+        }
+        
+        .example-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .example-content {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        .example-code {
+            background: #f5f5f5;
+            font-family: 'Courier New', monospace;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            margin-top: 5px;
+        }
+        
+        .conclusion {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+        
+        .conclusion-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .conclusion-text {
+            font-size: 16px;
+            line-height: 1.5;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">🍽️ レストランの注文 ≒ HTTPリクエスト</div>
+        
+        <div class="comparison-container">
+            <div class="scenario">
+                <div class="scenario-title restaurant-title">
+                    🍽️ レストランでの注文
+                </div>
+                
+                <div class="scene">
+                    <div class="scene-header">
+                        <div class="character">
+                            <div class="character-icon customer-icon">👤</div>
+                            <div class="character-label">お客さん</div>
+                        </div>
+                        <div class="communication-arrow">→</div>
+                        <div class="character">
+                            <div class="character-icon waiter-icon">🧑‍💼</div>
+                            <div class="character-label">ウェイター</div>
+                        </div>
+                    </div>
+                    
+                    <div class="request-details">
+                        <div class="detail-item">
+                            <div class="detail-icon restaurant-detail">🍔</div>
+                            <div class="detail-text">「ハンバーガーセットをください」</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-icon restaurant-detail">🏪</div>
+                            <div class="detail-text">「○○レストランで」</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-icon restaurant-detail">🪑</div>
+                            <div class="detail-text">「座席番号5番の客です」</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-icon restaurant-detail">🌶️</div>
+                            <div class="detail-text">「辛い物は苦手です」</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-icon restaurant-detail">💳</div>
+                            <div class="detail-text">「クレジットカードで支払います」</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="scenario">
+                <div class="scenario-title web-title">
+                    💻 Webでのリクエスト
+                </div>
+                
+                <div class="scene">
+                    <div class="scene-header">
+                        <div class="character">
+                            <div class="character-icon browser-icon">💻</div>
+                            <div class="character-label">ブラウザ</div>
+                        </div>
+                        <div class="communication-arrow">→</div>
+                        <div class="character">
+                            <div class="character-icon server-icon">🖥️</div>
+                            <div class="character-label">サーバー</div>
+                        </div>
+                    </div>
+                    
+                    <div class="request-details">
+                        <div class="detail-item">
+                            <div class="detail-icon web-detail">📄</div>
+                            <div class="detail-text">「smartphones.htmlをください」</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-icon web-detail">🌐</div>
+                            <div class="detail-text">「www.example.comで」</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-icon web-detail">🔧</div>
+                            <div class="detail-text">「Chromeブラウザです」</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-icon web-detail">🌍</div>
+                            <div class="detail-text">「日本語対応希望」</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-icon web-detail">🍪</div>
+                            <div class="detail-text">「Cookieがあります」</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mapping-table">
+            <div class="mapping-title">🔄 詳細な対応関係</div>
+            
+            <div class="mapping-grid">
+                <div class="mapping-item restaurant-item">
+                    <div class="item-title restaurant-color">何が欲しいか</div>
+                    <div class="item-description">「ハンバーガーセットを」</div>
+                </div>
+                <div class="mapping-arrow">⇔</div>
+                <div class="mapping-item web-item">
+                    <div class="item-title web-color">何が欲しいか</div>
+                    <div class="item-description">「smartphones.htmlを」</div>
+                </div>
+            </div>
+            
+            <div class="mapping-grid">
+                <div class="mapping-item restaurant-item">
+                    <div class="item-title restaurant-color">どこの店か</div>
+                    <div class="item-description">「○○レストランで」</div>
+                </div>
+                <div class="mapping-arrow">⇔</div>
+                <div class="mapping-item web-item">
+                    <div class="item-title web-color">どこのサーバーか</div>
+                    <div class="item-description">「www.example.comで」</div>
+                </div>
+            </div>
+            
+            <div class="mapping-grid">
+                <div class="mapping-item restaurant-item">
+                    <div class="item-title restaurant-color">自分の情報</div>
+                    <div class="item-description">「座席番号5番の客です」</div>
+                </div>
+                <div class="mapping-arrow">⇔</div>
+                <div class="mapping-item web-item">
+                    <div class="item-title web-color">自分の情報</div>
+                    <div class="item-description">「Chromeブラウザです」</div>
+                </div>
+            </div>
+            
+            <div class="mapping-grid">
+                <div class="mapping-item restaurant-item">
+                    <div class="item-title restaurant-color">好み・制限</div>
+                    <div class="item-description">「辛い物は苦手です」</div>
+                </div>
+                <div class="mapping-arrow">⇔</div>
+                <div class="mapping-item web-item">
+                    <div class="item-title web-color">好み・制限</div>
+                    <div class="item-description">「日本語対応希望」</div>
+                </div>
+            </div>
+            
+            <div class="mapping-grid">
+                <div class="mapping-item restaurant-item">
+                    <div class="item-title restaurant-color">支払い方法</div>
+                    <div class="item-description">「クレジットカードで」</div>
+                </div>
+                <div class="mapping-arrow">⇔</div>
+                <div class="mapping-item web-item">
+                    <div class="item-title web-color">認証情報</div>
+                    <div class="item-description">「Cookieがあります」</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="detailed-comparison">
+            <div class="comparison-title">📋 具体的な比較例</div>
+            
+            <div class="comparison-rows">
+                <div class="comparison-row">
+                    <div class="aspect-label">
+                        何を注文するか<br>
+                        何を要求するか
+                    </div>
+                    <div class="restaurant-example">
+                        <div class="example-title restaurant-color">レストランの場合</div>
+                        <div class="example-content">
+                            「ハンバーガーセット、ドリンクはコーラで、<br>
+                            サイドメニューはポテトでお願いします」
+                        </div>
+                    </div>
+                    <div class="web-example">
+                        <div class="example-title web-color">Webリクエストの場合</div>
+                        <div class="example-content">
+                            <div class="example-code">GET /products/smartphones.html HTTP/1.1</div>
+                            「smartphones.htmlページを取得してください」
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="comparison-row">
+                    <div class="aspect-label">
+                        どこで注文するか<br>
+                        どこに要求するか
+                    </div>
+                    <div class="restaurant-example">
+                        <div class="example-title restaurant-color">レストランの場合</div>
+                        <div class="example-content">
+                            「○○レストラン渋谷店で注文します」<br>
+                            店舗の場所を特定
+                        </div>
+                    </div>
+                    <div class="web-example">
+                        <div class="example-title web-color">Webリクエストの場合</div>
+                        <div class="example-content">
+                            <div class="example-code">Host: www.example.com</div>
+                            「example.comサーバーに要求します」
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="comparison-row">
+                    <div class="aspect-label">
+                        自己紹介<br>
+                        身元の特定
+                    </div>
+                    <div class="restaurant-example">
+                        <div class="example-title restaurant-color">レストランの場合</div>
+                        <div class="example-content">
+                            「座席番号5番のお客様です」<br>
+                            「会員カード持参しています」
+                        </div>
+                    </div>
+                    <div class="web-example">
+                        <div class="example-title web-color">Webリクエストの場合</div>
+                        <div class="example-content">
+                            <div class="example-code">User-Agent: Mozilla/5.0 Chrome/120.0</div>
+                            「Chromeブラウザを使っています」
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="conclusion">
+            <div class="conclusion-title">💡 なぜこの比較が重要？</div>
+            <div class="conclusion-text">
+                レストランでの注文も、Webでのリクエストも<br>
+                「詳細で正確な情報のやり取り」という点で同じです。<br><br>
+                適切な情報を伝えることで、相手（ウェイター/サーバー）が<br>
+                期待通りの結果（料理/Webページ）を提供してくれるのです。
+            </div>
+        </div>
+    </div>
+</body>
+</html>

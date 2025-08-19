@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GET vs POST 比較チャート</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 1000px;
+            text-align: center;
+        }
+        
+        .title {
+            color: #333;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 40px;
+        }
+        
+        .overview-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .method-overview {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 25px;
+        }
+        
+        .method-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .method-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .get-icon {
+            background: linear-gradient(135deg, #0984e3, #74b9ff);
+        }
+        
+        .post-icon {
+            background: linear-gradient(135deg, #00b894, #00cec9);
+        }
+        
+        .method-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .get-title { color: #0984e3; }
+        .post-title { color: #00b894; }
+        
+        .method-purpose {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .method-characteristics {
+            text-align: left;
+        }
+        
+        .characteristic-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 8px 0;
+            font-size: 14px;
+        }
+        
+        .characteristic-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+        
+        .get-characteristic {
+            background: #e3f2fd;
+            color: #0984e3;
+        }
+        
+        .post-characteristic {
+            background: #e8f5e8;
+            color: #00b894;
+        }
+        
+        .comparison-table {
+            background: #ffffff;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .table-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 25px;
+        }
+        
+        .table-grid {
+            display: grid;
+            grid-template-columns: 200px 1fr 1fr;
+            gap: 2px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .table-header {
+            background: #333;
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .table-header.aspect {
+            background: #667eea;
+        }
+        
+        .table-header.get {
+            background: #0984e3;
+        }
+        
+        .table-header.post {
+            background: #00b894;
+        }
+        
+        .table-cell {
+            background: #ffffff;
+            padding: 15px;
+            text-align: center;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .aspect-cell {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .get-cell {
+            border-left: 4px solid #0984e3;
+        }
+        
+        .post-cell {
+            border-left: 4px solid #00b894;
+        }
+        
+        .code-example {
+            font-family: 'Courier New', monospace;
+            background: #f5f5f5;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin: 5px 0;
+        }
+        
+        .practical-examples {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .examples-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .examples-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+        
+        .example-section {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .example-header {
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .get-header { color: #0984e3; }
+        .post-header { color: #00b894; }
+        
+        .example-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 10px 0;
+        }
+        
+        .example-title {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .example-description {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .example-url {
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            background: white;
+            padding: 6px;
+            border-radius: 4px;
+            border: 1px solid #e9ecef;
+            word-break: break-all;
+        }
+        
+        .library-analogy {
+            background: #ffffff;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .library-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .library-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+        
+        .library-scenario {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .scenario-header {
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .scenario-content {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .scenario-example {
+            background: white;
+            border: 1px solid #e9ecef;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-style: italic;
+        }
+        
+        .decision-guide {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+        
+        .guide-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .decision-flow {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .decision-question {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .question-text {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .question-examples {
+            font-size: 12px;
+            line-height: 1.3;
+        }
+        
+        .decision-arrow {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .decision-answers {
+            display: grid;
+            grid-template-rows: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .answer-option {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .answer-text {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .answer-method {
+            font-size: 12px;
+        }
+        
+        .get-answer { border-left: 4px solid #74b9ff; }
+        .post-answer { border-left: 4px solid #00cec9; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">⚡ GET vs POST 完全比較ガイド</div>
+        
+        <div class="overview-section">
+            <div class="method-overview">
+                <div class="method-header">
+                    <div class="method-icon get-icon">GET</div>
+                    <div class="method-title get-title">GET メソッド</div>
+                </div>
+                <div class="method-purpose">
+                    <strong>目的：</strong>データを「取得・閲覧」する
+                </div>
+                <div class="method-characteristics">
+                    <div class="characteristic-item">
+                        <div class="characteristic-icon get-characteristic">👀</div>
+                        <span>情報を見る・検索する</span>
+                    </div>
+                    <div class="characteristic-item">
+                        <div class="characteristic-icon get-characteristic">🔗</div>
+                        <span>URLにデータが表示される</span>
+                    </div>
+                    <div class="characteristic-item">
+                        <div class="characteristic-icon get-characteristic">📚</div>
+                        <span>ブックマーク・共有が可能</span>
+                    </div>
+                    <div class="characteristic-item">
+                        <div class="characteristic-icon get-characteristic">🔄</div>
+                        <span>何度実行しても安全</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="method-overview">
+                <div class="method-header">
+                    <div class="method-icon post-icon">POST</div>
+                    <div class="method-title post-title">POST メソッド</div>
+                </div>
+                <div class="method-purpose">
+                    <strong>目的：</strong>データを「送信・変更」する
+                </div>
+                <div class="method-characteristics">
+                    <div class="characteristic-item">
+                        <div class="characteristic-icon post-characteristic">📤</div>
+                        <span>情報を送信・投稿する</span>
+                    </div>
+                    <div class="characteristic-item">
+                        <div class="characteristic-icon post-characteristic">🔒</div>
+                        <span>URLにデータが表示されない</span>
+                    </div>
+                    <div class="characteristic-item">
+                        <div class="characteristic-icon post-characteristic">🚫</div>
+                        <span>ブックマーク不可</span>
+                    </div>
+                    <div class="characteristic-item">
+                        <div class="characteristic-icon post-characteristic">⚠️</div>
+                        <span>繰り返し実行で副作用の可能性</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="comparison-table">
+            <div class="table-title">📊 詳細比較表</div>
+            <div class="table-grid">
+                <div class="table-header aspect">比較項目</div>
+                <div class="table-header get">GET メソッド</div>
+                <div class="table-header post">POST メソッド</div>
+                
+                <div class="table-cell aspect-cell">主な用途</div>
+                <div class="table-cell get-cell">
+                    データの取得・閲覧<br>
+                    検索・一覧表示
+                </div>
+                <div class="table-cell post-cell">
+                    データの送信・投稿<br>
+                    ログイン・フォーム送信
+                </div>
+                
+                <div class="table-cell aspect-cell">データの場所</div>
+                <div class="table-cell get-cell">
+                    URLに含まれる<br>
+                    <div class="code-example">?name=yamada&age=25</div>
+                </div>
+                <div class="table-cell post-cell">
+                    リクエスト本文(Body)に含まれる<br>
+                    <div class="code-example">URLには表示されない</div>
+                </div>
+                
+                <div class="table-cell aspect-cell">セキュリティ</div>
+                <div class="table-cell get-cell">
+                    低い<br>
+                    パスワード等は不適切
+                </div>
+                <div class="table-cell post-cell">
+                    高い<br>
+                    機密情報の送信に適している
+                </div>
+                
+                <div class="table-cell aspect-cell">データサイズ制限</div>
+                <div class="table-cell get-cell">
+                    あり（約2KB）<br>
+                    URL長の制限による
+                </div>
+                <div class="table-cell post-cell">
+                    なし<br>
+                    大容量ファイルも送信可能
+                </div>
+                
+                <div class="table-cell aspect-cell">ブックマーク</div>
+                <div class="table-cell get-cell">
+                    可能<br>
+                    検索結果の共有等に便利
+                </div>
+                <div class="table-cell post-cell">
+                    不可能<br>
+                    状態が保持されない
+                </div>
+                
+                <div class="table-cell aspect-cell">ブラウザ履歴</div>
+                <div class="table-cell get-cell">
+                    残る<br>
+                    戻るボタンで再実行
+                </div>
+                <div class="table-cell post-cell">
+                    残らない<br>
+                    戻るボタンで警告表示
+                </div>
+                
+                <div class="table-cell aspect-cell">キャッシュ</div>
+                <div class="table-cell get-cell">
+                    される<br>
+                    高速表示が可能
+                </div>
+                <div class="table-cell post-cell">
+                    されない<br>
+                    常に最新の処理
+                </div>
+                
+                <div class="table-cell aspect-cell">副作用</div>
+                <div class="table-cell get-cell">
+                    なし<br>
+                    何度実行しても安全
+                </div>
+                <div class="table-cell post-cell">
+                    あり<br>
+                    データの変更・追加
+                </div>
+            </div>
+        </div>
+        
+        <div class="practical-examples">
+            <div class="examples-title">🌟 実際の使用例</div>
+            <div class="examples-grid">
+                <div class="example-section">
+                    <div class="example-header get-header">
+                        🔍 GET の具体例
+                    </div>
+                    
+                    <div class="example-item">
+                        <div class="example-title">Google検索</div>
+                        <div class="example-description">検索キーワードがURLに表示される</div>
+                        <div class="example-url">
+                            https://www.google.com/search?q=プログラミング学習
+                        </div>
+                    </div>
+                    
+                    <div class="example-item">
+                        <div class="example-title">商品カテゴリー閲覧</div>
+                        <div class="example-description">商品一覧の表示・フィルタリング</div>
+                        <div class="example-url">
+                            https://shop.example.com/products?category=electronics&price_max=50000
+                        </div>
+                    </div>
+                    
+                    <div class="example-item">
+                        <div class="example-title">ページネーション</div>
+                        <div class="example-description">ページ番号がURLに含まれる</div>
+                        <div class="example-url">
+                            https://blog.example.com/articles?page=3
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="example-section">
+                    <div class="example-header post-header">
+                        📤 POST の具体例
+                    </div>
+                    
+                    <div class="example-item">
+                        <div class="example-title">ログイン処理</div>
+                        <div class="example-description">パスワードが安全に送信される</div>
+                        <div class="example-url">
+                            POST /login (パスワードはURLに表示されない)
+                        </div>
+                    </div>
+                    
+                    <div class="example-item">
+                        <div class="example-title">お問い合わせフォーム</div>
+                        <div class="example-description">長文メッセージや個人情報の送信</div>
+                        <div class="example-url">
+                            POST /contact (メッセージ内容は非表示)
+                        </div>
+                    </div>
+                    
+                    <div class="example-item">
+                        <div class="example-title">ファイルアップロード</div>
+                        <div class="example-description">画像や文書ファイルの送信</div>
+                        <div class="example-url">
+                            POST /upload (ファイルデータを送信)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="library-analogy">
+            <div class="library-title">
+                📚 図書館で例えると...
+            </div>
+            <div class="library-comparison">
+                <div class="library-scenario">
+                    <div class="scenario-header get-header">
+                        🔍 GET = 本を探す・読む
+                    </div>
+                    <div class="scenario-content">
+                        図書館で本を探したり、読んだりする行為です。
+                        <div class="scenario-example">
+                            「コンピュータの本はどこですか？」<br>
+                            → 何度聞いても問題ない<br>
+                            → 他の人にも教えられる<br>
+                            → 図書館の状態は変わらない
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="library-scenario">
+                    <div class="scenario-header post-header">
+                        📤 POST = 本を借りる・返す
+                    </div>
+                    <div class="scenario-content">
+                        図書館で本を借りたり、返したりする行為です。
+                        <div class="scenario-example">
+                            図書カードと借りたい本を渡す<br>
+                            → 個人情報なので秘密に処理<br>
+                            → 同じ手続きを繰り返すと問題<br>
+                            → 図書館の状態が変わる
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="decision-guide">
+            <div class="guide-title">🤔 どっちを使えばいい？ 判断フローチャート</div>
+            <div class="decision-flow">
+                <div class="decision-question">
+                    <div class="question-text">何をしたいですか？</div>
+                    <div class="question-examples">
+                        データの取得？<br>
+                        データの送信？
+                    </div>
+                </div>
+                
+                <div class="decision-arrow">→</div>
+                
+                <div class="decision-answers">
+                    <div class="answer-option get-answer">
+                        <div class="answer-text">データを見たい・検索したい</div>
+                        <div class="answer-method">→ GET メソッド</div>
+                    </div>
+                    <div class="answer-option post-answer">
+                        <div class="answer-text">データを送信・変更したい</div>
+                        <div class="answer-method">→ POST メソッド</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

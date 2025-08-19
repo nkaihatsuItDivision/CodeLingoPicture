@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTTPステータスコード一覧図</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 1000px;
+            text-align: center;
+        }
+        
+        .title {
+            color: #333;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 40px;
+        }
+        
+        .status-categories {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .status-category {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: left;
+        }
+        
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .category-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .success-icon {
+            background: linear-gradient(135deg, #00b894, #00cec9);
+        }
+        
+        .redirect-icon {
+            background: linear-gradient(135deg, #0984e3, #74b9ff);
+        }
+        
+        .client-error-icon {
+            background: linear-gradient(135deg, #fdcb6e, #e17055);
+        }
+        
+        .server-error-icon {
+            background: linear-gradient(135deg, #fd79a8, #e84393);
+        }
+        
+        .category-info {
+            flex: 1;
+        }
+        
+        .category-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .success-title { color: #00b894; }
+        .redirect-title { color: #0984e3; }
+        .client-error-title { color: #e17055; }
+        .server-error-title { color: #e84393; }
+        
+        .category-description {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .status-list {
+            margin-top: 15px;
+        }
+        
+        .status-item {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .status-code {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 16px;
+            min-width: 40px;
+            text-align: center;
+        }
+        
+        .success-code { color: #00b894; }
+        .redirect-code { color: #0984e3; }
+        .client-error-code { color: #e17055; }
+        .server-error-code { color: #e84393; }
+        
+        .status-name {
+            font-weight: bold;
+            flex: 1;
+            text-align: left;
+            font-size: 14px;
+        }
+        
+        .status-description {
+            font-size: 12px;
+            color: #666;
+            flex: 2;
+            text-align: left;
+        }
+        
+        .restaurant-analogy {
+            background: #ffffff;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .analogy-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .analogy-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .analogy-item {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .analogy-category {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .analogy-examples {
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        
+        .analogy-example {
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .example-code {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            min-width: 35px;
+        }
+        
+        .common-codes {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+        
+        .common-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .common-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        .common-item {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .common-code {
+            font-family: 'Courier New', monospace;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .common-name {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .common-meaning {
+            font-size: 12px;
+            line-height: 1.3;
+        }
+        
+        .troubleshooting {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .troubleshooting-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .troubleshooting-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .troubleshooting-item {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .error-code {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        
+        .error-404 { color: #e17055; }
+        .error-500 { color: #e84393; }
+        .error-403 { color: #fdcb6e; }
+        
+        .error-cause {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .error-solution {
+            font-size: 12px;
+            color: #333;
+            background: #f8f9fa;
+            padding: 8px;
+            border-radius: 5px;
+            border-left: 3px solid #0984e3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">📊 HTTPステータスコード完全ガイド</div>
+        <div class="subtitle">サーバーからの「処理結果報告」を理解しよう</div>
+        
+        <div class="status-categories">
+            <div class="status-category">
+                <div class="category-header">
+                    <div class="category-icon success-icon">2xx</div>
+                    <div class="category-info">
+                        <div class="category-title success-title">成功 (Success)</div>
+                        <div class="category-description">「うまくいきました！」</div>
+                    </div>
+                </div>
+                <div class="status-list">
+                    <div class="status-item">
+                        <div class="status-code success-code">200</div>
+                        <div class="status-name">OK</div>
+                        <div class="status-description">正常に処理完了</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-code success-code">201</div>
+                        <div class="status-name">Created</div>
+                        <div class="status-description">新しいリソースを作成</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-code success-code">204</div>
+                        <div class="status-name">No Content</div>
+                        <div class="status-description">成功したが内容なし</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="status-category">
+                <div class="category-header">
+                    <div class="category-icon redirect-icon">3xx</div>
+                    <div class="category-info">
+                        <div class="category-title redirect-title">リダイレクト (Redirection)</div>
+                        <div class="category-description">「他の場所を見てください」</div>
+                    </div>
+                </div>
+                <div class="status-list">
+                    <div class="status-item">
+                        <div class="status-code redirect-code">301</div>
+                        <div class="status-name">Moved Permanently</div>
+                        <div class="status-description">完全に移転しました</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-code redirect-code">302</div>
+                        <div class="status-name">Found</div>
+                        <div class="status-description">一時的に別の場所</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-code redirect-code">304</div>
+                        <div class="status-name">Not Modified</div>
+                        <div class="status-description">変更されていません</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="status-category">
+                <div class="category-header">
+                    <div class="category-icon client-error-icon">4xx</div>
+                    <div class="category-info">
+                        <div class="category-title client-error-title">クライアントエラー (Client Error)</div>
+                        <div class="category-description">「あなたの要求に問題があります」</div>
+                    </div>
+                </div>
+                <div class="status-list">
+                    <div class="status-item">
+                        <div class="status-code client-error-code">400</div>
+                        <div class="status-name">Bad Request</div>
+                        <div class="status-description">要求が理解できません</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-code client-error-code">401</div>
+                        <div class="status-name">Unauthorized</div>
+                        <div class="status-description">認証が必要です</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-code client-error-code">403</div>
+                        <div class="status-name">Forbidden</div>
+                        <div class="status-description">アクセス権限がありません</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-code client-error-code">404</div>
+                        <div class="status-name">Not Found</div>
+                        <div class="status-description">ページが見つかりません</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="status-category">
+                <div class="category-header">
+                    <div class="category-icon server-error-icon">5xx</div>
+                    <div class="category-info">
+                        <div class="category-title server-error-title">サーバーエラー (Server Error)</div>
+                        <div class="category-description">「こちら（サーバー）に問題があります」</div>
+                    </div>
+                </div>
+                <div class="status-list">
+                    <div class="status-item">
+                        <div class="status-code server-error-code">500</div>
+                        <div class="status-name">Internal Server Error</div>
+                        <div class="status-description">サーバー内部でエラー</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-code server-error-code">502</div>
+                        <div class="status-name">Bad Gateway</div>
+                        <div class="status-description">ゲートウェイエラー</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-code server-error-code">503</div>
+                        <div class="status-name">Service Unavailable</div>
+                        <div class="status-description">サービス利用不可</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="restaurant-analogy">
+            <div class="analogy-title">
+                🍽️ レストランで例えると...
+            </div>
+            <div class="analogy-grid">
+                <div class="analogy-item">
+                    <div class="analogy-category success-title">
+                        ✅ 2xx系：成功
+                    </div>
+                    <div class="analogy-examples">
+                        <div class="analogy-example">
+                            <span class="example-code success-code">200</span>
+                            <span>「注文の料理をお持ちしました！」</span>
+                        </div>
+                        <div class="analogy-example">
+                            <span class="example-code success-code">201</span>
+                            <span>「新しい料理を作成しました！」</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="analogy-item">
+                    <div class="analogy-category redirect-title">
+                        🔄 3xx系：リダイレクト
+                    </div>
+                    <div class="analogy-examples">
+                        <div class="analogy-example">
+                            <span class="example-code redirect-code">301</span>
+                            <span>「その料理は別のメニューに移りました」</span>
+                        </div>
+                        <div class="analogy-example">
+                            <span class="example-code redirect-code">302</span>
+                            <span>「一時的に別の場所で提供中です」</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="analogy-item">
+                    <div class="analogy-category client-error-title">
+                        ❌ 4xx系：お客さんの問題
+                    </div>
+                    <div class="analogy-examples">
+                        <div class="analogy-example">
+                            <span class="example-code client-error-code">400</span>
+                            <span>「注文内容が理解できません」</span>
+                        </div>
+                        <div class="analogy-example">
+                            <span class="example-code client-error-code">404</span>
+                            <span>「そのメニューは存在しません」</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="analogy-item">
+                    <div class="analogy-category server-error-title">
+                        🔧 5xx系：お店の問題
+                    </div>
+                    <div class="analogy-examples">
+                        <div class="analogy-example">
+                            <span class="example-code server-error-code">500</span>
+                            <span>「キッチンで問題が発生しました」</span>
+                        </div>
+                        <div class="analogy-example">
+                            <span class="example-code server-error-code">503</span>
+                            <span>「一時的に営業停止中です」</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="common-codes">
+            <div class="common-title">🔥 よく見るステータスコード TOP 6</div>
+            <div class="common-grid">
+                <div class="common-item">
+                    <div class="common-code">200</div>
+                    <div class="common-name">OK</div>
+                    <div class="common-meaning">成功！<br>普通にページが表示</div>
+                </div>
+                <div class="common-item">
+                    <div class="common-code">404</div>
+                    <div class="common-name">Not Found</div>
+                    <div class="common-meaning">ページが見つからない<br>URLが間違っている</div>
+                </div>
+                <div class="common-item">
+                    <div class="common-code">500</div>
+                    <div class="common-name">Server Error</div>
+                    <div class="common-meaning">サーバーで問題発生<br>時間を置いて再アクセス</div>
+                </div>
+                <div class="common-item">
+                    <div class="common-code">403</div>
+                    <div class="common-name">Forbidden</div>
+                    <div class="common-meaning">アクセス権限なし<br>ログインが必要</div>
+                </div>
+                <div class="common-item">
+                    <div class="common-code">301</div>
+                    <div class="common-name">Moved</div>
+                    <div class="common-meaning">完全に移転<br>自動で新しいURLへ</div>
+                </div>
+                <div class="common-item">
+                    <div class="common-code">503</div>
+                    <div class="common-name">Unavailable</div>
+                    <div class="common-meaning">サーバーが忙しい<br>時間を置いて再試行</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="troubleshooting">
+            <div class="troubleshooting-title">🔧 エラー別対処法</div>
+            <div class="troubleshooting-grid">
+                <div class="troubleshooting-item">
+                    <div class="error-code error-404">404 Not Found</div>
+                    <div class="error-cause">
+                        <strong>原因：</strong>URLが間違っている、ページが削除された
+                    </div>
+                    <div class="error-solution">
+                        <strong>対処：</strong>URLのスペルチェック、正しいリンクを探す、サイト内検索を使用
+                    </div>
+                </div>
+                
+                <div class="troubleshooting-item">
+                    <div class="error-code error-500">500 Server Error</div>
+                    <div class="error-cause">
+                        <strong>原因：</strong>サーバー側のプログラムエラー、設定問題
+                    </div>
+                    <div class="error-solution">
+                        <strong>対処：</strong>時間を置いて再アクセス、別のブラウザで試す、管理者に連絡
+                    </div>
+                </div>
+                
+                <div class="troubleshooting-item">
+                    <div class="error-code error-403">403 Forbidden</div>
+                    <div class="error-cause">
+                        <strong>原因：</strong>アクセス権限がない、認証が必要
+                    </div>
+                    <div class="error-solution">
+                        <strong>対処：</strong>ログインが必要か確認、会員登録、適切な権限の取得
+                    </div>
+                </div>
+                
+                <div class="troubleshooting-item">
+                    <div class="error-code error-500">503 Unavailable</div>
+                    <div class="error-cause">
+                        <strong>原因：</strong>サーバーが一時的に利用不可、メンテナンス中
+                    </div>
+                    <div class="error-solution">
+                        <strong>対処：</strong>しばらく時間を置いて再アクセス、公式SNSで情報確認
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

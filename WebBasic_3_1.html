@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTTPリクエストの詳細構造</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 1000px;
+            text-align: center;
+        }
+        
+        .title {
+            color: #333;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 40px;
+        }
+        
+        .request-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        
+        .browser-icon, .server-icon {
+            width: 100px;
+            height: 100px;
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 50px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        
+        .browser-icon {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+        
+        .server-icon {
+            background: linear-gradient(135deg, #fd79a8, #e84393);
+        }
+        
+        .arrow-container {
+            flex: 1;
+            margin: 0 30px;
+            position: relative;
+        }
+        
+        .arrow {
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, #667eea, #fd79a8);
+            position: relative;
+            border-radius: 2px;
+        }
+        
+        .arrow::after {
+            content: '';
+            position: absolute;
+            right: -8px;
+            top: -6px;
+            width: 0;
+            height: 0;
+            border-left: 15px solid #fd79a8;
+            border-top: 7px solid transparent;
+            border-bottom: 7px solid transparent;
+        }
+        
+        .arrow-label {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .device-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .device-label {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .request-details {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+        
+        .details-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 25px;
+        }
+        
+        .request-sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+        
+        .request-section {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .method-section .section-title {
+            color: #1976d2;
+        }
+        
+        .headers-section .section-title {
+            color: #388e3c;
+        }
+        
+        .url-section .section-title {
+            color: #f57c00;
+        }
+        
+        .body-section .section-title {
+            color: #7b1fa2;
+        }
+        
+        .code-block {
+            background: #f5f5f5;
+            border-left: 4px solid;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            border-radius: 0 5px 5px 0;
+            margin: 8px 0;
+        }
+        
+        .method-code {
+            border-left-color: #1976d2;
+        }
+        
+        .headers-code {
+            border-left-color: #388e3c;
+        }
+        
+        .url-code {
+            border-left-color: #f57c00;
+        }
+        
+        .body-code {
+            border-left-color: #7b1fa2;
+        }
+        
+        .explanation {
+            font-size: 13px;
+            color: #666;
+            margin-top: 8px;
+            line-height: 1.4;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        
+        .response-preview {
+            background: #ffffff;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+        
+        .response-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .response-sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .response-section {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .response-section-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .status-section .response-section-title {
+            color: #28a745;
+        }
+        
+        .content-section .response-section-title {
+            color: #dc3545;
+        }
+        
+        .response-code {
+            background: white;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            border-radius: 4px;
+            line-height: 1.3;
+        }
+        
+        .key-points {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+        
+        .points-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .points-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .point-item {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .point-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .point-description {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">📡 HTTPリクエストの詳細構造</div>
+        
+        <div class="request-flow">
+            <div>
+                <div class="browser-icon">💻</div>
+                <div class="device-label">ブラウザ</div>
+            </div>
+            
+            <div class="arrow-container">
+                <div class="arrow">
+                    <div class="arrow-label">HTTPリクエスト</div>
+                </div>
+            </div>
+            
+            <div>
+                <div class="server-icon">🖥️</div>
+                <div class="device-label">Webサーバー</div>
+            </div>
+        </div>
+        
+        <div class="request-details">
+            <div class="details-title">🔍 リクエストに含まれる詳細情報</div>
+            
+            <div class="request-sections">
+                <div class="request-section">
+                    <div class="section-title method-section">
+                        🎯 ① 何をしたいか（メソッド）
+                    </div>
+                    <div class="code-block method-code">
+GET /products/smartphones.html HTTP/1.1
+                    </div>
+                    <div class="explanation">
+                        • <span class="highlight">GET</span> = データを取得したい<br>
+                        • <span class="highlight">/products/smartphones.html</span> = 欲しいページ<br>
+                        • <span class="highlight">HTTP/1.1</span> = 使用するプロトコルバージョン
+                    </div>
+                </div>
+                
+                <div class="request-section">
+                    <div class="section-title url-section">
+                        🌐 ② どこのサーバーか（ホスト）
+                    </div>
+                    <div class="code-block url-code">
+Host: www.example.com
+                    </div>
+                    <div class="explanation">
+                        • アクセスしたいサーバーの住所<br>
+                        • 一つのサーバーで複数サイト運営時に必要<br>
+                        • URLのドメイン部分と同じ
+                    </div>
+                </div>
+                
+                <div class="request-section">
+                    <div class="section-title headers-section">
+                        📋 ③ ブラウザの情報（User-Agent）
+                    </div>
+                    <div class="code-block headers-code">
+User-Agent: Mozilla/5.0 (Windows NT 10.0; 
+Win64; x64) AppleWebKit/537.36 Chrome/120.0.0.0
+                    </div>
+                    <div class="explanation">
+                        • どんなブラウザ（Chrome、Safari等）<br>
+                        • どんなOS（Windows、Mac等）<br>
+                        • サーバーが最適な形式で応答するため
+                    </div>
+                </div>
+                
+                <div class="request-section">
+                    <div class="section-title headers-section">
+                        🌍 ④ 受け入れ可能な形式・言語
+                    </div>
+                    <div class="code-block headers-code">
+Accept: text/html,application/xml;q=0.9
+Accept-Language: ja,en-US;q=0.9,en;q=0.8
+Accept-Encoding: gzip, deflate, br
+                    </div>
+                    <div class="explanation">
+                        • <span class="highlight">Accept</span>: HTMLやXMLなど受信可能な形式<br>
+                        • <span class="highlight">Accept-Language</span>: 日本語優先、英語も可<br>
+                        • <span class="highlight">Accept-Encoding</span>: 圧縮形式対応
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="response-preview">
+            <div class="response-title">
+                📨 サーバーからのレスポンス例
+            </div>
+            
+            <div class="response-sections">
+                <div class="response-section">
+                    <div class="response-section-title status-section">ステータス情報</div>
+                    <div class="response-code">
+HTTP/1.1 200 OK
+Server: Apache/2.4.41
+Date: Wed, 29 Jul 2025 10:30:00 GMT
+Content-Type: text/html; charset=UTF-8
+Content-Length: 2048
+                    </div>
+                </div>
+                
+                <div class="response-section">
+                    <div class="response-section-title content-section">実際の内容</div>
+                    <div class="response-code">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;スマートフォン一覧&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;最新スマートフォン&lt;/h1&gt;
+  &lt;p&gt;iPhone 15, Galaxy S24...&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="key-points">
+            <div class="points-title">💡 重要なポイント</div>
+            <div class="points-grid">
+                <div class="point-item">
+                    <div class="point-title">🤝 詳細な会話</div>
+                    <div class="point-description">
+                        単純な「ページください」ではなく、ブラウザ情報、言語設定など詳細な情報をやり取り
+                    </div>
+                </div>
+                <div class="point-item">
+                    <div class="point-title">🎯 最適化のため</div>
+                    <div class="point-description">
+                        サーバーがブラウザに合わせて最適な形式・言語でレスポンスを返すため
+                    </div>
+                </div>
+                <div class="point-item">
+                    <div class="point-title">🔄 毎回実行</div>
+                    <div class="point-description">
+                        Webページにアクセスするたびに、この詳細なやり取りが自動で行われている
+                    </div>
+                </div>
+                <div class="point-item">
+                    <div class="point-title">👀 確認可能</div>
+                    <div class="point-description">
+                        ブラウザの開発者ツール（F12）でこれらの詳細情報を実際に確認できる
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
