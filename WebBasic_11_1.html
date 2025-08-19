@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>メモ帳 vs VSCodeの比較図</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            font-family: "游ゴシック", Arial, sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .comparison-container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            max-width: 1200px;
+            width: 100%;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c5282;
+            margin-bottom: 40px;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .editor-section {
+            border: 2px solid;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .notepad-section {
+            border-color: #dc3545;
+        }
+        
+        .vscode-section {
+            border-color: #28a745;
+        }
+        
+        .editor-header {
+            padding: 12px 15px;
+            font-weight: bold;
+            color: white;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+        }
+        
+        .notepad-header {
+            background-color: #dc3545;
+        }
+        
+        .vscode-header {
+            background-color: #007acc;
+        }
+        
+        .editor-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .notepad-icon {
+            background-color: white;
+            color: #666;
+        }
+        
+        .vscode-icon {
+            background-color: #fff;
+            color: #007acc;
+        }
+        
+        .editor-content {
+            background-color: #fff;
+            padding: 20px;
+            min-height: 200px;
+            font-family: "Courier New", monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        
+        .notepad-content {
+            color: #000;
+        }
+        
+        .vscode-content {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+        }
+        
+        .html-tag {
+            color: #569cd6;
+        }
+        
+        .html-attribute {
+            color: #92c5f5;
+        }
+        
+        .html-string {
+            color: #ce9178;
+        }
+        
+        .html-text {
+            color: #d4d4d4;
+        }
+        
+        .features-list {
+            margin-top: 20px;
+            padding: 20px;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .features-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #495057;
+            font-size: 14px;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            font-size: 12px;
+        }
+        
+        .feature-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .bad-feature {
+            background-color: #dc3545;
+        }
+        
+        .good-feature {
+            background-color: #28a745;
+        }
+        
+        .vs-arrow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #ffc107;
+            color: #212529;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+            z-index: 10;
+            border: 3px solid white;
+        }
+        
+        .workflow-comparison {
+            margin-top: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .workflow-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c5282;
+            margin-bottom: 30px;
+        }
+        
+        .workflow-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .workflow-item {
+            text-align: center;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid;
+        }
+        
+        .workflow-bad {
+            border-color: #dc3545;
+            background: #fff5f5;
+        }
+        
+        .workflow-good {
+            border-color: #28a745;
+            background: #f0fff4;
+        }
+        
+        .workflow-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .workflow-step {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+            font-size: 12px;
+            position: relative;
+        }
+        
+        .workflow-step::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 10px solid #e9ecef;
+        }
+        
+        .workflow-step:last-child::after {
+            display: none;
+        }
+        
+        .step-time {
+            float: right;
+            color: #6c757d;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        
+        .conclusion {
+            margin-top: 30px;
+            text-align: center;
+            padding: 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+        }
+        
+        .conclusion h3 {
+            margin: 0 0 15px 0;
+            font-size: 20px;
+        }
+        
+        .conclusion p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="comparison-container">
+        <div class="title">メモ帳 vs VSCode の比較</div>
+        
+        <div style="position: relative;">
+            <div class="comparison-grid">
+                <!-- メモ帳側 -->
+                <div class="editor-section notepad-section">
+                    <div class="editor-header notepad-header">
+                        <div class="editor-icon notepad-icon">📝</div>
+                        メモ帳
+                    </div>
+                    <div class="editor-content notepad-content">
+&lt;html&gt;<br>
+&lt;head&gt;<br>
+&lt;title&gt;練習&lt;/title&gt;<br>
+&lt;style&gt;<br>
+h1{color:red;font-size:30px;}<br>
+p{color:blue;}<br>
+&lt;/style&gt;<br>
+&lt;/head&gt;<br>
+&lt;body&gt;<br>
+&lt;h1&gt;見出し&lt;/h1&gt;<br>
+&lt;p&gt;これは段落です。&lt;/p&gt;<br>
+&lt;/body&gt;<br>
+&lt;/html&gt;<br>
+                    </div>
+                    <div class="features-list">
+                        <div class="features-title">❌ 困ること</div>
+                        <div class="feature-item">
+                            <div class="feature-icon bad-feature">✕</div>
+                            コードが全て同じ色で見づらい
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon bad-feature">✕</div>
+                            タグの入力ミスに気づきにくい
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon bad-feature">✕</div>
+                            ブラウザで確認するのに手間
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon bad-feature">✕</div>
+                            複数ファイルの管理が面倒
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon bad-feature">✕</div>
+                            コードの整理が手動で大変
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- VSCode側 -->
+                <div class="editor-section vscode-section">
+                    <div class="editor-header vscode-header">
+                        <div class="editor-icon vscode-icon">VS</div>
+                        Visual Studio Code
+                    </div>
+                    <div class="editor-content vscode-content">
+<span class="html-tag">&lt;html&gt;</span><br>
+<span class="html-tag">&lt;head&gt;</span><br>
+  <span class="html-tag">&lt;title&gt;</span><span class="html-text">練習</span><span class="html-tag">&lt;/title&gt;</span><br>
+  <span class="html-tag">&lt;style&gt;</span><br>
+    <span class="html-text">h1 {</span><br>
+      <span class="html-attribute">color</span><span class="html-text">: </span><span class="html-string">red</span><span class="html-text">;</span><br>
+      <span class="html-attribute">font-size</span><span class="html-text">: </span><span class="html-string">30px</span><span class="html-text">;</span><br>
+    <span class="html-text">}</span><br>
+    <span class="html-text">p { </span><span class="html-attribute">color</span><span class="html-text">: </span><span class="html-string">blue</span><span class="html-text">; }</span><br>
+  <span class="html-tag">&lt;/style&gt;</span><br>
+<span class="html-tag">&lt;/head&gt;</span><br>
+<span class="html-tag">&lt;body&gt;</span><br>
+  <span class="html-tag">&lt;h1&gt;</span><span class="html-text">見出し</span><span class="html-tag">&lt;/h1&gt;</span><br>
+  <span class="html-tag">&lt;p&gt;</span><span class="html-text">これは段落です。</span><span class="html-tag">&lt;/p&gt;</span><br>
+<span class="html-tag">&lt;/body&gt;</span><br>
+<span class="html-tag">&lt;/html&gt;</span><br>
+                    </div>
+                    <div class="features-list">
+                        <div class="features-title">✅ できること</div>
+                        <div class="feature-item">
+                            <div class="feature-icon good-feature">✓</div>
+                            コードが色分けされて見やすい
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon good-feature">✓</div>
+                            タグの自動補完でミス防止
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon good-feature">✓</div>
+                            保存と同時にブラウザ更新
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon good-feature">✓</div>
+                            複数ファイルを簡単に管理
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon good-feature">✓</div>
+                            コードの自動整形機能
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="vs-arrow">VS</div>
+        </div>
+        
+        <div class="workflow-comparison">
+            <div class="workflow-title">💻 開発作業の流れ比較</div>
+            <div class="workflow-grid">
+                <div class="workflow-item workflow-bad">
+                    <h4 style="margin: 0 0 15px 0; color: #dc3545;">❌ メモ帳での作業</h4>
+                    <div class="workflow-steps">
+                        <div class="workflow-step">
+                            1. メモ帳でコードを編集
+                            <span class="step-time">2分</span>
+                        </div>
+                        <div class="workflow-step">
+                            2. ファイルを保存
+                            <span class="step-time">10秒</span>
+                        </div>
+                        <div class="workflow-step">
+                            3. ブラウザを開いてF5で更新
+                            <span class="step-time">20秒</span>
+                        </div>
+                        <div class="workflow-step">
+                            4. 間違いを発見...
+                            <span class="step-time">30秒</span>
+                        </div>
+                        <div class="workflow-step">
+                            5. メモ帳に戻って修正
+                            <span class="step-time">1分</span>
+                        </div>
+                    </div>
+                    <div style="margin-top: 15px; font-weight: bold; color: #dc3545;">
+                        合計: 約4分/回 😰
+                    </div>
+                </div>
+                
+                <div class="workflow-item workflow-good">
+                    <h4 style="margin: 0 0 15px 0; color: #28a745;">✅ VSCodeでの作業</h4>
+                    <div class="workflow-steps">
+                        <div class="workflow-step">
+                            1. VSCodeでコードを編集
+                            <span class="step-time">1分</span>
+                        </div>
+                        <div class="workflow-step">
+                            2. Ctrl+S で保存
+                            <span class="step-time">1秒</span>
+                        </div>
+                        <div class="workflow-step">
+                            3. ブラウザが自動更新
+                            <span class="step-time">1秒</span>
+                        </div>
+                        <div class="workflow-step">
+                            4. 間違いをエディタで確認
+                            <span class="step-time">5秒</span>
+                        </div>
+                        <div class="workflow-step">
+                            5. その場で即座に修正
+                            <span class="step-time">10秒</span>
+                        </div>
+                    </div>
+                    <div style="margin-top: 15px; font-weight: bold; color: #28a745;">
+                        合計: 約1分/回 😊
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="conclusion">
+            <h3>🚀 VSCodeを使うことで開発効率が4倍向上！</h3>
+            <p>
+                プロの開発者と同じ環境で作業することで、より効率的で快適なWeb開発が可能になります。<br>
+                複雑なプロジェクトにも対応でき、将来のJavaScript学習にも最適な環境です。
+            </p>
+        </div>
+    </div>
+</body>
+</html>
