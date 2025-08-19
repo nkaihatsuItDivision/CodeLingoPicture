@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 10.1: Week 10.2以降ロードマップ図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,123,255,0.3);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+
+        .current-completion {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .completion-title {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .completion-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .completion-item {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .completion-icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .completion-number {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .completion-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .roadmap-container {
+            margin-bottom: 30px;
+        }
+
+        .roadmap-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .roadmap-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .week-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            position: relative;
+            border-left: 5px solid #007bff;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .week-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .week-card.completed {
+            border-left-color: #28a745;
+            background: #e8f5e8;
+        }
+
+        .week-number {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            width: 60px;
+            height: 40px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 4px 15px rgba(0,123,255,0.3);
+        }
+
+        .week-card.completed .week-number {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+        }
+
+        .week-header {
+            margin-left: 80px;
+            margin-bottom: 20px;
+        }
+
+        .week-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 5px;
+        }
+
+        .week-card.completed .week-title {
+            color: #28a745;
+        }
+
+        .week-subtitle {
+            font-size: 14px;
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+
+        .week-duration {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .week-content {
+            margin-left: 80px;
+        }
+
+        .week-description {
+            font-size: 14px;
+            color: #495057;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .week-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .feature-item {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+        }
+
+        .feature-icon {
+            color: #007bff;
+            margin-right: 8px;
+        }
+
+        .feature-text {
+            font-size: 13px;
+            color: #495057;
+        }
+
+        .week-deliverables {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .deliverables-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 8px;
+        }
+
+        .deliverables-list {
+            font-size: 13px;
+            color: #856404;
+            line-height: 1.5;
+        }
+
+        .milestone-section {
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .milestone-title {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .milestone-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .milestone-item {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .milestone-header {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .milestone-content {
+            font-size: 14px;
+            opacity: 0.95;
+            line-height: 1.5;
+        }
+
+        .final-goal {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .goal-title {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .goal-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .goal-item {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .goal-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .goal-subtitle {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .goal-description {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        .progress-indicator {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .progress-text {
+            font-size: 16px;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 20px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            height: 100%;
+            width: 10%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-label {
+            font-size: 14px;
+            color: #856404;
+        }
+
+        @media (max-width: 768px) {
+            .completion-stats,
+            .week-features,
+            .milestone-grid,
+            .goal-content {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            .week-header,
+            .week-content {
+                margin-left: 30px;
+            }
+
+            .week-number {
+                width: 50px;
+                height: 35px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🗺️ Week 10.2以降ロードマップ</h1>
+            <p>検索・削除機能完成とWeek 11受託業務実践への道筋</p>
+        </div>
+
+        <div class="current-completion">
+            <div class="completion-title">🎉 Week 10.1 完了成果</div>
+            <div class="completion-stats">
+                <div class="completion-item">
+                    <div class="completion-icon">🏗️</div>
+                    <div class="completion-number">100%</div>
+                    <div class="completion-label">検索基盤確立</div>
+                </div>
+                <div class="completion-item">
+                    <div class="completion-icon">⚡</div>
+                    <div class="completion-number">15+</div>
+                    <div class="completion-label">実装パターン習得</div>
+                </div>
+                <div class="completion-item">
+                    <div class="completion-icon">🎯</div>
+                    <div class="completion-number">企業級</div>
+                    <div class="completion-label">技術レベル到達</div>
+                </div>
+                <div class="completion-item">
+                    <div class="completion-icon">🚀</div>
+                    <div class="completion-number">Ready</div>
+                    <div class="completion-label">次段階準備完了</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="progress-indicator">
+            <div class="progress-text">Week 10 全体進捗</div>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            <div class="progress-label">Week 10.1完了 - 次はWeek 10.2へ</div>
+        </div>
+
+        <div class="roadmap-container">
+            <div class="roadmap-title">📅 Week 10 完全制覇ロードマップ</div>
+            <div class="roadmap-grid">
+                <div class="week-card completed">
+                    <div class="week-number">10.1</div>
+                    <div class="week-header">
+                        <div class="week-title">検索機能基盤確立</div>
+                        <div class="week-subtitle">Spring Data JPA高度機能による検索システム構築</div>
+                        <div class="week-duration">完了済み</div>
+                    </div>
+                    <div class="week-content">
+                        <div class="week-description">
+                            <strong>✅ 完了内容：</strong>Repository拡張・動的検索・Specification・@Query・パフォーマンス最適化の完全習得により、エンタープライズレベルの検索基盤を確立しました。
+                        </div>
+                        <div class="week-deliverables">
+                            <div class="deliverables-title">🎯 完了成果物</div>
+                            <div class="deliverables-list">
+                                StudentRepository拡張実装、動的検索Specification、検索サービス層統合、パフォーマンス最適化コード、包括的テストスイート
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="week-card">
+                    <div class="week-number">10.2</div>
+                    <div class="week-header">
+                        <div class="week-title">検索画面・フォーム実装</div>
+                        <div class="week-subtitle">ThymeleafとBootstrapによるユーザーインターフェース構築</div>
+                        <div class="week-duration">80分</div>
+                    </div>
+                    <div class="week-content">
+                        <div class="week-description">
+                            Week 10.1で構築した検索基盤を活用し、直感的で使いやすい検索インターフェースを実装します。
+                        </div>
+                        <div class="week-features">
+                            <div class="feature-item">
+                                <span class="feature-icon">🎨</span>
+                                <span class="feature-text">Thymeleaf検索フォーム</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">📱</span>
+                                <span class="feature-text">レスポンシブUI設計</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">⚡</span>
+                                <span class="feature-text">Ajax非同期検索</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">✅</span>
+                                <span class="feature-text">フォームバリデーション</span>
+                            </div>
+                        </div>
+                        <div class="week-deliverables">
+                            <div class="deliverables-title">🎯 成果物</div>
+                            <div class="deliverables-list">
+                                検索画面テンプレート、StudentSearchController完全実装、Bootstrap4対応CSS、JavaScript検索機能
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="week-card">
+                    <div class="week-number">10.3</div>
+                    <div class="week-header">
+                        <div class="week-title">検索結果表示・ページネーション</div>
+                        <div class="week-subtitle">大量データ対応の効率的な結果表示システム</div>
+                        <div class="week-duration">85分</div>
+                    </div>
+                    <div class="week-content">
+                        <div class="week-description">
+                            検索結果の効率的な表示とページネーション機能を実装し、大量データでも快適なユーザー体験を提供します。
+                        </div>
+                        <div class="week-features">
+                            <div class="feature-item">
+                                <span class="feature-icon">📊</span>
+                                <span class="feature-text">結果一覧テーブル</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">📄</span>
+                                <span class="feature-text">Spring Data Pageable</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">🔄</span>
+                                <span class="feature-text">ソート機能</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">📈</span>
+                                <span class="feature-text">件数表示・統計</span>
+                            </div>
+                        </div>
+                        <div class="week-deliverables">
+                            <div class="deliverables-title">🎯 成果物</div>
+                            <div class="deliverables-list">
+                                結果表示テンプレート、Pageable対応Repository、ページネーションコンポーネント、ソート機能実装
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="week-card">
+                    <div class="week-number">10.4</div>
+                    <div class="week-header">
+                        <div class="week-title">高度検索機能・複合条件</div>
+                        <div class="week-subtitle">企業システム級の複雑な検索条件対応</div>
+                        <div class="week-duration">90分</div>
+                    </div>
+                    <div class="week-content">
+                        <div class="week-description">
+                            複数条件の組み合わせ、範囲検索、日付検索等、企業システムで求められる高度な検索機能を完成させます。
+                        </div>
+                        <div class="week-features">
+                            <div class="feature-item">
+                                <span class="feature-icon">🔍</span>
+                                <span class="feature-text">高度検索フォーム</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">📅</span>
+                                <span class="feature-text">日付範囲検索</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">🏷️</span>
+                                <span class="feature-text">タグ・カテゴリ検索</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">💾</span>
+                                <span class="feature-text">検索条件保存</span>
+                            </div>
+                        </div>
+                        <div class="week-deliverables">
+                            <div class="deliverables-title">🎯 成果物</div>
+                            <div class="deliverables-list">
+                                高度検索フォーム、複合条件Specification拡張、検索履歴機能、お気に入り検索保存
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="week-card">
+                    <div class="week-number">10.5</div>
+                    <div class="week-header">
+                        <div class="week-title">削除機能基盤実装</div>
+                        <div class="week-subtitle">安全で確実な削除システム構築</div>
+                        <div class="week-duration">75分</div>
+                    </div>
+                    <div class="week-content">
+                        <div class="week-description">
+                            Week 9・10.1のアーキテクチャを活用し、論理削除・物理削除・一括削除に対応した削除システムを実装します。
+                        </div>
+                        <div class="week-features">
+                            <div class="feature-item">
+                                <span class="feature-icon">🗑️</span>
+                                <span class="feature-text">論理削除・物理削除</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">🔒</span>
+                                <span class="feature-text">削除権限チェック</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">📦</span>
+                                <span class="feature-text">一括削除処理</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">🔄</span>
+                                <span class="feature-text">削除復旧機能</span>
+                            </div>
+                        </div>
+                        <div class="week-deliverables">
+                            <div class="deliverables-title">🎯 成果物</div>
+                            <div class="deliverables-list">
+                                削除サービス実装、論理削除Entity設計、削除権限管理、削除履歴・復旧機能
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="week-card">
+                    <div class="week-number">10.6-10.10</div>
+                    <div class="week-header">
+                        <div class="week-title">高度機能・最適化・完成</div>
+                        <div class="week-subtitle">エンタープライズシステム完全体への仕上げ</div>
+                        <div class="week-duration">400分（5日間）</div>
+                    </div>
+                    <div class="week-content">
+                        <div class="week-description">
+                            システムの完成度を企業レベルまで引き上げ、セキュリティ・監査・ログ機能等を実装し、受託業務実践に備えます。
+                        </div>
+                        <div class="week-features">
+                            <div class="feature-item">
+                                <span class="feature-icon">🔐</span>
+                                <span class="feature-text">セキュリティ強化</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">📝</span>
+                                <span class="feature-text">監査ログ・履歴管理</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">🚀</span>
+                                <span class="feature-text">最終パフォーマンス調整</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">✅</span>
+                                <span class="feature-text">総合テスト・品質保証</span>
+                            </div>
+                        </div>
+                        <div class="week-deliverables">
+                            <div class="deliverables-title">🎯 成果物</div>
+                            <div class="deliverables-list">
+                                完全統合システム、セキュリティ実装、パフォーマンステスト結果、最終品質レポート
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="milestone-section">
+            <div class="milestone-title">🏆 Week 10完了時の到達マイルストーン</div>
+            <div class="milestone-grid">
+                <div class="milestone-item">
+                    <div class="milestone-header">💼 実務即戦力レベル</div>
+                    <div class="milestone-content">
+                        企業の実際のプロジェクトで即座に活躍できる検索・削除機能の完全実装スキル。Spring Boot・JPA・Thymeleaf技術スタックの実践的活用能力。
+                    </div>
+                </div>
+                <div class="milestone-item">
+                    <div class="milestone-header">🏗️ エンタープライズアーキテクチャ習得</div>
+                    <div class="milestone-content">
+                        Week 9基盤を発展させた完全なエンタープライズアーキテクチャの理解と実装。大規模システム開発で求められる設計パターンの完全習得。
+                    </div>
+                </div>
+                <div class="milestone-item">
+                    <div class="milestone-header">🚀 高度技術スキル獲得</div>
+                    <div class="milestone-content">
+                        パフォーマンス最適化・セキュリティ実装・テスト駆動開発等、シニアエンジニアレベルの技術スキル。問題解決能力と技術的判断力の向上。
+                    </div>
+                </div>
+                <div class="milestone-item">
+                    <div class="milestone-header">🎯 受託業務準備完了</div>
+                    <div class="milestone-content">
+                        Week 11での受託業務実践に向けた完全な準備。実際のクライアント要件に対応できる技術力と問題解決能力の確立。
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="final-goal">
+            <div class="goal-title">🌟 Week 11・受託業務実践への道筋</div>
+            <div class="goal-content">
+                <div class="goal-item">
+                    <div class="goal-icon">🏢</div>
+                    <div class="goal-subtitle">受託業務実践</div>
+                    <div class="goal-description">実際のクライアント案件で Week 10習得技術を実践活用</div>
+                </div>
+                <div class="goal-item">
+                    <div class="goal-icon">👥</div>
+                    <div class="goal-subtitle">チーム開発経験</div>
+                    <div class="goal-description">プロフェッショナルなチーム開発環境での実務経験</div>
+                </div>
+                <div class="goal-item">
+                    <div class="goal-icon">💼</div>
+                    <div class="goal-subtitle">自社採用候補</div>
+                    <div class="goal-description">優秀な受講生は自社エンジニアとして採用検討</div>
+                </div>
+                <div class="goal-item">
+                    <div class="goal-icon">🚀</div>
+                    <div class="goal-subtitle">キャリア形成</div>
+                    <div class="goal-description">プロフェッショナルエンジニアとしてのキャリアスタート</div>
+                </div>
+            </div>
+        </div>
+
+        <div style="background: linear-gradient(135deg, #28a745, #1e7e34); color: white; padding: 20px; border-radius: 12px; text-align: center;">
+            <h3 style="margin-bottom: 15px;">🎉 Week 10.1完了おめでとうございます！</h3>
+            <p style="margin-bottom: 10px;">検索機能基盤の確立により、Week 10全体の成功への確実な基盤が整いました</p>
+            <p><strong>次回Week 10.2では、構築した基盤を活用して美しい検索インターフェースを実装します！</strong></p>
+        </div>
+    </div>
+</body>
+</html>

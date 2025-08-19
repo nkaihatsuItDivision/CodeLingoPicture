@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 10.1: 習得技術統合図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,123,255,0.3);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+
+        .achievement-summary {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .summary-title {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .achievement-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .integration-layers {
+            margin-bottom: 30px;
+        }
+
+        .layers-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .layer-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .layer-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            border-left: 5px solid #007bff;
+            position: relative;
+        }
+
+        .layer-number {
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .layer-header {
+            font-size: 20px;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 15px;
+        }
+
+        .layer-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .technology-list {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .tech-category {
+            margin-bottom: 15px;
+        }
+
+        .tech-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+
+        .tech-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tech-item {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            line-height: 1.3;
+            text-align: left;
+            overflow-x: auto;
+        }
+
+        .integration-showcase {
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .showcase-title {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .showcase-item {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .showcase-header {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .showcase-content {
+            font-size: 14px;
+            opacity: 0.95;
+            line-height: 1.5;
+        }
+
+        .mastery-matrix {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .matrix-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .mastery-item {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            border: 2px solid #ffc107;
+        }
+
+        .mastery-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .mastery-icon {
+            font-size: 20px;
+            margin-right: 10px;
+            color: #ffc107;
+        }
+
+        .mastery-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #856404;
+        }
+
+        .mastery-level {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: auto;
+        }
+
+        .mastery-skills {
+            font-size: 14px;
+            color: #6c757d;
+            line-height: 1.5;
+        }
+
+        .enterprise-readiness {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .readiness-title {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .readiness-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .readiness-item {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .readiness-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .readiness-subtitle {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .readiness-description {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        @media (max-width: 768px) {
+            .achievement-stats,
+            .showcase-grid,
+            .matrix-grid,
+            .readiness-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .layer-content {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏆 Week 10.1習得技術統合</h1>
+            <p>Spring Data JPA高度機能による検索機能基盤の完全マスタリー</p>
+        </div>
+
+        <div class="achievement-summary">
+            <div class="summary-title">📊 Week 10.1 達成指標</div>
+            <div class="achievement-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">検索基盤技術習得</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🔧</div>
+                    <div class="stat-number">15+</div>
+                    <div class="stat-label">実装パターン習得</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⚡</div>
+                    <div class="stat-number">90%</div>
+                    <div class="stat-label">性能最適化効果</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🏢</div>
+                    <div class="stat-number">企業級</div>
+                    <div class="stat-label">アーキテクチャレベル</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="integration-layers">
+            <div class="layers-title">🏗️ 統合技術アーキテクチャ</div>
+            <div class="layer-grid">
+                <div class="layer-card">
+                    <div class="layer-number">1</div>
+                    <div class="layer-header">データアクセス層（Repository）</div>
+                    <div class="layer-content">
+                        <div class="technology-list">
+                            <div class="tech-category">
+                                <div class="tech-title">基本機能</div>
+                                <div class="tech-items">
+                                    <span class="tech-item">JpaRepository</span>
+                                    <span class="tech-item">JpaSpecificationExecutor</span>
+                                    <span class="tech-item">@Query・JPQL</span>
+                                </div>
+                            </div>
+                            <div class="tech-category">
+                                <div class="tech-title">拡張機能</div>
+                                <div class="tech-items">
+                                    <span class="tech-item">カスタムリポジトリ</span>
+                                    <span class="tech-item">EntityManager</span>
+                                    <span class="tech-item">Criteria API</span>
+                                </div>
+                            </div>
+                            <div class="tech-category">
+                                <div class="tech-title">最適化技術</div>
+                                <div class="tech-items">
+                                    <span class="tech-item">@EntityGraph</span>
+                                    <span class="tech-item">JOIN FETCH</span>
+                                    <span class="tech-item">インデックス設計</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="code-example">// 統合Repository実装例<br>
+@Repository<br>
+public interface StudentRepository extends <br>
+    JpaRepository&lt;Student, Long&gt;, <br>
+    JpaSpecificationExecutor&lt;Student&gt;,<br>
+    StudentRepositoryCustom {<br>
+    <br>
+    @EntityGraph(&quot;Student.withScores&quot;)<br>
+    @Query(&quot;SELECT s FROM Student s WHERE s.major = :major&quot;)<br>
+    List&lt;Student&gt; findByMajorWithScores(@Param(&quot;major&quot;) String major);<br>
+    <br>
+    @Query(&quot;SELECT s.major, COUNT(s), AVG(s.grade) FROM Student s GROUP BY s.major&quot;)<br>
+    List&lt;Object[]&gt; getStatisticsByMajor();<br>
+}</div>
+                    </div>
+                </div>
+
+                <div class="layer-card">
+                    <div class="layer-number">2</div>
+                    <div class="layer-header">動的検索層（Specification）</div>
+                    <div class="layer-content">
+                        <div class="technology-list">
+                            <div class="tech-category">
+                                <div class="tech-title">検索条件管理</div>
+                                <div class="tech-items">
+                                    <span class="tech-item">StudentSearchCriteria</span>
+                                    <span class="tech-item">Bean Validation</span>
+                                    <span class="tech-item">条件バリデーション</span>
+                                </div>
+                            </div>
+                            <div class="tech-category">
+                                <div class="tech-title">動的クエリ構築</div>
+                                <div class="tech-items">
+                                    <span class="tech-item">Specification</span>
+                                    <span class="tech-item">Predicate構築</span>
+                                    <span class="tech-item">条件組み合わせ</span>
+                                </div>
+                            </div>
+                            <div class="tech-category">
+                                <div class="tech-title">高度検索</div>
+                                <div class="tech-items">
+                                    <span class="tech-item">範囲検索</span>
+                                    <span class="tech-item">部分一致</span>
+                                    <span class="tech-item">複合条件</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="code-example">// 動的検索実装例<br>
+public static Specification&lt;Student&gt; searchByCriteria(StudentSearchCriteria criteria) {<br>
+    return Specification.where(nameContains(criteria.getName()))<br>
+        .and(majorEquals(criteria.getMajor()))<br>
+        .and(gradeInRange(criteria.getMinGrade(), criteria.getMaxGrade()))<br>
+        .and(statusEquals(criteria.getStatus()))<br>
+        .and(enrollmentDateInRange(criteria.getStartDate(), criteria.getEndDate()));<br>
+}<br>
+<br>
+private static Specification&lt;Student&gt; gradeInRange(Integer minGrade, Integer maxGrade) {<br>
+    return (root, query, cb) -&gt; {<br>
+        if (minGrade == null && maxGrade == null) return null;<br>
+        if (minGrade == null) return cb.lessThanOrEqualTo(root.get(&quot;grade&quot;), maxGrade);<br>
+        if (maxGrade == null) return cb.greaterThanOrEqualTo(root.get(&quot;grade&quot;), minGrade);<br>
+        return cb.between(root.get(&quot;grade&quot;), minGrade, maxGrade);<br>
+    };<br>
+}</div>
+                    </div>
+                </div>
+
+                <div class="layer-card">
+                    <div class="layer-number">3</div>
+                    <div class="layer-header">サービス層（Week 9アーキテクチャ統合）</div>
+                    <div class="layer-content">
+                        <div class="technology-list">
+                            <div class="tech-category">
+                                <div class="tech-title">Week 9継承</div>
+                                <div class="tech-items">
+                                    <span class="tech-item">@Service</span>
+                                    <span class="tech-item">@Transactional</span>
+                                    <span class="tech-item">ServiceException</span>
+                                </div>
+                            </div>
+                            <div class="tech-category">
+                                <div class="tech-title">検索サービス</div>
+                                <div class="tech-items">
+                                    <span class="tech-item">StudentSearchService</span>
+                                    <span class="tech-item">検索ロジック統合</span>
+                                    <span class="tech-item">エラーハンドリング</span>
+                                </div>
+                            </div>
+                            <div class="tech-category">
+                                <div class="tech-title">データ変換</div>
+                                <div class="tech-items">
+                                    <span class="tech-item">DTOパターン</span>
+                                    <span class="tech-item">Entity-DTO変換</span>
+                                    <span class="tech-item">データ整合性</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="code-example">// サービス層統合実装例<br>
+@Service<br>
+@Transactional(readOnly = true)<br>
+public class StudentSearchServiceImpl implements StudentSearchService {<br>
+    <br>
+    @Autowired<br>
+    private StudentRepository studentRepository;<br>
+    <br>
+    public List&lt;StudentDto&gt; searchStudents(StudentSearchCriteria criteria) throws ServiceException {<br>
+        try {<br>
+            validateSearchCriteria(criteria);  // Week 9 バリデーション<br>
+            <br>
+            Specification&lt;Student&gt; spec = StudentSpecifications.searchByCriteria(criteria);<br>
+            List&lt;Student&gt; students = studentRepository.findAll(spec);<br>
+            <br>
+            return students.stream()<br>
+                .map(this::convertToDto)  // Week 9 DTOパターン<br>
+                .collect(Collectors.toList());<br>
+                <br>
+        } catch (Exception e) {<br>
+            throw new ServiceException(&quot;学生検索に失敗しました&quot;, e);  // Week 9 エラーハンドリング<br>
+        }<br>
+    }<br>
+}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="integration-showcase">
+            <div class="showcase-title">🔗 技術統合の実現価値</div>
+            <div class="showcase-grid">
+                <div class="showcase-item">
+                    <div class="showcase-header">Week 9アーキテクチャの発展</div>
+                    <div class="showcase-content">
+                        確立されたエンタープライズアーキテクチャを基盤として、検索機能を自然に統合。一貫性のあるコード品質と保守性を維持しながら高度な機能を実現。
+                    </div>
+                </div>
+                <div class="showcase-item">
+                    <div class="showcase-header">Spring Data JPA完全活用</div>
+                    <div class="showcase-content">
+                        標準機能から高度なカスタム実装まで、Spring Data JPAの全機能を段階的に習得。企業システムで要求される複雑な検索要件に対応可能。
+                    </div>
+                </div>
+                <div class="showcase-item">
+                    <div class="showcase-header">パフォーマンス最適化実践</div>
+                    <div class="showcase-content">
+                        インデックス設計・N+1問題対策・クエリ最適化等、実際のプロダクション環境で必要な性能チューニング技術を実装レベルで習得。
+                    </div>
+                </div>
+                <div class="showcase-item">
+                    <div class="showcase-header">実用的な検索基盤構築</div>
+                    <div class="showcase-content">
+                        動的条件検索・複合検索・統計処理等、企業システムで実際に使用される検索機能の完全な実装基盤を確立。即戦力レベルのスキル獲得。
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mastery-matrix">
+            <div class="matrix-title">🎯 技術習得マトリックス</div>
+            <div class="matrix-grid">
+                <div class="mastery-item">
+                    <div class="mastery-header">
+                        <div class="mastery-icon">🔧</div>
+                        <div class="mastery-title">Repository設計</div>
+                        <div class="mastery-level">EXPERT</div>
+                    </div>
+                    <div class="mastery-skills">
+                        JpaRepository拡張・カスタムリポジトリ実装・EntityManager活用・複雑クエリ構築
+                    </div>
+                </div>
+                <div class="mastery-item">
+                    <div class="mastery-header">
+                        <div class="mastery-icon">⚡</div>
+                        <div class="mastery-title">動的検索技術</div>
+                        <div class="mastery-level">EXPERT</div>
+                    </div>
+                    <div class="mastery-skills">
+                        Specification実装・Criteria API・動的Predicate構築・条件の組み合わせ最適化
+                    </div>
+                </div>
+                <div class="mastery-item">
+                    <div class="mastery-header">
+                        <div class="mastery-icon">📝</div>
+                        <div class="mastery-title">JPQL・@Query</div>
+                        <div class="mastery-level">EXPERT</div>
+                    </div>
+                    <div class="mastery-skills">
+                        JPQL記述・@Query活用・パラメータバインディング・集計クエリ・統計処理
+                    </div>
+                </div>
+                <div class="mastery-item">
+                    <div class="mastery-header">
+                        <div class="mastery-icon">🏗️</div>
+                        <div class="mastery-title">アーキテクチャ統合</div>
+                        <div class="mastery-level">EXPERT</div>
+                    </div>
+                    <div class="mastery-skills">
+                        Week 9基盤活用・Service層設計・DTOパターン・エラーハンドリング統合
+                    </div>
+                </div>
+                <div class="mastery-item">
+                    <div class="mastery-header">
+                        <div class="mastery-icon">🚀</div>
+                        <div class="mastery-title">性能最適化</div>
+                        <div class="mastery-level">ADVANCED</div>
+                    </div>
+                    <div class="mastery-skills">
+                        インデックス設計・N+1問題対策・@EntityGraph活用・クエリ最適化・パフォーマンステスト
+                    </div>
+                </div>
+                <div class="mastery-item">
+                    <div class="mastery-header">
+                        <div class="mastery-icon">✅</div>
+                        <div class="mastery-title">品質保証</div>
+                        <div class="mastery-level">ADVANCED</div>
+                    </div>
+                    <div class="mastery-skills">
+                        テスト駆動開発・Repository/Serviceテスト・統合テスト・品質管理プロセス
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="enterprise-readiness">
+            <div class="readiness-title">🏢 エンタープライズ対応レベル</div>
+            <div class="readiness-grid">
+                <div class="readiness-item">
+                    <div class="readiness-icon">🎯</div>
+                    <div class="readiness-subtitle">実装完成度</div>
+                    <div class="readiness-description">企業システムレベルの検索機能を完全実装可能</div>
+                </div>
+                <div class="readiness-item">
+                    <div class="readiness-icon">⚡</div>
+                    <div class="readiness-subtitle">性能要件対応</div>
+                    <div class="readiness-description">大規模データに対応する最適化技術を習得</div>
+                </div>
+                <div class="readiness-item">
+                    <div class="readiness-icon">🔧</div>
+                    <div class="readiness-subtitle">保守性確保</div>
+                    <div class="readiness-description">長期運用に耐える設計パターンを実践</div>
+                </div>
+                <div class="readiness-item">
+                    <div class="readiness-icon">📈</div>
+                    <div class="readiness-subtitle">拡張性設計</div>
+                    <div class="readiness-description">将来の機能拡張に対応する柔軟なアーキテクチャ</div>
+                </div>
+            </div>
+        </div>
+
+        <div style="background: linear-gradient(135deg, #6f42c1, #5a32a3); color: white; padding: 20px; border-radius: 12px; text-align: center;">
+            <h3 style="margin-bottom: 15px;">🚀 次のステップ：Week 10.2以降のロードマップ</h3>
+            <p>確立された検索基盤を活用し、完全な検索システムの構築に向けたWeek 10全体の学習計画を確認します</p>
+        </div>
+    </div>
+</body>
+</html>

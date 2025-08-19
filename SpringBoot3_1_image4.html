@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 10.1: 動的検索アーキテクチャ図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,123,255,0.3);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+
+        .architecture-flow {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .flow-step {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            border-left: 5px solid #007bff;
+            position: relative;
+        }
+
+        .step-number {
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .step-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 15px;
+            margin-left: 50px;
+        }
+
+        .step-content {
+            margin-left: 50px;
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            text-align: left;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        .step-description {
+            font-size: 14px;
+            color: #6c757d;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .criteria-showcase {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .criteria-title {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .criteria-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .criteria-item {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .criteria-header {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .specification-section {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .specification-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .benefit-card {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .benefit-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .benefit-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .benefit-description {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        @media (max-width: 768px) {
+            .criteria-grid,
+            .benefits-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            .step-title {
+                margin-left: 25px;
+            }
+
+            .step-content {
+                margin-left: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚡ 動的検索アーキテクチャ</h1>
+            <p>Criteria API・Specificationパターンによる柔軟な検索システム</p>
+        </div>
+
+        <div class="criteria-showcase">
+            <div class="criteria-title">📋 StudentSearchCriteria DTO設計</div>
+            <div class="criteria-grid">
+                <div class="criteria-item">
+                    <div class="criteria-header">基本検索条件</div>
+                    <div class="code-example">public class StudentSearchCriteria {<br>
+    private String name;<br>
+    private String email;<br>
+    private String major;<br>
+    private String status;<br>
+    <br>
+    // getters/setters<br>
+}</div>
+                </div>
+                <div class="criteria-item">
+                    <div class="criteria-header">範囲検索条件</div>
+                    <div class="code-example">// 成績範囲<br>
+private Integer minGrade;<br>
+private Integer maxGrade;<br>
+<br>
+// 日付範囲<br>
+private LocalDate startDate;<br>
+private LocalDate endDate;<br>
+<br>
+// スコア範囲<br>
+private Double minScore;<br>
+private Double maxScore;</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="architecture-flow">
+            <div class="flow-step">
+                <div class="step-number">1</div>
+                <div class="step-title">検索条件受け取り</div>
+                <div class="step-content">
+                    <div class="step-description">
+                        フロントエンドから送信された検索条件をStudentSearchCriteriaオブジェクトで受け取り、null値チェックを実施
+                    </div>
+                    <div class="code-example">@PostMapping(&quot;/search&quot;)<br>
+public String searchStudents(@ModelAttribute StudentSearchCriteria criteria, Model model) {<br>
+    // 検索条件の前処理<br>
+    if (criteria.getName() != null && criteria.getName().trim().isEmpty()) {<br>
+        criteria.setName(null);<br>
+    }<br>
+    <br>
+    List&lt;StudentDto&gt; results = studentSearchService.searchStudents(criteria);<br>
+    model.addAttribute(&quot;students&quot;, results);<br>
+    return &quot;student/search-results&quot;;<br>
+}</div>
+                </div>
+            </div>
+
+            <div class="flow-step">
+                <div class="step-number">2</div>
+                <div class="step-title">Specification生成</div>
+                <div class="step-content">
+                    <div class="step-description">
+                        検索条件に基づいて動的にSpecificationオブジェクトを生成。null値の条件は無視して柔軟な検索を実現
+                    </div>
+                    <div class="code-example">public static Specification&lt;Student&gt; searchByCriteria(StudentSearchCriteria criteria) {<br>
+    return (root, query, criteriaBuilder) -&gt; {<br>
+        List&lt;Predicate&gt; predicates = new ArrayList&lt;&gt;();<br>
+        <br>
+        // 名前の部分一致検索<br>
+        if (criteria.getName() != null) {<br>
+            predicates.add(criteriaBuilder.like(<br>
+                criteriaBuilder.lower(root.get(&quot;name&quot;)), <br>
+                &quot;%&quot; + criteria.getName().toLowerCase() + &quot;%&quot;<br>
+            ));<br>
+        }<br>
+        <br>
+        // 専攻の完全一致検索<br>
+        if (criteria.getMajor() != null) {<br>
+            predicates.add(criteriaBuilder.equal(root.get(&quot;major&quot;), criteria.getMajor()));<br>
+        }<br>
+        <br>
+        // 成績範囲検索<br>
+        if (criteria.getMinGrade() != null) {<br>
+            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get(&quot;grade&quot;), criteria.getMinGrade()));<br>
+        }<br>
+        if (criteria.getMaxGrade() != null) {<br>
+            predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get(&quot;grade&quot;), criteria.getMaxGrade()));<br>
+        }<br>
+        <br>
+        return criteriaBuilder.and(predicates.toArray(new Predicate[0]));<br>
+    };<br>
+}</div>
+                </div>
+            </div>
+
+            <div class="flow-step">
+                <div class="step-number">3</div>
+                <div class="step-title">動的Predicate構築</div>
+                <div class="step-content">
+                    <div class="step-description">
+                        条件ごとにPredicateを動的に追加。複数条件はAND演算子で結合し、柔軟な検索ロジックを構築
+                    </div>
+                    <div class="code-example">// 条件の組み合わせパターン例<br>
+private static Specification&lt;Student&gt; buildComplexSpecification(StudentSearchCriteria criteria) {<br>
+    return Specification.where(nameContains(criteria.getName()))<br>
+        .and(majorEquals(criteria.getMajor()))<br>
+        .and(gradeInRange(criteria.getMinGrade(), criteria.getMaxGrade()))<br>
+        .and(enrollmentDateInRange(criteria.getStartDate(), criteria.getEndDate()))<br>
+        .and(statusEquals(criteria.getStatus()));<br>
+}<br>
+<br>
+// 個別Specification実装<br>
+private static Specification&lt;Student&gt; nameContains(String name) {<br>
+    return (root, query, cb) -&gt; name == null ? null : <br>
+        cb.like(cb.lower(root.get(&quot;name&quot;)), &quot;%&quot; + name.toLowerCase() + &quot;%&quot;);<br>
+}<br>
+<br>
+private static Specification&lt;Student&gt; gradeInRange(Integer minGrade, Integer maxGrade) {<br>
+    return (root, query, cb) -&gt; {<br>
+        if (minGrade == null && maxGrade == null) return null;<br>
+        if (minGrade == null) return cb.lessThanOrEqualTo(root.get(&quot;grade&quot;), maxGrade);<br>
+        if (maxGrade == null) return cb.greaterThanOrEqualTo(root.get(&quot;grade&quot;), minGrade);<br>
+        return cb.between(root.get(&quot;grade&quot;), minGrade, maxGrade);<br>
+    };<br>
+}</div>
+                </div>
+            </div>
+
+            <div class="flow-step">
+                <div class="step-number">4</div>
+                <div class="step-title">Repository実行・結果取得</div>
+                <div class="step-content">
+                    <div class="step-description">
+                        生成されたSpecificationをJpaSpecificationExecutorで実行し、検索結果を取得
+                    </div>
+                    <div class="code-example">@Repository<br>
+public interface StudentRepository extends JpaRepository&lt;Student, Long&gt;, JpaSpecificationExecutor&lt;Student&gt; {<br>
+    // JpaSpecificationExecutorにより動的検索が可能<br>
+}<br>
+<br>
+// Service層での実行<br>
+@Service<br>
+@Transactional(readOnly = true)<br>
+public class StudentSearchServiceImpl implements StudentSearchService {<br>
+    <br>
+    @Autowired<br>
+    private StudentRepository studentRepository;<br>
+    <br>
+    public List&lt;StudentDto&gt; searchStudents(StudentSearchCriteria criteria) {<br>
+        Specification&lt;Student&gt; spec = StudentSpecifications.searchByCriteria(criteria);<br>
+        List&lt;Student&gt; students = studentRepository.findAll(spec);<br>
+        <br>
+        return students.stream()<br>
+            .map(this::convertToDto)<br>
+            .collect(Collectors.toList());<br>
+    }<br>
+}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="specification-section">
+            <div class="specification-title">🔧 Specificationパターンの強力な機能</div>
+            <div class="code-example">// OR条件の実装<br>
+public static Specification&lt;Student&gt; majorInList(List&lt;String&gt; majors) {<br>
+    return (root, query, cb) -&gt; {<br>
+        if (majors == null || majors.isEmpty()) return null;<br>
+        return root.get(&quot;major&quot;).in(majors);<br>
+    };<br>
+}<br>
+<br>
+// 複雑な条件組み合わせ<br>
+public static Specification&lt;Student&gt; complexSearch(StudentSearchCriteria criteria) {<br>
+    return Specification.where(nameContains(criteria.getName()))<br>
+        .and(majorInList(criteria.getMajors()))<br>
+        .and(gradeInRange(criteria.getMinGrade(), criteria.getMaxGrade()))<br>
+        .and(activeStudentsOnly())<br>
+        .and(enrolledAfter(criteria.getEnrollmentDate()));<br>
+}<br>
+<br>
+// JOIN検索の実装<br>
+public static Specification&lt;Student&gt; hasScoreAbove(Double minScore) {<br>
+    return (root, query, cb) -&gt; {<br>
+        Join&lt;Student, Score&gt; scoreJoin = root.join(&quot;scores&quot;);<br>
+        return cb.greaterThan(scoreJoin.get(&quot;value&quot;), minScore);<br>
+    };<br>
+}</div>
+        </div>
+
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <div class="benefit-icon">🎯</div>
+                <div class="benefit-title">柔軟な検索条件</div>
+                <div class="benefit-description">null値を含む条件を動的に処理し、ユーザーが入力した条件のみで検索実行</div>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">🔧</div>
+                <div class="benefit-title">再利用可能設計</div>
+                <div class="benefit-description">Specificationを組み合わせることで複雑な検索ロジックを構築可能</div>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">⚡</div>
+                <div class="benefit-title">タイプセーフ</div>
+                <div class="benefit-description">コンパイル時にエラーを検出でき、実行時エラーを防止</div>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">🚀</div>
+                <div class="benefit-title">パフォーマンス最適化</div>
+                <div class="benefit-description">必要な条件のみでクエリを構築し、無駄なデータ取得を排除</div>
+            </div>
+        </div>
+
+        <div style="background: linear-gradient(135deg, #6f42c1, #5a32a3); color: white; padding: 20px; border-radius: 12px; text-align: center;">
+            <h3 style="margin-bottom: 15px;">📈 次のステップ：Repository拡張パターン</h3>
+            <p>動的検索の基盤を活用して、さらに高度なカスタムリポジトリ実装を学習します</p>
+        </div>
+    </div>
+</body>
+</html>

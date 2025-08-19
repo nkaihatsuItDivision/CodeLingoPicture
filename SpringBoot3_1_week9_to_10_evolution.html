@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 9→10技術発展図</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            border-radius: 12px;
+        }
+
+        .evolution-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .week-box {
+            flex: 1;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            position: relative;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .week9-box {
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+            color: white;
+        }
+
+        .week10-box {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+        }
+
+        .week-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 8px;
+        }
+
+        .tech-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .tech-item {
+            background: rgba(255,255,255,0.15);
+            margin: 8px 0;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            border-left: 4px solid rgba(255,255,255,0.6);
+        }
+
+        .evolution-arrow {
+            font-size: 40px;
+            color: #28a745;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-width: 80px;
+        }
+
+        .arrow-text {
+            font-size: 14px;
+            color: #28a745;
+            font-weight: bold;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .achievement-box {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .achievement-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .achievement-text {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            text-align: left;
+            overflow-x: auto;
+        }
+
+        .highlight {
+            background: rgba(255,255,255,0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .evolution-container {
+                flex-direction: column;
+            }
+            
+            .evolution-arrow {
+                transform: rotate(90deg);
+                margin: 20px 0;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            .title {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Week 9 → Week 10.1 技術発展図</div>
+        
+        <div class="evolution-container">
+            <div class="week-box week9-box">
+                <div class="week-title">Week 9 完成<br>エンタープライズアーキテクチャ</div>
+                <ul class="tech-list">
+                    <li class="tech-item"><span class="highlight">Service層設計</span><br>ビジネスロジック分離</li>
+                    <li class="tech-item"><span class="highlight">DI・@Transactional</span><br>トランザクション管理</li>
+                    <li class="tech-item"><span class="highlight">DTOパターン</span><br>Entity・Form分離</li>
+                    <li class="tech-item"><span class="highlight">統一エラーハンドリング</span><br>ServiceException</li>
+                    <li class="tech-item"><span class="highlight">Bean Validation</span><br>自動バリデーション</li>
+                    <li class="tech-item"><span class="highlight">PRGパターン</span><br>UX最適化</li>
+                </ul>
+                
+                <div class="code-example">
+@Service<br>
+@Transactional<br>
+public class StudentServiceImpl {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// CRUD操作・ビジネスロジック<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 統一エラーハンドリング<br>
+}
+                </div>
+            </div>
+            
+            <div class="evolution-arrow">
+                <div>🚀</div>
+                <div class="arrow-text">技術進化</div>
+            </div>
+            
+            <div class="week-box week10-box">
+                <div class="week-title">Week 10.1 実装<br>検索機能基盤</div>
+                <ul class="tech-list">
+                    <li class="tech-item"><span class="highlight">@Query・JPQL</span><br>柔軟な検索クエリ</li>
+                    <li class="tech-item"><span class="highlight">動的検索条件</span><br>Criteria API活用</li>
+                    <li class="tech-item"><span class="highlight">Repository拡張</span><br>カスタムリポジトリ</li>
+                    <li class="tech-item"><span class="highlight">読み取り専用TX</span><br>パフォーマンス最適化</li>
+                    <li class="tech-item"><span class="highlight">検索条件DTO</span><br>型安全な条件指定</li>
+                    <li class="tech-item"><span class="highlight">統計・集計クエリ</span><br>高度な検索機能</li>
+                </ul>
+                
+                <div class="code-example">
+@Service<br>
+@Transactional(readOnly = true)<br>
+public class StudentSearchServiceImpl {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 動的検索・高度クエリ<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// Week 9基盤の完全活用<br>
+}
+                </div>
+            </div>
+        </div>
+        
+        <div class="achievement-box">
+            <div class="achievement-title">🎯 Week 10.1での技術発展価値</div>
+            <div class="achievement-text">
+                Week 9のエンタープライズアーキテクチャを基盤として、<strong>企業システムレベルの検索機能</strong>を実装。<br>
+                基本CRUD → 高度検索機能への自然な技術進化により、<strong>実用的なWebアプリケーション開発技術</strong>を完全習得
+            </div>
+        </div>
+    </div>
+</body>
+</html>

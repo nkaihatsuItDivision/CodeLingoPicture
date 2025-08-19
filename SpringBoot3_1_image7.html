@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 10.1: パフォーマンス最適化図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,123,255,0.3);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+
+        .optimization-overview {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .overview-title {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .overview-item {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .overview-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .overview-subtitle {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .optimization-sections {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .optimization-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            border-left: 5px solid #007bff;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-icon {
+            width: 30px;
+            height: 30px;
+            background: #007bff;
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 16px;
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            text-align: left;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        .subsection {
+            margin-bottom: 25px;
+        }
+
+        .subsection-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 10px;
+        }
+
+        .subsection-description {
+            font-size: 14px;
+            color: #6c757d;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .performance-metrics {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .metrics-title {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .metric-card {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .best-practices {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .practices-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .practices-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .practice-item {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            border: 2px solid #ffc107;
+        }
+
+        .practice-header {
+            font-size: 16px;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .practice-content {
+            font-size: 14px;
+            color: #6c757d;
+            line-height: 1.5;
+        }
+
+        .warning-box {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .warning-title {
+            font-weight: bold;
+            color: #721c24;
+            margin-bottom: 5px;
+        }
+
+        .warning-content {
+            font-size: 14px;
+            color: #721c24;
+        }
+
+        @media (max-width: 768px) {
+            .overview-grid,
+            .metrics-grid,
+            .practices-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚡ パフォーマンス最適化</h1>
+            <p>エンタープライズレベルの検索システム最適化技術</p>
+        </div>
+
+        <div class="optimization-overview">
+            <div class="overview-title">🎯 最適化の重要領域</div>
+            <div class="overview-grid">
+                <div class="overview-item">
+                    <div class="overview-icon">📊</div>
+                    <div class="overview-subtitle">データベースインデックス</div>
+                    <div>検索性能の根本的向上</div>
+                </div>
+                <div class="overview-item">
+                    <div class="overview-icon">🔗</div>
+                    <div class="overview-subtitle">N+1問題回避</div>
+                    <div>関連データ取得最適化</div>
+                </div>
+                <div class="overview-item">
+                    <div class="overview-icon">💾</div>
+                    <div class="overview-subtitle">クエリ最適化</div>
+                    <div>効率的なSQL構築</div>
+                </div>
+                <div class="overview-item">
+                    <div class="overview-icon">📈</div>
+                    <div class="overview-subtitle">メモリ管理</div>
+                    <div>リソース効率化</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="optimization-sections">
+            <div class="optimization-section">
+                <div class="section-title">
+                    <div class="section-icon">📊</div>
+                    データベースインデックス設計
+                </div>
+
+                <div class="subsection">
+                    <div class="subsection-title">1. 基本インデックス設定</div>
+                    <div class="subsection-description">
+                        検索頻度の高いカラムに適切なインデックスを設定し、クエリ実行速度を劇的に向上させます。
+                    </div>
+                    <div class="code-example">@Entity<br>
+@Table(name = &quot;students&quot;, indexes = {<br>
+    @Index(name = &quot;idx_student_name&quot;, columnList = &quot;name&quot;),<br>
+    @Index(name = &quot;idx_student_email&quot;, columnList = &quot;email&quot;),<br>
+    @Index(name = &quot;idx_student_major&quot;, columnList = &quot;major&quot;),<br>
+    @Index(name = &quot;idx_student_grade&quot;, columnList = &quot;grade&quot;),<br>
+    @Index(name = &quot;idx_student_status&quot;, columnList = &quot;status&quot;),<br>
+    @Index(name = &quot;idx_student_enrollment_date&quot;, columnList = &quot;enrollment_date&quot;)<br>
+})<br>
+public class Student {<br>
+    @Id<br>
+    @GeneratedValue(strategy = GenerationType.IDENTITY)<br>
+    private Long id;<br>
+    <br>
+    @Column(name = &quot;name&quot;, nullable = false)<br>
+    private String name;<br>
+    <br>
+    @Column(name = &quot;email&quot;, unique = true)<br>
+    private String email;<br>
+    <br>
+    // その他フィールド<br>
+}</div>
+                </div>
+
+                <div class="subsection">
+                    <div class="subsection-title">2. 複合インデックス戦略</div>
+                    <div class="subsection-description">
+                        複数カラムの組み合わせ検索に対応する複合インデックスで、より高度な最適化を実現。
+                    </div>
+                    <div class="code-example">@Table(name = &quot;students&quot;, indexes = {<br>
+    // 複合インデックス：検索頻度と選択性を考慮した順序<br>
+    @Index(name = &quot;idx_major_grade&quot;, columnList = &quot;major, grade&quot;),<br>
+    @Index(name = &quot;idx_status_major_grade&quot;, columnList = &quot;status, major, grade&quot;),<br>
+    @Index(name = &quot;idx_enrollment_date_major&quot;, columnList = &quot;enrollment_date, major&quot;),<br>
+    <br>
+    // 範囲検索対応<br>
+    @Index(name = &quot;idx_grade_enrollment_date&quot;, columnList = &quot;grade, enrollment_date&quot;),<br>
+    <br>
+    // 部分一致検索最適化（主要検索条件のみ）<br>
+    @Index(name = &quot;idx_name_major&quot;, columnList = &quot;name, major&quot;)<br>
+})</div>
+                </div>
+
+                <div class="warning-box">
+                    <div class="warning-title">⚠️ インデックス設計の注意点</div>
+                    <div class="warning-content">
+                        インデックスは検索性能を向上させますが、INSERT/UPDATE/DELETE性能を低下させる可能性があります。実際の使用パターンを分析して適切なバランスを取ることが重要です。
+                    </div>
+                </div>
+            </div>
+
+            <div class="optimization-section">
+                <div class="section-title">
+                    <div class="section-icon">🔗</div>
+                    N+1問題の完全回避
+                </div>
+
+                <div class="subsection">
+                    <div class="subsection-title">1. @EntityGraphによる宣言的フェッチ</div>
+                    <div class="subsection-description">
+                        関連エンティティを一度のクエリで取得し、N+1問題を根本的に解決します。
+                    </div>
+                    <div class="code-example">@Entity<br>
+@NamedEntityGraphs({<br>
+    @NamedEntityGraph(<br>
+        name = &quot;Student.withScores&quot;,<br>
+        attributeNodes = {<br>
+            @NamedAttributeNode(&quot;scores&quot;),<br>
+            @NamedAttributeNode(&quot;major&quot;)<br>
+        }<br>
+    ),<br>
+    @NamedEntityGraph(<br>
+        name = &quot;Student.withAllRelations&quot;,<br>
+        attributeNodes = {<br>
+            @NamedAttributeNode(&quot;scores&quot;),<br>
+            @NamedAttributeNode(&quot;major&quot;),<br>
+            @NamedAttributeNode(&quot;enrollmentHistory&quot;)<br>
+        }<br>
+    )<br>
+})<br>
+public class Student {<br>
+    // エンティティ定義<br>
+}<br>
+<br>
+// リポジトリでの活用<br>
+@Repository<br>
+public interface StudentRepository extends JpaRepository&lt;Student, Long&gt; {<br>
+    <br>
+    @EntityGraph(&quot;Student.withScores&quot;)<br>
+    List&lt;Student&gt; findByMajor(String major);<br>
+    <br>
+    @EntityGraph(&quot;Student.withAllRelations&quot;)<br>
+    @Query(&quot;SELECT s FROM Student s WHERE s.grade &gt;= :minGrade&quot;)<br>
+    List&lt;Student&gt; findByGradeWithRelations(@Param(&quot;minGrade&quot;) Integer minGrade);<br>
+}</div>
+                </div>
+
+                <div class="subsection">
+                    <div class="subsection-title">2. JOIN FETCHによる効率的取得</div>
+                    <div class="subsection-description">
+                        JPQLのJOIN FETCH句を使用して、必要な関連データを一括取得。
+                    </div>
+                    <div class="code-example">@Repository<br>
+public interface StudentRepository extends JpaRepository&lt;Student, Long&gt; {<br>
+    <br>
+    // 成績データを含む学生検索<br>
+    @Query(&quot;SELECT DISTINCT s FROM Student s &quot; +<br>
+           &quot;LEFT JOIN FETCH s.scores &quot; +<br>
+           &quot;WHERE s.major = :major&quot;)<br>
+    List&lt;Student&gt; findByMajorWithScores(@Param(&quot;major&quot;) String major);<br>
+    <br>
+    // 複数関連エンティティの一括取得<br>
+    @Query(&quot;SELECT DISTINCT s FROM Student s &quot; +<br>
+           &quot;LEFT JOIN FETCH s.scores sc &quot; +<br>
+           &quot;LEFT JOIN FETCH s.enrollmentHistory eh &quot; +<br>
+           &quot;WHERE s.status = 'ACTIVE' AND s.grade &gt;= :minGrade&quot;)<br>
+    List&lt;Student&gt; findActiveStudentsWithAllData(@Param(&quot;minGrade&quot;) Integer minGrade);<br>
+    <br>
+    // 条件付き関連データ取得<br>
+    @Query(&quot;SELECT s FROM Student s &quot; +<br>
+           &quot;LEFT JOIN FETCH s.scores sc &quot; +<br>
+           &quot;WHERE s.name LIKE %:name% AND sc.value &gt;= :minScore&quot;)<br>
+    List&lt;Student&gt; findByNameWithHighScores(@Param(&quot;name&quot;) String name, <br>
+                                          @Param(&quot;minScore&quot;) Double minScore);<br>
+}</div>
+                </div>
+            </div>
+
+            <div class="optimization-section">
+                <div class="section-title">
+                    <div class="section-icon">💾</div>
+                    効率的なクエリ設計原則
+                </div>
+
+                <div class="subsection">
+                    <div class="subsection-title">1. 選択性を考慮した条件順序</div>
+                    <div class="subsection-description">
+                        WHERE句の条件順序を最適化し、データベースエンジンの効率を最大化します。
+                    </div>
+                    <div class="code-example">// 最適化されたSpecification実装<br>
+public static Specification&lt;Student&gt; optimizedSearch(StudentSearchCriteria criteria) {<br>
+    return (root, query, cb) -&gt; {<br>
+        List&lt;Predicate&gt; predicates = new ArrayList&lt;&gt;();<br>
+        <br>
+        // 1. 最も選択性の高い条件から順番に追加<br>
+        // メールアドレス（ユニーク制約）<br>
+        if (StringUtils.hasText(criteria.getEmail())) {<br>
+            predicates.add(cb.equal(root.get(&quot;email&quot;), criteria.getEmail()));<br>
+        }<br>
+        <br>
+        // 2. ステータス（インデックス有り・高選択性）<br>
+        if (StringUtils.hasText(criteria.getStatus())) {<br>
+            predicates.add(cb.equal(root.get(&quot;status&quot;), criteria.getStatus()));<br>
+        }<br>
+        <br>
+        // 3. 専攻（インデックス有り・中選択性）<br>
+        if (StringUtils.hasText(criteria.getMajor())) {<br>
+            predicates.add(cb.equal(root.get(&quot;major&quot;), criteria.getMajor()));<br>
+        }<br>
+        <br>
+        // 4. 範囲検索（インデックス活用）<br>
+        if (criteria.getMinGrade() != null || criteria.getMaxGrade() != null) {<br>
+            if (criteria.getMinGrade() != null && criteria.getMaxGrade() != null) {<br>
+                predicates.add(cb.between(root.get(&quot;grade&quot;), criteria.getMinGrade(), criteria.getMaxGrade()));<br>
+            } else if (criteria.getMinGrade() != null) {<br>
+                predicates.add(cb.greaterThanOrEqualTo(root.get(&quot;grade&quot;), criteria.getMinGrade()));<br>
+            } else {<br>
+                predicates.add(cb.lessThanOrEqualTo(root.get(&quot;grade&quot;), criteria.getMaxGrade()));<br>
+            }<br>
+        }<br>
+        <br>
+        // 5. 部分一致検索（最も負荷が高い）<br>
+        if (StringUtils.hasText(criteria.getName())) {<br>
+            predicates.add(cb.like(cb.lower(root.get(&quot;name&quot;)), <br>
+                &quot;%&quot; + criteria.getName().toLowerCase() + &quot;%&quot;));<br>
+        }<br>
+        <br>
+        return cb.and(predicates.toArray(new Predicate[0]));<br>
+    };<br>
+}</div>
+                </div>
+
+                <div class="subsection">
+                    <div class="subsection-title">2. バッチサイズ最適化</div>
+                    <div class="subsection-description">
+                        大量データ処理時のメモリ効率化とパフォーマンス向上を実現。
+                    </div>
+                    <div class="code-example">@Entity<br>
+@BatchSize(size = 25)  // 関連エンティティの一括取得サイズ<br>
+public class Student {<br>
+    <br>
+    @OneToMany(mappedBy = &quot;student&quot;, fetch = FetchType.LAZY)<br>
+    @BatchSize(size = 50)  // スコアデータのバッチサイズ<br>
+    private List&lt;Score&gt; scores = new ArrayList&lt;&gt;();<br>
+}<br>
+<br>
+// Hibernate設定（application.yml）<br>
+spring:<br>
+  jpa:<br>
+    properties:<br>
+      hibernate:<br>
+        jdbc:<br>
+          batch_size: 25           # INSERT/UPDATE バッチサイズ<br>
+          fetch_size: 50           # SELECT フェッチサイズ<br>
+        order_inserts: true        # INSERT順序最適化<br>
+        order_updates: true        # UPDATE順序最適化<br>
+        batch_versioned_data: true # バージョニング対応</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="performance-metrics">
+            <div class="metrics-title">📈 最適化効果の測定指標</div>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value">90%</div>
+                    <div class="metric-label">クエリ実行時間短縮</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">75%</div>
+                    <div class="metric-label">メモリ使用量削減</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">85%</div>
+                    <div class="metric-label">データベース負荷軽減</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">95%</div>
+                    <div class="metric-label">N+1問題排除率</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="best-practices">
+            <div class="practices-title">🎯 パフォーマンス最適化ベストプラクティス</div>
+            <div class="practices-grid">
+                <div class="practice-item">
+                    <div class="practice-header">📊 監視・分析</div>
+                    <div class="practice-content">
+                        • アプリケーションログでスロークエリを特定<br>
+                        • Spring Boot Actuatorでメトリクス監視<br>
+                        • データベースのEXECUTION PLANを定期確認<br>
+                        • JVM メモリ使用状況の継続監視
+                    </div>
+                </div>
+                <div class="practice-item">
+                    <div class="practice-header">🔍 テスト検証</div>
+                    <div class="practice-content">
+                        • 実データ規模でのパフォーマンステスト実施<br>
+                        • 負荷テストによる限界値把握<br>
+                        • 異なる検索パターンでの性能検証<br>
+                        • メモリリーク検出テストの定期実行
+                    </div>
+                </div>
+                <div class="practice-item">
+                    <div class="practice-header">⚙️ 継続改善</div>
+                    <div class="practice-content">
+                        • 使用パターン変化に応じたインデックス見直し<br>
+                        • クエリキャッシュ戦略の最適化<br>
+                        • データ増加に伴うアーキテクチャ調整<br>
+                        • 新技術導入による性能向上検討
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="background: linear-gradient(135deg, #6f42c1, #5a32a3); color: white; padding: 20px; border-radius: 12px; text-align: center;">
+            <h3 style="margin-bottom: 15px;">🚀 次のステップ：実践演習フロー</h3>
+            <p>最適化技術を実際のコードで体験する6ステップの段階的実装演習を開始します</p>
+        </div>
+    </div>
+</body>
+</html>

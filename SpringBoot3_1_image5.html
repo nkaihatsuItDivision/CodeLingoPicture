@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 10.1: Repository拡張パターン図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,123,255,0.3);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+
+        .architecture-overview {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .overview-title {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .overview-item {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .overview-icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .overview-subtitle {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .step-by-step {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .step-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            border-left: 5px solid #007bff;
+            position: relative;
+        }
+
+        .step-number {
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .step-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 15px;
+            margin-left: 50px;
+        }
+
+        .step-content {
+            margin-left: 50px;
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            text-align: left;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        .step-description {
+            font-size: 14px;
+            color: #6c757d;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .integration-section {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .integration-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .comparison-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid #007bff;
+        }
+
+        .comparison-header {
+            font-size: 16px;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .benefits-section {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .benefits-title {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .benefit-item {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .benefit-icon {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .benefit-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .overview-grid,
+            .comparison-grid,
+            .benefits-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            .step-title {
+                margin-left: 25px;
+            }
+
+            .step-content {
+                margin-left: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 Repository拡張パターン</h1>
+            <p>カスタムリポジトリによる高度なクエリ実装技術</p>
+        </div>
+
+        <div class="architecture-overview">
+            <div class="overview-title">🏗️ Repository拡張アーキテクチャ</div>
+            <div class="overview-grid">
+                <div class="overview-item">
+                    <div class="overview-icon">📋</div>
+                    <div class="overview-subtitle">カスタムインターフェース</div>
+                    <div>StudentRepositoryCustom<br>独自メソッド定義</div>
+                </div>
+                <div class="overview-item">
+                    <div class="overview-icon">⚙️</div>
+                    <div class="overview-subtitle">実装クラス</div>
+                    <div>StudentRepositoryCustomImpl<br>EntityManager活用</div>
+                </div>
+                <div class="overview-item">
+                    <div class="overview-icon">🔗</div>
+                    <div class="overview-subtitle">統合リポジトリ</div>
+                    <div>JpaRepository + Custom<br>完全な機能統合</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="step-by-step">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <div class="step-title">カスタムインターフェース設計</div>
+                <div class="step-content">
+                    <div class="step-description">
+                        JpaRepositoryでは実現できない複雑なクエリ用の独自インターフェースを定義
+                    </div>
+                    <div class="code-example">package com.example.repository;<br>
+<br>
+import java.util.List;<br>
+import com.example.dto.StudentSearchCriteria;<br>
+import com.example.entity.Student;<br>
+<br>
+/**<br>
+ * StudentRepository用カスタムインターフェース<br>
+ * 複雑な検索ロジック・統計処理を定義<br>
+ */<br>
+public interface StudentRepositoryCustom {<br>
+    <br>
+    /**<br>
+     * 複雑な条件による学生検索<br>
+     */<br>
+    List&lt;Student&gt; findStudentsWithComplexCriteria(StudentSearchCriteria criteria);<br>
+    <br>
+    /**<br>
+     * 専攻別成績統計取得<br>
+     */<br>
+    List&lt;Object[]&gt; getGradeStatisticsByMajor();<br>
+    <br>
+    /**<br>
+     * 上位N位の学生を取得<br>
+     */<br>
+    List&lt;Student&gt; findTopStudentsByScore(int limit);<br>
+    <br>
+    /**<br>
+     * 月別入学者数統計<br>
+     */<br>
+    List&lt;Object[]&gt; getMonthlyEnrollmentStatistics(int year);<br>
+}</div>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <div class="step-title">実装クラス作成</div>
+                <div class="step-content">
+                    <div class="step-description">
+                        EntityManagerを活用してカスタムインターフェースの実装クラスを作成。命名規則「インターフェース名 + Impl」を遵守
+                    </div>
+                    <div class="code-example">package com.example.repository;<br>
+<br>
+import org.springframework.stereotype.Repository;<br>
+import javax.persistence.EntityManager;<br>
+import javax.persistence.PersistenceContext;<br>
+import javax.persistence.TypedQuery;<br>
+import javax.persistence.criteria.*;<br>
+import java.util.ArrayList;<br>
+import java.util.List;<br>
+<br>
+@Repository<br>
+public class StudentRepositoryCustomImpl implements StudentRepositoryCustom {<br>
+    <br>
+    @PersistenceContext<br>
+    private EntityManager entityManager;<br>
+    <br>
+    @Override<br>
+    public List&lt;Student&gt; findStudentsWithComplexCriteria(StudentSearchCriteria criteria) {<br>
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();<br>
+        CriteriaQuery&lt;Student&gt; query = cb.createQuery(Student.class);<br>
+        Root&lt;Student&gt; root = query.from(Student.class);<br>
+        <br>
+        List&lt;Predicate&gt; predicates = new ArrayList&lt;&gt;();<br>
+        <br>
+        // 複雑な条件構築<br>
+        if (criteria.getName() != null) {<br>
+            predicates.add(cb.like(cb.lower(root.get(&quot;name&quot;)), <br>
+                &quot;%&quot; + criteria.getName().toLowerCase() + &quot;%&quot;));<br>
+        }<br>
+        <br>
+        if (criteria.getMajors() != null && !criteria.getMajors().isEmpty()) {<br>
+            predicates.add(root.get(&quot;major&quot;).in(criteria.getMajors()));<br>
+        }<br>
+        <br>
+        // スコアランキング条件<br>
+        if (criteria.getMinScore() != null) {<br>
+            Subquery&lt;Double&gt; subquery = query.subquery(Double.class);<br>
+            Root&lt;Score&gt; scoreRoot = subquery.from(Score.class);<br>
+            subquery.select(cb.avg(scoreRoot.get(&quot;value&quot;)))<br>
+                .where(cb.equal(scoreRoot.get(&quot;student&quot;), root));<br>
+            predicates.add(cb.greaterThan(subquery, criteria.getMinScore()));<br>
+        }<br>
+        <br>
+        query.where(cb.and(predicates.toArray(new Predicate[0])));<br>
+        query.orderBy(cb.desc(root.get(&quot;grade&quot;)), cb.asc(root.get(&quot;name&quot;)));<br>
+        <br>
+        TypedQuery&lt;Student&gt; typedQuery = entityManager.createQuery(query);<br>
+        return typedQuery.getResultList();<br>
+    }<br>
+}</div>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <div class="step-title">統計・集計クエリ実装</div>
+                <div class="step-content">
+                    <div class="step-description">
+                        Criteria APIを活用した高度な統計処理・集計クエリの実装
+                    </div>
+                    <div class="code-example">@Override<br>
+public List&lt;Object[]&gt; getGradeStatisticsByMajor() {<br>
+    CriteriaBuilder cb = entityManager.getCriteriaBuilder();<br>
+    CriteriaQuery&lt;Object[]&gt; query = cb.createQuery(Object[].class);<br>
+    Root&lt;Student&gt; root = query.from(Student.class);<br>
+    <br>
+    query.multiselect(<br>
+        root.get(&quot;major&quot;),                    // 専攻<br>
+        cb.count(root),                       // 学生数<br>
+        cb.avg(root.get(&quot;grade&quot;)),             // 平均成績<br>
+        cb.max(root.get(&quot;grade&quot;)),             // 最高成績<br>
+        cb.min(root.get(&quot;grade&quot;))              // 最低成績<br>
+    );<br>
+    <br>
+    query.groupBy(root.get(&quot;major&quot;));<br>
+    query.orderBy(cb.desc(cb.avg(root.get(&quot;grade&quot;))));<br>
+    <br>
+    return entityManager.createQuery(query).getResultList();<br>
+}<br>
+<br>
+@Override<br>
+public List&lt;Student&gt; findTopStudentsByScore(int limit) {<br>
+    CriteriaBuilder cb = entityManager.getCriteriaBuilder();<br>
+    CriteriaQuery&lt;Student&gt; query = cb.createQuery(Student.class);<br>
+    Root&lt;Student&gt; root = query.from(Student.class);<br>
+    Join&lt;Student, Score&gt; scoreJoin = root.join(&quot;scores&quot;);<br>
+    <br>
+    query.select(root)<br>
+        .groupBy(root.get(&quot;id&quot;))<br>
+        .orderBy(cb.desc(cb.avg(scoreJoin.get(&quot;value&quot;))));<br>
+    <br>
+    return entityManager.createQuery(query)<br>
+        .setMaxResults(limit)<br>
+        .getResultList();<br>
+}</div>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <div class="step-title">JpaRepositoryとの統合</div>
+                <div class="step-content">
+                    <div class="step-description">
+                        カスタムインターフェースをJpaRepositoryと統合し、すべての機能を一つのリポジトリで提供
+                    </div>
+                    <div class="code-example">package com.example.repository;<br>
+<br>
+import org.springframework.data.jpa.repository.JpaRepository;<br>
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;<br>
+import org.springframework.data.jpa.repository.Query;<br>
+import org.springframework.data.repository.query.Param;<br>
+import org.springframework.stereotype.Repository;<br>
+import com.example.entity.Student;<br>
+import java.util.List;<br>
+<br>
+/**<br>
+ * 統合Studentリポジトリインターフェース<br>
+ * JpaRepository + JpaSpecificationExecutor + カスタム機能<br>
+ */<br>
+@Repository<br>
+public interface StudentRepository extends <br>
+    JpaRepository&lt;Student, Long&gt;, <br>
+    JpaSpecificationExecutor&lt;Student&gt;,<br>
+    StudentRepositoryCustom {  // カスタムインターフェース継承<br>
+    <br>
+    // 基本的なクエリメソッド<br>
+    List&lt;Student&gt; findByMajor(String major);<br>
+    <br>
+    List&lt;Student&gt; findByGradeBetween(Integer minGrade, Integer maxGrade);<br>
+    <br>
+    // @Queryアノテーション活用<br>
+    @Query(&quot;SELECT s FROM Student s WHERE s.name LIKE %:name% ORDER BY s.grade DESC&quot;)<br>
+    List&lt;Student&gt; findByNameContainingOrderByGradeDesc(@Param(&quot;name&quot;) String name);<br>
+    <br>
+    // すべての機能が一つのリポジトリで利用可能：<br>
+    // 1. JpaRepository標準機能（save, findById, delete等）<br>
+    // 2. JpaSpecificationExecutor動的検索<br>
+    // 3. カスタム複雑クエリ（findStudentsWithComplexCriteria等）<br>
+}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="integration-section">
+            <div class="integration-title">🔗 Service層での活用パターン</div>
+            <div class="code-example">@Service<br>
+@Transactional(readOnly = true)<br>
+public class StudentSearchServiceImpl implements StudentSearchService {<br>
+    <br>
+    @Autowired<br>
+    private StudentRepository studentRepository;<br>
+    <br>
+    /**<br>
+     * 標準的な動的検索（Specification活用）<br>
+     */<br>
+    public List&lt;StudentDto&gt; searchStudents(StudentSearchCriteria criteria) {<br>
+        Specification&lt;Student&gt; spec = StudentSpecifications.searchByCriteria(criteria);<br>
+        return studentRepository.findAll(spec).stream()<br>
+            .map(this::convertToDto)<br>
+            .collect(Collectors.toList());<br>
+    }<br>
+    <br>
+    /**<br>
+     * 複雑な条件検索（カスタムリポジトリ活用）<br>
+     */<br>
+    public List&lt;StudentDto&gt; searchStudentsAdvanced(StudentSearchCriteria criteria) {<br>
+        return studentRepository.findStudentsWithComplexCriteria(criteria).stream()<br>
+            .map(this::convertToDto)<br>
+            .collect(Collectors.toList());<br>
+    }<br>
+    <br>
+    /**<br>
+     * 統計データ取得<br>
+     */<br>
+    public List&lt;MajorStatisticsDto&gt; getMajorStatistics() {<br>
+        return studentRepository.getGradeStatisticsByMajor().stream()<br>
+            .map(this::convertToStatisticsDto)<br>
+            .collect(Collectors.toList());<br>
+    }<br>
+}</div>
+        </div>
+
+        <div class="comparison-grid">
+            <div class="comparison-item">
+                <div class="comparison-header">🎯 適用場面</div>
+                <div style="font-size: 14px; line-height: 1.6;">
+                    <strong>カスタムリポジトリが必要な場合：</strong><br>
+                    • 複数テーブルのJOIN処理<br>
+                    • 複雑な集計・統計処理<br>
+                    • サブクエリを含む高度な検索<br>
+                    • ネイティブSQL最適化<br>
+                    • バッチ処理・一括更新<br>
+                    <br>
+                    <strong>標準機能で十分な場合：</strong><br>
+                    • 単純なCRUD操作<br>
+                    • 基本的な条件検索<br>
+                    • Specificationで実現可能な動的検索
+                </div>
+            </div>
+            <div class="comparison-item">
+                <div class="comparison-header">⚡ パフォーマンス考慮</div>
+                <div style="font-size: 14px; line-height: 1.6;">
+                    <strong>最適化のポイント：</strong><br>
+                    • 適切なインデックス設計<br>
+                    • N+1問題の回避<br>
+                    • JOIN FETCHの活用<br>
+                    • バッチサイズ調整<br>
+                    • クエリプランの確認<br>
+                    <br>
+                    <strong>監視すべき項目：</strong><br>
+                    • 実行時間<br>
+                    • メモリ使用量<br>
+                    • データベース負荷
+                </div>
+            </div>
+        </div>
+
+        <div class="benefits-section">
+            <div class="benefits-title">🚀 Repository拡張の利点</div>
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="benefit-icon">🎨</div>
+                    <div class="benefit-title">柔軟な実装</div>
+                    <div>EntityManagerで自由度の高いクエリ実装</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">🔧</div>
+                    <div class="benefit-title">統合アーキテクチャ</div>
+                    <div>標準機能とカスタム機能の完全統合</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">⚡</div>
+                    <div class="benefit-title">高性能</div>
+                    <div>最適化されたクエリで高速処理</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">🎯</div>
+                    <div class="benefit-title">保守性</div>
+                    <div>明確な責任分担で保守性向上</div>
+                </div>
+            </div>
+        </div>
+
+        <div style="background: linear-gradient(135deg, #6f42c1, #5a32a3); color: white; padding: 20px; border-radius: 12px; text-align: center;">
+            <h3 style="margin-bottom: 15px;">📈 次のステップ：Week 9アーキテクチャ活用</h3>
+            <p>Repository拡張パターンをWeek 9のエンタープライズアーキテクチャと統合し、完全なサービス層を構築します</p>
+        </div>
+    </div>
+</body>
+</html>

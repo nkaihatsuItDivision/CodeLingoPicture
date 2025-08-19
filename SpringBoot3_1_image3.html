@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 10.1: @Query・JPQL実装パターン図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,123,255,0.3);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .pattern-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            border-left: 5px solid #007bff;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .pattern-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .pattern-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .pattern-icon {
+            width: 24px;
+            height: 24px;
+            background: #007bff;
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            text-align: left;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        .pattern-description {
+            font-size: 14px;
+            color: #6c757d;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .feature-highlight {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .feature-highlight h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .feature-item {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .comparison-section {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .comparison-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .comparison-item {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            border: 2px solid #ffc107;
+        }
+
+        .comparison-header {
+            font-size: 16px;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .vs-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffc107;
+            margin: 10px 0;
+        }
+
+        @media (max-width: 768px) {
+            .content-grid,
+            .comparison-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .feature-list {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 @Query・JPQL実装パターン</h1>
+            <p>Spring Data JPA高度クエリ機能の完全活用</p>
+        </div>
+
+        <div class="feature-highlight">
+            <h3>📊 @Queryアノテーションの多彩な機能</h3>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <strong>JPQL</strong><br>
+                    オブジェクト指向クエリ
+                </div>
+                <div class="feature-item">
+                    <strong>ネイティブSQL</strong><br>
+                    データベース固有機能
+                </div>
+                <div class="feature-item">
+                    <strong>パラメータバインディング</strong><br>
+                    @Param活用
+                </div>
+                <div class="feature-item">
+                    <strong>複雑な検索条件</strong><br>
+                    部分一致・範囲検索
+                </div>
+            </div>
+        </div>
+
+        <div class="comparison-section">
+            <div class="comparison-title">🔄 JPQL vs ネイティブSQL比較</div>
+            <div class="comparison-grid">
+                <div class="comparison-item">
+                    <div class="comparison-header">JPQL (推奨)</div>
+                    <div class="code-example">@Query(&quot;SELECT s FROM Student s WHERE s.name LIKE %:name%&quot;)<br>
+List&lt;Student&gt; findByNameContaining(@Param(&quot;name&quot;) String name);</div>
+                    <div style="margin-top: 10px; font-size: 14px; color: #28a745;">
+                        ✅ データベース非依存<br>
+                        ✅ タイプセーフ<br>
+                        ✅ エンティティ直接操作
+                    </div>
+                </div>
+                <div class="comparison-item">
+                    <div class="comparison-header">ネイティブSQL</div>
+                    <div class="code-example">@Query(value = &quot;SELECT * FROM students WHERE name LIKE CONCAT('%', :name, '%')&quot;, nativeQuery = true)<br>
+List&lt;Student&gt; findByNameContainingNative(@Param(&quot;name&quot;) String name);</div>
+                    <div style="margin-top: 10px; font-size: 14px; color: #dc3545;">
+                        ⚠️ データベース依存<br>
+                        ⚠️ 最適化が必要な場合のみ
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <div class="pattern-card">
+                <div class="pattern-title">
+                    <div class="pattern-icon">1</div>
+                    部分一致検索パターン
+                </div>
+                <div class="pattern-description">
+                    文字列の部分一致検索を効率的に実装。LIKEクエリの活用パターン。
+                </div>
+                <div class="code-example">@Query(&quot;SELECT s FROM Student s WHERE s.name LIKE %:name%&quot;)<br>
+List&lt;Student&gt; findByNameContaining(@Param(&quot;name&quot;) String name);<br><br>
+
+@Query(&quot;SELECT s FROM Student s WHERE s.email LIKE :email%&quot;)<br>
+List&lt;Student&gt; findByEmailStartingWith(@Param(&quot;email&quot;) String email);</div>
+            </div>
+
+            <div class="pattern-card">
+                <div class="pattern-title">
+                    <div class="pattern-icon">2</div>
+                    範囲検索パターン
+                </div>
+                <div class="pattern-description">
+                    数値や日付の範囲検索を実装。BETWEENクエリの効果的な活用。
+                </div>
+                <div class="code-example">@Query(&quot;SELECT s FROM Student s WHERE s.grade BETWEEN :minGrade AND :maxGrade&quot;)<br>
+List&lt;Student&gt; findByGradeRange(@Param(&quot;minGrade&quot;) Integer minGrade, @Param(&quot;maxGrade&quot;) Integer maxGrade);<br><br>
+
+@Query(&quot;SELECT s FROM Student s WHERE s.enrollmentDate BETWEEN :startDate AND :endDate&quot;)<br>
+List&lt;Student&gt; findByEnrollmentDateRange(@Param(&quot;startDate&quot;) LocalDate startDate, @Param(&quot;endDate&quot;) LocalDate endDate);</div>
+            </div>
+
+            <div class="pattern-card">
+                <div class="pattern-title">
+                    <div class="pattern-icon">3</div>
+                    複合条件検索パターン
+                </div>
+                <div class="pattern-description">
+                    複数の条件を組み合わせた高度な検索。AND/OR論理演算子の活用。
+                </div>
+                <div class="code-example">@Query(&quot;SELECT s FROM Student s WHERE s.major = :major AND s.grade &gt;= :minGrade AND s.status = 'ACTIVE'&quot;)<br>
+List&lt;Student&gt; findByMajorAndGradeAndStatus(@Param(&quot;major&quot;) String major, @Param(&quot;minGrade&quot;) Integer minGrade);<br><br>
+
+@Query(&quot;SELECT s FROM Student s WHERE (s.major = :major1 OR s.major = :major2) AND s.grade BETWEEN :minGrade AND :maxGrade&quot;)<br>
+List&lt;Student&gt; findByMultipleMajorsAndGradeRange(@Param(&quot;major1&quot;) String major1, @Param(&quot;major2&quot;) String major2, @Param(&quot;minGrade&quot;) Integer minGrade, @Param(&quot;maxGrade&quot;) Integer maxGrade);</div>
+            </div>
+
+            <div class="pattern-card">
+                <div class="pattern-title">
+                    <div class="pattern-icon">4</div>
+                    集計・グループ化パターン
+                </div>
+                <div class="pattern-description">
+                    COUNT、SUM、AVG等の集計関数とGROUP BYを活用した統計クエリ。
+                </div>
+                <div class="code-example">@Query(&quot;SELECT s.major, COUNT(s) FROM Student s GROUP BY s.major&quot;)<br>
+List&lt;Object[]&gt; countStudentsByMajor();<br><br>
+
+@Query(&quot;SELECT s.grade, AVG(s.score) FROM Student s WHERE s.major = :major GROUP BY s.grade&quot;)<br>
+List&lt;Object[]&gt; getAverageScoreByGradeForMajor(@Param(&quot;major&quot;) String major);<br><br>
+
+@Query(&quot;SELECT COUNT(s) FROM Student s WHERE s.enrollmentDate &gt;= :date&quot;)<br>
+Long countStudentsEnrolledSince(@Param(&quot;date&quot;) LocalDate date);</div>
+            </div>
+        </div>
+
+        <div style="background: linear-gradient(135deg, #fd7e14, #e55100); color: white; padding: 20px; border-radius: 12px; text-align: center;">
+            <h3 style="margin-bottom: 15px;">🚀 次のステップ：動的検索アーキテクチャ</h3>
+            <p>@Queryの基盤を活用して、条件に応じて動的にクエリを構築する高度なアーキテクチャを構築します</p>
+        </div>
+    </div>
+</body>
+</html>

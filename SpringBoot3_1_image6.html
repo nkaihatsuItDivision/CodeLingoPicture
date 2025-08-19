@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 10.1: Week 9アーキテクチャ活用図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,123,255,0.3);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+
+        .week9-foundation {
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .foundation-title {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .foundation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .foundation-item {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .foundation-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .foundation-subtitle {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .evolution-section {
+            margin-bottom: 30px;
+        }
+
+        .evolution-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .evolution-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .evolution-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            border-left: 5px solid #6f42c1;
+        }
+
+        .evolution-item.enhanced {
+            border-left: 5px solid #007bff;
+        }
+
+        .evolution-header {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #6f42c1;
+        }
+
+        .evolution-item.enhanced .evolution-header {
+            color: #007bff;
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            text-align: left;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        .service-implementation {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .implementation-title {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .integration-benefits {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .benefits-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .benefit-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            border: 2px solid #ffc107;
+            text-align: center;
+        }
+
+        .benefit-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #ffc107;
+        }
+
+        .benefit-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 8px;
+        }
+
+        .benefit-description {
+            font-size: 14px;
+            color: #6c757d;
+            line-height: 1.5;
+        }
+
+        .enhancement-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .evolution-container,
+            .foundation-grid,
+            .benefits-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔗 Week 9アーキテクチャ活用</h1>
+            <p>エンタープライズ基盤を活用した検索サービス実装</p>
+        </div>
+
+        <div class="week9-foundation">
+            <div class="foundation-title">🏗️ Week 9確立済みアーキテクチャ基盤</div>
+            <div class="foundation-grid">
+                <div class="foundation-item">
+                    <div class="foundation-icon">🏢</div>
+                    <div class="foundation-subtitle">Service層設計</div>
+                    <div>@Service・@Transactional</div>
+                </div>
+                <div class="foundation-item">
+                    <div class="foundation-icon">📋</div>
+                    <div class="foundation-subtitle">DTOパターン</div>
+                    <div>Entity・Form分離</div>
+                </div>
+                <div class="foundation-item">
+                    <div class="foundation-icon">✅</div>
+                    <div class="foundation-subtitle">Bean Validation</div>
+                    <div>自動バリデーション</div>
+                </div>
+                <div class="foundation-item">
+                    <div class="foundation-icon">⚠️</div>
+                    <div class="foundation-subtitle">エラーハンドリング</div>
+                    <div>ServiceException統一</div>
+                </div>
+                <div class="foundation-item">
+                    <div class="foundation-icon">🔄</div>
+                    <div class="foundation-subtitle">PRGパターン</div>
+                    <div>UX最適化</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="evolution-section">
+            <div class="evolution-title">📈 Week 9アーキテクチャの検索機能への進化</div>
+            <div class="evolution-container">
+                <div class="evolution-item">
+                    <div class="evolution-header">Week 9 基盤実装</div>
+                    <div class="code-example">@Service<br>
+@Transactional<br>
+public class StudentServiceImpl implements StudentService {<br>
+    <br>
+    @Autowired<br>
+    private StudentRepository studentRepository;<br>
+    <br>
+    public StudentDto createStudent(StudentForm form) throws ServiceException {<br>
+        try {<br>
+            Student student = convertToEntity(form);<br>
+            Student saved = studentRepository.save(student);<br>
+            return convertToDto(saved);<br>
+        } catch (Exception e) {<br>
+            throw new ServiceException(&quot;学生の登録に失敗しました&quot;, e);<br>
+        }<br>
+    }<br>
+    <br>
+    public List&lt;StudentDto&gt; getAllStudents() {<br>
+        return studentRepository.findAll().stream()<br>
+            .map(this::convertToDto)<br>
+            .collect(Collectors.toList());<br>
+    }<br>
+}</div>
+                </div>
+
+                <div class="evolution-item enhanced">
+                    <div class="evolution-header">Week 10.1 検索機能拡張<span class="enhancement-badge">NEW</span></div>
+                    <div class="code-example">@Service<br>
+@Transactional(readOnly = true)  // 読み取り専用最適化<br>
+public class StudentSearchServiceImpl implements StudentSearchService {<br>
+    <br>
+    @Autowired<br>
+    private StudentRepository studentRepository;<br>
+    <br>
+    public List&lt;StudentDto&gt; searchStudents(StudentSearchCriteria criteria) throws ServiceException {<br>
+        try {<br>
+            // Week 9 DTOパターン継承<br>
+            validateSearchCriteria(criteria);<br>
+            <br>
+            // Week 10.1 動的検索実装<br>
+            Specification&lt;Student&gt; spec = StudentSpecifications.searchByCriteria(criteria);<br>
+            List&lt;Student&gt; students = studentRepository.findAll(spec);<br>
+            <br>
+            // Week 9 Entity-DTO変換継承<br>
+            return students.stream()<br>
+                .map(this::convertToDto)<br>
+                .collect(Collectors.toList());<br>
+                <br>
+        } catch (IllegalArgumentException e) {<br>
+            // Week 9 ServiceException活用<br>
+            throw new ServiceException(&quot;検索条件が不正です: &quot; + e.getMessage(), e);<br>
+        } catch (Exception e) {<br>
+            throw new ServiceException(&quot;学生検索中にエラーが発生しました&quot;, e);<br>
+        }<br>
+    }<br>
+}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="service-implementation">
+            <div class="implementation-title">🚀 統合検索サービス完全実装</div>
+            <div class="code-example">@Service<br>
+@Transactional(readOnly = true)<br>
+public class StudentSearchServiceImpl implements StudentSearchService {<br>
+    <br>
+    @Autowired<br>
+    private StudentRepository studentRepository;<br>
+    <br>
+    @Autowired<br>
+    private StudentConverter studentConverter;  // Week 9 変換ロジック再利用<br>
+    <br>
+    /**<br>
+     * 基本検索（Week 9 パターン継承）<br>
+     */<br>
+    @Override<br>
+    public List&lt;StudentDto&gt; searchStudents(StudentSearchCriteria criteria) throws ServiceException {<br>
+        validateSearchCriteria(criteria);  // Week 9 バリデーション<br>
+        <br>
+        try {<br>
+            Specification&lt;Student&gt; spec = StudentSpecifications.searchByCriteria(criteria);<br>
+            List&lt;Student&gt; students = studentRepository.findAll(spec);<br>
+            <br>
+            return students.stream()<br>
+                .map(studentConverter::convertToDto)  // Week 9 変換ロジック<br>
+                .collect(Collectors.toList());<br>
+                <br>
+        } catch (Exception e) {<br>
+            log.error(&quot;検索エラー: criteria={}&quot;, criteria, e);<br>
+            throw new ServiceException(&quot;学生検索に失敗しました&quot;, e);<br>
+        }<br>
+    }<br>
+    <br>
+    /**<br>
+     * 高度検索（Week 10.1 拡張機能）<br>
+     */<br>
+    @Override<br>
+    public List&lt;StudentDto&gt; searchStudentsAdvanced(StudentSearchCriteria criteria) throws ServiceException {<br>
+        validateAdvancedCriteria(criteria);<br>
+        <br>
+        try {<br>
+            // カスタムリポジトリ活用<br>
+            List&lt;Student&gt; students = studentRepository.findStudentsWithComplexCriteria(criteria);<br>
+            <br>
+            return students.stream()<br>
+                .map(studentConverter::convertToDto)<br>
+                .collect(Collectors.toList());<br>
+                <br>
+        } catch (Exception e) {<br>
+            throw new ServiceException(&quot;高度検索に失敗しました&quot;, e);<br>
+        }<br>
+    }<br>
+    <br>
+    /**<br>
+     * Week 9 バリデーションパターン継承<br>
+     */<br>
+    private void validateSearchCriteria(StudentSearchCriteria criteria) throws ServiceException {<br>
+        if (criteria == null) {<br>
+            throw new ServiceException(&quot;検索条件が指定されていません&quot;);<br>
+        }<br>
+        <br>
+        // 基本的な条件チェック<br>
+        if (StringUtils.hasText(criteria.getName()) && criteria.getName().length() &lt; 2) {<br>
+            throw new ServiceException(&quot;名前は2文字以上で入力してください&quot;);<br>
+        }<br>
+        <br>
+        if (criteria.getMinGrade() != null && criteria.getMaxGrade() != null) {<br>
+            if (criteria.getMinGrade() &gt; criteria.getMaxGrade()) {<br>
+                throw new ServiceException(&quot;最小成績は最大成績以下で入力してください&quot;);<br>
+            }<br>
+        }<br>
+    }<br>
+}</div>
+        </div>
+
+        <div class="evolution-section">
+            <div class="evolution-title">🎯 Controller層での統合活用</div>
+            <div class="evolution-container">
+                <div class="evolution-item">
+                    <div class="evolution-header">Week 9 基本Controller</div>
+                    <div class="code-example">@Controller<br>
+@RequestMapping(&quot;/students&quot;)<br>
+public class StudentController {<br>
+    <br>
+    @Autowired<br>
+    private StudentService studentService;<br>
+    <br>
+    @PostMapping<br>
+    public String createStudent(@Valid @ModelAttribute StudentForm form, <br>
+                              BindingResult result, <br>
+                              RedirectAttributes redirectAttributes) {<br>
+        if (result.hasErrors()) {<br>
+            return &quot;student/form&quot;;<br>
+        }<br>
+        <br>
+        try {<br>
+            studentService.createStudent(form);<br>
+            redirectAttributes.addFlashAttribute(&quot;successMessage&quot;, &quot;学生を登録しました&quot;);<br>
+            return &quot;redirect:/students&quot;;<br>
+        } catch (ServiceException e) {<br>
+            redirectAttributes.addFlashAttribute(&quot;errorMessage&quot;, e.getMessage());<br>
+            return &quot;redirect:/students/form&quot;;<br>
+        }<br>
+    }<br>
+}</div>
+                </div>
+
+                <div class="evolution-item enhanced">
+                    <div class="evolution-header">Week 10.1 検索Controller拡張<span class="enhancement-badge">ENHANCED</span></div>
+                    <div class="code-example">@Controller<br>
+@RequestMapping(&quot;/students&quot;)<br>
+public class StudentController {<br>
+    <br>
+    @Autowired<br>
+    private StudentService studentService;<br>
+    <br>
+    @Autowired<br>
+    private StudentSearchService studentSearchService;  // 検索サービス追加<br>
+    <br>
+    // Week 9 PRGパターン継承<br>
+    @PostMapping(&quot;/search&quot;)<br>
+    public String searchStudents(@Valid @ModelAttribute StudentSearchCriteria criteria,<br>
+                               BindingResult result,<br>
+                               Model model,<br>
+                               RedirectAttributes redirectAttributes) {<br>
+        <br>
+        // Week 9 バリデーション継承<br>
+        if (result.hasErrors()) {<br>
+            model.addAttribute(&quot;criteria&quot;, criteria);<br>
+            return &quot;student/search&quot;;<br>
+        }<br>
+        <br>
+        try {<br>
+            // Week 10.1 検索機能<br>
+            List&lt;StudentDto&gt; students = studentSearchService.searchStudents(criteria);<br>
+            <br>
+            model.addAttribute(&quot;students&quot;, students);<br>
+            model.addAttribute(&quot;criteria&quot;, criteria);<br>
+            model.addAttribute(&quot;resultCount&quot;, students.size());<br>
+            <br>
+            return &quot;student/search-results&quot;;<br>
+            <br>
+        } catch (ServiceException e) {<br>
+            // Week 9 エラーハンドリング継承<br>
+            model.addAttribute(&quot;errorMessage&quot;, e.getMessage());<br>
+            model.addAttribute(&quot;criteria&quot;, criteria);<br>
+            return &quot;student/search&quot;;<br>
+        }<br>
+    }<br>
+}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="integration-benefits">
+            <div class="benefits-title">🎯 Week 9アーキテクチャ継承の利点</div>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">🏗️</div>
+                    <div class="benefit-title">一貫性のあるアーキテクチャ</div>
+                    <div class="benefit-description">確立済みの設計パターンを継承し、システム全体の一貫性を保持</div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">⚡</div>
+                    <div class="benefit-title">開発効率の向上</div>
+                    <div class="benefit-description">既存の基盤コードを再利用し、開発時間を大幅短縮</div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🛡️</div>
+                    <div class="benefit-title">統一されたエラーハンドリング</div>
+                    <div class="benefit-description">ServiceExceptionによる一貫したエラー処理で保守性向上</div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">📋</div>
+                    <div class="benefit-title">DTOパターンの活用</div>
+                    <div class="benefit-description">Entity-DTO変換ロジックを再利用し、データ整合性を保証</div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">✅</div>
+                    <div class="benefit-title">バリデーション統合</div>
+                    <div class="benefit-description">Bean Validationと独自バリデーションの組み合わせで堅牢性確保</div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🔄</div>
+                    <div class="benefit-title">UX継続性</div>
+                    <div class="benefit-description">PRGパターン継承により、ユーザー体験の一貫性を維持</div>
+                </div>
+            </div>
+        </div>
+
+        <div style="background: linear-gradient(135deg, #fd7e14, #e55100); color: white; padding: 20px; border-radius: 12px; text-align: center;">
+            <h3 style="margin-bottom: 15px;">🚀 次のステップ：パフォーマンス最適化</h3>
+            <p>確立された検索基盤をベースに、エンタープライズレベルのパフォーマンス最適化技術を学習します</p>
+        </div>
+    </div>
+</body>
+</html>
