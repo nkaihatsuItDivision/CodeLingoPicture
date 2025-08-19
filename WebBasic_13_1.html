@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>田中太郎 - プロフィール</title>
+    <style>
+        /* 全体設定 */
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            font-family: "游ゴシック", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            background-color: #f8f9fa;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            min-height: 100vh;
+        }
+        
+        /* ヘッダー */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 60px 30px;
+        }
+        
+        .header-name {
+            font-size: 42px;
+            margin: 0 0 10px 0;
+            font-weight: bold;
+        }
+        
+        .header-title {
+            font-size: 20px;
+            margin: 0 0 15px 0;
+            opacity: 0.9;
+        }
+        
+        .header-subtitle {
+            font-size: 16px;
+            margin: 0;
+            opacity: 0.8;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* セクション共通 */
+        .section-container {
+            padding: 50px 30px;
+        }
+        
+        .section-title {
+            font-size: 28px;
+            color: #2c5282;
+            text-align: center;
+            margin: 0 0 40px 0;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        /* プロフィール */
+        .profile-content {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .profile-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 4px solid #3498db;
+            margin-bottom: 20px;
+        }
+        
+        .info-table {
+            margin: 0 auto;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        
+        .info-table th {
+            background-color: #f8f9fa;
+            padding: 12px 20px;
+            text-align: left;
+            border: 1px solid #dee2e6;
+            font-weight: bold;
+            color: #495057;
+        }
+        
+        .info-table td {
+            padding: 12px 20px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .profile-description {
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 16px;
+            line-height: 1.8;
+            text-align: center;
+            color: #6c757d;
+        }
+        
+        /* スキル */
+        .skills-section {
+            background-color: #f8f9fa;
+        }
+        
+        .skills-grid {
+            text-align: center;
+        }
+        
+        .skill-card {
+            display: inline-block;
+            width: 280px;
+            margin: 15px;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 25px;
+            text-align: left;
+            vertical-align: top;
+        }
+        
+        .skill-name {
+            color: #2c5282;
+            margin: 0 0 15px 0;
+            font-size: 20px;
+        }
+        
+        .skill-description {
+            margin-bottom: 15px;
+            color: #6c757d;
+            font-size: 14px;
+        }
+        
+        .skill-level {
+            color: #495057;
+            font-size: 14px;
+        }
+        
+        /* 趣味 */
+        .hobbies-list {
+            max-width: 600px;
+            margin: 0 auto 40px auto;
+            padding-left: 0;
+            list-style: none;
+        }
+        
+        .hobby-item {
+            background: #f8f9fa;
+            margin: 15px 0;
+            padding: 15px 20px;
+            border-left: 4px solid #3498db;
+            border-radius: 4px;
+        }
+        
+        .goals-box {
+            background: #e8f4f8;
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid #bee5eb;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .goals-box h3 {
+            margin: 0 0 15px 0;
+            color: #0c5460;
+        }
+        
+        .goals-box ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .goals-box li {
+            margin: 8px 0;
+            color: #495057;
+        }
+        
+        /* 連絡先 */
+        .contact-section {
+            background-color: #f8f9fa;
+        }
+        
+        .contact-info {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .contact-methods {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            margin-top: 20px;
+        }
+        
+        .contact-item {
+            margin: 15px 0;
+            font-size: 16px;
+        }
+        
+        .contact-item a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        
+        .contact-item a:hover {
+            text-decoration: underline;
+        }
+        
+        /* フッター */
+        .footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .footer p {
+            margin: 5px 0;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="header-name">田中 太郎</h1>
+            <p class="header-title">Web Developer / Programmer</p>
+            <p class="header-subtitle">HTMLとCSSを学んで、Webの世界へ第一歩を踏み出しました</p>
+        </header>
+
+        <section class="profile-section">
+            <div class="section-container">
+                <h2 class="section-title">プロフィール</h2>
+                
+                <div class="profile-content">
+                    <img src="男性イラスト.png" alt="田中太郎のプロフィール写真" class="profile-photo">
+                    
+                    <table class="info-table">
+                        <tr>
+                            <th>名前</th>
+                            <td>田中 太郎</td>
+                        </tr>
+                        <tr>
+                            <th>年齢</th>
+                            <td>25歳</td>
+                        </tr>
+                        <tr>
+                            <th>出身</th>
+                            <td>大阪府大阪市</td>
+                        </tr>
+                        <tr>
+                            <th>職業</th>
+                            <td>会社員（IT業界）</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <p class="profile-description">
+                    プログラミングに興味を持ち、HTML/CSSの学習を開始しました。
+                    将来的にはWebエンジニアとして活躍したいと考えています。
+                    学習したことをアウトプットしながら、着実にスキルアップを目指しています。
+                </p>
+            </div>
+        </section>
+
+        <section class="skills-section">
+            <div class="section-container">
+                <h2 class="section-title">学習中のスキル</h2>
+                
+                <div class="skills-grid">
+                    <div class="skill-card">
+                        <h3 class="skill-name">HTML</h3>
+                        <p class="skill-description">
+                            Webページの構造を作成する言語。
+                            見出し、段落、リスト、表などの基本要素をマスター。
+                        </p>
+                        <div class="skill-level">
+                            <strong>習得レベル：</strong>基礎完了
+                        </div>
+                    </div>
+                    
+                    <div class="skill-card">
+                        <h3 class="skill-name">CSS</h3>
+                        <p class="skill-description">
+                            Webページのデザインを担当する言語。
+                            色、フォント、レイアウトの基本的なスタイリングを習得。
+                        </p>
+                        <div class="skill-level">
+                            <strong>習得レベル：</strong>基礎完了
+                        </div>
+                    </div>
+                    
+                    <div class="skill-card">
+                        <h3 class="skill-name">JavaScript</h3>
+                        <p class="skill-description">
+                            Webページに動きを加える言語。
+                            次の学習ステップとして習得予定。
+                        </p>
+                        <div class="skill-level">
+                            <strong>習得レベル：</strong>学習予定
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="hobbies-section">
+            <div class="section-container">
+                <h2 class="section-title">趣味・興味</h2>
+                
+                <ul class="hobbies-list">
+                    <li class="hobby-item">
+                        <strong>読書</strong> - 技術書やビジネス書を中心に月5冊程度
+                    </li>
+                    <li class="hobby-item">
+                        <strong>映画鑑賞</strong> - SF映画やヒューマンドラマが好き
+                    </li>
+                    <li class="hobby-item">
+                        <strong>料理</strong> - 週末に新しいレシピに挑戦するのが楽しみ
+                    </li>
+                    <li class="hobby-item">
+                        <strong>ブログ執筆</strong> - 学習内容をアウトプット
+                    </li>
+                </ul>
+                
+                <div class="goals-box">
+                    <h3>将来の目標</h3>
+                    <ol>
+                        <li>JavaScriptを習得して動的なWebサイトを作成</li>
+                        <li>オリジナルのWebアプリケーションを開発</li>
+                        <li>Webエンジニアとして転職を実現</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <section class="contact-section">
+            <div class="section-container">
+                <h2 class="section-title">お問い合わせ</h2>
+                
+                <div class="contact-info">
+                    <p>ご質問やご相談がございましたら、お気軽にご連絡ください。</p>
+                    
+                    <div class="contact-methods">
+                        <div class="contact-item">
+                            <strong>Email:</strong> 
+                            <a href="mailto:tanaka@example.com">tanaka@example.com</a>
+                        </div>
+                        <div class="contact-item">
+                            <strong>電話:</strong> 
+                            <a href="tel:090-1234-5678">090-1234-5678</a>
+                        </div>
+                        <div class="contact-item">
+                            <strong>所在地:</strong> 大阪府大阪市
+                        </div>
+                        <div class="contact-item">
+                            <strong>SNS:</strong> 
+                            <a href="https://twitter.com/example" target="_blank" rel="noopener">Twitter</a> / 
+                            <a href="https://github.com/example" target="_blank" rel="noopener">GitHub</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <div class="section-container">
+                <p>© 2024 田中太郎. All rights reserved.</p>
+                <p>このサイトはHTML/CSS学習の成果として作成されました。</p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
