@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webページ表示の5つのステップ</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 1000px;
+            text-align: center;
+        }
+        
+        .title {
+            color: #333;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 40px;
+        }
+        
+        .flowchart {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 20px;
+            padding: 40px;
+        }
+        
+        .step {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+        }
+        
+        .step-box {
+            background: white;
+            border-radius: 15px;
+            padding: 20px 30px;
+            min-width: 300px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .step-number {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex: 1;
+            text-align: left;
+        }
+        
+        .step-title {
+            font-weight: bold;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .step-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        .step-icon {
+            font-size: 30px;
+            flex-shrink: 0;
+        }
+        
+        .arrow {
+            color: #666;
+            font-size: 30px;
+            margin: 10px 0;
+        }
+        
+        /* 各ステップの色分け */
+        .step:nth-child(1) .step-number { background: linear-gradient(135deg, #74b9ff, #0984e3); }
+        .step:nth-child(2) .step-number { background: linear-gradient(135deg, #00b894, #00cec9); }
+        .step:nth-child(3) .step-number { background: linear-gradient(135deg, #fdcb6e, #e17055); }
+        .step:nth-child(4) .step-number { background: linear-gradient(135deg, #fd79a8, #e84393); }
+        .step:nth-child(5) .step-number { background: linear-gradient(135deg, #a29bfe, #6c5ce7); }
+        
+        .side-labels {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .client-label, .server-label {
+            position: absolute;
+            color: #666;
+            font-weight: bold;
+            font-size: 14px;
+            background: #ffffff;
+            padding: 5px 10px;
+            border-radius: 15px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .client-label {
+            left: 20px;
+            top: 15%;
+        }
+        
+        .server-label {
+            right: 20px;
+            top: 45%;
+        }
+        
+        .summary {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 30px;
+            color: #333;
+            text-align: left;
+        }
+        
+        .summary h3 {
+            margin: 0 0 15px 0;
+            font-size: 18px;
+            text-align: center;
+        }
+        
+        .key-points {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .key-point {
+            background: #ffffff;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Webページ表示の5つのステップ</div>
+        
+        <div class="flowchart">
+            <div class="side-labels">
+                <div class="client-label">👤 あなた（クライアント）</div>
+                <div class="server-label">🖥️ サーバー</div>
+            </div>
+            
+            <div class="step">
+                <div class="step-box">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <div class="step-title">URLの入力・リンクのクリック</div>
+                        <div class="step-description">アドレスバーにURLを入力、または検索結果のリンクをクリック</div>
+                    </div>
+                    <div class="step-icon">🌐</div>
+                </div>
+            </div>
+            
+            <div class="arrow">↓</div>
+            
+            <div class="step">
+                <div class="step-box">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <div class="step-title">サーバーへの要求（リクエスト）</div>
+                        <div class="step-description">ブラウザが「このページを見せてください」とサーバーに依頼</div>
+                    </div>
+                    <div class="step-icon">📤</div>
+                </div>
+            </div>
+            
+            <div class="arrow">↓</div>
+            
+            <div class="step">
+                <div class="step-box">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <div class="step-title">サーバーでの処理</div>
+                        <div class="step-description">要求されたページ（HTML、CSS、画像）を探して準備</div>
+                    </div>
+                    <div class="step-icon">⚙️</div>
+                </div>
+            </div>
+            
+            <div class="arrow">↓</div>
+            
+            <div class="step">
+                <div class="step-box">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <div class="step-title">ブラウザへの応答（レスポンス）</div>
+                        <div class="step-description">準備したファイルを「はい、どうぞ！」とブラウザに送信</div>
+                    </div>
+                    <div class="step-icon">📥</div>
+                </div>
+            </div>
+            
+            <div class="arrow">↓</div>
+            
+            <div class="step">
+                <div class="step-box">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <div class="step-title">ブラウザでの表示</div>
+                        <div class="step-description">受け取ったファイルを解析して、画面にWebページとして表示</div>
+                    </div>
+                    <div class="step-icon">🖼️</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="summary">
+            <h3>重要なポイント</h3>
+            <div class="key-points">
+                <div class="key-point">
+                    <strong>🔄 やり取りの流れ</strong><br>
+                    「要求 → 処理 → 応答 → 表示」の順番で進む
+                </div>
+                <div class="key-point">
+                    <strong>⚡ 自動で高速</strong><br>
+                    この複雑な流れが数秒で完了する
+                </div>
+                <div class="key-point">
+                    <strong>🌍 世界中と通信</strong><br>
+                    サーバーが世界のどこにあっても同じ仕組み
+                </div>
+                <div class="key-point">
+                    <strong>📦 複数ファイル</strong><br>
+                    HTML、CSS、画像など複数のファイルで一つのページ
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>レストランの例でWebの仕組みを理解</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 1000px;
+            text-align: center;
+        }
+
+        .title {
+            color: #d63031;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .subtitle {
+            color: #636e72;
+            font-size: 16px;
+            margin-bottom: 40px;
+        }
+
+        .restaurant-scene {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scene-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 30px 0;
+        }
+
+        .character {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .character-icon {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+            margin-bottom: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .customer {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+        }
+
+        .waiter {
+            background: linear-gradient(135deg, #00b894, #00cec9);
+        }
+
+        .kitchen {
+            background: linear-gradient(135deg, #fd79a8, #e84393);
+        }
+
+        .character-label {
+            font-weight: bold;
+            color: #2d3436;
+            margin-bottom: 5px;
+        }
+
+        .character-description {
+            font-size: 12px;
+            color: #636e72;
+            text-align: center;
+            max-width: 100px;
+        }
+
+        .arrow-flow {
+            display: flex;
+            align-items: center;
+            margin: 0 20px;
+        }
+
+        .flow-arrow {
+            font-size: 30px;
+            color: #fd79a8;
+        }
+
+        .speech-bubble {
+            position: absolute;
+            background: white;
+            border-radius: 15px;
+            padding: 8px 16px;
+            font-size: 14px;
+            color: #2d3436;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e9ecef;
+            min-width: 120px;
+            white-space: nowrap;
+            text-align: center;
+            writing-mode: horizontal-tb;
+        }
+
+
+        .bubble-1 {
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .bubble-2 {
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .bubble-3 {
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .comparison-table {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .table-title {
+            color: #d63031;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .comparison-column {
+            background: #ffffff;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .column-title {
+            font-weight: bold;
+            color: #2d3436;
+            margin-bottom: 15px;
+            font-size: 16px;
+            text-align: center;
+            background: #f8f9fa;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        .comparison-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .comparison-item:last-child {
+            border-bottom: none;
+        }
+
+        .restaurant-term {
+            color: #e17055;
+            font-weight: 500;
+        }
+
+        .web-term {
+            color: #0984e3;
+            font-weight: 500;
+        }
+
+        .steps-flow {
+            margin: 30px 0;
+        }
+
+        .step-item {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .step-number {
+            background: #fd79a8;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="title">🍽️ レストランの例でWebの仕組みを理解</div>
+        <div class="subtitle">普段の食事と同じような流れで、Webページも表示されています</div>
+
+        <div class="restaurant-scene">
+            <div class="scene-row">
+                <div class="character">
+                    <div class="character-icon customer">👤</div>
+                    <div class="character-label">お客さん</div>
+                    <div class="character-description">あなたのブラウザ</div>
+                    <div class="speech-bubble bubble-1">ハンバーガーセット<br>ください！</div>
+                </div>
+
+                <div class="arrow-flow">
+                    <div class="flow-arrow">→</div>
+                </div>
+
+                <div class="character">
+                    <div class="character-icon waiter">🧑‍💼</div>
+                    <div class="character-label">ウェイター</div>
+                    <div class="character-description">インターネット</div>
+                    <div class="speech-bubble bubble-2">承知いたしました！</div>
+                </div>
+
+                <div class="arrow-flow">
+                    <div class="flow-arrow">→</div>
+                </div>
+
+                <div class="character">
+                    <div class="character-icon kitchen">👨‍🍳</div>
+                    <div class="character-label">キッチン</div>
+                    <div class="character-description">Webサーバー</div>
+                    <div class="speech-bubble bubble-3">料理を準備中...</div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin: 20px 0; color: #636e72;">
+                ↓ 料理完成・提供 ↓
+            </div>
+
+            <div class="scene-row">
+                <div class="character">
+                    <div class="character-icon customer">😋</div>
+                    <div class="character-label">お客さん</div>
+                    <div class="character-description">料理を受け取って食事</div>
+                </div>
+
+                <div class="arrow-flow">
+                    <div class="flow-arrow">←</div>
+                </div>
+
+                <div class="character">
+                    <div class="character-icon waiter">🧑‍💼</div>
+                    <div class="character-label">ウェイター</div>
+                    <div class="character-description">料理を運ぶ</div>
+                </div>
+
+                <div class="arrow-flow">
+                    <div class="flow-arrow">←</div>
+                </div>
+
+                <div class="character">
+                    <div class="character-icon kitchen">✅</div>
+                    <div class="character-label">キッチン</div>
+                    <div class="character-description">料理完成！</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="comparison-table">
+            <div class="table-title">📊 レストラン と Web の対応表</div>
+            <div class="comparison-grid">
+                <div class="comparison-column">
+                    <div class="column-title">🍽️ レストランでの注文</div>
+                    <div class="comparison-item">
+                        <span class="restaurant-term">お客さん</span>
+                        <span>→</span>
+                        <span class="web-term">あなたのブラウザ</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="restaurant-term">ウェイター</span>
+                        <span>→</span>
+                        <span class="web-term">インターネット</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="restaurant-term">キッチン</span>
+                        <span>→</span>
+                        <span class="web-term">Webサーバー</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="restaurant-term">料理</span>
+                        <span>→</span>
+                        <span class="web-term">Webページ</span>
+                    </div>
+                </div>
+
+                <div class="comparison-column">
+                    <div class="column-title">🌐 行動の対応</div>
+                    <div class="comparison-item">
+                        <span class="restaurant-term">「注文します」</span>
+                        <span>→</span>
+                        <span class="web-term">リクエスト</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="restaurant-term">「料理をお持ちしました」</span>
+                        <span>→</span>
+                        <span class="web-term">レスポンス</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="restaurant-term">料理を食べる</span>
+                        <span>→</span>
+                        <span class="web-term">ページを閲覧</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="restaurant-term">メニューを見る</span>
+                        <span>→</span>
+                        <span class="web-term">リンクをクリック</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="steps-flow">
+            <div class="step-item">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <span class="restaurant-term">「ハンバーガーセットください」</span>
+                    <span>≒</span>
+                    <span class="web-term">「このページを表示して」</span>
+                </div>
+            </div>
+            <div class="step-item">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <span class="restaurant-term">ウェイターがキッチンに伝達</span>
+                    <span>≒</span>
+                    <span class="web-term">ブラウザがサーバーに要求</span>
+                </div>
+            </div>
+            <div class="step-item">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <span class="restaurant-term">キッチンで料理を準備</span>
+                    <span>≒</span>
+                    <span class="web-term">サーバーでページを準備</span>
+                </div>
+            </div>
+            <div class="step-item">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <span class="restaurant-term">料理をお客さんに提供</span>
+                    <span>≒</span>
+                    <span class="web-term">ページをブラウザに送信</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

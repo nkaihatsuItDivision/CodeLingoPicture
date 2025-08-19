@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>クライアント・サーバーの関係図</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 900px;
+            text-align: center;
+        }
+        
+        .title {
+            color: #333;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 40px;
+        }
+        
+        .relationship-diagram {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 20px 0;
+        }
+        
+        .client-side, .server-side {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .device-icon {
+            width: 120px;
+            height: 120px;
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 60px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .client-icon {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .server-icon {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .device-label {
+            color: #333;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .device-description {
+            color: #666;
+            font-size: 14px;
+            text-align: center;
+            line-height: 1.4;
+        }
+        
+        .communication-flow {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0 20px;
+        }
+        
+        .request-arrow, .response-arrow {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            position: relative;
+        }
+        
+        .arrow-line {
+            height: 3px;
+            flex: 1;
+            position: relative;
+            margin: 0 10px;
+        }
+        
+        .request-arrow .arrow-line {
+            background: #00b894;
+        }
+        
+        .response-arrow .arrow-line {
+            background: #fd79a8;
+        }
+        
+        .arrow-head {
+            width: 0;
+            height: 0;
+            border-style: solid;
+        }
+        
+        .request-arrow .arrow-head {
+            border-left: 12px solid #00b894;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+        }
+        
+        .response-arrow .arrow-head {
+            border-right: 12px solid #fd79a8;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+        }
+        
+        .arrow-label {
+            color: #333;
+            font-weight: bold;
+            font-size: 16px;
+            min-width: 120px;
+        }
+        
+        .request-label { color: #00b894; }
+        .response-label { color: #fd79a8; }
+        
+        .examples {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            color: #333;
+        }
+        
+        .examples h3 {
+            margin: 0 0 15px 0;
+            font-size: 18px;
+        }
+        
+        .example-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            text-align: left;
+        }
+        
+        .example-item {
+            background: #ffffff;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        
+        .example-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">クライアント・サーバーの関係</div>
+        
+        <div class="relationship-diagram">
+            <div class="client-side">
+                <div class="device-icon client-icon">💻</div>
+                <div class="device-label">クライアント</div>
+                <div class="device-description">
+                    あなたのブラウザ<br>
+                    (Chrome, Safari, Edge等)<br><br>
+                    <strong>役割：</strong>情報を要求する
+                </div>
+            </div>
+            
+            <div class="communication-flow">
+                <div class="request-arrow">
+                    <div class="arrow-label request-label">リクエスト</div>
+                    <div class="arrow-line"></div>
+                    <div class="arrow-head"></div>
+                </div>
+                
+                <div style="color: #666; font-size: 14px; margin: 15px 0;">
+                    「このページを<br>見せてください！」
+                </div>
+                
+                <div class="response-arrow">
+                    <div class="arrow-head"></div>
+                    <div class="arrow-line"></div>
+                    <div class="arrow-label response-label">レスポンス</div>
+                </div>
+                
+                <div style="color: #666; font-size: 14px; margin: 15px 0;">
+                    「はい、このページを<br>どうぞ！」
+                </div>
+            </div>
+            
+            <div class="server-side">
+                <div class="device-icon server-icon">🖥️</div>
+                <div class="device-label">サーバー</div>
+                <div class="device-description">
+                    Webサイトを管理する<br>
+                    コンピュータ<br><br>
+                    <strong>役割：</strong>情報を提供する
+                </div>
+            </div>
+        </div>
+        
+        <div class="examples">
+            <h3>具体例</h3>
+            <div class="example-grid">
+                <div class="example-item">
+                    <div class="example-title">クライアントの例</div>
+                    • あなたのスマートフォン<br>
+                    • あなたのパソコン<br>
+                    • タブレット
+                </div>
+                <div class="example-item">
+                    <div class="example-title">サーバーの例</div>
+                    • Googleのサーバー<br>
+                    • YouTubeのサーバー<br>
+                    • Amazonのサーバー
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
