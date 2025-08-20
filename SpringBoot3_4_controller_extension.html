@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 10.4 Controller拡張アーキテクチャ図</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            color: #fd7e14;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .controller-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .endpoint-box {
+            background: linear-gradient(145deg, #fff, #f8f9fa);
+            border: 2px solid #fd7e14;
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .endpoint-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(253, 126, 20, 0.2);
+        }
+
+        .endpoint-title {
+            color: #e55100;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .endpoint-method {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .endpoint-url {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin: 10px 0;
+        }
+
+        .endpoint-description {
+            color: #495057;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            margin-top: 15px;
+            overflow-x: auto;
+            text-align: left;
+        }
+
+        .architecture-flow {
+            background: linear-gradient(145deg, #fff5e6, #ffe0b3);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .flow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .flow-step {
+            background: white;
+            border: 2px solid #fd7e14;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 auto 10px;
+        }
+
+        .step-title {
+            color: #e55100;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .step-description {
+            color: #495057;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .validation-section {
+            background: linear-gradient(145deg, #e8f5e8, #d4edda);
+            border: 2px solid #28a745;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .validation-title {
+            color: #155724;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .prg-pattern {
+            background: linear-gradient(145deg, #e6f3ff, #cce7ff);
+            border: 2px solid #007bff;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .prg-title {
+            color: #004085;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(145deg, #fff9e6, #fff3cc);
+            border-left: 4px solid #fd7e14;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .highlight-title {
+            color: #e55100;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .feature-item {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .feature-icon {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .controller-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .flow-steps {
+                grid-template-columns: 1fr;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .code-example {
+                font-size: 11px;
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-cogs"></i> Week 10.4 Controller拡張アーキテクチャ</h1>
+            <p>Ajax API対応・バリデーション・PRGパターンによる高度なController設計</p>
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <h2 class="section-title">
+                    <i class="fas fa-route"></i> 高度検索エンドポイント設計
+                </h2>
+
+                <div class="controller-grid">
+                    <div class="endpoint-box">
+                        <h3 class="endpoint-title">
+                            <span class="endpoint-method">GET</span>
+                            フォーム表示エンドポイント
+                        </h3>
+                        <div class="endpoint-url">/students/search/advanced</div>
+                        <p class="endpoint-description">
+                            高度検索フォームの表示・選択肢データの取得・初期値設定
+                        </p>
+                        <div class="code-example">
+@GetMapping("/search/advanced")<br>
+public String advancedSearchForm(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Model model,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@ModelAttribute StudentSearchCriteria criteria) {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 選択肢データの取得<br>
+&nbsp;&nbsp;&nbsp;&nbsp;List&lt;String&gt; availableMajors = <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;studentSearchService.getAvailableMajors();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;List&lt;String&gt; availableStatuses = <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;studentSearchService.getAvailableStatuses();<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;model.addAttribute("availableMajors", availableMajors);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;model.addAttribute("availableStatuses", availableStatuses);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;model.addAttribute("searchCriteria", criteria);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return "student/search-advanced";<br>
+}
+                        </div>
+                    </div>
+
+                    <div class="endpoint-box">
+                        <h3 class="endpoint-title">
+                            <span class="endpoint-method">POST</span>
+                            検索実行エンドポイント
+                        </h3>
+                        <div class="endpoint-url">/students/search/advanced</div>
+                        <p class="endpoint-description">
+                            高度検索の実行・バリデーション・結果ページへのリダイレクト
+                        </p>
+                        <div class="code-example">
+@PostMapping("/search/advanced")<br>
+public String executeAdvancedSearch(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Valid @ModelAttribute StudentSearchCriteria criteria,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;BindingResult bindingResult,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Model model,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;RedirectAttributes redirectAttributes) {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// バリデーションエラーチェック<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (bindingResult.hasErrors()) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 選択肢データを再設定<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;populateFormData(model);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return "student/search-advanced";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// PRGパターン：検索条件をセッションに保存<br>
+&nbsp;&nbsp;&nbsp;&nbsp;redirectAttributes.addFlashAttribute(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"searchCriteria", criteria);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return "redirect:/students/search/results";<br>
+}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="controller-grid">
+                    <div class="endpoint-box">
+                        <h3 class="endpoint-title">
+                            <span class="endpoint-method">GET</span>
+                            Ajax プレビューAPI
+                        </h3>
+                        <div class="endpoint-url">/students/api/search/preview</div>
+                        <p class="endpoint-description">
+                            リアルタイム検索プレビュー・JSON形式でのレスポンス
+                        </p>
+                        <div class="code-example">
+@GetMapping("/api/search/preview")<br>
+@ResponseBody<br>
+public ResponseEntity&lt;SearchPreviewResponse&gt; getSearchPreview(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Valid StudentSearchCriteria criteria) {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;try {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 検索プレビューの実行<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;long resultCount = studentSearchService<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.countAdvancedSearch(criteria);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SearchPreviewResponse response = <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new SearchPreviewResponse(resultCount, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;criteria.getDisplayText());<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return ResponseEntity.ok(response);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;} catch (Exception e) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return ResponseEntity<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.badRequest().build();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                        </div>
+                    </div>
+
+                    <div class="endpoint-box">
+                        <h3 class="endpoint-title">
+                            <span class="endpoint-method">GET</span>
+                            検索結果表示
+                        </h3>
+                        <div class="endpoint-url">/students/search/results</div>
+                        <p class="endpoint-description">
+                            Week 10.3拡張：高度検索結果の表示・ページネーション
+                        </p>
+                        <div class="code-example">
+@GetMapping("/search/results")<br>
+public String showSearchResults(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@ModelAttribute("searchCriteria") <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;StudentSearchCriteria criteria,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@RequestParam(defaultValue = "0") int page,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@RequestParam(defaultValue = "20") int size,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Model model) {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// Week 10.4 高度検索の実行<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Page&lt;Student&gt; students = studentSearchService<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.advancedSearchWithPaging(criteria, page, size);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;model.addAttribute("students", students);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;model.addAttribute("criteria", criteria);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return "student/search-results";<br>
+}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="architecture-flow">
+                <h3 class="section-title">
+                    <i class="fas fa-project-diagram"></i> Controller拡張の処理フロー
+                </h3>
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="step-number">1</div>
+                        <div class="step-title">フォーム表示</div>
+                        <div class="step-description">
+                            GET /search/advanced<br>選択肢データ取得・モデル設定
+                        </div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-number">2</div>
+                        <div class="step-title">入力バリデーション</div>
+                        <div class="step-description">
+                            @Valid による自動検証<br>BindingResult エラーハンドリング
+                        </div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-number">3</div>
+                        <div class="step-title">検索実行</div>
+                        <div class="step-description">
+                            POST /search/advanced<br>高度検索ロジック呼び出し
+                        </div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-number">4</div>
+                        <div class="step-title">結果表示</div>
+                        <div class="step-description">
+                            PRGパターンでリダイレクト<br>検索結果ページ表示
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="validation-section">
+                <div class="validation-title">
+                    <i class="fas fa-shield-alt"></i> バリデーション・エラーハンドリング
+                </div>
+                <div class="code-example">
+// バリデーション注解の活用<br>
+public class StudentSearchCriteria {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Size(max = 50, message = "名前は50文字以内で入力してください")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private String name;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Min(value = 0, message = "年齢は0以上で入力してください")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Max(value = 150, message = "年齢は150以下で入力してください")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private Integer minAge;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@AssertTrue(message = "開始日は終了日以前である必要があります")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public boolean isValidDateRange() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (startDate == null || endDate == null) return true;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return !startDate.isAfter(endDate);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}<br>
+<br>
+// エラーハンドリング<br>
+@ExceptionHandler(ValidationException.class)<br>
+public String handleValidationException(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ValidationException ex, Model model) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;model.addAttribute("errorMessage", ex.getMessage());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return "student/search-advanced";<br>
+}
+                </div>
+            </div>
+
+            <div class="prg-pattern">
+                <div class="prg-title">
+                    <i class="fas fa-exchange-alt"></i> PRGパターンの実装
+                </div>
+                <div class="code-example">
+// POST-REDIRECT-GET パターンの実装<br>
+@PostMapping("/search/advanced")<br>
+public String executeAdvancedSearch(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Valid @ModelAttribute StudentSearchCriteria criteria,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;BindingResult bindingResult,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;RedirectAttributes redirectAttributes) {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (bindingResult.hasErrors()) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// バリデーションエラー：再表示<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return "student/search-advanced";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 検索条件をFlashAttributeで次の画面に渡す<br>
+&nbsp;&nbsp;&nbsp;&nbsp;redirectAttributes.addFlashAttribute(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"searchCriteria", criteria);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// リダイレクトで重複送信防止<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return "redirect:/students/search/results";<br>
+}<br>
+<br>
+// メリット：<br>
+// - ブラウザの戻る・進むボタン対応<br>
+// - フォーム重複送信防止<br>
+// - URLの状態管理
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <div class="highlight-title">
+                    <i class="fas fa="star"></i> Week 10.2 StudentSearchController 拡張
+                </div>
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-plus-circle"></i>
+                        </div>
+                        <div>
+                            <strong>Ajax API追加</strong><br>
+                            <small>リアルタイムプレビュー機能の実装</small>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div>
+                            <strong>バリデーション強化</strong><br>
+                            <small>@Valid・BindingResult によるエラー処理</small>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <div>
+                            <strong>PRGパターン</strong><br>
+                            <small>重複送信防止・ユーザビリティ向上</small>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                        <div>
+                            <strong>RESTful設計</strong><br>
+                            <small>適切なHTTPメソッド・ステータスコード</small>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div>
+                            <strong>例外処理</strong><br>
+                            <small>@ExceptionHandler による統一エラー処理</small>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <div>
+                            <strong>企業システムレベル</strong><br>
+                            <small>実務で通用する高度なController設計</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

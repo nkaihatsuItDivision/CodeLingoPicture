@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 10.4 動的フィルタリング実装図</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            color: #fd7e14;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ajax-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .feature-box {
+            background: linear-gradient(145deg, #fff, #f8f9fa);
+            border: 2px solid #fd7e14;
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(253, 126, 20, 0.2);
+        }
+
+        .feature-title {
+            color: #e55100;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .feature-description {
+            color: #495057;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            margin-top: 15px;
+            overflow-x: auto;
+            text-align: left;
+        }
+
+        .realtime-demo {
+            background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .demo-interface {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #fd7e14;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            transition: border-color 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #e55100;
+            box-shadow: 0 0 0 3px rgba(253, 126, 20, 0.2);
+        }
+
+        .filter-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .filter-group {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 15px;
+        }
+
+        .filter-label {
+            color: #495057;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .filter-select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            background: white;
+        }
+
+        .preview-results {
+            background: linear-gradient(145deg, #e8f5e8, #d4edda);
+            border: 1px solid #28a745;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .preview-count {
+            color: #155724;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ajax-flow {
+            background: linear-gradient(145deg, #fff5e6, #ffe0b3);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .flow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .flow-step {
+            background: white;
+            border: 2px solid #fd7e14;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 auto 10px;
+        }
+
+        .step-title {
+            color: #e55100;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .step-description {
+            color: #495057;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .debounce-section {
+            background: linear-gradient(145deg, #e6f3ff, #cce7ff);
+            border: 2px solid #007bff;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .debounce-title {
+            color: #004085;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ux-section {
+            background: linear-gradient(145deg, #fff0e6, #ffe6cc);
+            border: 2px solid #ff6b35;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .ux-title {
+            color: #cc2900;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(145deg, #fff9e6, #fff3cc);
+            border-left: 4px solid #fd7e14;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .highlight-title {
+            color: #e55100;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .feature-item {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .feature-icon {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading-indicator {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #fd7e14;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .ajax-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .flow-steps {
+                grid-template-columns: 1fr;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-controls {
+                grid-template-columns: 1fr;
+            }
+
+            .code-example {
+                font-size: 11px;
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-bolt"></i> Week 10.4 動的フィルタリング実装</h1>
+            <p>Ajax活用・リアルタイム検索・UX向上による次世代検索体験</p>
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <h2 class="section-title">
+                    <i class="fas fa-code"></i> Ajax による非同期通信実装
+                </h2>
+
+                <div class="ajax-grid">
+                    <div class="feature-box">
+                        <h3 class="feature-title">
+                            <i class="fas fa-paper-plane"></i> fetch API による非同期通信
+                        </h3>
+                        <p class="feature-description">
+                            モダンなJavaScript fetch API を使用したリアルタイム検索通信
+                        </p>
+                        <div class="code-example">
+// リアルタイム検索の実装<br>
+function executeRealTimeSearch() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const form = document.querySelector('#advancedSearchForm');<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const formData = new FormData(form);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// URLSearchParams でクエリパラメータ構築<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const params = new URLSearchParams();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for (let [key, value] of formData.entries()) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (value.trim() !== '') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;params.append(key, value);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// Ajax による非同期通信<br>
+&nbsp;&nbsp;&nbsp;&nbsp;fetch('/students/api/search/preview?' + params.toString(), {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;method: 'GET',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;headers: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'Content-Type': 'application/json',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'X-Requested-With': 'XMLHttpRequest'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;})<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.then(response =&gt; response.json())<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.then(data =&gt; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;updateSearchPreview(data);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;})<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.catch(error =&gt; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.error('検索エラー:', error);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;showErrorMessage('検索に失敗しました');<br>
+&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+}
+                        </div>
+                    </div>
+
+                    <div class="feature-box">
+                        <h3 class="feature-title">
+                            <i class="fas fa-clock"></i> デバウンス処理
+                        </h3>
+                        <p class="feature-description">
+                            入力頻度を制御してサーバー負荷を軽減する最適化処理
+                        </p>
+                        <div class="code-example">
+// デバウンス機能の実装<br>
+let searchTimeout;<br>
+const DEBOUNCE_DELAY = 300; // 300ms<br>
+<br>
+function debounceSearch() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 既存のタイマーをクリア<br>
+&nbsp;&nbsp;&nbsp;&nbsp;clearTimeout(searchTimeout);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 新しいタイマーを設定<br>
+&nbsp;&nbsp;&nbsp;&nbsp;searchTimeout = setTimeout(() =&gt; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;executeRealTimeSearch();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}, DEBOUNCE_DELAY);<br>
+}<br>
+<br>
+// イベントリスナーの設定<br>
+document.addEventListener('DOMContentLoaded', function() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 入力フィールドのイベント監視<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const searchInputs = document.querySelectorAll(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'input[type="text"], input[type="number"], ' +<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'input[type="date"], select, input[type="checkbox"]');<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;searchInputs.forEach(input =&gt; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;input.addEventListener('input', debounceSearch);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;input.addEventListener('change', debounceSearch);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+});
+                        </div>
+                    </div>
+                </div>
+
+                <div class="realtime-demo">
+                    <h3 class="section-title">
+                        <i class="fas fa-search"></i> リアルタイム検索プレビュー
+                    </h3>
+                    
+                    <div class="demo-interface">
+                        <input type="text" class="search-input" placeholder="学生名を入力してください..." onkeyup="simulateSearch(this.value)">
+                        
+                        <div class="filter-controls">
+                            <div class="filter-group">
+                                <label class="filter-label">専攻</label>
+                                <select class="filter-select" onchange="simulateSearch()">
+                                    <option value="">すべて</option>
+                                    <option value="cs">Computer Science</option>
+                                    <option value="math">Mathematics</option>
+                                    <option value="physics">Physics</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label class="filter-label">学年</label>
+                                <select class="filter-select" onchange="simulateSearch()">
+                                    <option value="">すべて</option>
+                                    <option value="1">1年生</option>
+                                    <option value="2">2年生</option>
+                                    <option value="3">3年生</option>
+                                    <option value="4">4年生</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="preview-results">
+                            <div class="preview-count">
+                                <i class="fas fa-users"></i>
+                                <span id="result-count">検索結果: 1,247件</span>
+                                <div class="loading-indicator" id="loading" style="display: none; margin-left: 10px;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="code-example">
+// 検索プレビューの更新<br>
+function updateSearchPreview(data) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const resultCountElement = document.getElementById('result-count');<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const loadingElement = document.getElementById('loading');<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// ローディング非表示<br>
+&nbsp;&nbsp;&nbsp;&nbsp;loadingElement.style.display = 'none';<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 結果件数の更新<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (data.count !== undefined) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const formattedCount = data.count.toLocaleString();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;resultCountElement.textContent = <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`検索結果: ${formattedCount}件`;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 件数に応じた色変更<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (data.count === 0) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;resultCountElement.style.color = '#dc3545';<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else if (data.count &gt; 1000) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;resultCountElement.style.color = '#fd7e14';<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;resultCountElement.style.color = '#28a745';<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                    </div>
+                </div>
+            </div>
+
+            <div class="ajax-flow">
+                <h3 class="section-title">
+                    <i class="fas fa-project-diagram"></i> 動的フィルタリングの処理フロー
+                </h3>
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="step-number">1</div>
+                        <div class="step-title">入力検知</div>
+                        <div class="step-description">
+                            input・change イベントでリアルタイム監視
+                        </div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-number">2</div>
+                        <div class="step-title">デバウンス</div>
+                        <div class="step-description">
+                            300ms 遅延でサーバー負荷軽減
+                        </div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-number">3</div>
+                        <div class="step-title">Ajax送信</div>
+                        <div class="step-description">
+                            fetch API で非同期リクエスト送信
+                        </div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-number">4</div>
+                        <div class="step-title">UI更新</div>
+                        <div class="step-description">
+                            検索結果プレビューの即座更新
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="debounce-section">
+                <div class="debounce-title">
+                    <i class="fas fa-stopwatch"></i> デバウンス処理の最適化
+                </div>
+                <div class="code-example">
+// 高度なデバウンス実装<br>
+class SearchDebouncer {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;constructor(callback, delay = 300) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.callback = callback;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.delay = delay;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.timeoutId = null;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.isSearching = false;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;execute(...args) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 既存のタイマーをクリア<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;clearTimeout(this.timeoutId);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// ローディング表示<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.showLoading();<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 新しいタイマー設定<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.timeoutId = setTimeout(() =&gt; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.isSearching = true;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.callback.apply(this, args)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.finally(() =&gt; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.isSearching = false;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.hideLoading();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}, this.delay);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;showLoading() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;document.getElementById('loading').style.display = 'inline-block';<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;hideLoading() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;document.getElementById('loading').style.display = 'none';<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}<br>
+<br>
+// 使用例<br>
+const searchDebouncer = new SearchDebouncer(executeRealTimeSearch, 300);
+                </div>
+            </div>
+
+            <div class="ux-section">
+                <div class="ux-title">
+                    <i class="fas fa-heart"></i> UX向上・選択肢の動的更新
+                </div>
+                <div class="code-example">
+// 選択肢の動的更新機能<br>
+function updateDependentSelections() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const majorSelect = document.getElementById('major');<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const gradeSelect = document.getElementById('grade');<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const statusSelect = document.getElementById('status');<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 専攻選択時に学年選択肢を更新<br>
+&nbsp;&nbsp;&nbsp;&nbsp;majorSelect.addEventListener('change', function() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const selectedMajor = this.value;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Ajax で該当専攻の学年一覧を取得<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fetch(`/students/api/grades?major=${selectedMajor}`)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.then(response =&gt; response.json())<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.then(grades =&gt; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// select オプションを動的更新<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gradeSelect.innerHTML = <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'&lt;option value=""&gt;すべて&lt;/option&gt;';<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;grades.forEach(grade =&gt; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const option = document.createElement('option');<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;option.value = grade;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;option.textContent = `${grade}年生`;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gradeSelect.appendChild(option);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// フェードイン効果<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gradeSelect.style.opacity = '0.5';<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;setTimeout(() =&gt; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gradeSelect.style.opacity = '1';<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}, 100);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+}
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <div class="highlight-title">
+                    <i class="fas fa="star"></i> 動的フィルタリングの技術特徴
+                </div>
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa="bolt"></i>
+                        </div>
+                        <div>
+                            <strong>リアルタイム検索</strong><br>
+                            <small>入力と同時に検索結果をプレビュー</small>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa="clock"></i>
+                        </div>
+                        <div>
+                            <strong>デバウンス最適化</strong><br>
+                            <small>300ms 遅延でサーバー負荷軽減</small>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa="paper-plane"></i>
+                        </div>
+                        <div>
+                            <strong>Ajax 通信</strong><br>
+                            <small>fetch API による非同期通信</small>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa="sync-alt"></i>
+                        </div>
+                        <div>
+                            <strong>選択肢動的更新</strong><br>
+                            <small>専攻選択→学年フィルタの連動</small>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa="heart"></i>
+                        </div>
+                        <div>
+                            <strong>UX向上</strong><br>
+                            <small>ローディング・エラー表示・視覚的フィードバック</small>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa="mobile-alt"></i>
+                        </div>
+                        <div>
+                            <strong>レスポンシブ対応</strong><br>
+                            <small>モバイル・タブレット・デスクトップ全対応</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let searchTimeout;
+        
+        function simulateSearch(value) {
+            const loading = document.getElementById('loading');
+            const resultCount = document.getElementById('result-count');
+            
+            // ローディング表示
+            loading.style.display = 'inline-block';
+            
+            // デバウンス
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                // シミュレーション：検索結果件数を計算
+                let count = 1247;
+                if (value && value.length > 0) {
+                    count = Math.max(1, Math.floor(Math.random() * 500));
+                }
+                
+                // 結果更新
+                setTimeout(() => {
+                    loading.style.display = 'none';
+                    resultCount.textContent = `検索結果: ${count.toLocaleString()}件`;
+                    
+                    // 色変更
+                    if (count === 0) {
+                        resultCount.style.color = '#dc3545';
+                    } else if (count > 100) {
+                        resultCount.style.color = '#fd7e14';
+                    } else {
+                        resultCount.style.color = '#28a745';
+                    }
+                }, 200);
+            }, 300);
+        }
+    </script>
+</body>
+</html>

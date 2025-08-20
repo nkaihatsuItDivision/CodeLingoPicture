@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 10.4 高度検索機能完成価値図</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .achievement-badge {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50px;
+            padding: 10px 20px;
+            margin: 20px auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .content {
+            padding: 50px 40px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            color: #fd7e14;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-align: center;
+            justify-content: center;
+        }
+
+        .week-progression {
+            background: linear-gradient(145deg, #fff5e6, #ffe0b3);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 2px solid #fd7e14;
+        }
+
+        .progression-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .week-step {
+            background: white;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .week-step.current {
+            border-color: #fd7e14;
+            box-shadow: 0 10px 25px rgba(253, 126, 20, 0.3);
+            transform: scale(1.05);
+        }
+
+        .week-step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .week-number {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin: 0 auto 15px;
+            color: white;
+        }
+
+        .week-10-1 { background: linear-gradient(135deg, #007bff, #0056b3); }
+        .week-10-2 { background: linear-gradient(135deg, #28a745, #1e7e34); }
+        .week-10-3 { background: linear-gradient(135deg, #28a745, #1e7e34); }
+        .week-10-4 { background: linear-gradient(135deg, #fd7e14, #e55100); }
+
+        .week-title {
+            color: #495057;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .week-description {
+            color: #6c757d;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .value-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .value-card {
+            background: linear-gradient(145deg, #fff, #f8f9fa);
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .value-card:hover {
+            border-color: #fd7e14;
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(253, 126, 20, 0.2);
+        }
+
+        .value-icon {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 20px;
+        }
+
+        .value-title {
+            color: #e55100;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .value-description {
+            color: #495057;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .value-list {
+            list-style: none;
+            text-align: left;
+        }
+
+        .value-list li {
+            color: #6c757d;
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .value-list li::before {
+            content: '✓';
+            color: #28a745;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .technology-mastery {
+            background: linear-gradient(145deg, #e8f5e8, #d4edda);
+            border: 2px solid #28a745;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .mastery-title {
+            color: #155724;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .tech-item {
+            background: white;
+            border: 1px solid #c3e6cb;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .tech-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.2);
+        }
+
+        .tech-icon {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+        }
+
+        .tech-name {
+            color: #155724;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .tech-desc {
+            color: #495057;
+            font-size: 0.9rem;
+        }
+
+        .future-roadmap {
+            background: linear-gradient(145deg, #e6f3ff, #cce7ff);
+            border: 2px solid #007bff;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .roadmap-title {
+            color: #004085;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .roadmap-item {
+            background: white;
+            border: 1px solid #b8daff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .roadmap-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.2);
+        }
+
+        .roadmap-icon {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .roadmap-content h4 {
+            color: #004085;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .roadmap-content p {
+            color: #495057;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .completion-celebration {
+            background: linear-gradient(135deg, #fff9e6, #fff3cc);
+            border: 3px solid #fd7e14;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .completion-celebration::before {
+            content: '🎉';
+            position: absolute;
+            font-size: 3rem;
+            top: 10px;
+            left: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        .completion-celebration::after {
+            content: '🚀';
+            position: absolute;
+            font-size: 3rem;
+            bottom: 10px;
+            right: 20px;
+            animation: bounce 2s infinite 0.5s;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .celebration-title {
+            color: #e55100;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .celebration-text {
+            color: #495057;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .header {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .content {
+                padding: 30px 20px;
+            }
+
+            .progression-steps {
+                grid-template-columns: 1fr;
+            }
+
+            .value-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tech-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+
+            .week-step.current {
+                transform: none;
+            }
+
+            .completion-celebration {
+                padding: 30px 20px;
+            }
+
+            .celebration-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-trophy"></i> Week 10.4 高度検索機能完成</h1>
+                <p>企業システムレベルの検索機能を習得完了</p>
+                <div class="achievement-badge">
+                    <i class="fas fa-medal"></i>
+                    <span>Advanced Search System Master</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-line"></i> Week 10.1-10.4 技術発展の軌跡
+                </h2>
+
+                <div class="week-progression">
+                    <div class="progression-steps">
+                        <div class="week-step">
+                            <div class="week-number week-10-1">10.1</div>
+                            <div class="week-title">検索機能基盤</div>
+                            <div class="week-description">
+                                JPA Specifications・Criteria API・基本検索の実装基盤を構築
+                            </div>
+                        </div>
+                        <div class="week-step">
+                            <div class="week-number week-10-2">10.2</div>
+                            <div class="week-title">検索画面作成</div>
+                            <div class="week-description">
+                                Thymeleaf・Bootstrap活用による検索フォームUIの実装
+                            </div>
+                        </div>
+                        <div class="week-step">
+                            <div class="week-number week-10-3">10.3</div>
+                            <div class="week-title">検索結果表示</div>
+                            <div class="week-description">
+                                ページネーション・ソート・結果表示の最適化実装
+                            </div>
+                        </div>
+                        <div class="week-step current">
+                            <div class="week-number week-10-4">10.4</div>
+                            <div class="week-title">高度検索機能</div>
+                            <div class="week-description">
+                                複合条件・日付範囲・複数選択・Ajax による企業システムレベル機能
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">
+                    <i class="fas fa-star"></i> 実現した企業システムレベル価値
+                </h2>
+
+                <div class="value-grid">
+                    <div class="value-card">
+                        <div class="value-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="value-title">企業システムレベル</div>
+                        <div class="value-description">
+                            実際のビジネスシステムで使用される高度な検索機能を完全習得
+                        </div>
+                        <ul class="value-list">
+                            <li>ERP・CRM システムレベルの検索機能</li>
+                            <li>複合条件による柔軟なデータ抽出</li>
+                            <li>大規模データベース対応の最適化</li>
+                            <li>エンタープライズレベルのUX</li>
+                        </ul>
+                    </div>
+
+                    <div class="value-card">
+                        <div class="value-icon">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                        <div class="value-title">保守性・拡張性向上</div>
+                        <div class="value-description">
+                            Specifications パターンによる高い保守性とコードの再利用性を実現
+                        </div>
+                        <ul class="value-list">
+                            <li>動的クエリ生成の柔軟性</li>
+                            <li>条件の組み合わせ・再利用</li>
+                            <li>テストしやすいアーキテクチャ</li>
+                            <li>機能追加・変更の容易性</li>
+                        </ul>
+                    </div>
+
+                    <div class="value-card">
+                        <div class="value-icon">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <div class="value-title">Week 10.5 基盤構築</div>
+                        <div class="value-description">
+                            削除機能・エクスポート機能・最適化への確実な土台完成
+                        </div>
+                        <ul class="value-list">
+                            <li>検索結果からの削除機能</li>
+                            <li>Excel・CSV エクスポート</li>
+                            <li>バッチ処理・一括操作</li>
+                            <li>システム統合・API連携</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="technology-mastery">
+                <div class="mastery-title">
+                    <i class="fas fa-graduation-cap"></i> 習得技術の総括
+                </div>
+                <div class="tech-grid">
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <i class="fas fa-search-plus"></i>
+                        </div>
+                        <div class="tech-name">複合条件検索</div>
+                        <div class="tech-desc">AND/OR演算子・Predicate組み合わせ</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="tech-name">日付範囲検索</div>
+                        <div class="tech-desc">LocalDate・期間指定・バリデーション</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <i class="fas fa-check-square"></i>
+                        </div>
+                        <div class="tech-name">複数選択検索</div>
+                        <div class="tech-desc">チェックボックス・IN句・リストバインディング</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div class="tech-name">Ajax・リアルタイム</div>
+                        <div class="tech-desc">fetch API・デバウンス・動的フィルタリング</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <div class="tech-name">条件保存・キャッシュ</div>
+                        <div class="tech-desc">セッション管理・パフォーマンス最適化</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <div class="tech-name">レスポンシブUI</div>
+                        <div class="tech-desc">モバイル対応・アクセシビリティ</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="future-roadmap">
+                <div class="roadmap-title">
+                    <i class="fas fa="route"></i> Week 10.5 以降への期待
+                </div>
+                
+                <div class="roadmap-item">
+                    <div class="roadmap-icon">
+                        <i class="fas fa-trash-alt"></i>
+                    </div>
+                    <div class="roadmap-content">
+                        <h4>Week 10.5: 削除機能実装</h4>
+                        <p>高度検索結果からの安全な削除・一括削除・論理削除の実装</p>
+                    </div>
+                </div>
+                
+                <div class="roadmap-item">
+                    <div class="roadmap-icon">
+                        <i class="fas fa-file-export"></i>
+                    </div>
+                    <div class="roadmap-content">
+                        <h4>Week 10.6: エクスポート機能</h4>
+                        <p>検索結果のExcel・CSV出力・テンプレート活用・大容量対応</p>
+                    </div>
+                </div>
+                
+                <div class="roadmap-item">
+                    <div class="roadmap-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <div class="roadmap-content">
+                        <h4>Week 10.7: 最適化・監視</h4>
+                        <p>クエリ最適化・インデックス設計・パフォーマンス監視</p>
+                    </div>
+                </div>
+                
+                <div class="roadmap-item">
+                    <div class="roadmap-icon">
+                        <i class="fas fa-puzzle-piece"></i>
+                    </div>
+                    <div class="roadmap-content">
+                        <h4>Week 11: 受託業務実践</h4>
+                        <p>実際のクライアント要件での検索システム開発・実務経験</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="completion-celebration">
+                <div class="celebration-title">
+                    🎊 Week 10.4 高度検索機能 完全マスター 🎊
+                </div>
+                <div class="celebration-text">
+                    Week 10.1の基盤構築から始まり、Week 10.4で企業システムレベルの高度検索機能を完全習得しました。
+                    複合条件検索・日付範囲・複数選択・Ajax活用など、実務で即戦力となる技術を身につけ、
+                    Week 10.5以降の削除機能・エクスポート機能への確実な土台が完成しています。
+                    <br><br>
+                    <strong>あなたは今、企業の検索システム開発において中核を担える技術者です。</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
