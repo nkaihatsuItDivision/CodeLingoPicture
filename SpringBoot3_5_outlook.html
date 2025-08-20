@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 10.6への展望</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            border-radius: 15px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+        }
+
+        .excitement-banner {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(40, 167, 69, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .excitement-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .excitement-banner h2 {
+            font-size: 2.2em;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .excitement-subtitle {
+            font-size: 1.3em;
+            margin-top: 10px;
+            opacity: 0.9;
+        }
+
+        .features-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border: 3px solid #e9ecef;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(253, 126, 20, 0.3);
+            border-color: #fd7e14;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: white;
+            box-shadow: 0 8px 20px rgba(253, 126, 20, 0.3);
+        }
+
+        .feature-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .feature-description {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            margin-top: 15px;
+            overflow-x: auto;
+            text-align: left;
+        }
+
+        .implementation-roadmap {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 2px solid #dee2e6;
+        }
+
+        .roadmap-title {
+            text-align: center;
+            font-size: 1.6em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 25px;
+        }
+
+        .roadmap-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .roadmap-step {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .roadmap-step:hover {
+            border-color: #fd7e14;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(253, 126, 20, 0.2);
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 auto 15px;
+        }
+
+        .step-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .step-description {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .technology-stack {
+            background: linear-gradient(135deg, #e8f5e8, #f0fdf4);
+            border: 2px solid #28a745;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .stack-title {
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #28a745;
+            margin-bottom: 25px;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .tech-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 2px solid #28a745;
+            transition: all 0.3s ease;
+        }
+
+        .tech-item:hover {
+            background: #28a745;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .benefits-showcase {
+            background: linear-gradient(135deg, #fff3e0, #ffeaa7);
+            border: 2px solid #ff9800;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .benefits-title {
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #e67e22;
+            margin-bottom: 25px;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .benefit-item {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid #ff9800;
+            transition: all 0.3s ease;
+        }
+
+        .benefit-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 152, 0, 0.2);
+        }
+
+        .benefit-icon {
+            font-size: 2em;
+            color: #ff9800;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .benefit-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .benefit-description {
+            font-size: 0.9em;
+            color: #666;
+            text-align: center;
+        }
+
+        .call-to-action {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 30px 0;
+            box-shadow: 0 10px 30px rgba(253, 126, 20, 0.3);
+        }
+
+        .cta-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .cta-subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .excitement-banner h2 {
+                font-size: 1.8em;
+            }
+            
+            .features-preview {
+                grid-template-columns: 1fr;
+            }
+            
+            .roadmap-steps {
+                grid-template-columns: 1fr;
+            }
+            
+            .tech-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Week 10.6への展望</h1>
+            <p>一括削除機能・複数選択処理：より高度で実用的なデータ管理システムへ</p>
+        </div>
+
+        <div class="excitement-banner">
+            <h2>🎯 次なる挑戦</h2>
+            <div class="excitement-subtitle">Week 10.5で確立した削除基盤を活用し、企業システムで必須の一括処理機能を実装！</div>
+        </div>
+
+        <div class="features-preview">
+            <div class="feature-card">
+                <div class="feature-icon">☑️</div>
+                <div class="feature-title">チェックボックス連携</div>
+                <div class="feature-description">
+                    検索結果一覧での複数選択UI実装。JavaScript連携によるスマートな選択状態管理
+                </div>
+                <div class="code-example">
+// 全選択・全解除機能<br>
+function toggleAllCheckboxes(selectAll) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const checkboxes = document.querySelectorAll(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.student-checkbox');<br>
+&nbsp;&nbsp;&nbsp;&nbsp;checkboxes.forEach(checkbox =&gt; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;checkbox.checked = selectAll;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+&nbsp;&nbsp;&nbsp;&nbsp;updateDeleteButton();<br>
+}
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <div class="feature-title">一括削除機能</div>
+                <div class="feature-description">
+                    選択された複数レコードの同時削除処理。Week 10.5のトランザクション技術を大量データに適用
+                </div>
+                <div class="code-example">
+@Transactional<br>
+public void bulkDeleteStudents(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;List&lt;Long&gt; studentIds,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;String deleteType,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;String deleteReason,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;String deletedBy) {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for (Long studentId : studentIds) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (&quot;logical&quot;.equals(deleteType)) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;logicalDeleteStudent(studentId, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deleteReason, deletedBy);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;physicalDeleteStudent(studentId, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deleteReason, deletedBy);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <div class="feature-title">選択状態管理</div>
+                <div class="feature-description">
+                    選択された件数の表示、削除ボタンの動的制御、確認ダイアログでの詳細表示
+                </div>
+                <div class="code-example">
+// 選択状態の動的更新<br>
+function updateSelectionStatus() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const checked = document.querySelectorAll(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.student-checkbox:checked');<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const count = checked.length;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;document.getElementById('selectedCount')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.textContent = count + '件選択中';<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const deleteBtn = document.getElementById(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'bulkDeleteBtn');<br>
+&nbsp;&nbsp;&nbsp;&nbsp;deleteBtn.disabled = count === 0;<br>
+}
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <div class="feature-title">トランザクション統合</div>
+                <div class="feature-description">
+                    大量データ処理での安全性確保。パフォーマンス最適化とエラーハンドリング
+                </div>
+                <div class="code-example">
+@Transactional(timeout = 300) // 5分タイムアウト<br>
+public BulkDeleteResult bulkDelete(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;BulkDeleteRequest request) {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;List&lt;String&gt; successIds = new ArrayList&lt;&gt;();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;List&lt;String&gt; failedIds = new ArrayList&lt;&gt;();<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for (Long id : request.getStudentIds()) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deleteStudent(id, request);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;successIds.add(id.toString());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} catch (Exception e) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;failedIds.add(id.toString());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;log.error(&quot;Delete failed for: &quot; + id, e);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return new BulkDeleteResult(successIds, failedIds);<br>
+}
+                </div>
+            </div>
+        </div>
+
+        <div class="implementation-roadmap">
+            <div class="roadmap-title">🗺️ Week 10.6 実装ロードマップ</div>
+            <div class="roadmap-steps">
+                <div class="roadmap-step">
+                    <div class="step-number">1</div>
+                    <div class="step-title">UI設計</div>
+                    <div class="step-description">チェックボックス・一括操作ボタンの実装</div>
+                </div>
+                <div class="roadmap-step">
+                    <div class="step-number">2</div>
+                    <div class="step-title">JavaScript連携</div>
+                    <div class="step-description">選択状態管理・動的UI制御</div>
+                </div>
+                <div class="roadmap-step">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Controller拡張</div>
+                    <div class="step-description">一括削除エンドポイント実装</div>
+                </div>
+                <div class="roadmap-step">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Service層実装</div>
+                    <div class="step-description">Week 10.5基盤活用の一括処理</div>
+                </div>
+                <div class="roadmap-step">
+                    <div class="step-number">5</div>
+                    <div class="step-title">エラーハンドリング</div>
+                    <div class="step-description">部分失敗・ロールバック対応</div>
+                </div>
+                <div class="roadmap-step">
+                    <div class="step-number">6</div>
+                    <div class="step-title">パフォーマンス最適化</div>
+                    <div class="step-description">大量データ処理の効率化</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="technology-stack">
+            <div class="stack-title">🛠️ Week 10.6で活用する技術スタック</div>
+            <div class="tech-grid">
+                <div class="tech-item">Thymeleaf</div>
+                <div class="tech-item">JavaScript ES6</div>
+                <div class="tech-item">jQuery</div>
+                <div class="tech-item">Bootstrap</div>
+                <div class="tech-item">Spring Boot</div>
+                <div class="tech-item">@Transactional</div>
+                <div class="tech-item">JPA Batch</div>
+                <div class="tech-item">JSON処理</div>
+                <div class="tech-item">Ajax通信</div>
+                <div class="tech-item">エラーハンドリング</div>
+            </div>
+        </div>
+
+        <div class="benefits-showcase">
+            <div class="benefits-title">🌟 Week 10.6完了時の期待効果</div>
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="benefit-icon">⚡</div>
+                    <div class="benefit-title">作業効率化</div>
+                    <div class="benefit-description">複数データの一括処理で管理作業時間を大幅短縮</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">🎯</div>
+                    <div class="benefit-title">ユーザビリティ向上</div>
+                    <div class="benefit-description">直感的な操作性で管理者の満足度向上</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">🔒</div>
+                    <div class="benefit-title">安全性確保</div>
+                    <div class="benefit-description">Week 10.5の安全機能を一括処理でも継承</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">📈</div>
+                    <div class="benefit-title">スケーラビリティ</div>
+                    <div class="benefit-description">大量データ処理への対応力向上</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">🏢</div>
+                    <div class="benefit-title">企業標準機能</div>
+                    <div class="benefit-description">実用システムで必須の一括処理機能を習得</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">🚀</div>
+                    <div class="benefit-title">Week 10.7基盤</div>
+                    <div class="benefit-description">エクスポート機能への確実な土台構築</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="call-to-action">
+            <div class="cta-title">🎉 Week 10.6で実現する価値</div>
+            <div class="cta-subtitle">Week 10.5の削除基盤 + Week 10.6の一括処理 = 企業システムレベルの完全データ管理機能！<br>
+            より実用的で効率的なシステム開発者として大きく成長します。</div>
+        </div>
+    </div>
+</body>
+</html>
