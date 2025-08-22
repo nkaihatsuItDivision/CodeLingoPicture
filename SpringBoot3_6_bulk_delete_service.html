@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 10.6 一括削除サービス実装図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(253, 126, 20, 0.3);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-card.interface { border-left-color: #9b59b6; }
+        .feature-card.transaction { border-left-color: #e74c3c; }
+        .feature-card.error-handling { border-left-color: #f39c12; }
+        .feature-card.result { border-left-color: #27ae60; }
+
+        .feature-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .interface .feature-icon { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+        .transaction .feature-icon { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .error-handling .feature-icon { background: linear-gradient(135deg, #f39c12, #e67e22); }
+        .result .feature-icon { background: linear-gradient(135deg, #27ae60, #229954); }
+
+        .feature-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .feature-description {
+            color: #6c757d;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            text-align: left;
+            margin-bottom: 15px;
+            overflow-x: auto;
+        }
+
+        .tech-highlight {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .tech-highlight h4 {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .tech-list {
+            list-style: none;
+        }
+
+        .tech-list li {
+            padding: 5px 0;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .tech-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .bottom-section {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .bottom-section h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .feature-card {
+                padding: 20px;
+            }
+            
+            .code-example {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Week 10.6 一括削除サービス実装</h1>
+            <p>Week 10.5基盤を活用した複数データの安全な一括処理とトランザクション管理</p>
+        </div>
+
+        <div class="main-content">
+            <div class="feature-card interface">
+                <div class="feature-header">
+                    <div class="feature-icon">1</div>
+                    <div class="feature-title">サービスインターフェース設計</div>
+                </div>
+                <div class="feature-description">
+                    Week 10.5の削除基盤を一括処理に拡張するインターフェース設計
+                </div>
+                <div class="code-example">
+@Service<br>
+public interface StudentBulkDeleteService {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;/**<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* 複数学生の一括論理削除<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* Week 10.5の論理削除基盤を一括処理に拡張<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/<br>
+&nbsp;&nbsp;&nbsp;&nbsp;BulkDeleteResult bulkLogicalDelete(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;List&lt;Long&gt; studentIds);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;/**<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* 複数学生の一括物理削除<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* Week 10.5の物理削除基盤を一括処理に拡張<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/<br>
+&nbsp;&nbsp;&nbsp;&nbsp;BulkDeleteResult bulkPhysicalDelete(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;List&lt;Long&gt; studentIds);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;/**<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* 削除前の存在確認（Week 10.5基盤活用）<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/<br>
+&nbsp;&nbsp;&nbsp;&nbsp;List&lt;Long&gt; validateStudentIds(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;List&lt;Long&gt; studentIds);<br>
+}
+                </div>
+                <div class="tech-highlight">
+                    <h4>インターフェース技術</h4>
+                    <ul class="tech-list">
+                        <li>Week 10.5基盤の一括拡張</li>
+                        <li>論理削除・物理削除対応</li>
+                        <li>エンタープライズ設計原則</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="feature-card transaction">
+                <div class="feature-header">
+                    <div class="feature-icon">2</div>
+                    <div class="feature-title">@Transactional一括処理</div>
+                </div>
+                <div class="feature-description">
+                    複数データを安全に一括処理するトランザクション制御の実装
+                </div>
+                <div class="code-example">
+@Service<br>
+@Transactional<br>
+public class StudentBulkDeleteServiceImpl <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;implements StudentBulkDeleteService {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Autowired<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private StudentDeleteService deleteService;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Override<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Transactional(rollbackFor = Exception.class)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public BulkDeleteResult bulkLogicalDelete(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;List&lt;Long&gt; studentIds) {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BulkDeleteResult result = <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new BulkDeleteResult();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (Long studentId : studentIds) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Week 10.5の削除サービス活用<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deleteService.logicalDelete(studentId);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result.addSuccess(studentId);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} catch (Exception e) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result.addFailure(studentId, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.getMessage());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return result;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                </div>
+                <div class="tech-highlight">
+                    <h4>トランザクション技術</h4>
+                    <ul class="tech-list">
+                        <li>@Transactional一括制御</li>
+                        <li>rollbackFor例外処理</li>
+                        <li>Week 10.5サービス活用</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="feature-card error-handling">
+                <div class="feature-header">
+                    <div class="feature-icon">3</div>
+                    <div class="feature-title">エラーハンドリング・部分失敗対応</div>
+                </div>
+                <div class="feature-description">
+                    一括処理での部分失敗に対応する堅牢なエラーハンドリング機能
+                </div>
+                <div class="code-example">
+// BulkDeleteResult.java<br>
+@Data<br>
+public class BulkDeleteResult {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private List&lt;Long&gt; successIds = new ArrayList&lt;&gt;();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private List&lt;BulkDeleteError&gt; failures = <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new ArrayList&lt;&gt;();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private int totalCount;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private int successCount;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private int failureCount;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public void addSuccess(Long studentId) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;successIds.add(studentId);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;successCount++;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public void addFailure(Long studentId, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String errorMessage) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;failures.add(new BulkDeleteError(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;studentId, errorMessage));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;failureCount++;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public boolean isAllSuccess() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return failureCount == 0;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public boolean hasPartialFailure() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return successCount &gt; 0 && failureCount &gt; 0;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                </div>
+                <div class="tech-highlight">
+                    <h4>エラー処理技術</h4>
+                    <ul class="tech-list">
+                        <li>部分失敗への完全対応</li>
+                        <li>詳細エラー情報管理</li>
+                        <li>成功・失敗の分離管理</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="feature-card result">
+                <div class="feature-header">
+                    <div class="feature-icon">4</div>
+                    <div class="feature-title">実践統合・パフォーマンス最適化</div>
+                </div>
+                <div class="feature-description">
+                    大量データ処理に対応したバッチ処理とパフォーマンス最適化
+                </div>
+                <div class="code-example">
+@Override<br>
+@Transactional(rollbackFor = Exception.class)<br>
+public BulkDeleteResult optimizedBulkDelete(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;List&lt;Long&gt; studentIds) {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 1. 事前バリデーション（一括）<br>
+&nbsp;&nbsp;&nbsp;&nbsp;List&lt;Long&gt; validIds = <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;validateStudentIds(studentIds);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 2. バッチサイズでの分割処理<br>
+&nbsp;&nbsp;&nbsp;&nbsp;final int BATCH_SIZE = 100;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;BulkDeleteResult result = new BulkDeleteResult();<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; validIds.size(); <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i += BATCH_SIZE) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int endIndex = Math.min(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i + BATCH_SIZE, validIds.size());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;List&lt;Long&gt; batch = validIds.subList(i, endIndex);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 3. バッチごとの削除実行<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BulkDeleteResult batchResult = <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;processBatchDelete(batch);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 4. 結果の統合<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result.merge(batchResult);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return result;<br>
+}
+                </div>
+                <div class="tech-highlight">
+                    <h4>最適化技術</h4>
+                    <ul class="tech-list">
+                        <li>バッチ処理による効率化</li>
+                        <li>事前バリデーション</li>
+                        <li>企業システム実装レベル</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bottom-section">
+                <h3>🎯 Week 10.6サービス層達成レベル</h3>
+                <p>Week 10.5の削除基盤を一括処理に発展させ、トランザクション制御・エラーハンドリング・パフォーマンス最適化を統合した企業システムレベルのサービス層を完成</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

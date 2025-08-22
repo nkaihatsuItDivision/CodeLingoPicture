@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 10.6 選択状態管理機能図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(253, 126, 20, 0.3);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-card.class-design { border-left-color: #8e44ad; }
+        .feature-card.state-management { border-left-color: #e74c3c; }
+        .feature-card.pagination { border-left-color: #3498db; }
+        .feature-card.advanced { border-left-color: #27ae60; }
+
+        .feature-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .class-design .feature-icon { background: linear-gradient(135deg, #8e44ad, #732d91); }
+        .state-management .feature-icon { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .pagination .feature-icon { background: linear-gradient(135deg, #3498db, #2980b9); }
+        .advanced .feature-icon { background: linear-gradient(135deg, #27ae60, #229954); }
+
+        .feature-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .feature-description {
+            color: #6c757d;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            text-align: left;
+            margin-bottom: 15px;
+            overflow-x: auto;
+        }
+
+        .tech-highlight {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .tech-highlight h4 {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .tech-list {
+            list-style: none;
+        }
+
+        .tech-list li {
+            padding: 5px 0;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .tech-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .bottom-section {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .bottom-section h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .feature-card {
+                padding: 20px;
+            }
+            
+            .code-example {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Week 10.6 選択状態管理機能</h1>
+            <p>ページネーション対応の高度な状態管理技術の実装</p>
+        </div>
+
+        <div class="main-content">
+            <div class="feature-card class-design">
+                <div class="feature-header">
+                    <div class="feature-icon">1</div>
+                    <div class="feature-title">SelectionManagerクラス設計</div>
+                </div>
+                <div class="feature-description">
+                    複数ページにわたる選択状態を管理する専用クラスの設計と実装
+                </div>
+                <div class="code-example">
+class SelectionManager {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;constructor() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 全選択状態を管理（ページ横断）<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.selectedIds = new Set();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 現在ページの学生ID一覧<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.currentPageIds = new Set();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// ページネーション情報<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.currentPage = 1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.totalPages = 1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 状態初期化メソッド<br>
+&nbsp;&nbsp;&nbsp;&nbsp;initializePage(pageStudents) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.currentPageIds.clear();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pageStudents.forEach(student =&gt; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.currentPageIds.add(student.id);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                </div>
+                <div class="tech-highlight">
+                    <h4>クラス設計技術</h4>
+                    <ul class="tech-list">
+                        <li>Set()による効率的ID管理</li>
+                        <li>ページ情報とのデータ分離</li>
+                        <li>状態管理の構造化</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="feature-card state-management">
+                <div class="feature-header">
+                    <div class="feature-icon">2</div>
+                    <div class="feature-title">選択状態の永続化</div>
+                </div>
+                <div class="feature-description">
+                    ページ切り替え時でも選択状態を保持する高度な状態管理機能
+                </div>
+                <div class="code-example">
+// 選択状態の更新と保持<br>
+updateSelectionState(studentId, isSelected) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (isSelected) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.selectedIds.add(studentId);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.selectedIds.delete(studentId);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// UI状態の即座反映<br>
+&nbsp;&nbsp;&nbsp;&nbsp;this.updatePageDisplay();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;this.updateBulkActionButtons();<br>
+}<br>
+<br>
+// ページ表示時の状態復元<br>
+restorePageSelections() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;this.currentPageIds.forEach(studentId =&gt; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const checkbox = document<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.querySelector(`[value="${studentId}"]`);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (checkbox) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;checkbox.checked = <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.selectedIds.has(studentId);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+}
+                </div>
+                <div class="tech-highlight">
+                    <h4>状態管理技術</h4>
+                    <ul class="tech-list">
+                        <li>Set()によるID追加・削除</li>
+                        <li>ページ切り替え時の状態復元</li>
+                        <li>リアルタイムUI更新</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="feature-card pagination">
+                <div class="feature-header">
+                    <div class="feature-icon">3</div>
+                    <div class="feature-title">ページネーション連携</div>
+                </div>
+                <div class="feature-description">
+                    複数ページにわたる選択操作と全選択・部分選択の完全対応
+                </div>
+                <div class="code-example">
+// ページ切り替え時の処理<br>
+onPageChange(newPage, newPageStudents) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 現在ページ情報更新<br>
+&nbsp;&nbsp;&nbsp;&nbsp;this.currentPage = newPage;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;this.initializePage(newPageStudents);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 選択状態復元<br>
+&nbsp;&nbsp;&nbsp;&nbsp;this.restorePageSelections();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 全選択状態の判定<br>
+&nbsp;&nbsp;&nbsp;&nbsp;this.updateSelectAllState();<br>
+}<br>
+<br>
+// 全選択状態の高度判定<br>
+updateSelectAllState() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const pageSelectedCount = Array.from(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.currentPageIds<br>
+&nbsp;&nbsp;&nbsp;&nbsp;).filter(id =&gt; this.selectedIds.has(id)).length;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const selectAllCheckbox = document<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.getElementById('selectAll');<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;selectAllCheckbox.checked = <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(pageSelectedCount === this.currentPageIds.size);<br>
+}
+                </div>
+                <div class="tech-highlight">
+                    <h4>ページネーション技術</h4>
+                    <ul class="tech-list">
+                        <li>ページ切り替え時の状態管理</li>
+                        <li>複数ページ横断選択対応</li>
+                        <li>全選択判定ロジック</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="feature-card advanced">
+                <div class="feature-header">
+                    <div class="feature-icon">4</div>
+                    <div class="feature-title">高度な状態監視</div>
+                </div>
+                <div class="feature-description">
+                    選択数のリアルタイム表示と一括操作ボタンの動的制御
+                </div>
+                <div class="code-example">
+// 選択状態の総合監視<br>
+updateBulkActionButtons() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const totalSelected = this.selectedIds.size;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const pageSelected = Array.from(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.currentPageIds<br>
+&nbsp;&nbsp;&nbsp;&nbsp;).filter(id =&gt; this.selectedIds.has(id)).length;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 一括削除ボタン制御<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const bulkDeleteBtn = document<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.getElementById('bulkDeleteBtn');<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (totalSelected &gt; 0) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bulkDeleteBtn.disabled = false;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bulkDeleteBtn.textContent = <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`選択した${totalSelected}件を削除`;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bulkDeleteBtn.disabled = true;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bulkDeleteBtn.textContent = '削除';<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 選択状況表示<br>
+&nbsp;&nbsp;&nbsp;&nbsp;this.updateSelectionDisplay(totalSelected, pageSelected);<br>
+}<br>
+<br>
+// 選択IDsリストの取得<br>
+getSelectedIds() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return Array.from(this.selectedIds);<br>
+}
+                </div>
+                <div class="tech-highlight">
+                    <h4>高度監視技術</h4>
+                    <ul class="tech-list">
+                        <li>リアルタイム選択数表示</li>
+                        <li>動的ボタン制御</li>
+                        <li>企業システムレベル実現</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bottom-section">
+                <h3>🎯 Week 10.6状態管理達成レベル</h3>
+                <p>複数ページにわたる複雑な選択状態を管理する高度なJavaScript技術をマスターし、企業システムで求められる実用的なUI制御機能を完全実装</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

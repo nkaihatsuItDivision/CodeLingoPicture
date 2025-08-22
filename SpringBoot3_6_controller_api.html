@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 10.6 コントローラーAPI実装図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(253, 126, 20, 0.3);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-card.endpoint { border-left-color: #3498db; }
+        .feature-card.request { border-left-color: #e74c3c; }
+        .feature-card.response { border-left-color: #27ae60; }
+        .feature-card.ajax { border-left-color: #f39c12; }
+
+        .feature-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .endpoint .feature-icon { background: linear-gradient(135deg, #3498db, #2980b9); }
+        .request .feature-icon { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .response .feature-icon { background: linear-gradient(135deg, #27ae60, #229954); }
+        .ajax .feature-icon { background: linear-gradient(135deg, #f39c12, #e67e22); }
+
+        .feature-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .feature-description {
+            color: #6c757d;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            text-align: left;
+            margin-bottom: 15px;
+            overflow-x: auto;
+        }
+
+        .tech-highlight {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .tech-highlight h4 {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .tech-list {
+            list-style: none;
+        }
+
+        .tech-list li {
+            padding: 5px 0;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .tech-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .bottom-section {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .bottom-section h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .feature-card {
+                padding: 20px;
+            }
+            
+            .code-example {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Week 10.6 コントローラーAPI実装</h1>
+            <p>Ajax通信・JSONレスポンス・Web API設計による一括削除機能統合</p>
+        </div>
+
+        <div class="main-content">
+            <div class="feature-card endpoint">
+                <div class="feature-header">
+                    <div class="feature-icon">1</div>
+                    <div class="feature-title">REST API エンドポイント設計</div>
+                </div>
+                <div class="feature-description">
+                    一括削除機能のためのRESTful APIエンドポイント設計と実装
+                </div>
+                <div class="code-example">
+@RestController<br>
+@RequestMapping("/api/students")<br>
+public class StudentBulkDeleteController {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Autowired<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private StudentBulkDeleteService bulkDeleteService;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;/**<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* 一括削除API<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* POST /api/students/bulk-delete<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@PostMapping("/bulk-delete")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bulkDelete(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@RequestParam("studentIds") <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;List&lt;Long&gt; studentIds,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@RequestParam(value = "deleteType", <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;defaultValue = "logical") <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String deleteType) {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// サービス層呼び出し<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BulkDeleteResult result = <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bulkDeleteService.bulkLogicalDelete(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;studentIds);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// JSONレスポンス構築<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return createJsonResponse(result);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                </div>
+                <div class="tech-highlight">
+                    <h4>API設計技術</h4>
+                    <ul class="tech-list">
+                        <li>@RestController RESTful設計</li>
+                        <li>@PostMapping 一括操作対応</li>
+                        <li>@RequestParam パラメータ解析</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="feature-card request">
+                <div class="feature-header">
+                    <div class="feature-icon">2</div>
+                    <div class="feature-title">リクエスト処理・バリデーション</div>
+                </div>
+                <div class="feature-description">
+                    入力パラメータの検証と安全な一括削除処理の実行
+                </div>
+                <div class="code-example">
+// リクエスト処理とバリデーション<br>
+private ResponseEntity&lt;Map&lt;String, Object&gt;&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;processRequest(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;List&lt;Long&gt; studentIds, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String deleteType) {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;try {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 1. 入力バリデーション<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (studentIds == null || studentIds.isEmpty()) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return createErrorResponse(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"削除対象が選択されていません", <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HttpStatus.BAD_REQUEST);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 2. サイズ制限チェック<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (studentIds.size() &gt; 100) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return createErrorResponse(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"一度に削除できるのは100件までです", <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HttpStatus.BAD_REQUEST);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 3. ID重複除去<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;List&lt;Long&gt; uniqueIds = studentIds.stream()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.distinct()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.collect(Collectors.toList());<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 4. サービス実行<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BulkDeleteResult result = <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;executeDeleteOperation(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;uniqueIds, deleteType);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return createSuccessResponse(result);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;} catch (Exception e) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return createErrorResponse(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.getMessage(), <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HttpStatus.INTERNAL_SERVER_ERROR);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                </div>
+                <div class="tech-highlight">
+                    <h4>リクエスト処理技術</h4>
+                    <ul class="tech-list">
+                        <li>入力バリデーション</li>
+                        <li>セキュリティ制限</li>
+                        <li>例外ハンドリング</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="feature-card response">
+                <div class="feature-header">
+                    <div class="feature-icon">3</div>
+                    <div class="feature-title">JSONレスポンス構築</div>
+                </div>
+                <div class="feature-description">
+                    一括削除結果の構造化されたJSONレスポンス生成と状態管理
+                </div>
+                <div class="code-example">
+// JSONレスポンス構築<br>
+private ResponseEntity&lt;Map&lt;String, Object&gt;&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;createJsonResponse(BulkDeleteResult result) {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 1. 基本情報<br>
+&nbsp;&nbsp;&nbsp;&nbsp;response.put("success", result.isAllSuccess());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;response.put("timestamp", <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LocalDateTime.now().toString());<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 2. 統計情報<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Map&lt;String, Integer&gt; statistics = new HashMap&lt;&gt;();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;statistics.put("total", result.getTotalCount());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;statistics.put("success", result.getSuccessCount());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;statistics.put("failure", result.getFailureCount());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;response.put("statistics", statistics);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 3. 成功したID一覧<br>
+&nbsp;&nbsp;&nbsp;&nbsp;response.put("successIds", result.getSuccessIds());<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 4. エラー詳細（失敗がある場合）<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (!result.isAllSuccess()) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;response.put("errors", result.getFailures());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 5. メッセージ生成<br>
+&nbsp;&nbsp;&nbsp;&nbsp;response.put("message", createMessage(result));<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 6. HTTPステータス決定<br>
+&nbsp;&nbsp;&nbsp;&nbsp;HttpStatus status = result.isAllSuccess() ? <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HttpStatus.OK : HttpStatus.PARTIAL_CONTENT;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return new ResponseEntity&lt;&gt;(response, status);<br>
+}
+                </div>
+                <div class="tech-highlight">
+                    <h4>レスポンス技術</h4>
+                    <ul class="tech-list">
+                        <li>構造化JSON設計</li>
+                        <li>HTTPステータス管理</li>
+                        <li>エラー情報の詳細化</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="feature-card ajax">
+                <div class="feature-header">
+                    <div class="feature-icon">4</div>
+                    <div class="feature-title">Ajax通信フロー</div>
+                </div>
+                <div class="feature-description">
+                    フロントエンドとの非同期通信による一括削除機能の完全統合
+                </div>
+                <div class="code-example">
+// Ajax通信実装（JavaScript側）<br>
+function executeBulkDelete() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const selectedIds = selectionManager.getSelectedIds();<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (selectedIds.length === 0) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;alert('削除する学生を選択してください');<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 確認ダイアログ<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (!confirm(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`選択した${selectedIds.length}件を削除しますか？`)) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// Ajax送信<br>
+&nbsp;&nbsp;&nbsp;&nbsp;fetch('/api/students/bulk-delete', {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;method: 'POST',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;headers: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'Content-Type': <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'application/x-www-form-urlencoded'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;body: `studentIds=${selectedIds.join(',')}`<br>
+&nbsp;&nbsp;&nbsp;&nbsp;})<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.then(response =&gt; response.json())<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.then(data =&gt; handleDeleteResponse(data))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.catch(error =&gt; handleDeleteError(error));<br>
+}<br>
+<br>
+// レスポンス処理<br>
+function handleDeleteResponse(data) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (data.success) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;showSuccessMessage(data.message);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;refreshStudentList();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;selectionManager.clearAll();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;showPartialErrorMessage(data);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                </div>
+                <div class="tech-highlight">
+                    <h4>Ajax通信技術</h4>
+                    <ul class="tech-list">
+                        <li>Fetch API活用</li>
+                        <li>非同期処理・Promise</li>
+                        <li>UI状態同期</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bottom-section">
+                <h3>🎯 Week 10.6 Web層統合達成レベル</h3>
+                <p>Ajax通信・JSONレスポンス・RESTful API設計を統合し、フロントエンドとバックエンドが完全連携した企業システムレベルの一括削除機能を実現</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

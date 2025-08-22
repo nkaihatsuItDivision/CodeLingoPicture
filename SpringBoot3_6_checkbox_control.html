@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 10.6 チェックボックス制御機能図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(253, 126, 20, 0.3);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-card.html { border-left-color: #e74c3c; }
+        .feature-card.javascript { border-left-color: #f39c12; }
+        .feature-card.ui { border-left-color: #3498db; }
+        .feature-card.integration { border-left-color: #27ae60; }
+
+        .feature-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .html .feature-icon { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .javascript .feature-icon { background: linear-gradient(135deg, #f39c12, #e67e22); }
+        .ui .feature-icon { background: linear-gradient(135deg, #3498db, #2980b9); }
+        .integration .feature-icon { background: linear-gradient(135deg, #27ae60, #229954); }
+
+        .feature-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .feature-description {
+            color: #6c757d;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            text-align: left;
+            margin-bottom: 15px;
+            overflow-x: auto;
+        }
+
+        .tech-highlight {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .tech-highlight h4 {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .tech-list {
+            list-style: none;
+        }
+
+        .tech-list li {
+            padding: 5px 0;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .tech-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .bottom-section {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .bottom-section h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .feature-card {
+                padding: 20px;
+            }
+            
+            .code-example {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Week 10.6 チェックボックス制御機能</h1>
+            <p>JavaScript DOM操作による企業システムレベルUI制御の実装</p>
+        </div>
+
+        <div class="main-content">
+            <div class="feature-card html">
+                <div class="feature-header">
+                    <div class="feature-icon">1</div>
+                    <div class="feature-title">HTMLチェックボックス構造</div>
+                </div>
+                <div class="feature-description">
+                    一括削除機能の基盤となるチェックボックス配置とHTML構造の設計
+                </div>
+                <div class="code-example">
+&lt;!-- 全選択チェックボックス --&gt;<br>
+&lt;input type="checkbox" id="selectAll"&gt;<br>
+&lt;label for="selectAll"&gt;全選択&lt;/label&gt;<br>
+<br>
+&lt;!-- 学生リスト --&gt;<br>
+&lt;table class="student-table"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;tr&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;td&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;input type="checkbox" <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;class="student-checkbox" <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value="1"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/td&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;td&gt;田中太郎&lt;/td&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/tr&gt;<br>
+&lt;/table&gt;
+                </div>
+                <div class="tech-highlight">
+                    <h4>HTML技術要素</h4>
+                    <ul class="tech-list">
+                        <li>チェックボックス配置設計</li>
+                        <li>id/class属性による識別</li>
+                        <li>テーブル構造との統合</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="feature-card javascript">
+                <div class="feature-header">
+                    <div class="feature-icon">2</div>
+                    <div class="feature-title">DOM操作による制御</div>
+                </div>
+                <div class="feature-description">
+                    document.getElementById()とaddEventListenerによる動的制御
+                </div>
+                <div class="code-example">
+// 全選択チェックボックスの制御<br>
+document.getElementById('selectAll')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.addEventListener('change', function() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const isChecked = this.checked;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const checkboxes = document<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.querySelectorAll('.student-checkbox');<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;checkboxes.forEach(checkbox =&gt; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;checkbox.checked = isChecked;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;updateBulkActionButtons();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;});
+                </div>
+                <div class="tech-highlight">
+                    <h4>JavaScript技術要素</h4>
+                    <ul class="tech-list">
+                        <li>DOM操作（getElementById）</li>
+                        <li>イベントリスナー登録</li>
+                        <li>querySelectorAll活用</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="feature-card ui">
+                <div class="feature-header">
+                    <div class="feature-icon">3</div>
+                    <div class="feature-title">選択状態の視覚化</div>
+                </div>
+                <div class="feature-description">
+                    選択状態に応じたUI変更と一括操作ボタンの制御
+                </div>
+                <div class="code-example">
+function updateBulkActionButtons() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const selectedCount = document<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.querySelectorAll('.student-checkbox:checked')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.length;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const bulkDeleteBtn = document<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.getElementById('bulkDeleteBtn');<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (selectedCount &gt; 0) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bulkDeleteBtn.disabled = false;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bulkDeleteBtn.textContent = <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`選択した${selectedCount}件を削除`;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bulkDeleteBtn.disabled = true;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                </div>
+                <div class="tech-highlight">
+                    <h4>UI制御技術</h4>
+                    <ul class="tech-list">
+                        <li>動的ボタン制御</li>
+                        <li>選択数カウント表示</li>
+                        <li>ユーザビリティ向上</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="feature-card integration">
+                <div class="feature-header">
+                    <div class="feature-icon">4</div>
+                    <div class="feature-title">企業システム統合</div>
+                </div>
+                <div class="feature-description">
+                    個別選択・全選択・部分選択の完全対応による実用レベル実現
+                </div>
+                <div class="code-example">
+// 個別チェックボックスの制御<br>
+document.querySelectorAll('.student-checkbox')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.forEach(checkbox =&gt; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;checkbox.addEventListener('change', <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;updateSelectAllState);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+<br>
+function updateSelectAllState() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const totalCheckboxes = document<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.querySelectorAll('.student-checkbox').length;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const checkedCount = document<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.querySelectorAll('.student-checkbox:checked')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.length;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const selectAll = document<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.getElementById('selectAll');<br>
+&nbsp;&nbsp;&nbsp;&nbsp;selectAll.checked = (checkedCount === totalCheckboxes);<br>
+}
+                </div>
+                <div class="tech-highlight">
+                    <h4>統合技術</h4>
+                    <ul class="tech-list">
+                        <li>双方向状態同期</li>
+                        <li>部分選択対応</li>
+                        <li>企業システムレベル実現</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bottom-section">
+                <h3>🎯 Week 10.6達成レベル</h3>
+                <p>企業システムで使用される高度なUI制御技術をマスターし、ユーザビリティの高い一括操作機能を実装できるスキルを習得</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

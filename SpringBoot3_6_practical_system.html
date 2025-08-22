@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 10.6 実践演習完成システム図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(253, 126, 20, 0.3);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-card.step1 { border-left-color: #e74c3c; }
+        .feature-card.step2 { border-left-color: #f39c12; }
+        .feature-card.step3 { border-left-color: #3498db; }
+        .feature-card.step4 { border-left-color: #27ae60; }
+        .feature-card.step5 { border-left-color: #9b59b6; }
+        .feature-card.step6 { border-left-color: #1abc9c; }
+
+        .feature-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .step1 .feature-icon { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .step2 .feature-icon { background: linear-gradient(135deg, #f39c12, #e67e22); }
+        .step3 .feature-icon { background: linear-gradient(135deg, #3498db, #2980b9); }
+        .step4 .feature-icon { background: linear-gradient(135deg, #27ae60, #229954); }
+        .step5 .feature-icon { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+        .step6 .feature-icon { background: linear-gradient(135deg, #1abc9c, #16a085); }
+
+        .feature-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .feature-description {
+            color: #6c757d;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            text-align: left;
+            margin-bottom: 15px;
+            overflow-x: auto;
+        }
+
+        .tech-highlight {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .tech-highlight h4 {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .tech-list {
+            list-style: none;
+        }
+
+        .tech-list li {
+            padding: 5px 0;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .tech-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .test-results {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .test-results h4 {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .bottom-section {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .bottom-section h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .feature-card {
+                padding: 20px;
+            }
+            
+            .code-example {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Week 10.6 実践演習完成システム</h1>
+            <p>6ステップ統合実装による一括削除機能の完全動作システム構築</p>
+        </div>
+
+        <div class="main-content">
+            <div class="feature-card step1">
+                <div class="feature-header">
+                    <div class="feature-icon">1</div>
+                    <div class="feature-title">Step 1: HTML基盤構築</div>
+                </div>
+                <div class="feature-description">
+                    チェックボックス付き学生一覧テーブルと一括操作ボタンの配置
+                </div>
+                <div class="code-example">
+&lt;!-- 一括操作コントロールエリア --&gt;<br>
+&lt;div class="bulk-actions"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;label&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;input type="checkbox" id="selectAll"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;全選択<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/label&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;button id="bulkDeleteBtn" disabled&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;削除<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/button&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;span id="selectionCount"&gt;&lt;/span&gt;<br>
+&lt;/div&gt;<br>
+<br>
+&lt;!-- 学生一覧テーブル --&gt;<br>
+&lt;table class="student-table"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;thead&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;tr&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;th&gt;選択&lt;/th&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;th&gt;学生ID&lt;/th&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;th&gt;氏名&lt;/th&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;th&gt;メール&lt;/th&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/tr&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/thead&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;tbody&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;!-- 動的生成される学生行 --&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/tbody&gt;<br>
+&lt;/table&gt;
+                </div>
+                <div class="tech-highlight">
+                    <h4>Step 1 確認ポイント</h4>
+                    <ul class="tech-list">
+                        <li>全選択チェックボックス配置確認</li>
+                        <li>一括削除ボタン初期状態（無効）</li>
+                        <li>テーブル構造とIDの一致</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="feature-card step2">
+                <div class="feature-header">
+                    <div class="feature-icon">2</div>
+                    <div class="feature-title">Step 2: JavaScript制御実装</div>
+                </div>
+                <div class="feature-description">
+                    SelectionManagerクラスとDOM操作による選択状態管理機能
+                </div>
+                <div class="code-example">
+// Step 2 動作確認テスト<br>
+console.log('=== Step 2 動作確認 ===');<br>
+<br>
+// 1. SelectionManagerインスタンス作成<br>
+const selectionManager = new SelectionManager();<br>
+console.log('SelectionManager作成完了');<br>
+<br>
+// 2. 全選択機能テスト<br>
+document.getElementById('selectAll').click();<br>
+console.log('全選択テスト:', <br>
+&nbsp;&nbsp;&nbsp;&nbsp;selectionManager.getSelectedIds());<br>
+<br>
+// 3. 個別選択テスト<br>
+const firstCheckbox = document<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.querySelector('.student-checkbox');<br>
+firstCheckbox.click();<br>
+console.log('個別選択テスト:', <br>
+&nbsp;&nbsp;&nbsp;&nbsp;selectionManager.getSelectedIds());<br>
+<br>
+// 4. ボタン状態確認<br>
+const bulkBtn = document<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.getElementById('bulkDeleteBtn');<br>
+console.log('ボタン状態:', <br>
+&nbsp;&nbsp;&nbsp;&nbsp;bulkBtn.disabled ? '無効' : '有効');<br>
+console.log('ボタンテキスト:', bulkBtn.textContent);
+                </div>
+                <div class="test-results">
+                    <h4>Step 2 テスト結果</h4>
+                    <ul class="tech-list">
+                        <li>✓ 全選択・全解除が正常動作</li>
+                        <li>✓ 個別選択が状態に反映</li>
+                        <li>✓ ボタンが動的に制御される</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="feature-card step3">
+                <div class="feature-header">
+                    <div class="feature-icon">3</div>
+                    <div class="feature-title">Step 3: Javaサービス層実装</div>
+                </div>
+                <div class="feature-description">
+                    BulkDeleteServiceとトランザクション制御の実装・単体テスト
+                </div>
+                <div class="code-example">
+// Step 3 サービス層テスト<br>
+@Test<br>
+public void testBulkLogicalDelete() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// テストデータ準備<br>
+&nbsp;&nbsp;&nbsp;&nbsp;List&lt;Long&gt; studentIds = Arrays.asList(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1L, 2L, 3L, 4L, 5L);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 一括削除実行<br>
+&nbsp;&nbsp;&nbsp;&nbsp;BulkDeleteResult result = <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bulkDeleteService.bulkLogicalDelete(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;studentIds);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 結果検証<br>
+&nbsp;&nbsp;&nbsp;&nbsp;assertThat(result.isAllSuccess()).isTrue();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;assertThat(result.getSuccessCount()).isEqualTo(5);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;assertThat(result.getFailureCount()).isEqualTo(0);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// データベース状態確認<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for (Long id : studentIds) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Student student = studentRepository<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.findById(id).orElse(null);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assertThat(student.getDeletedAt())<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.isNotNull();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("✅ 一括論理削除テスト成功");<br>
+}
+                </div>
+                <div class="test-results">
+                    <h4>Step 3 テスト結果</h4>
+                    <ul class="tech-list">
+                        <li>✓ @Transactional正常動作</li>
+                        <li>✓ 全件削除成功</li>
+                        <li>✓ deleted_at更新確認</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="feature-card step4">
+                <div class="feature-header">
+                    <div class="feature-icon">4</div>
+                    <div class="feature-title">Step 4: コントローラー統合</div>
+                </div>
+                <div class="feature-description">
+                    RESTful APIエンドポイントとJSON レスポンスの統合テスト
+                </div>
+                <div class="code-example">
+// Step 4 API統合テスト<br>
+@Test<br>
+public void testBulkDeleteAPI() throws Exception {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// リクエストパラメータ準備<br>
+&nbsp;&nbsp;&nbsp;&nbsp;String studentIds = "1,2,3,4,5";<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// APIリクエスト実行<br>
+&nbsp;&nbsp;&nbsp;&nbsp;mockMvc.perform(post("/api/students/bulk-delete")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.param("studentIds", studentIds))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.andExpect(status().isOk())<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.andExpect(jsonPath("$.success").value(true))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.andExpect(jsonPath("$.statistics.total")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.value(5))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.andExpect(jsonPath("$.statistics.success")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.value(5))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.andExpected(jsonPath("$.message")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.value("5件の学生を削除しました"));<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("✅ API統合テスト成功");<br>
+}<br>
+<br>
+// レスポンス形式確認<br>
+/*<br>
+{<br>
+&nbsp;&nbsp;"success": true,<br>
+&nbsp;&nbsp;"timestamp": "2025-08-22T10:30:00",<br>
+&nbsp;&nbsp;"statistics": {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"total": 5,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"success": 5,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"failure": 0<br>
+&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;"successIds": [1, 2, 3, 4, 5],<br>
+&nbsp;&nbsp;"message": "5件の学生を削除しました"<br>
+}<br>
+*/
+                </div>
+                <div class="test-results">
+                    <h4>Step 4 テスト結果</h4>
+                    <ul class="tech-list">
+                        <li>✓ REST API正常レスポンス</li>
+                        <li>✓ JSON形式正確</li>
+                        <li>✓ HTTPステータス200</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="feature-card step5">
+                <div class="feature-header">
+                    <div class="feature-icon">5</div>
+                    <div class="feature-title">Step 5: Ajax通信統合</div>
+                </div>
+                <div class="feature-description">
+                    フロントエンドとバックエンドの完全連携テストとUI同期確認
+                </div>
+                <div class="code-example">
+// Step 5 Ajax統合テスト<br>
+async function testAjaxIntegration() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;console.log('=== Ajax統合テスト開始 ===');<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 1. 学生5件選択<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const testIds = [1, 2, 3, 4, 5];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;testIds.forEach(id =&gt; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;selectionManager.updateSelectionState(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;id, true);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;console.log('選択数:', <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;selectionManager.getSelectedIds().length);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 2. 一括削除実行<br>
+&nbsp;&nbsp;&nbsp;&nbsp;try {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const response = await fetch(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'/api/students/bulk-delete', {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;method: 'POST',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;headers: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'Content-Type': <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'application/x-www-form-urlencoded'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;body: `studentIds=${testIds.join(',')}`<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const data = await response.json();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 3. レスポンス確認<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log('成功:', data.success);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log('削除数:', data.statistics.success);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log('メッセージ:', data.message);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 4. UI更新確認<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;refreshStudentList();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;selectionManager.clearAll();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log('✅ Ajax統合テスト成功');<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;} catch (error) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.error('❌ Ajax統合テスト失敗:', error);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                </div>
+                <div class="test-results">
+                    <h4>Step 5 テスト結果</h4>
+                    <ul class="tech-list">
+                        <li>✓ Ajax通信成功</li>
+                        <li>✓ UI状態同期完了</li>
+                        <li>✓ 学生一覧自動更新</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="feature-card step6">
+                <div class="feature-header">
+                    <div class="feature-icon">6</div>
+                    <div class="feature-title">Step 6: 総合動作確認</div>
+                </div>
+                <div class="feature-description">
+                    実際のユーザー操作による全機能テストとパフォーマンス確認
+                </div>
+                <div class="code-example">
+// Step 6 総合動作確認シナリオ<br>
+<br>
+/** シナリオ1: 基本的な一括削除 */<br>
+// 1. 学生一覧画面を開く<br>
+// 2. 任意の3件を個別選択<br>
+// 3. 「選択した3件を削除」ボタンをクリック<br>
+// 4. 確認ダイアログで「OK」<br>
+// 5. 削除完了メッセージ表示<br>
+// 6. 学生一覧から該当学生が消える<br>
+<br>
+/** シナリオ2: 全選択削除 */<br>
+// 1. 「全選択」チェックボックスをクリック<br>
+// 2. 全学生が選択状態になる<br>
+// 3. 「選択したN件を削除」ボタンをクリック<br>
+// 4. 一括削除実行・完了<br>
+<br>
+/** シナリオ3: ページネーション対応 */<br>
+// 1. 1ページ目で3件選択<br>
+// 2. 2ページ目に移動<br>
+// 3. 追加で2件選択<br>
+// 4. 選択数「5件」が正しく表示<br>
+// 5. 5件一括削除が正常実行<br>
+<br>
+/** シナリオ4: エラーハンドリング */<br>
+// 1. 存在しないIDを含む削除要求<br>
+// 2. 部分失敗レスポンス受信<br>
+// 3. エラー詳細が適切に表示<br>
+<br>
+console.log('🎯 Week 10.6 完全動作確認完了');<br>
+console.log('企業システムレベル達成！');
+                </div>
+                <div class="test-results">
+                    <h4>Step 6 総合確認結果</h4>
+                    <ul class="tech-list">
+                        <li>✓ 全シナリオ正常動作</li>
+                        <li>✓ パフォーマンス良好</li>
+                        <li>✓ 企業システムレベル到達</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bottom-section">
+                <h3>🎯 Week 10.6 実践演習完全達成</h3>
+                <p>6ステップ段階的実装により、チェックボックス制御・状態管理・一括削除処理・Ajax通信が完全統合された企業システムレベルの一括削除機能が完成。Week 10.7への確固たる基盤を構築</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
