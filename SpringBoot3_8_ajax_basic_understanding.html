@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajax技術の基礎理解 - 従来方式 vs Ajax方式</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #28a745, #155724);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .comparison-section {
+            padding: 40px;
+        }
+
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .method-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .traditional-method {
+            border-left: 5px solid #6c757d;
+        }
+
+        .ajax-method {
+            border-left: 5px solid #28a745;
+        }
+
+        .method-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .method-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .traditional-icon {
+            background: #6c757d;
+        }
+
+        .ajax-icon {
+            background: #28a745;
+        }
+
+        .method-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .process-flow {
+            margin: 20px 0;
+        }
+
+        .process-step {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-left: 4px solid #dee2e6;
+            transition: all 0.3s ease;
+        }
+
+        .traditional-method .process-step {
+            border-left-color: #6c757d;
+        }
+
+        .ajax-method .process-step {
+            border-left-color: #28a745;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: #007bff;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 25px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-right: 10px;
+        }
+
+        .step-text {
+            font-size: 1rem;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        .ux-impact {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .traditional-ux {
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+            border: 1px solid #f1b0b7;
+        }
+
+        .ajax-ux {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            border: 1px solid #b8dacd;
+        }
+
+        .ux-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .traditional-ux .ux-title {
+            color: #721c24;
+        }
+
+        .ajax-ux .ux-title {
+            color: #155724;
+        }
+
+        .ux-description {
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .traditional-ux .ux-description {
+            color: #721c24;
+        }
+
+        .ajax-ux .ux-description {
+            color: #155724;
+        }
+
+        .highlight-section {
+            margin-top: 40px;
+            background: linear-gradient(135deg, #e3f2fd, #e1f5fe);
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid #b3e5fc;
+        }
+
+        .highlight-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #0277bd;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .highlight-content {
+            text-align: center;
+            font-size: 1rem;
+            color: #01579b;
+            line-height: 1.6;
+        }
+
+        /* レスポンシブデザイン */
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 10px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .comparison-section {
+                padding: 20px;
+            }
+
+            .comparison-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .method-card {
+                padding: 20px;
+            }
+
+            .method-title {
+                font-size: 1.2rem;
+            }
+
+            .method-icon {
+                font-size: 1.5rem;
+                width: 40px;
+                height: 40px;
+            }
+
+            .step-text {
+                font-size: 0.9rem;
+            }
+
+            .highlight-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-exchange-alt"></i> Ajax技術の基礎理解</h1>
+            <p>従来の同期通信 vs Ajax（非同期通信）の比較</p>
+        </div>
+
+        <div class="comparison-section">
+            <div class="comparison-container">
+                <!-- 従来の方式（同期通信） -->
+                <div class="method-card traditional-method">
+                    <div class="method-header">
+                        <div class="method-icon traditional-icon">
+                            <i class="fas fa-sync"></i>
+                        </div>
+                        <div class="method-title">従来の方式（同期通信）</div>
+                    </div>
+
+                    <div class="process-flow">
+                        <div class="process-step">
+                            <span class="step-number">1</span>
+                            <span class="step-text">フォーム送信ボタンをクリック</span>
+                        </div>
+                        <div class="process-step">
+                            <span class="step-number">2</span>
+                            <span class="step-text">ページ全体がサーバーに送信される</span>
+                        </div>
+                        <div class="process-step">
+                            <span class="step-number">3</span>
+                            <span class="step-text">サーバーで処理を実行</span>
+                        </div>
+                        <div class="process-step">
+                            <span class="step-number">4</span>
+                            <span class="step-text">新しいHTMLページが返される</span>
+                        </div>
+                        <div class="process-step">
+                            <span class="step-number">5</span>
+                            <span class="step-text">ページ全体が再読み込み</span>
+                        </div>
+                    </div>
+
+                    <div class="ux-impact traditional-ux">
+                        <div class="ux-title">⚠️ UXへの影響</div>
+                        <div class="ux-description">
+                            画面が一瞬白くなる<br>
+                            入力データが消える可能性<br>
+                            読み込み時間が長い<br>
+                            操作性が悪い
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ajax方式（非同期通信） -->
+                <div class="method-card ajax-method">
+                    <div class="method-header">
+                        <div class="method-icon ajax-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div class="method-title">Ajax方式（非同期通信）</div>
+                    </div>
+
+                    <div class="process-flow">
+                        <div class="process-step">
+                            <span class="step-number">1</span>
+                            <span class="step-text">ボタンクリック・入力検知</span>
+                        </div>
+                        <div class="process-step">
+                            <span class="step-number">2</span>
+                            <span class="step-text">背景でサーバーと通信開始</span>
+                        </div>
+                        <div class="process-step">
+                            <span class="step-number">3</span>
+                            <span class="step-text">ページはそのまま表示継続</span>
+                        </div>
+                        <div class="process-step">
+                            <span class="step-number">4</span>
+                            <span class="step-text">サーバーからJSON形式で結果受信</span>
+                        </div>
+                        <div class="process-step">
+                            <span class="step-number">5</span>
+                            <span class="step-text">必要な部分のみを動的に更新</span>
+                        </div>
+                    </div>
+
+                    <div class="ux-impact ajax-ux">
+                        <div class="ux-title">✅ UXへの向上</div>
+                        <div class="ux-description">
+                            画面がスムーズに動作<br>
+                            入力データが保持される<br>
+                            高速なレスポンス<br>
+                            現代的な操作感
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-section">
+                <div class="highlight-title">💡 Week 10.8で習得する技術価値</div>
+                <div class="highlight-content">
+                    Ajax技術をマスターすることで、「使いにくいWebサイト」から「快適なWebアプリケーション」へと進化させることができます。<br>
+                    ユーザビリティの向上は現代のWeb開発において必須スキルです。
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
