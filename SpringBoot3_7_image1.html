@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apache POI とは</title>
+    <style>
+        .poi-overview {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            border-radius: 12px;
+            color: white;
+        }
+
+        .poi-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .poi-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .poi-box {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .poi-java {
+            background: rgba(52, 144, 220, 0.2);
+        }
+
+        .poi-apache {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .poi-files {
+            background: rgba(76, 175, 80, 0.2);
+        }
+
+        .poi-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .poi-label {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .poi-description {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .poi-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            border-left: 4px solid #fff;
+        }
+
+        .feature-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .feature-desc {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .week-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .poi-content {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .poi-apache {
+                transform: none;
+            }
+            
+            .poi-features {
+                grid-template-columns: 1fr;
+            }
+            
+            .poi-title {
+                font-size: 20px;
+            }
+            
+            .poi-icon {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="poi-overview">
+        <div class="poi-title">
+            🔧 Apache POI とは何か
+        </div>
+        
+        <div class="poi-content">
+            <div class="poi-box poi-java">
+                <div class="poi-icon">☕</div>
+                <div class="poi-label">Java アプリケーション</div>
+                <div class="poi-description">
+                    Spring Boot<br>
+                    学生管理システム<br>
+                    データ処理ロジック
+                </div>
+            </div>
+            
+            <div class="poi-box poi-apache">
+                <div class="poi-icon">⚙️</div>
+                <div class="poi-label">Apache POI</div>
+                <div class="poi-description">
+                    <strong>Microsoft Office</strong><br>
+                    <strong>ドキュメント操作</strong><br>
+                    <strong>Java ライブラリ</strong>
+                </div>
+            </div>
+            
+            <div class="poi-box poi-files">
+                <div class="poi-icon">📊</div>
+                <div class="poi-label">Office ファイル</div>
+                <div class="poi-description">
+                    Excel (.xlsx)<br>
+                    CSV ファイル<br>
+                    Word, PowerPoint
+                </div>
+            </div>
+        </div>
+        
+        <div class="poi-features">
+            <div class="feature-card">
+                <div class="feature-title">
+                    <span>📈</span> Excel ファイル生成
+                </div>
+                <div class="feature-desc">
+                    XSSFWorkbook を使用してスタイル付きの<br>
+                    Excel ファイルを動的に生成
+                </div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-title">
+                    <span>📄</span> CSV データ出力
+                </div>
+                <div class="feature-desc">
+                    エスケープ処理を含む安全な<br>
+                    CSV 形式でのデータエクスポート
+                </div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-title">
+                    <span>💾</span> メモリ効率処理
+                </div>
+                <div class="feature-desc">
+                    ByteArrayOutputStream による<br>
+                    大量データの効率的な処理
+                </div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-title">
+                    <span>🔗</span> Spring Boot 統合
+                </div>
+                <div class="feature-desc">
+                    ResponseEntity との連携による<br>
+                    安全なファイルダウンロード機能
+                </div>
+            </div>
+        </div>
+        
+        <div class="week-badge">
+            Week 10.7 で習得する企業システムレベルの技術
+        </div>
+    </div>
+</body>
+</html>

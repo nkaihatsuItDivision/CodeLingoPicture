@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apache POI の基本概念</title>
+    <style>
+        .poi-hierarchy {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            border-radius: 12px;
+            color: white;
+        }
+
+        .hierarchy-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hierarchy-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .level {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .level-number {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .level-content {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .concept-box {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .workbook-box {
+            background: rgba(63, 81, 181, 0.3);
+            border-color: rgba(63, 81, 181, 0.5);
+        }
+
+        .sheet-box {
+            background: rgba(33, 150, 243, 0.3);
+            border-color: rgba(33, 150, 243, 0.5);
+        }
+
+        .row-box {
+            background: rgba(0, 188, 212, 0.3);
+            border-color: rgba(0, 188, 212, 0.5);
+        }
+
+        .cell-box {
+            background: rgba(0, 150, 136, 0.3);
+            border-color: rgba(0, 150, 136, 0.5);
+        }
+
+        .concept-icon {
+            font-size: 36px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .concept-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .concept-class {
+            font-size: 14px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .description-panel {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .description-title {
+            font-weight: bold;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .description-text {
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .code-example {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            border-left: 3px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .hierarchy-summary {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .summary-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .summary-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .flow-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .flow-separator {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .level-content {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .level {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .hierarchy-title {
+                font-size: 20px;
+            }
+            
+            .concept-icon {
+                font-size: 28px;
+            }
+            
+            .summary-flow {
+                flex-direction: column;
+            }
+            
+            .flow-separator {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="poi-hierarchy">
+        <div class="hierarchy-title">
+            📊 Apache POI の基本概念と階層構造
+        </div>
+        
+        <div class="hierarchy-container">
+            <!-- Level 1: Workbook -->
+            <div class="level">
+                <div class="level-number">1</div>
+                <div class="level-content">
+                    <div class="concept-box workbook-box">
+                        <div class="concept-icon">📁</div>
+                        <div class="concept-name">Workbook</div>
+                        <div class="concept-class">XSSFWorkbook</div>
+                    </div>
+                    <div class="description-panel">
+                        <div class="description-title">📁 ワークブック（Excelファイル全体）</div>
+                        <div class="description-text">
+                            Excel ファイル全体を表すトップレベルのオブジェクト。<br>
+                            複数のシートを含み、ファイルの保存・読み込みを管理。
+                        </div>
+                        <div class="code-example">
+                            Workbook workbook = new XSSFWorkbook();<br>
+                            // .xlsx 形式のExcelファイルを作成
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Level 2: Sheet -->
+            <div class="level">
+                <div class="level-number">2</div>
+                <div class="level-content">
+                    <div class="concept-box sheet-box">
+                        <div class="concept-icon">📋</div>
+                        <div class="concept-name">Sheet</div>
+                        <div class="concept-class">XSSFSheet</div>
+                    </div>
+                    <div class="description-panel">
+                        <div class="description-title">📋 シート（ワークシート）</div>
+                        <div class="description-text">
+                            Workbook 内の個別のシート。「学生一覧」「検索結果」など<br>
+                            目的別にデータを整理する単位。
+                        </div>
+                        <div class="code-example">
+                            Sheet sheet = workbook.createSheet("学生一覧");<br>
+                            // "学生一覧" という名前のシートを作成
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Level 3: Row -->
+            <div class="level">
+                <div class="level-number">3</div>
+                <div class="level-content">
+                    <div class="concept-box row-box">
+                        <div class="concept-icon">📏</div>
+                        <div class="concept-name">Row</div>
+                        <div class="concept-class">XSSFRow</div>
+                    </div>
+                    <div class="description-panel">
+                        <div class="description-title">📏 行（水平方向のデータ列）</div>
+                        <div class="description-text">
+                            Sheet 内の横一列のデータ。1つの学生の情報や<br>
+                            ヘッダー行など、関連するデータの集合。
+                        </div>
+                        <div class="code-example">
+                            Row headerRow = sheet.createRow(0);<br>
+                            // 0行目（最初の行）を作成
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Level 4: Cell -->
+            <div class="level">
+                <div class="level-number">4</div>
+                <div class="level-content">
+                    <div class="concept-box cell-box">
+                        <div class="concept-icon">🔢</div>
+                        <div class="concept-name">Cell</div>
+                        <div class="concept-class">XSSFCell</div>
+                    </div>
+                    <div class="description-panel">
+                        <div class="description-title">🔢 セル（個別のデータ項目）</div>
+                        <div class="description-text">
+                            最小単位のデータ格納場所。学生名、メールアドレスなど<br>
+                            個別の値を格納し、スタイルも設定可能。
+                        </div>
+                        <div class="code-example">
+                            Cell cell = headerRow.createCell(0);<br>
+                            cell.setCellValue("学生ID");<br>
+                            // セルに値とスタイルを設定
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="hierarchy-summary">
+            <div class="summary-title">🔄 Week 10.7 での操作フロー</div>
+            <div class="summary-flow">
+                <div class="flow-item">Workbook 作成</div>
+                <div class="flow-separator">▶</div>
+                <div class="flow-item">Sheet 追加</div>
+                <div class="flow-separator">▶</div>
+                <div class="flow-item">Row 作成</div>
+                <div class="flow-separator">▶</div>
+                <div class="flow-item">Cell 設定</div>
+                <div class="flow-separator">▶</div>
+                <div class="flow-item">ファイル出力</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
