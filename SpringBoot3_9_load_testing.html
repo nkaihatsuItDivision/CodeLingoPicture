@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 10.9 負荷テスト実装図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .header .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .jmeter-overview {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .jmeter-title {
+            font-size: 1.6em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .test-plan-flow {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .flow-step {
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .flow-step:hover {
+            transform: translateY(-5px);
+        }
+
+        .step-icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .step-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .step-description {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .test-controller-section {
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .controller-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .controller-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .controller-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 25px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .controller-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .controller-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .controller-icon {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .controller-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .code-example {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            color: #495057;
+            margin: 15px 0;
+            border-left: 4px solid #6c757d;
+        }
+
+        .scenarios-section {
+            background: linear-gradient(135deg, #28a745, #155724);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+        }
+
+        .scenarios-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .scenarios-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .scenario-card {
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .scenario-header {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .scenario-metrics {
+            background: rgba(255,255,255,0.1);
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .performance-results {
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+        }
+
+        .results-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .result-item {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .result-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .result-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .analysis-section {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+        }
+
+        .analysis-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .analysis-card {
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .analysis-header {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .analysis-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .analysis-list li {
+            padding: 5px 0;
+            display: flex;
+            align-items: center;
+            font-size: 0.9em;
+        }
+
+        .analysis-list li::before {
+            content: "🔍";
+            margin-right: 8px;
+        }
+
+        .threadgroup-config {
+            background: linear-gradient(135deg, #dc3545, #bd2130);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+        }
+
+        .threadgroup-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .config-table {
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .config-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .config-row:last-child {
+            border-bottom: none;
+        }
+
+        .config-label {
+            font-weight: bold;
+        }
+
+        .config-value {
+            font-family: 'Courier New', monospace;
+        }
+
+        .config-description {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .test-plan-flow {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .controller-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .scenarios-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+            }
+
+            .analysis-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .config-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 負荷テストの実装</h1>
+            <div class="subtitle">Week 10.9 パフォーマンス最適化：JMeter実装とストレステスト</div>
+        </div>
+
+        <div class="content">
+            <div class="jmeter-overview">
+                <div class="jmeter-title">🛠️ JMeterテストプラン構成</div>
+                <div class="test-plan-flow">
+                    <div class="flow-step">
+                        <div class="step-icon">📋</div>
+                        <div class="step-title">Test Plan作成</div>
+                        <div class="step-description">テスト全体の設計<br>と実行計画</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-icon">👥</div>
+                        <div class="step-title">Thread Group</div>
+                        <div class="step-description">同時ユーザー数<br>と実行パターン</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-icon">🌐</div>
+                        <div class="step-title">HTTP Request</div>
+                        <div class="step-description">API エンドポイント<br>呼び出し設定</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-icon">📊</div>
+                        <div class="step-title">Listeners</div>
+                        <div class="step-description">結果収集と<br>レポート生成</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-icon">📈</div>
+                        <div class="step-title">Analysis</div>
+                        <div class="step-description">パフォーマンス<br>分析と改善</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="threadgroup-config">
+                <div class="threadgroup-title">👥 JMeter ThreadGroup 設定</div>
+                <div class="config-table">
+                    <div class="config-row">
+                        <div class="config-label">設定項目</div>
+                        <div class="config-label">設定値</div>
+                        <div class="config-label">説明</div>
+                    </div>
+                    <div class="config-row">
+                        <div class="config-value">Number of Threads</div>
+                        <div class="config-value">100</div>
+                        <div class="config-description">同時実行ユーザー数</div>
+                    </div>
+                    <div class="config-row">
+                        <div class="config-value">Ramp-up Period</div>
+                        <div class="config-value">60 seconds</div>
+                        <div class="config-description">ユーザー増加時間</div>
+                    </div>
+                    <div class="config-row">
+                        <div class="config-value">Loop Count</div>
+                        <div class="config-value">10</div>
+                        <div class="config-description">1ユーザーあたり実行回数</div>
+                    </div>
+                    <div class="config-row">
+                        <div class="config-value">Duration</div>
+                        <div class="config-value">300 seconds</div>
+                        <div class="config-description">テスト継続時間</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="test-controller-section">
+                <div class="controller-title">🎯 PerformanceTestController 実装</div>
+                <div class="controller-grid">
+                    <div class="controller-card">
+                        <div class="controller-header">
+                            <div class="controller-icon">🔧</div>
+                            <div class="controller-name">テストコントローラー</div>
+                        </div>
+                        <div class="code-example">
+@RestController<br>
+@RequestMapping(&quot;/api/performance&quot;)<br>
+public class PerformanceTestController {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Autowired<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private StudentService studentService;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@GetMapping(&quot;/students&quot;)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public ResponseEntity&lt;List&lt;Student&gt;&gt; getStudents() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;long startTime = System.currentTimeMillis();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;List&lt;Student&gt; students = studentService.findAll();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;long endTime = System.currentTimeMillis();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;long responseTime = endTime - startTime;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return ResponseEntity.ok()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.header(&quot;X-Response-Time&quot;, String.valueOf(responseTime))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.body(students);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                        </div>
+                        <p style="font-size: 0.9em; color: #666; margin-top: 15px;">
+                            負荷テスト専用のAPIエンドポイント実装
+                        </p>
+                    </div>
+
+                    <div class="controller-card">
+                        <div class="controller-header">
+                            <div class="controller-icon">📊</div>
+                            <div class="controller-name">テスト結果モデル</div>
+                        </div>
+                        <div class="code-example">
+@Data<br>
+@AllArgsConstructor<br>
+public class PerformanceTestResult {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private String testName;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private long totalRequests;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private long successfulRequests;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private long failedRequests;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private double averageResponseTime;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private double maxResponseTime;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private double minResponseTime;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private double throughput;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private double errorRate;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private LocalDateTime testStartTime;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private LocalDateTime testEndTime;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public double getSuccessRate() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return (double) successfulRequests / totalRequests * 100;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                        </div>
+                        <p style="font-size: 0.9em; color: #666; margin-top: 15px;">
+                            テスト結果を格納するデータモデル
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scenarios-section">
+                <div class="scenarios-title">🎬 ストレステストシナリオ</div>
+                <div class="scenarios-grid">
+                    <div class="scenario-card">
+                        <div class="scenario-header">基本負荷テスト</div>
+                        <div class="scenario-metrics">
+同時ユーザー: 50名<br>
+実行時間: 5分<br>
+対象API: 学生一覧取得<br>
+期待値: 平均2秒以下
+                        </div>
+                        <p style="font-size: 0.9em; margin-top: 10px;">
+                            通常業務時の負荷を想定したテスト
+                        </p>
+                    </div>
+
+                    <div class="scenario-card">
+                        <div class="scenario-header">ピーク負荷テスト</div>
+                        <div class="scenario-metrics">
+同時ユーザー: 200名<br>
+実行時間: 10分<br>
+対象API: 検索機能<br>
+期待値: 平均5秒以下
+                        </div>
+                        <p style="font-size: 0.9em; margin-top: 10px;">
+                            最大負荷時の性能限界テスト
+                        </p>
+                    </div>
+
+                    <div class="scenario-card">
+                        <div class="scenario-header">持続負荷テスト</div>
+                        <div class="scenario-metrics">
+同時ユーザー: 100名<br>
+実行時間: 30分<br>
+対象API: CRUD操作<br>
+期待値: 安定性確保
+                        </div>
+                        <p style="font-size: 0.9em; margin-top: 10px;">
+                            長時間運用での安定性検証
+                        </p>
+                    </div>
+
+                    <div class="scenario-card">
+                        <div class="scenario-header">スパイクテスト</div>
+                        <div class="scenario-metrics">
+同時ユーザー: 500名<br>
+実行時間: 2分<br>
+対象API: Ajax機能<br>
+期待値: 障害無し
+                        </div>
+                        <p style="font-size: 0.9em; margin-top: 10px;">
+                            突発的高負荷への耐性テスト
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="performance-results">
+                <div class="results-title">📈 性能検証結果の分析</div>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <div class="result-value">1,200</div>
+                        <div class="result-label">リクエスト/分</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-value">0.8秒</div>
+                        <div class="result-label">平均レスポンス時間</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-value">99.2%</div>
+                        <div class="result-label">成功率</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-value">0.8%</div>
+                        <div class="result-label">エラー率</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-value">4.5秒</div>
+                        <div class="result-label">最大レスポンス時間</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-value">95%</div>
+                        <div class="result-label">2秒以内完了率</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="analysis-section">
+                <div class="analysis-title">🔍 パフォーマンス分析結果</div>
+                <div class="analysis-grid">
+                    <div class="analysis-card">
+                        <div class="analysis-header">Week 10.1-10.8機能の効果</div>
+                        <ul class="analysis-list">
+                            <li>Ajax検索：高速レスポンス</li>
+                            <li>削除機能：安定性確保</li>
+                            <li>エクスポート：負荷分散</li>
+                            <li>一括操作：効率的処理</li>
+                        </ul>
+                    </div>
+
+                    <div class="analysis-card">
+                        <div class="analysis-header">最適化効果の確認</div>
+                        <ul class="analysis-list">
+                            <li>インデックス：10倍高速化</li>
+                            <li>N+1解決：99%負荷軽減</li>
+                            <li>キャッシュ：20倍向上</li>
+                            <li>監視：リアルタイム把握</li>
+                        </ul>
+                    </div>
+
+                    <div class="analysis-card">
+                        <div class="analysis-header">ボトルネック特定</div>
+                        <ul class="analysis-list">
+                            <li>CPU使用率：最適範囲内</li>
+                            <li>メモリ：効率的使用</li>
+                            <li>データベース：最適化済み</li>
+                            <li>ネットワーク：十分な帯域</li>
+                        </ul>
+                    </div>
+
+                    <div class="analysis-card">
+                        <div class="analysis-header">企業運用レベル達成</div>
+                        <ul class="analysis-list">
+                            <li>高負荷耐性：確認済み</li>
+                            <li>安定性：長時間運用OK</li>
+                            <li>スケーラビリティ：拡張可能</li>
+                            <li>監視体制：完全構築</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

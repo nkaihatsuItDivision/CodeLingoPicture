@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 10.9 パフォーマンス監視システム図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .header .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .monitoring-architecture {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .architecture-title {
+            font-size: 1.6em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .monitoring-flow {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .flow-step {
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .flow-step:hover {
+            transform: translateY(-5px);
+        }
+
+        .step-number {
+            background: rgba(255,255,255,0.3);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-weight: bold;
+        }
+
+        .step-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .step-description {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .aspect-section {
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .aspect-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .aspect-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .aspect-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 25px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .aspect-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .aspect-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .aspect-icon {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .aspect-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .code-example {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            color: #495057;
+            margin: 15px 0;
+            border-left: 4px solid #6c757d;
+        }
+
+        .metrics-collection {
+            background: linear-gradient(135deg, #28a745, #155724);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+        }
+
+        .metrics-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .metric-card {
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .metric-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .metric-name {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .metric-description {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .dashboard-section {
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+        }
+
+        .dashboard-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .feature-header {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 5px 0;
+            display: flex;
+            align-items: center;
+            font-size: 0.9em;
+        }
+
+        .feature-list li::before {
+            content: "📊";
+            margin-right: 8px;
+        }
+
+        .actuator-section {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+        }
+
+        .actuator-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .endpoints-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .endpoint-card {
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .endpoint-url {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            background: rgba(255,255,255,0.2);
+            padding: 8px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .endpoint-description {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .monitoring-flow {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .aspect-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .dashboard-features {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .endpoints-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📈 パフォーマンス監視システム</h1>
+            <div class="subtitle">Week 10.9 パフォーマンス最適化：リアルタイム監視とメトリクス収集</div>
+        </div>
+
+        <div class="content">
+            <div class="monitoring-architecture">
+                <div class="architecture-title">🔍 監視システムアーキテクチャ</div>
+                <div class="monitoring-flow">
+                    <div class="flow-step">
+                        <div class="step-number">1</div>
+                        <div class="step-title">メソッド実行</div>
+                        <div class="step-description">@Around アスペクトで<br>自動計測開始</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-number">2</div>
+                        <div class="step-title">メトリクス収集</div>
+                        <div class="step-description">実行時間・回数<br>エラー率を記録</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-number">3</div>
+                        <div class="step-title">Micrometer</div>
+                        <div class="step-description">統一メトリクス<br>形式で送信</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-number">4</div>
+                        <div class="step-title">Prometheus</div>
+                        <div class="step-description">時系列データベース<br>に永続化</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-number">5</div>
+                        <div class="step-title">ダッシュボード</div>
+                        <div class="step-description">リアルタイム<br>可視化表示</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="aspect-section">
+                <div class="aspect-title">🎯 PerformanceMonitoringAspect の実装</div>
+                <div class="aspect-grid">
+                    <div class="aspect-card">
+                        <div class="aspect-header">
+                            <div class="aspect-icon">⚡</div>
+                            <div class="aspect-name">@Around アスペクト</div>
+                        </div>
+                        <div class="code-example">
+@Aspect<br>
+@Component<br>
+public class PerformanceMonitoringAspect {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private final MeterRegistry meterRegistry;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Around(&quot;@annotation(PerformanceMonitoring)&quot;)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public Object monitor(ProceedingJoinPoint joinPoint)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throws Throwable {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Timer.Sample sample = Timer.start(meterRegistry);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Object result = joinPoint.proceed();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;recordSuccess(joinPoint);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return result;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} catch (Exception e) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;recordError(joinPoint, e);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw e;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} finally {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sample.stop(Timer.builder(&quot;method.execution&quot;)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.register(meterRegistry));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                        </div>
+                        <p style="font-size: 0.9em; color: #666; margin-top: 15px;">
+                            メソッド実行を自動的に監視し、実行時間と成功/失敗を記録
+                        </p>
+                    </div>
+
+                    <div class="aspect-card">
+                        <div class="aspect-header">
+                            <div class="aspect-icon">📊</div>
+                            <div class="aspect-name">Timer.Sample</div>
+                        </div>
+                        <div class="code-example">
+@Service<br>
+public class CustomMetricsService {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private final MeterRegistry meterRegistry;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private final Counter requestCounter;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private final Timer responseTimer;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public CustomMetricsService(MeterRegistry registry) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.meterRegistry = registry;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.requestCounter = Counter.builder(&quot;api.requests&quot;)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.description(&quot;API request count&quot;)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.register(registry);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.responseTimer = Timer.builder(&quot;api.response.time&quot;)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.description(&quot;API response time&quot;)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.register(registry);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public void recordApiCall(String endpoint) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;requestCounter.increment(Tags.of(&quot;endpoint&quot;, endpoint));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                        </div>
+                        <p style="font-size: 0.9em; color: #666; margin-top: 15px;">
+                            カスタムメトリクスの定義と収集機能
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="metrics-collection">
+                <div class="metrics-title">📋 収集メトリクスの詳細</div>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon">⏱️</div>
+                        <div class="metric-name">実行時間</div>
+                        <div class="metric-description">メソッド別の平均・最大・最小実行時間を測定</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">🔢</div>
+                        <div class="metric-name">実行回数</div>
+                        <div class="metric-description">API呼び出し頻度とリクエスト数をカウント</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">💥</div>
+                        <div class="metric-name">エラー率</div>
+                        <div class="metric-description">例外発生率と失敗パターンを分析</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">🏆</div>
+                        <div class="metric-name">成功率</div>
+                        <div class="metric-description">正常処理完了率とサービス品質測定</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">💾</div>
+                        <div class="metric-name">メモリ使用量</div>
+                        <div class="metric-description">JVMヒープ使用量とGC頻度を監視</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">🌐</div>
+                        <div class="metric-name">HTTP統計</div>
+                        <div class="metric-description">レスポンスコード別の統計とスループット</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="actuator-section">
+                <div class="actuator-title">🔧 Actuator endpoints 活用</div>
+                <div class="endpoints-grid">
+                    <div class="endpoint-card">
+                        <div class="endpoint-url">/actuator/metrics</div>
+                        <div class="endpoint-description">全メトリクス一覧表示とリアルタイム値確認</div>
+                    </div>
+                    <div class="endpoint-card">
+                        <div class="endpoint-url">/actuator/health</div>
+                        <div class="endpoint-description">アプリケーション・データベース・外部サービス健全性</div>
+                    </div>
+                    <div class="endpoint-card">
+                        <div class="endpoint-url">/actuator/prometheus</div>
+                        <div class="endpoint-description">Prometheus形式でのメトリクス出力</div>
+                    </div>
+                    <div class="endpoint-card">
+                        <div class="endpoint-url">/actuator/info</div>
+                        <div class="endpoint-description">アプリケーション情報とビルド詳細</div>
+                    </div>
+                    <div class="endpoint-card">
+                        <div class="endpoint-url">/actuator/httptrace</div>
+                        <div class="endpoint-description">HTTP リクエスト履歴と詳細ログ</div>
+                    </div>
+                    <div class="endpoint-card">
+                        <div class="endpoint-url">/actuator/threaddump</div>
+                        <div class="endpoint-description">スレッド状態とパフォーマンス分析</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-section">
+                <div class="dashboard-title">📊 リアルタイム監視ダッシュボード</div>
+                <div class="dashboard-features">
+                    <div class="feature-card">
+                        <div class="feature-header">パフォーマンス監視</div>
+                        <ul class="feature-list">
+                            <li>レスポンス時間グラフ</li>
+                            <li>スループット測定</li>
+                            <li>エラー率トレンド</li>
+                            <li>ボトルネック特定</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-header">リソース監視</div>
+                        <ul class="feature-list">
+                            <li>CPU使用率</li>
+                            <li>メモリ使用量</li>
+                            <li>ディスクI/O</li>
+                            <li>ネットワーク統計</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-header">データベース監視</div>
+                        <ul class="feature-list">
+                            <li>クエリ実行時間</li>
+                            <li>接続プール状況</li>
+                            <li>スロークエリ検出</li>
+                            <li>トランザクション統計</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-header">アラート機能</div>
+                        <ul class="feature-list">
+                            <li>異常値検出</li>
+                            <li>しきい値監視</li>
+                            <li>自動通知</li>
+                            <li>障害予測</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

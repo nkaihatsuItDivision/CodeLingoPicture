@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 10.9 データベース最適化概要図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .header .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .optimization-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .optimization-card {
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 25px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .optimization-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-icon {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+
+        .card-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .improvement-metric {
+            background: linear-gradient(135deg, #28a745, #155724);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 15px 0;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .code-example {
+            background: rgba(108, 117, 125, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #495057;
+            margin: 15px 0;
+            border-left: 4px solid #6c757d;
+        }
+
+        .tech-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tech-list li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .tech-list li::before {
+            content: "⚡";
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .comparison-section {
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 2px solid #e9ecef;
+        }
+
+        .comparison-title {
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 25px;
+        }
+
+        .before-after {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .before-section, .after-section {
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .before-section {
+            background: linear-gradient(135deg, #dc3545, #bd2130);
+            color: white;
+        }
+
+        .after-section {
+            background: linear-gradient(135deg, #28a745, #155724);
+            color: white;
+        }
+
+        .section-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .performance-metrics {
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .metrics-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .metric-item {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .metric-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .optimization-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .before-after {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 データベース最適化概要</h1>
+            <div class="subtitle">Week 10.9 パフォーマンス最適化：インデックスとクエリ効率化</div>
+        </div>
+
+        <div class="content">
+            <div class="optimization-grid">
+                <div class="optimization-card">
+                    <div class="card-header">
+                        <div class="card-icon">🏗️</div>
+                        <div class="card-title">インデックス設計</div>
+                    </div>
+                    <div class="improvement-metric">検索速度 10倍以上高速化</div>
+                    <div class="code-example">
+@Index(columnList = &quot;student_id, semester&quot;)<br>
+@Index(columnList = &quot;department_id&quot;)<br>
+@Index(columnList = &quot;status&quot;)
+                    </div>
+                    <ul class="tech-list">
+                        <li>基本インデックス設計</li>
+                        <li>複合インデックス戦略</li>
+                        <li>UNIQUE制約活用</li>
+                        <li>外部キー最適化</li>
+                    </ul>
+                </div>
+
+                <div class="optimization-card">
+                    <div class="card-header">
+                        <div class="card-icon">🔍</div>
+                        <div class="card-title">クエリ実行計画</div>
+                    </div>
+                    <div class="improvement-metric">実行時間 1/10以下に削減</div>
+                    <div class="code-example">
+EXPLAIN ANALYZE<br>
+SELECT s.*, d.department_name<br>
+FROM students s<br>
+JOIN departments d ON s.department_id = d.id<br>
+WHERE s.status = 'ACTIVE'
+                    </div>
+                    <ul class="tech-list">
+                        <li>EXPLAIN ANALYZE活用</li>
+                        <li>実行計画最適化</li>
+                        <li>ボトルネック特定</li>
+                        <li>クエリチューニング</li>
+                    </ul>
+                </div>
+
+                <div class="optimization-card">
+                    <div class="card-header">
+                        <div class="card-icon">💾</div>
+                        <div class="card-title">PostgreSQL/MySQL対応</div>
+                    </div>
+                    <div class="improvement-metric">企業運用レベル達成</div>
+                    <div class="code-example">
+-- PostgreSQL<br>
+CREATE INDEX CONCURRENTLY idx_performance<br>
+-- MySQL<br>
+CREATE INDEX idx_performance USING BTREE
+                    </div>
+                    <ul class="tech-list">
+                        <li>データベース別最適化</li>
+                        <li>インデックス種別選択</li>
+                        <li>パーティション対応</li>
+                        <li>統計情報更新</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="comparison-section">
+                <div class="comparison-title">🔄 最適化前後の劇的改善</div>
+                <div class="before-after">
+                    <div class="before-section">
+                        <div class="section-title">❌ 最適化前</div>
+                        <div class="code-example" style="background: rgba(255,255,255,0.2); color: white; border-left-color: white;">
+SELECT * FROM students WHERE name = '田中'<br>
+-- フルテーブルスキャン<br>
+-- 実行時間: 2.5秒<br>
+-- スキャン行数: 100,000行
+                        </div>
+                        <ul class="tech-list" style="color: white;">
+                            <li>全行スキャンが必要</li>
+                            <li>メモリ使用量大</li>
+                            <li>CPU負荷高</li>
+                            <li>レスポンス遅延</li>
+                        </ul>
+                    </div>
+                    <div class="after-section">
+                        <div class="section-title">✅ 最適化後</div>
+                        <div class="code-example" style="background: rgba(255,255,255,0.2); color: white; border-left-color: white;">
+SELECT * FROM students WHERE name = '田中'<br>
+-- インデックススキャン<br>
+-- 実行時間: 0.02秒<br>
+-- スキャン行数: 3行
+                        </div>
+                        <ul class="tech-list" style="color: white;">
+                            <li>インデックス高速検索</li>
+                            <li>メモリ効率向上</li>
+                            <li>CPU負荷軽減</li>
+                            <li>瞬時レスポンス</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="performance-metrics">
+                <div class="metrics-title">🎯 Week 10.1-10.8統合システムの最適化効果</div>
+                <div class="metrics-grid">
+                    <div class="metric-item">
+                        <div class="metric-value">10倍+</div>
+                        <div class="metric-label">検索処理高速化</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value">1/10</div>
+                        <div class="metric-label">クエリ実行時間</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value">95%+</div>
+                        <div class="metric-label">レスポンス改善</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value">100%</div>
+                        <div class="metric-label">Ajax機能最適化</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

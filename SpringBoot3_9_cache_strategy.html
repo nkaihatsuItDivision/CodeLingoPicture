@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 10.9 キャッシュ戦略設計図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .header .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .architecture-section {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .architecture-title {
+            font-size: 1.6em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .cache-layers {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .cache-layer {
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .cache-layer:hover {
+            transform: translateY(-5px);
+        }
+
+        .layer-icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .layer-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .layer-description {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .cache-config-section {
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .config-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .config-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .config-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .config-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .config-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .config-icon {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+
+        .config-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .code-example {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #495057;
+            margin: 15px 0;
+            border-left: 4px solid #6c757d;
+        }
+
+        .cache-features {
+            list-style: none;
+            padding: 0;
+        }
+
+        .cache-features li {
+            padding: 6px 0;
+            display: flex;
+            align-items: center;
+            font-size: 0.9em;
+        }
+
+        .cache-features li::before {
+            content: "⚡";
+            margin-right: 8px;
+            font-size: 14px;
+        }
+
+        .ttl-section {
+            background: linear-gradient(135deg, #28a745, #155724);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+        }
+
+        .ttl-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .ttl-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .ttl-item {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .ttl-value {
+            font-size: 1.6em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .ttl-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .performance-metrics {
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .metrics-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .metric-item {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .metric-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .invalidation-section {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+        }
+
+        .invalidation-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .invalidation-strategies {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .strategy-card {
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .strategy-header {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .cache-layers {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .config-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .ttl-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .invalidation-strategies {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 キャッシュ戦略の実装</h1>
+            <div class="subtitle">Week 10.9 パフォーマンス最適化：Redis統合とキャッシュ無効化戦略</div>
+        </div>
+
+        <div class="content">
+            <div class="architecture-section">
+                <div class="architecture-title">🏗️ Redis統合アーキテクチャ</div>
+                <div class="cache-layers">
+                    <div class="cache-layer">
+                        <div class="layer-icon">🌐</div>
+                        <div class="layer-title">アプリケーション層</div>
+                        <div class="layer-description">@Cacheable / @CacheEvict<br>アノテーション制御</div>
+                    </div>
+                    <div class="cache-layer">
+                        <div class="layer-icon">⚡</div>
+                        <div class="layer-title">Spring Cache</div>
+                        <div class="layer-description">RedisCacheManager<br>自動キャッシュ制御</div>
+                    </div>
+                    <div class="cache-layer">
+                        <div class="layer-icon">💾</div>
+                        <div class="layer-title">Redis Server</div>
+                        <div class="layer-description">高速インメモリDB<br>分散キャッシュ</div>
+                    </div>
+                    <div class="cache-layer">
+                        <div class="layer-icon">🗄️</div>
+                        <div class="layer-title">データベース</div>
+                        <div class="layer-description">PostgreSQL/MySQL<br>永続データ保存</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cache-config-section">
+                <div class="config-title">⚙️ キャッシュ設定の完全実装</div>
+                <div class="config-grid">
+                    <div class="config-card">
+                        <div class="config-header">
+                            <div class="config-icon">🔧</div>
+                            <div class="config-name">@EnableCaching</div>
+                        </div>
+                        <div class="code-example">
+@Configuration<br>
+@EnableCaching<br>
+public class CacheConfiguration {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Bean<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public RedisCacheManager cacheManager(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RedisConnectionFactory factory) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return RedisCacheManager.builder(factory)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.build();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                        </div>
+                        <ul class="cache-features">
+                            <li>Spring Cache有効化</li>
+                            <li>Redis統合設定</li>
+                            <li>自動キャッシュ管理</li>
+                            <li>設定の一元化</li>
+                        </ul>
+                    </div>
+
+                    <div class="config-card">
+                        <div class="config-header">
+                            <div class="config-icon">📝</div>
+                            <div class="config-name">@Cacheable</div>
+                        </div>
+                        <div class="code-example">
+@Service<br>
+public class StudentService {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Cacheable(value = &quot;students&quot;, key = &quot;#id&quot;)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public Student findById(Long id) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return repository.findById(id);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Cacheable(value = &quot;studentList&quot;)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public List&lt;Student&gt; findAll() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return repository.findAll();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                        </div>
+                        <ul class="cache-features">
+                            <li>メソッドレベルキャッシュ</li>
+                            <li>キー自動生成</li>
+                            <li>戻り値自動保存</li>
+                            <li>透明なキャッシュ機能</li>
+                        </ul>
+                    </div>
+
+                    <div class="config-card">
+                        <div class="config-header">
+                            <div class="config-icon">🗑️</div>
+                            <div class="config-name">@CacheEvict</div>
+                        </div>
+                        <div class="code-example">
+@Service<br>
+public class StudentService {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@CacheEvict(value = &quot;students&quot;, key = &quot;#student.id&quot;)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public Student update(Student student) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return repository.save(student);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@CacheEvict(value = &quot;studentList&quot;, allEntries = true)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public void clearAllCache() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 全キャッシュクリア<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                        </div>
+                        <ul class="cache-features">
+                            <li>キャッシュ無効化</li>
+                            <li>自動クリア機能</li>
+                            <li>データ整合性確保</li>
+                            <li>柔軟な無効化戦略</li>
+                        </ul>
+                    </div>
+
+                    <div class="config-card">
+                        <div class="config-header">
+                            <div class="config-icon">🔗</div>
+                            <div class="config-name">Serializer設定</div>
+                        </div>
+                        <div class="code-example">
+@Bean<br>
+public RedisTemplate&lt;String, Object&gt; redisTemplate(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RedisConnectionFactory factory) {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;RedisTemplate&lt;String, Object&gt; template = <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new RedisTemplate&lt;&gt;();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;template.setConnectionFactory(factory);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// JSON シリアライザー設定<br>
+&nbsp;&nbsp;&nbsp;&nbsp;GenericJackson2JsonRedisSerializer serializer = <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new GenericJackson2JsonRedisSerializer();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;template.setDefaultSerializer(serializer);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return template;<br>
+}
+                        </div>
+                        <ul class="cache-features">
+                            <li>JSON形式保存</li>
+                            <li>オブジェクト自動変換</li>
+                            <li>型安全性確保</li>
+                            <li>可読性向上</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ttl-section">
+                <div class="ttl-title">⏰ TTL（Time To Live）設定戦略</div>
+                <div class="ttl-grid">
+                    <div class="ttl-item">
+                        <div class="ttl-value">5分</div>
+                        <div class="ttl-label">ユーザーセッション</div>
+                    </div>
+                    <div class="ttl-item">
+                        <div class="ttl-value">30分</div>
+                        <div class="ttl-label">学生データ一覧</div>
+                    </div>
+                    <div class="ttl-item">
+                        <div class="ttl-value">1時間</div>
+                        <div class="ttl-label">統計データ</div>
+                    </div>
+                    <div class="ttl-item">
+                        <div class="ttl-value">24時間</div>
+                        <div class="ttl-label">マスタデータ</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="invalidation-section">
+                <div class="invalidation-title">🔄 キャッシュ無効化戦略</div>
+                <div class="invalidation-strategies">
+                    <div class="strategy-card">
+                        <div class="strategy-header">データ更新時</div>
+                        <div class="code-example" style="background: rgba(255,255,255,0.1); border-left-color: rgba(255,255,255,0.5);">
+@CacheEvict(value = &quot;students&quot;, key = &quot;#id&quot;)<br>
+public Student updateStudent(Student student) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 更新と同時にキャッシュクリア<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return repository.save(student);<br>
+}
+                        </div>
+                    </div>
+                    <div class="strategy-card">
+                        <div class="strategy-header">一括操作時</div>
+                        <div class="code-example" style="background: rgba(255,255,255,0.1); border-left-color: rgba(255,255,255,0.5);">
+@CacheEvict(value = &quot;studentList&quot;, allEntries = true)<br>
+public void bulkUpdate(List&lt;Student&gt; students) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 一括更新時は全キャッシュクリア<br>
+&nbsp;&nbsp;&nbsp;&nbsp;repository.saveAll(students);<br>
+}
+                        </div>
+                    </div>
+                    <div class="strategy-card">
+                        <div class="strategy-header">定期実行</div>
+                        <div class="code-example" style="background: rgba(255,255,255,0.1); border-left-color: rgba(255,255,255,0.5);">
+@Scheduled(fixedRate = 3600000) // 1時間毎<br>
+@CacheEvict(value = &quot;statistics&quot;, allEntries = true)<br>
+public void refreshStatisticsCache() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 統計データの定期更新<br>
+}
+                        </div>
+                    </div>
+                    <div class="strategy-card">
+                        <div class="strategy-header">条件付き無効化</div>
+                        <div class="code-example" style="background: rgba(255,255,255,0.1); border-left-color: rgba(255,255,255,0.5);">
+@CacheEvict(value = &quot;students&quot;, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;condition = &quot;#result.active == false&quot;)<br>
+public Student deactivateStudent(Long id) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 条件に応じてキャッシュクリア<br>
+}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="performance-metrics">
+                <div class="metrics-title">📊 キャッシュ効果による性能向上</div>
+                <div class="metrics-grid">
+                    <div class="metric-item">
+                        <div class="metric-value">90%+</div>
+                        <div class="metric-label">キャッシュヒット率</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value">20倍</div>
+                        <div class="metric-label">レスポンス速度向上</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value">80%</div>
+                        <div class="metric-label">DB負荷軽減</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value">100%</div>
+                        <div class="metric-label">Ajax機能最適化</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

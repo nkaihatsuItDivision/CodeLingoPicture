@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 10.8→10.9 Ajax機能から最適化への発展図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding-left: 15px;
+            border-left: 4px solid #6c757d;
+        }
+
+        /* Week 10.8 完成機能 */
+        .week-108-container {
+            background: linear-gradient(135deg, #28a745, #155724);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .week-108-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .feature-item {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-item h4 {
+            font-size: 16px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .feature-item .icon {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+
+        .feature-item p {
+            font-size: 13px;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        .code-example {
+            background: rgba(0,0,0,0.2);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin-top: 15px;
+            color: #e8f5e8;
+        }
+
+        /* 課題セクション */
+        .challenges-container {
+            background: linear-gradient(135deg, #dc3545, #bd2130);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .challenges-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .challenge-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .challenge-item {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .challenge-item h4 {
+            font-size: 16px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .challenge-item .icon {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+
+        .challenge-item p {
+            font-size: 13px;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        /* Week 10.9 最適化技術 */
+        .week-109-container {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .week-109-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .optimization-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .optimization-item {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .optimization-item h4 {
+            font-size: 16px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .optimization-item .icon {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+
+        .optimization-item p {
+            font-size: 13px;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        /* 成果セクション */
+        .result-container {
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+            border-radius: 12px;
+            padding: 25px;
+            color: white;
+        }
+
+        .result-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .result-item {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+
+        .result-item .metric {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .result-item .description {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        /* ステップ表示 */
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .step {
+            background: #6c757d;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .step-number {
+            background: #495057;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        /* レスポンシブ対応 */
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 8px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .content {
+                padding: 20px 15px;
+            }
+
+            .feature-grid,
+            .challenge-list,
+            .optimization-grid,
+            .result-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .week-108-container,
+            .challenges-container,
+            .week-109-container,
+            .result-container {
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+
+            .step-indicator {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .step {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Week 10.8 → 10.9 技術発展図</h1>
+            <p>Ajax機能から企業運用レベルパフォーマンス最適化への進化</p>
+        </div>
+
+        <div class="content">
+            <!-- Week 10.8 完成機能 -->
+            <div class="section">
+                <div class="week-108-container">
+                    <div class="week-108-title">✅ Week 10.8で完成したAjax機能</div>
+                    
+                    <div class="feature-grid">
+                        <div class="feature-item">
+                            <h4><span class="icon">⚡</span>リアルタイム検索</h4>
+                            <p>入力と同時に検索結果を表示<br>ページ遷移なしの快適な操作性</p>
+                        </div>
+                        <div class="feature-item">
+                            <h4><span class="icon">🔄</span>非同期通信</h4>
+                            <p>jQuery・Fetch API完全マスター<br>REST API連携の実現</p>
+                        </div>
+                        <div class="feature-item">
+                            <h4><span class="icon">✔️</span>非同期バリデーション</h4>
+                            <p>サーバーサイドチェックの高速化<br>リアルタイムエラー表示</p>
+                        </div>
+                        <div class="feature-item">
+                            <h4><span class="icon">🎨</span>UX大幅向上</h4>
+                            <p>モダンなユーザーインターフェース<br>レスポンシブデザイン対応</p>
+                        </div>
+                    </div>
+
+                    <div class="code-example">
+// Week 10.8で完成したAjax検索機能<br>
+@RestController<br>
+@RequestMapping(&quot;/api/students&quot;)<br>
+public class StudentRestController {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@GetMapping(&quot;/search&quot;)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public ResponseEntity&lt;Page&lt;StudentDTO&gt;&gt; searchStudents(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@RequestParam String name, Pageable pageable) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return ResponseEntity.ok(studentService.searchStudents(name, pageable));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                    </div>
+                </div>
+            </div>
+
+            <!-- ステップ表示 -->
+            <div class="step-indicator">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    Ajax機能完成
+                </div>
+                <div class="step">
+                    <span class="step-number">2</span>
+                    課題の発見
+                </div>
+                <div class="step">
+                    <span class="step-number">3</span>
+                    最適化実装
+                </div>
+                <div class="step">
+                    <span class="step-number">4</span>
+                    企業レベル達成
+                </div>
+            </div>
+
+            <!-- データ量増加時の課題 -->
+            <div class="section">
+                <div class="challenges-container">
+                    <div class="challenges-title">❌ データ量増加時に発生する課題</div>
+                    
+                    <div class="challenge-list">
+                        <div class="challenge-item">
+                            <h4><span class="icon">🐌</span>検索が遅い</h4>
+                            <p>インデックスなしで全件スキャン<br>データ量に比例して処理時間増大</p>
+                        </div>
+                        <div class="challenge-item">
+                            <h4><span class="icon">🔄</span>N+1問題</h4>
+                            <p>関連データ取得で大量のクエリ発行<br>100件の学生に対して101回のクエリ</p>
+                        </div>
+                        <div class="challenge-item">
+                            <h4><span class="icon">⏱️</span>レスポンス遅延</h4>
+                            <p>キャッシュなしで毎回データベースアクセス<br>同じデータの重複取得</p>
+                        </div>
+                        <div class="challenge-item">
+                            <h4><span class="icon">💾</span>メモリ不足</h4>
+                            <p>効率的でないクエリによるリソース浪費<br>サーバー負荷の増大</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Week 10.9 最適化技術 -->
+            <div class="section">
+                <div class="week-109-container">
+                    <div class="week-109-title">🚀 Week 10.9で実装するパフォーマンス最適化</div>
+                    
+                    <div class="optimization-grid">
+                        <div class="optimization-item">
+                            <h4><span class="icon">🗄️</span>データベース最適化</h4>
+                            <p>インデックス設計・複合インデックス<br>クエリ実行計画分析・チューニング</p>
+                        </div>
+                        <div class="optimization-item">
+                            <h4><span class="icon">⚡</span>N+1問題解決</h4>
+                            <p>@EntityGraph・JOIN FETCH<br>Batch Fetch・効率的フェッチ戦略</p>
+                        </div>
+                        <div class="optimization-item">
+                            <h4><span class="icon">🚀</span>キャッシュ戦略</h4>
+                            <p>Redis統合・@Cacheable<br>階層キャッシュ・無効化戦略</p>
+                        </div>
+                        <div class="optimization-item">
+                            <h4><span class="icon">📊</span>パフォーマンス監視</h4>
+                            <p>メトリクス取得・APMツール<br>ボトルネック特定・継続監視</p>
+                        </div>
+                        <div class="optimization-item">
+                            <h4><span class="icon">🔬</span>負荷テスト</h4>
+                            <p>JMeter実装・ストレステスト<br>性能検証・スケーラビリティ確認</p>
+                        </div>
+                        <div class="optimization-item">
+                            <h4><span class="icon">🏢</span>企業運用レベル</h4>
+                            <p>高性能・高可用性・監視体制<br>実用システムの完成</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 最適化成果 -->
+            <div class="section">
+                <div class="result-container">
+                    <div class="result-title">🎯 Week 10.9完了時の達成成果</div>
+                    
+                    <div class="result-grid">
+                        <div class="result-item">
+                            <div class="metric">10倍以上</div>
+                            <div class="description">検索処理の高速化</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="metric">1/10以下</div>
+                            <div class="description">クエリ実行回数削減</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="metric">90%以上</div>
+                            <div class="description">キャッシュヒット率</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="metric">企業レベル</div>
+                            <div class="description">実用システム完成</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

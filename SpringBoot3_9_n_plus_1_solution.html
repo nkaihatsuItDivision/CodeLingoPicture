@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 10.9 N+1問題解決効果比較図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .header .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .problem-solution {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .problem-section {
+            background: linear-gradient(135deg, #dc3545, #bd2130);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        .solution-section {
+            background: linear-gradient(135deg, #28a745, #155724);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-icon {
+            font-size: 30px;
+            margin-right: 15px;
+        }
+
+        .section-title {
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+
+        .query-count {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 15px 0;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+        .code-example {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin: 15px 0;
+            border-left: 4px solid rgba(255,255,255,0.5);
+        }
+
+        .improvement-showcase {
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .showcase-title {
+            font-size: 1.6em;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+
+        .improvement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .improvement-card {
+            background: rgba(255,255,255,0.2);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .improvement-value {
+            font-size: 2.2em;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .improvement-label {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+
+        .techniques-section {
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .techniques-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .technique-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .technique-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .technique-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .technique-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .technique-icon {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-weight: bold;
+        }
+
+        .technique-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .code-sample {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            color: #495057;
+            margin: 10px 0;
+            border-left: 3px solid #6c757d;
+        }
+
+        .before-after-comparison {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+        }
+
+        .comparison-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .comparison-item {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .comparison-header {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .problem-solution {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .technique-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .improvement-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .comparison-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 N+1問題の完全解決</h1>
+            <div class="subtitle">Week 10.9 パフォーマンス最適化：クエリ実行回数の劇的削減</div>
+        </div>
+
+        <div class="content">
+            <div class="problem-solution">
+                <div class="problem-section">
+                    <div class="section-header">
+                        <div class="section-icon">❌</div>
+                        <div class="section-title">N+1問題発生</div>
+                    </div>
+                    <div class="query-count">クエリ実行回数: 101回</div>
+                    <div class="code-example">
+// 問題のあるコード<br>
+@Entity<br>
+public class Student {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@ManyToOne(fetch = FetchType.LAZY)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private Course course;<br>
+}<br><br>
+// コントローラーで学生リスト取得<br>
+List&lt;Student&gt; students = repository.findAll();<br>
+for (Student s : students) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;s.getCourse().getName(); // 追加クエリ発生！<br>
+}
+                    </div>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin: 8px 0;">🔥 1回の学生取得 + 100回のコース取得</li>
+                        <li style="margin: 8px 0;">⚠️ LazyInitializationException</li>
+                        <li style="margin: 8px 0;">🐌 データベース負荷大</li>
+                        <li style="margin: 8px 0;">⏰ レスポンス時間遅延</li>
+                    </ul>
+                </div>
+
+                <div class="solution-section">
+                    <div class="section-header">
+                        <div class="section-icon">✅</div>
+                        <div class="section-title">最適化後</div>
+                    </div>
+                    <div class="query-count">クエリ実行回数: 1回</div>
+                    <div class="code-example">
+// 最適化されたコード<br>
+@EntityGraph(attributePaths = {&quot;course&quot;})<br>
+@Query(&quot;SELECT s FROM Student s&quot;)<br>
+List&lt;Student&gt; findAllWithCourse();<br><br>
+// または JOIN FETCH使用<br>
+@Query(&quot;SELECT s FROM Student s JOIN FETCH s.course&quot;)<br>
+List&lt;Student&gt; findAllWithCourseFetch();<br><br>
+// 一括取得で完了<br>
+List&lt;Student&gt; students = repository.findAllWithCourse();
+                    </div>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin: 8px 0;">⚡ 1回のJOIN クエリで完了</li>
+                        <li style="margin: 8px 0;">✨ 例外解決完了</li>
+                        <li style="margin: 8px 0;">🚀 データベース負荷軽減</li>
+                        <li style="margin: 8px 0;">⚡ 瞬時レスポンス</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="improvement-showcase">
+                <div class="showcase-title">🎯 劇的なパフォーマンス改善効果</div>
+                <div class="improvement-grid">
+                    <div class="improvement-card">
+                        <div class="improvement-value">101→1</div>
+                        <div class="improvement-label">クエリ実行回数削減</div>
+                    </div>
+                    <div class="improvement-card">
+                        <div class="improvement-value">99%</div>
+                        <div class="improvement-label">データベース負荷軽減</div>
+                    </div>
+                    <div class="improvement-card">
+                        <div class="improvement-value">50倍</div>
+                        <div class="improvement-label">レスポンス速度向上</div>
+                    </div>
+                    <div class="improvement-card">
+                        <div class="improvement-value">100%</div>
+                        <div class="improvement-label">例外解決率</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="techniques-section">
+                <div class="techniques-title">🛠️ N+1問題解決技術の完全習得</div>
+                <div class="technique-grid">
+                    <div class="technique-card">
+                        <div class="technique-header">
+                            <div class="technique-icon">1</div>
+                            <div class="technique-name">@EntityGraph</div>
+                        </div>
+                        <div class="code-sample">
+@EntityGraph(attributePaths = {&quot;course&quot;, &quot;department&quot;})<br>
+@Query(&quot;SELECT s FROM Student s&quot;)<br>
+List&lt;Student&gt; findAllOptimized();
+                        </div>
+                        <p style="font-size: 0.9em; color: #666; margin-top: 10px;">
+                            アノテーションで関連エンティティを一括取得指定
+                        </p>
+                    </div>
+
+                    <div class="technique-card">
+                        <div class="technique-header">
+                            <div class="technique-icon">2</div>
+                            <div class="technique-name">JOIN FETCH</div>
+                        </div>
+                        <div class="code-sample">
+@Query(&quot;SELECT s FROM Student s &quot; +<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;JOIN FETCH s.course &quot; +<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;JOIN FETCH s.department&quot;)<br>
+List&lt;Student&gt; findAllWithRelations();
+                        </div>
+                        <p style="font-size: 0.9em; color: #666; margin-top: 10px;">
+                            JPQL内で明示的にJOIN FETCHを指定
+                        </p>
+                    </div>
+
+                    <div class="technique-card">
+                        <div class="technique-header">
+                            <div class="technique-icon">3</div>
+                            <div class="technique-name">Batch Fetch</div>
+                        </div>
+                        <div class="code-sample">
+@Entity<br>
+@BatchSize(size = 25)<br>
+public class Course {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// バッチサイズ指定で効率化<br>
+}
+                        </div>
+                        <p style="font-size: 0.9em; color: #666; margin-top: 10px;">
+                            バッチサイズ指定でクエリ数を大幅削減
+                        </p>
+                    </div>
+
+                    <div class="technique-card">
+                        <div class="technique-header">
+                            <div class="technique-icon">4</div>
+                            <div class="technique-name">OptimizedRepository</div>
+                        </div>
+                        <div class="code-sample">
+public interface OptimizedStudentRepository<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;extends JpaRepository&lt;Student, Long&gt; {<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@EntityGraph(attributePaths = {&quot;course&quot;})<br>
+&nbsp;&nbsp;&nbsp;&nbsp;List&lt;Student&gt; findByStatus(String status);<br>
+}
+                        </div>
+                        <p style="font-size: 0.9em; color: #666; margin-top: 10px;">
+                            最適化されたRepository設計パターン
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="before-after-comparison">
+                <div class="comparison-title">📊 Week 10.8 Ajax機能の最適化効果</div>
+                <div class="comparison-grid">
+                    <div class="comparison-item">
+                        <div class="comparison-header">最適化前のAjax検索</div>
+                        <div class="code-example" style="background: rgba(255,255,255,0.1); border-left-color: rgba(255,255,255,0.5);">
+// Ajax検索時に毎回N+1問題発生<br>
+$.get('/api/students', function(data) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 101回のクエリ実行<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// レスポンス時間: 3.2秒<br>
+});
+                        </div>
+                    </div>
+                    <div class="comparison-item">
+                        <div class="comparison-header">最適化後のAjax検索</div>
+                        <div class="code-example" style="background: rgba(255,255,255,0.1); border-left-color: rgba(255,255,255,0.5);">
+// 最適化されたAjax検索<br>
+$.get('/api/students/optimized', function(data) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 1回のクエリで完了<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// レスポンス時間: 0.06秒<br>
+});
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
