@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 10.10 実践演習6ステップ図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #6f42c1;
+            padding-bottom: 15px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #6f42c1;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        .intro-section {
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .intro-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .intro-description {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+
+        .intro-goals {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .goal-tag {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .steps-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .step-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+
+        .step-header {
+            padding: 20px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .step-1 .step-header {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+        }
+
+        .step-2 .step-header {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+        }
+
+        .step-3 .step-header {
+            background: linear-gradient(135deg, #17a2b8, #0c5460);
+        }
+
+        .step-4 .step-header {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+
+        .step-5 .step-header {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+        }
+
+        .step-6 .step-header {
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .step-header-text {
+            flex-grow: 1;
+        }
+
+        .step-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .step-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .step-body {
+            padding: 25px;
+        }
+
+        .step-description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .step-tasks {
+            margin-bottom: 20px;
+        }
+
+        .tasks-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .task-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 3px solid #6f42c1;
+        }
+
+        .task-icon {
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .task-text {
+            font-size: 14px;
+            color: #495057;
+        }
+
+        .step-hints {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .hints-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hint-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .hint-item {
+            font-size: 13px;
+            color: #856404;
+            margin-bottom: 5px;
+            padding-left: 15px;
+            position: relative;
+        }
+
+        .hint-item::before {
+            content: "💡";
+            position: absolute;
+            left: 0;
+            font-size: 12px;
+        }
+
+        .step-verification {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .verification-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #0c5460;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .verification-points {
+            list-style: none;
+            padding: 0;
+        }
+
+        .verification-point {
+            font-size: 13px;
+            color: #0c5460;
+            margin-bottom: 5px;
+            padding-left: 15px;
+            position: relative;
+        }
+
+        .verification-point::before {
+            content: "✅";
+            position: absolute;
+            left: 0;
+            font-size: 12px;
+        }
+
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .progress-step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .progress-step.step-1-progress {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+        }
+
+        .progress-step.step-2-progress {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+        }
+
+        .progress-step.step-3-progress {
+            background: linear-gradient(135deg, #17a2b8, #0c5460);
+        }
+
+        .progress-step.step-4-progress {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+
+        .progress-step.step-5-progress {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+        }
+
+        .progress-step.step-6-progress {
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+        }
+
+        .progress-arrow {
+            font-size: 16px;
+            color: #6c757d;
+        }
+
+        .final-goal {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .final-goal-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .final-goal-description {
+            font-size: 16px;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .achievement-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .achievement-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+            
+            .step-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+            
+            .step-number {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+            
+            .progress-indicator {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .progress-arrow {
+                display: none;
+            }
+            
+            .achievement-badges {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Week 10.10 実践演習6ステップ図</h1>
+        <p class="subtitle">段階的実装による統合システム完成の流れを視覚化</p>
+
+        <div class="intro-section">
+            <div class="intro-title">🎯 Week 10.10 実践演習：企業運用レベルシステム完成への道</div>
+            <div class="intro-description">
+                Week 10.1-10.9で構築した全機能を統合し、6つの段階的なステップを通じて企業運用レベルの実用システムとして完成させる実践演習です。
+                各ステップで確実な理解・実装・品質保証を行い、最終的に実務で通用するプロフェッショナル品質のシステムを構築します。
+            </div>
+            <div class="intro-goals">
+                <span class="goal-tag">企業運用レベル品質</span>
+                <span class="goal-tag">段階的確実実装</span>
+                <span class="goal-tag">実務即戦力スキル</span>
+                <span class="goal-tag">プロフェッショナル完成</span>
+            </div>
+        </div>
+
+        <div class="progress-indicator">
+            <div class="progress-step step-1-progress">1</div>
+            <div class="progress-arrow">→</div>
+            <div class="progress-step step-2-progress">2</div>
+            <div class="progress-arrow">→</div>
+            <div class="progress-step step-3-progress">3</div>
+            <div class="progress-arrow">→</div>
+            <div class="progress-step step-4-progress">4</div>
+            <div class="progress-arrow">→</div>
+            <div class="progress-step step-5-progress">5</div>
+            <div class="progress-arrow">→</div>
+            <div class="progress-step step-6-progress">6</div>
+        </div>
+
+        <div class="steps-container">
+            <div class="step-card step-1">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <div class="step-header-text">
+                        <div class="step-title">統合テスト実装</div>
+                        <div class="step-subtitle">Week 10.1-10.9機能の連携動作保証</div>
+                    </div>
+                </div>
+                <div class="step-body">
+                    <div class="step-description">
+                        検索・削除・一括操作・エクスポート・Ajax・パフォーマンス最適化など、Week 10.1-10.9で開発した全機能が正常に連携動作することを包括的にテストし、品質を保証します。
+                    </div>
+                    <div class="step-tasks">
+                        <div class="tasks-title">📝 実装タスク</div>
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <div class="task-icon">🧪</div>
+                                <div class="task-text">JUnit 5 + MockMvc による統合テストクラス作成</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-icon">🔗</div>
+                                <div class="task-text">各Week機能の連携シナリオテスト実装</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-icon">🗄️</div>
+                                <div class="task-text">TestContainers によるデータベーステスト環境構築</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-icon">⚡</div>
+                                <div class="task-text">パフォーマンステスト・負荷テストの実装</div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="step-hints">
+                        <div class="hints-title">💡 実装ヒント</div>
+                        <ul class="hint-list">
+                            <li class="hint-item">@SpringBootTest アノテーションで完全なアプリケーションコンテキストをロード</li>
+                            <li class="hint-item">MockMvc でHTTPリクエスト・レスポンスを模擬してAPI動作確認</li>
+                            <li class="hint-item">@Transactional でテストデータの自動ロールバック実現</li>
+                            <li class="hint-item">AssertJ を活用して読みやすいアサーション記述</li>
+                        </ul>
+                    </div>
+                    <div class="step-verification">
+                        <div class="verification-title">✅ 確認ポイント</div>
+                        <ul class="verification-points">
+                            <li class="verification-point">全テストが正常に実行されグリーンになること</li>
+                            <li class="verification-point">検索→削除→エクスポートの連続操作が正常動作すること</li>
+                            <li class="verification-point">Ajax による非同期処理が適切にレスポンスを返すこと</li>
+                            <li class="verification-point">パフォーマンス要件（レスポンス時間 &lt; 3秒）を満たすこと</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-card step-2">
+                <div class="step-header">
+                    <div class="step-number">2</div>
+                    <div class="step-header-text">
+                        <div class="step-title">セキュリティ強化</div>
+                        <div class="step-subtitle">Spring Security統合・認証認可・脆弱性対策</div>
+                    </div>
+                </div>
+                <div class="step-body">
+                    <div class="step-description">
+                        企業運用で必須となるセキュリティ要件を満たすため、Spring Security を統合して認証・認可・CSRF対策・SQL インジェクション対策など、包括的なセキュリティ機能を実装します。
+                    </div>
+                    <div class="step-tasks">
+                        <div class="tasks-title">📝 実装タスク</div>
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <div class="task-icon">🔐</div>
+                                <div class="task-text">Spring Security設定クラス・SecurityFilterChain 作成</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-icon">👤</div>
+                                <div class="task-text">ユーザー認証・ログイン・ログアウト機能実装</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-icon">🛡️</div>
+                                <div class="task-text">ROLE_ADMIN・ROLE_USER によるアクセス制御実装</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-icon">🔒</div>
+                                <div class="task-text">CSRF・XSS・SQL インジェクション対策実装</div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="step-hints">
+                        <div class="hints-title">💡 実装ヒント</div>
+                        <ul class="hint-list">
+                            <li class="hint-item">BCryptPasswordEncoder でパスワードを安全にハッシュ化</li>
+                            <li class="hint-item">@PreAuthorize アノテーションでメソッドレベルのアクセス制御</li>
+                            <li class="hint-item">Thymeleaf の th:csrf でCSRFトークン自動生成</li>
+                            <li class="hint-item">@Valid・@Sanitized で入力値検証・サニタイズ実装</li>
+                        </ul>
+                    </div>
+                    <div class="step-verification">
+                        <div class="verification-title">✅ 確認ポイント</div>
+                        <ul class="verification-points">
+                            <li class="verification-point">未認証ユーザーが管理画面にアクセスできないこと</li>
+                            <li class="verification-point">ROLE_USER が管理者専用機能を使用できないこと</li>
+                            <li class="verification-point">CSRFトークンなしのPOSTリクエストが拒否されること</li>
+                            <li class="verification-point">SQLインジェクション攻撃を試しても正常に防御されること</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-card step-3">
+                <div class="step-header">
+                    <div class="step-number">3</div>
+                    <div class="step-header-text">
+                        <div class="step-title">デプロイ準備・Docker化</div>
+                        <div class="step-subtitle">コンテナ化・環境分離・CI/CD基盤構築</div>
+                    </div>
+                </div>
+                <div class="step-body">
+                    <div class="step-description">
+                        開発・テスト・本番環境での一貫したデプロイを実現するため、Docker によるコンテナ化を行い、環境設定の分離とCI/CDパイプラインの基盤を構築します。
+                    </div>
+                    <div class="step-tasks">
+                        <div class="tasks-title">📝 実装タスク</div>
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <div class="task-icon">🐳</div>
+                                <div class="task-text">Dockerfile・docker-compose.yml 作成</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-icon">🏗️</div>
+                                <div class="task-text">マルチステージビルドによる最適化実装</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-icon">🌍</div>
+                                <div class="task-text">開発・テスト・本番環境の設定ファイル分離</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-icon">⚙️</div>
+                                <div class="task-text">GitHub Actions による基本的なCI/CDパイプライン構築</div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="step-hints">
+                        <div class="hints-title">💡 実装ヒント</div>
+                        <ul class="hint-list">
+                            <li class="hint-item">軽量なJRE イメージ（openjdk:17-jre-slim）を使用してサイズ最適化</li>
+                            <li class="hint-item">application-{env}.yml で環境別設定を分離</li>
+                            <li class="hint-item">docker-compose で アプリ・MySQL・Redis の3コンテナ構成</li>
+                            <li class="hint-item">.dockerignore でビルドに不要なファイルを除外</li>
+                        </ul>
+                    </div>
+                    <div class="step-verification">
+                        <div class="verification-title">✅ 確認ポイント</div>
+                        <ul class="verification-points">
+                            <li class="verification-point">docker-compose up でシステム全体が正常起動すること</li>
+                            <li class="verification-point">コンテナ間通信でデータベース接続が正常動作すること</li>
+                            <li class="verification-point">環境変数による設定切り替えが適切に動作すること</li>
+                            <li class="verification-point">イメージサイズが適切に最適化されていること（&lt; 500MB）</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-card step-4">
+                <div class="step-header">
+                    <div class="step-number">4</div>
+                    <div class="step-header-text">
+                        <div class="step-title">運用監視システム</div>
+                        <div class="step-subtitle">ログ管理・ヘルスチェック・エラーハンドリング</div>
+                    </div>
+                </div>
+                <div class="step-body">
+                    <div class="step-description">
+                        企業運用で必要な可観測性を実現するため、構造化ログ・ヘルスチェック・メトリクス監視・アラート通知など、包括的な監視システムを構築します。
+                    </div>
+                    <div class="step-tasks">
+                        <div class="tasks-title">📝 実装タスク</div>
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <div class="task-icon">📋</div>
+                                <div class="task-text">Logback による構造化ログ・ログローテーション設定</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-icon">💓</div>
+                                <div class="task-text">Spring Boot Actuator によるヘルスチェック・メトリクス公開</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-icon">🛠️</div>
+                                <div class="task-text">@ControllerAdvice によるグローバル例外ハンドラー実装</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-icon">🚨</div>
+                                <div class="task-text">エラー閾値監視・Slack 通知機能実装</div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="step-hints">
+                        <div class="hints-title">💡 実装ヒント</div>
+                        <ul class="hint-list">
+                            <li class="hint-item">JSON形式のログで ELK Stack での分析を容易に</li>
+                            <li class="hint-item">MDC（Mapped Diagnostic Context）でリクエストIDをログに付与</li>
+                            <li class="hint-item">/actuator/health エンドポイントでシステム健全性確認</li>
+                            <li class="hint-item">@EventListener でアプリケーションイベントをキャッチして監視</li>
+                        </ul>
+                    </div>
+                    <div class="step-verification">
+                        <div class="verification-title">✅ 確認ポイント</div>
+                        <ul class="verification-points">
+                            <li class="verification-point">構造化ログが適切な形式で出力されること</li>
+                            <li class="verification-point">/actuator/health で全システムが正常と表示されること</li>
+                            <li class="verification-point">例外発生時にユーザーフレンドリーなエラー画面が表示されること</li>
+                            <li class="verification-point">エラー閾値超過時にSlack通知が正常に送信されること</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-card step-5">
+                <div class="step-header">
+                    <div class="step-number">5</div>
+                    <div class="step-header-text">
+                        <div class="step-title">ドキュメント整備</div>
+                        <div class="step-subtitle">API仕様書・運用マニュアル・保守ガイド作成</div>
+                    </div>
+                </div>
+                <div class="step-body">
+                    <div class="step-description">
+                        企業運用とチーム開発で必要な完全なドキュメント体系を構築し、API仕様書の自動生成・運用マニュアル・保守ガイド・ユーザーマニュアルを整備します。
+                    </div>
+                    <div class="step-tasks">
+                        <div class="tasks-title">📝 実装タスク</div>
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <div class="task-icon">📡</div>
+                                <div class="task-text">Swagger・OpenAPI 3.0 による API仕様書自動生成</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-icon">📖</div>
+                                <div class="task-text">README・環境構築手順・デプロイガイド作成</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-icon">🔧</div>
+                                <div class="task-text">コード保守・トラブルシューティング・FAQ 作成</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-icon">👥</div>
+                                <div class="task-text">エンドユーザー向け操作マニュアル・機能説明書作成</div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="step-hints">
+                        <div class="hints-title">💡 実装ヒント</div>
+                        <ul class="hint-list">
+                            <li class="hint-item">@ApiOperation・@ApiParam アノテーションでAPI仕様を記述</li>
+                            <li class="hint-item">Markdown形式で読みやすく、GitHub Pages で公開可能な形式</li>
+                            <li class="hint-item">スクリーンショット付きで視覚的に分かりやすいマニュアル</li>
+                            <li class="hint-item">検索しやすい構造・目次・インデックスを作成</li>
+                        </ul>
+                    </div>
+                    <div class="step-verification">
+                        <div class="verification-title">✅ 確認ポイント</div>
+                        <ul class="verification-points">
+                            <li class="verification-point">Swagger UI で全APIエンドポイントが確認できること</li>
+                            <li class="verification-point">README通りに環境構築・デプロイが実行できること</li>
+                            <li class="verification-point">保守ガイドに沿ってコード改修・機能追加ができること</li>
+                            <li class="verification-point">ユーザーマニュアルで初心者でもシステム利用できること</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-card step-6">
+                <div class="step-header">
+                    <div class="step-number">6</div>
+                    <div class="step-header-text">
+                        <div class="step-title">最終統合・品質確認</div>
+                        <div class="step-subtitle">企業運用レベルシステム完成確認</div>
+                    </div>
+                </div>
+                <div class="step-body">
+                    <div class="step-description">
+                        これまでの5ステップで構築した機能を最終統合し、企業運用レベルの品質基準を満たすシステムとして完成したことを包括的に確認・検証します。
+                    </div>
+                    <div class="step-tasks">
+                        <div class="tasks-title">📝 実装タスク</div>
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <div class="task-icon">🔍</div>
+                                <div class="task-text">エンドツーエンド（E2E）統合テスト実行</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-icon">📊</div>
+                                <div class="task-text">パフォーマンス・セキュリティ・可用性の最終検証</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-icon">✅</div>
+                                <div class="task-text">企業運用レベル品質基準との適合性確認</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-icon">🎉</div>
+                                <div class="task-text">Week 10.10 完成システムのデモ・プレゼンテーション</div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="step-hints">
+                        <div class="hints-title">💡 実装ヒント</div>
+                        <ul class="hint-list">
+                            <li class="hint-item">実際のブラウザ操作でユーザーシナリオを完全に再現</li>
+                            <li class="hint-item">負荷テスト・ストレステストで本番環境の動作を模擬</li>
+                            <li class="hint-item">企業品質基準（可用性99.9%・レスポンス&lt;3秒・セキュリティ対策完備）確認</li>
+                            <li class="hint-item">デモで Week 10.1-10.10 の学習成果をアピール</li>
+                        </ul>
+                    </div>
+                    <div class="step-verification">
+                        <div class="verification-title">✅ 確認ポイント</div>
+                        <ul class="verification-points">
+                            <li class="verification-point">E2Eテストで実際のユーザー操作が全て正常動作すること</li>
+                            <li class="verification-point">企業運用レベルの性能・セキュリティ要件を満たすこと</li>
+                            <li class="verification-point">監視・ログ・ドキュメントが実用レベルで整備されていること</li>
+                            <li class="verification-point">Week 10全体の学習成果が統合システムに体現されていること</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="final-goal">
+            <div class="final-goal-title">🎊 Week 10.10 実践演習完成で獲得する成果</div>
+            <div class="final-goal-description">
+                6つのステップを通じて、Week 10.1-10.9の技術的な学習成果を企業運用レベルの実用システムとして完成させ、実務で即戦力となるプロフェッショナルスキルを確立します。
+            </div>
+            <div class="achievement-badges">
+                <div class="achievement-badge">
+                    🎯 企業運用レベル品質達成
+                </div>
+                <div class="achievement-badge">
+                    🛡️ 包括的セキュリティ対策習得
+                </div>
+                <div class="achievement-badge">
+                    🐳 コンテナ化・DevOps基盤習得
+                </div>
+                <div class="achievement-badge">
+                    📊 監視・可観測性システム習得
+                </div>
+                <div class="achievement-badge">
+                    📚 プロフェッショナルドキュメンテーション
+                </div>
+                <div class="achievement-badge">
+                    💼 実務即戦力スキル確立
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

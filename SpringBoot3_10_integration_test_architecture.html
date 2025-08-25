@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 10.10 統合テスト実装図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #6f42c1;
+            padding-bottom: 15px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #6f42c1;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        .test-layers {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .test-layer {
+            background: white;
+            border: 2px solid #e1e8ed;
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .test-layer:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(111, 66, 193, 0.3);
+        }
+
+        .e2e-layer {
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+            color: white;
+            border: none;
+        }
+
+        .integration-layer {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+        }
+
+        .unit-layer {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            border: none;
+        }
+
+        .layer-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .layer-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .layer-description {
+            font-size: 14px;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tech-tag {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .week-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .week-feature {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-left: 4px solid #6f42c1;
+            transition: all 0.3s ease;
+        }
+
+        .week-feature:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(111, 66, 193, 0.2);
+        }
+
+        .week-10-1 { border-left-color: #007bff; }
+        .week-10-2 { border-left-color: #007bff; }
+        .week-10-3 { border-left-color: #007bff; }
+        .week-10-4 { border-left-color: #007bff; }
+        .week-10-5 { border-left-color: #dc3545; }
+        .week-10-6 { border-left-color: #dc3545; }
+        .week-10-7 { border-left-color: #fd7e14; }
+        .week-10-8 { border-left-color: #28a745; }
+        .week-10-9 { border-left-color: #6c757d; }
+
+        .feature-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .feature-description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .test-points {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .test-point {
+            background: #f8f9fa;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            color: #495057;
+        }
+
+        .flow-arrow {
+            text-align: center;
+            font-size: 24px;
+            color: #6f42c1;
+            margin: 15px 0;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+
+        .highlight-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .highlight-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .highlight-point {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .highlight-icon {
+            width: 20px;
+            height: 20px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+            
+            .week-features {
+                grid-template-columns: 1fr;
+            }
+            
+            .highlight-points {
+                grid-template-columns: 1fr;
+            }
+            
+            .tech-stack {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Week 10.10 統合テスト実装図</h1>
+        <p class="subtitle">Week 10.1-10.9機能の連携テスト体系を視覚化</p>
+
+        <div class="test-layers">
+            <div class="test-layer e2e-layer">
+                <div class="layer-title">
+                    <div class="layer-icon">🎯</div>
+                    E2E テスト（End-to-End Test）
+                </div>
+                <div class="layer-description">
+                    実際のブラウザ操作を模擬した完全なユーザーシナリオテスト
+                </div>
+                <div class="tech-stack">
+                    <span class="tech-tag">Selenium WebDriver</span>
+                    <span class="tech-tag">TestContainers</span>
+                    <span class="tech-tag">実ブラウザテスト</span>
+                    <span class="tech-tag">シナリオ検証</span>
+                </div>
+            </div>
+
+            <div class="flow-arrow">↓</div>
+
+            <div class="test-layer integration-layer">
+                <div class="layer-title">
+                    <div class="layer-icon">🔗</div>
+                    統合テスト（Integration Test）
+                </div>
+                <div class="layer-description">
+                    Spring Boot アプリケーション全体での HTTP リクエスト・レスポンステスト
+                </div>
+                <div class="tech-stack">
+                    <span class="tech-tag">@SpringBootTest</span>
+                    <span class="tech-tag">MockMvc</span>
+                    <span class="tech-tag">TestRestTemplate</span>
+                    <span class="tech-tag">データベース統合</span>
+                </div>
+            </div>
+
+            <div class="flow-arrow">↓</div>
+
+            <div class="test-layer unit-layer">
+                <div class="layer-title">
+                    <div class="layer-icon">⚙️</div>
+                    単体テスト（Unit Test）
+                </div>
+                <div class="layer-description">
+                    個別のメソッドやクラスの動作を検証する基盤テスト
+                </div>
+                <div class="tech-stack">
+                    <span class="tech-tag">JUnit 5</span>
+                    <span class="tech-tag">Mockito</span>
+                    <span class="tech-tag">AssertJ</span>
+                    <span class="tech-tag">@Mock</span>
+                </div>
+            </div>
+        </div>
+
+        <h2 style="text-align: center; color: #6f42c1; margin-bottom: 20px;">Week 10.1-10.9 機能別テスト対象</h2>
+
+        <div class="week-features">
+            <div class="week-feature week-10-1">
+                <div class="feature-title">10.1-10.4 高度検索機能</div>
+                <div class="feature-description">動的クエリ・複合検索・ページネーション</div>
+                <div class="test-points">
+                    <span class="test-point">検索条件組み合わせ</span>
+                    <span class="test-point">ページング動作</span>
+                    <span class="test-point">結果件数確認</span>
+                </div>
+            </div>
+
+            <div class="week-feature week-10-5">
+                <div class="feature-title">10.5 削除機能</div>
+                <div class="feature-description">安全な削除処理とトランザクション</div>
+                <div class="test-points">
+                    <span class="test-point">論理削除確認</span>
+                    <span class="test-point">トランザクション</span>
+                    <span class="test-point">削除前確認</span>
+                </div>
+            </div>
+
+            <div class="week-feature week-10-6">
+                <div class="feature-title">10.6 一括削除機能</div>
+                <div class="feature-description">チェックボックスと複数選択処理</div>
+                <div class="test-points">
+                    <span class="test-point">複数選択</span>
+                    <span class="test-point">JavaScript連携</span>
+                    <span class="test-point">状態管理</span>
+                </div>
+            </div>
+
+            <div class="week-feature week-10-7">
+                <div class="feature-title">10.7 データエクスポート</div>
+                <div class="feature-description">CSV・Excel出力機能</div>
+                <div class="test-points">
+                    <span class="test-point">ファイル生成</span>
+                    <span class="test-point">データ整合性</span>
+                    <span class="test-point">ダウンロード</span>
+                </div>
+            </div>
+
+            <div class="week-feature week-10-8">
+                <div class="feature-title">10.8 Ajax・非同期通信</div>
+                <div class="feature-description">リアルタイム検索・非同期処理</div>
+                <div class="test-points">
+                    <span class="test-point">非同期レスポンス</span>
+                    <span class="test-point">リアルタイム更新</span>
+                    <span class="test-point">JavaScript統合</span>
+                </div>
+            </div>
+
+            <div class="week-feature week-10-9">
+                <div class="feature-title">10.9 パフォーマンス最適化</div>
+                <div class="feature-description">インデックス・キャッシュ・負荷対策</div>
+                <div class="test-points">
+                    <span class="test-point">レスポンス時間</span>
+                    <span class="test-point">メモリ使用量</span>
+                    <span class="test-point">キャッシュ効果</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <div class="highlight-title">🎊 Week 10.10 統合テストで実現する価値</div>
+            <div class="highlight-points">
+                <div class="highlight-point">
+                    <div class="highlight-icon">✅</div>
+                    全機能連携の動作保証
+                </div>
+                <div class="highlight-point">
+                    <div class="highlight-icon">🔒</div>
+                    企業レベルの品質確保
+                </div>
+                <div class="highlight-point">
+                    <div class="highlight-icon">⚡</div>
+                    継続的インテグレーション
+                </div>
+                <div class="highlight-point">
+                    <div class="highlight-icon">📊</div>
+                    パフォーマンス監視
+                </div>
+                <div class="highlight-point">
+                    <div class="highlight-icon">🛡️</div>
+                    セキュリティ検証
+                </div>
+                <div class="highlight-point">
+                    <div class="highlight-icon">🎯</div>
+                    実用システム完成
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

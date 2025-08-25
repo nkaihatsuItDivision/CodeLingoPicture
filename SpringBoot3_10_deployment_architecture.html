@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 10.10 デプロイ準備アーキテクチャ図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #6f42c1;
+            padding-bottom: 15px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #6f42c1;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        .docker-composition {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .container-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-top: 4px solid;
+        }
+
+        .container-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+
+        .app-container {
+            border-top-color: #6f42c1;
+        }
+
+        .mysql-container {
+            border-top-color: #fd7e14;
+        }
+
+        .redis-container {
+            border-top-color: #6c757d;
+        }
+
+        .container-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            margin: 0 auto 15px;
+        }
+
+        .app-icon {
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+        }
+
+        .mysql-icon {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+        }
+
+        .redis-icon {
+            background: linear-gradient(135deg, #6c757d, #495057);
+        }
+
+        .container-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .container-description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .container-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            justify-content: center;
+        }
+
+        .feature-tag {
+            background: #f8f9fa;
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            color: #495057;
+            border: 1px solid #dee2e6;
+        }
+
+        .dockerfile-section {
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+        }
+
+        .dockerfile-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .build-stages {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .stage-card {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .stage-number {
+            width: 30px;
+            height: 30px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .stage-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .stage-description {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .environment-section {
+            margin: 30px 0;
+        }
+
+        .env-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #6f42c1;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .env-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .env-card {
+            background: white;
+            border: 2px solid #e1e8ed;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .env-card:hover {
+            border-color: #6f42c1;
+            box-shadow: 0 4px 16px rgba(111, 66, 193, 0.2);
+        }
+
+        .dev-env {
+            border-color: #28a745;
+        }
+
+        .test-env {
+            border-color: #ffc107;
+        }
+
+        .prod-env {
+            border-color: #dc3545;
+        }
+
+        .env-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            margin: 0 auto 15px;
+        }
+
+        .dev-icon {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+
+        .test-icon {
+            background: linear-gradient(135deg, #ffc107, #e0a800);
+        }
+
+        .prod-icon {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+        }
+
+        .env-name {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .env-characteristics {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .cicd-pipeline {
+            background: linear-gradient(135deg, #17a2b8, #0c5460);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+        }
+
+        .pipeline-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .pipeline-flow {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            align-items: center;
+        }
+
+        .pipeline-step {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            margin: 0 auto 10px;
+        }
+
+        .step-name {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .step-description {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .arrow-separator {
+            text-align: center;
+            font-size: 20px;
+            color: rgba(255,255,255,0.7);
+            align-self: center;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+
+        .highlight-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .highlight-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .highlight-point {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .highlight-icon {
+            width: 20px;
+            height: 20px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+            
+            .docker-composition {
+                grid-template-columns: 1fr;
+            }
+            
+            .build-stages {
+                grid-template-columns: 1fr;
+            }
+            
+            .env-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .pipeline-flow {
+                grid-template-columns: 1fr;
+            }
+            
+            .arrow-separator {
+                transform: rotate(90deg);
+            }
+            
+            .highlight-points {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Week 10.10 デプロイ準備アーキテクチャ図</h1>
+        <p class="subtitle">Docker化と本番環境への準備体系を視覚化</p>
+
+        <h2 style="text-align: center; color: #6f42c1; margin-bottom: 20px;">🐳 Docker コンテナ構成</h2>
+
+        <div class="docker-composition">
+            <div class="container-card app-container">
+                <div class="container-icon app-icon">🍃</div>
+                <div class="container-title">Spring Boot アプリケーション</div>
+                <div class="container-description">Week 10.1-10.9の統合システムをコンテナ化</div>
+                <div class="container-features">
+                    <span class="feature-tag">Java 17</span>
+                    <span class="feature-tag">Spring Boot 3.x</span>
+                    <span class="feature-tag">Maven Build</span>
+                    <span class="feature-tag">8080ポート</span>
+                </div>
+            </div>
+
+            <div class="container-card mysql-container">
+                <div class="container-icon mysql-icon">🗄️</div>
+                <div class="container-title">MySQL データベース</div>
+                <div class="container-description">永続化データの格納と管理を担当</div>
+                <div class="container-features">
+                    <span class="feature-tag">MySQL 8.0</span>
+                    <span class="feature-tag">永続化ボリューム</span>
+                    <span class="feature-tag">3306ポート</span>
+                    <span class="feature-tag">学生管理データ</span>
+                </div>
+            </div>
+
+            <div class="container-card redis-container">
+                <div class="container-icon redis-icon">⚡</div>
+                <div class="container-title">Redis キャッシュサーバー</div>
+                <div class="container-description">セッション管理とパフォーマンス最適化</div>
+                <div class="container-features">
+                    <span class="feature-tag">Redis 7.0</span>
+                    <span class="feature-tag">セッション保存</span>
+                    <span class="feature-tag">6379ポート</span>
+                    <span class="feature-tag">キャッシュ戦略</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="dockerfile-section">
+            <div class="dockerfile-title">📋 マルチステージビルド戦略</div>
+            <div class="build-stages">
+                <div class="stage-card">
+                    <div class="stage-number">1</div>
+                    <div class="stage-title">ビルドステージ</div>
+                    <div class="stage-description">
+                        Maven環境でアプリケーションのビルド・コンパイル・テスト実行を行う
+                    </div>
+                </div>
+                <div class="stage-card">
+                    <div class="stage-number">2</div>
+                    <div class="stage-title">実行ステージ</div>
+                    <div class="stage-description">
+                        軽量なJREイメージでアプリケーションの実行環境を構築する
+                    </div>
+                </div>
+                <div class="stage-card">
+                    <div class="stage-number">3</div>
+                    <div class="stage-title">最適化ステージ</div>
+                    <div class="stage-description">
+                        不要なファイルを除去してイメージサイズを最小化する
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="environment-section">
+            <div class="env-title">🌍 環境分離・設定管理</div>
+            <div class="env-grid">
+                <div class="env-card dev-env">
+                    <div class="env-icon dev-icon">💻</div>
+                    <div class="env-name">開発環境</div>
+                    <div class="env-characteristics">
+                        開発用データベース・デバッグ有効・ホットリロード・開発ツール有効
+                    </div>
+                </div>
+                <div class="env-card test-env">
+                    <div class="env-icon test-icon">🧪</div>
+                    <div class="env-name">テスト環境</div>
+                    <div class="env-characteristics">
+                        テスト用データベース・統合テスト実行・品質チェック・性能測定
+                    </div>
+                </div>
+                <div class="env-card prod-env">
+                    <div class="env-icon prod-icon">🚀</div>
+                    <div class="env-name">本番環境</div>
+                    <div class="env-characteristics">
+                        本番データベース・セキュリティ強化・監視有効・最適化設定
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="cicd-pipeline">
+            <div class="pipeline-title">🔄 CI/CD パイプライン基盤</div>
+            <div class="pipeline-flow">
+                <div class="pipeline-step">
+                    <div class="step-icon">📥</div>
+                    <div class="step-name">コード取得</div>
+                    <div class="step-description">GitHubからソースコード取得</div>
+                </div>
+                <div class="arrow-separator">→</div>
+                <div class="pipeline-step">
+                    <div class="step-icon">🔨</div>
+                    <div class="step-name">ビルド</div>
+                    <div class="step-description">Maven コンパイル・依存関係解決</div>
+                </div>
+                <div class="arrow-separator">→</div>
+                <div class="pipeline-step">
+                    <div class="step-icon">🧪</div>
+                    <div class="step-name">テスト実行</div>
+                    <div class="step-description">単体・統合・E2E テスト実行</div>
+                </div>
+                <div class="arrow-separator">→</div>
+                <div class="pipeline-step">
+                    <div class="step-icon">🐳</div>
+                    <div class="step-name">Docker化</div>
+                    <div class="step-description">コンテナイメージビルド・プッシュ</div>
+                </div>
+                <div class="arrow-separator">→</div>
+                <div class="pipeline-step">
+                    <div class="step-icon">🚀</div>
+                    <div class="step-name">デプロイ</div>
+                    <div class="step-description">環境別自動デプロイ実行</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <div class="highlight-title">🎊 Week 10.10 デプロイ準備で実現する企業運用基盤</div>
+            <div class="highlight-points">
+                <div class="highlight-point">
+                    <div class="highlight-icon">🐳</div>
+                    コンテナ化による環境統一
+                </div>
+                <div class="highlight-point">
+                    <div class="highlight-icon">🔄</div>
+                    CI/CDパイプライン自動化
+                </div>
+                <div class="highlight-point">
+                    <div class="highlight-icon">🌍</div>
+                    環境分離による品質保証
+                </div>
+                <div class="highlight-point">
+                    <div class="highlight-icon">📊</div>
+                    マルチステージビルド最適化
+                </div>
+                <div class="highlight-point">
+                    <div class="highlight-icon">🛡️</div>
+                    セキュリティを考慮した設計
+                </div>
+                <div class="highlight-point">
+                    <div class="highlight-icon">⚡</div>
+                    スケーラブルなアーキテクチャ
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

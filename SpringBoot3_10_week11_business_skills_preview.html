@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 11実務スキル予告図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #17a2b8;
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        .transition-banner {
+            background: linear-gradient(135deg, #6f42c1, #17a2b8);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .banner-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .banner-description {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .transition-path {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .path-step {
+            background: rgba(255,255,255,0.2);
+            padding: 15px 25px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .path-arrow {
+            font-size: 20px;
+            opacity: 0.7;
+        }
+
+        .evolution-section {
+            display: grid;
+            grid-template-columns: 1fr 80px 1fr;
+            gap: 30px;
+            margin: 40px 0;
+            align-items: center;
+        }
+
+        .evolution-from, .evolution-to {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+
+        .evolution-from {
+            border: 2px solid #6f42c1;
+        }
+
+        .evolution-to {
+            border: 2px solid #17a2b8;
+        }
+
+        .evolution-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .from-title {
+            color: #6f42c1;
+        }
+
+        .to-title {
+            color: #17a2b8;
+        }
+
+        .evolution-subtitle {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .skill-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .skill-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 3px solid;
+        }
+
+        .from-skill {
+            border-left-color: #6f42c1;
+        }
+
+        .to-skill {
+            border-left-color: #17a2b8;
+        }
+
+        .skill-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .from-icon {
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+        }
+
+        .to-icon {
+            background: linear-gradient(135deg, #17a2b8, #0c5460);
+        }
+
+        .skill-text {
+            font-size: 14px;
+            color: #495057;
+        }
+
+        .evolution-arrow {
+            text-align: center;
+            font-size: 48px;
+            color: #28a745;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .week11-curriculum {
+            background: linear-gradient(135deg, #17a2b8, #0c5460);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 40px 0;
+        }
+
+        .curriculum-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .curriculum-modules {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .curriculum-module {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .module-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .module-number {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .module-info {
+            flex-grow: 1;
+        }
+
+        .module-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .module-subtitle {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .module-lessons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .lesson-tag {
+            background: rgba(255,255,255,0.2);
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        .business-value-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+            border: 2px solid #17a2b8;
+        }
+
+        .value-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #17a2b8;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .value-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .value-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .value-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(23, 162, 184, 0.2);
+        }
+
+        .value-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #17a2b8, #0c5460);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            margin: 0 auto 15px;
+        }
+
+        .value-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .value-description {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .career-path {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+        }
+
+        .career-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .career-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            align-items: center;
+        }
+
+        .career-step {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+            position: relative;
+        }
+
+        .career-step-number {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 30px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .career-step-icon {
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+
+        .career-step-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .career-step-description {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .career-arrow {
+            text-align: center;
+            font-size: 20px;
+            opacity: 0.7;
+            align-self: center;
+        }
+
+        .final-motivation {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 40px;
+            border-radius: 12px;
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .motivation-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .motivation-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .motivation-description {
+            font-size: 18px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .motivation-action {
+            background: rgba(255,255,255,0.2);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .action-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .action-steps {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .action-step {
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .title {
+                font-size: 28px;
+            }
+            
+            .evolution-section {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .evolution-arrow {
+                font-size: 32px;
+                transform: rotate(90deg);
+            }
+            
+            .curriculum-modules {
+                grid-template-columns: 1fr;
+            }
+            
+            .value-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .career-steps {
+                grid-template-columns: 1fr;
+            }
+            
+            .career-arrow {
+                transform: rotate(90deg);
+            }
+            
+            .transition-path {
+                flex-direction: column;
+            }
+            
+            .path-arrow {
+                transform: rotate(90deg);
+            }
+            
+            .action-steps {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Week 11実務スキル予告図</h1>
+        <p class="subtitle">技術基盤完成から実務スキル習得への発展を視覚化</p>
+
+        <div class="transition-banner">
+            <div class="banner-title">🚀 次のステージへ：技術者からプロフェッショナルへ</div>
+            <div class="banner-description">
+                Week 10で企業運用レベルの技術基盤を完成させたあなたが、次に習得するのは実務スキル。
+                プロジェクト管理・ビジネスコミュニケーション・受託業務実務知識を学び、真のプロフェッショナルWeb開発者を目指します。
+            </div>
+            <div class="transition-path">
+                <div class="path-step">
+                    <span>🎯</span>
+                    Week 10技術完成
+                </div>
+                <div class="path-arrow">→</div>
+                <div class="path-step">
+                    <span>💼</span>
+                    Week 11実務スキル
+                </div>
+                <div class="path-arrow">→</div>
+                <div class="path-step">
+                    <span>🏢</span>
+                    受託業務実践
+                </div>
+                <div class="path-arrow">→</div>
+                <div class="path-step">
+                    <span>⭐</span>
+                    即戦力エンジニア
+                </div>
+            </div>
+        </div>
+
+        <h2 style="text-align: center; color: #17a2b8; margin-bottom: 30px;">🔄 技術者からプロフェッショナルへの進化</h2>
+
+        <div class="evolution-section">
+            <div class="evolution-from">
+                <div class="evolution-title from-title">Week 10まで：技術者</div>
+                <div class="evolution-subtitle">システム開発・技術実装に特化</div>
+                <ul class="skill-list">
+                    <li class="skill-item from-skill">
+                        <div class="skill-icon from-icon">🔍</div>
+                        <div class="skill-text">高度検索機能開発</div>
+                    </li>
+                    <li class="skill-item from-skill">
+                        <div class="skill-icon from-icon">🗑️</div>
+                        <div class="skill-text">削除・一括操作実装</div>
+                    </li>
+                    <li class="skill-item from-skill">
+                        <div class="skill-icon from-icon">📊</div>
+                        <div class="skill-text">データエクスポート機能</div>
+                    </li>
+                    <li class="skill-item from-skill">
+                        <div class="skill-icon from-icon">⚡</div>
+                        <div class="skill-text">Ajax・パフォーマンス最適化</div>
+                    </li>
+                    <li class="skill-item from-skill">
+                        <div class="skill-icon from-icon">🛡️</div>
+                        <div class="skill-text">セキュリティ・テスト・デプロイ</div>
+                    </li>
+                    <li class="skill-item from-skill">
+                        <div class="skill-icon from-icon">📈</div>
+                        <div class="skill-text">監視・ドキュメント整備</div>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="evolution-arrow">🚀</div>
+            
+            <div class="evolution-to">
+                <div class="evolution-title to-title">Week 11以降：プロフェッショナル</div>
+                <div class="evolution-subtitle">ビジネス価値創出・実務対応力を習得</div>
+                <ul class="skill-list">
+                    <li class="skill-item to-skill">
+                        <div class="skill-icon to-icon">📋</div>
+                        <div class="skill-text">プロジェクト管理・品質管理</div>
+                    </li>
+                    <li class="skill-item to-skill">
+                        <div class="skill-icon to-icon">💬</div>
+                        <div class="skill-text">ビジネスコミュニケーション</div>
+                    </li>
+                    <li class="skill-item to-skill">
+                        <div class="skill-icon to-icon">🤝</div>
+                        <div class="skill-text">クライアント対応・要件定義</div>
+                    </li>
+                    <li class="skill-item to-skill">
+                        <div class="skill-icon to-icon">📊</div>
+                        <div class="skill-text">報告・相談・連絡スキル</div>
+                    </li>
+                    <li class="skill-item to-skill">
+                        <div class="skill-icon to-icon">💼</div>
+                        <div class="skill-text">受託業務・契約・品質基準</div>
+                    </li>
+                    <li class="skill-item to-skill">
+                        <div class="skill-icon to-icon">⭐</div>
+                        <div class="skill-text">顧客満足・継続関係構築</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="week11-curriculum">
+            <div class="curriculum-title">📚 Week 11カリキュラム：実務スキル・ビジネススキル習得</div>
+            <div class="curriculum-modules">
+                <div class="curriculum-module">
+                    <div class="module-header">
+                        <div class="module-number">1</div>
+                        <div class="module-info">
+                            <div class="module-title">プロジェクト・品質管理</div>
+                            <div class="module-subtitle">3レッスン構成</div>
+                        </div>
+                    </div>
+                    <div class="module-lessons">
+                        <span class="lesson-tag">プロジェクト管理入門</span>
+                        <span class="lesson-tag">品質管理・テスト戦略</span>
+                        <span class="lesson-tag">ドキュメント作成技術</span>
+                    </div>
+                </div>
+
+                <div class="curriculum-module">
+                    <div class="module-header">
+                        <div class="module-number">2</div>
+                        <div class="module-info">
+                            <div class="module-title">ビジネスコミュニケーション</div>
+                            <div class="module-subtitle">3レッスン構成</div>
+                        </div>
+                    </div>
+                    <div class="module-lessons">
+                        <span class="lesson-tag">クライアント対応</span>
+                        <span class="lesson-tag">要件確認・ヒアリング</span>
+                        <span class="lesson-tag">報告・相談・連絡</span>
+                    </div>
+                </div>
+
+                <div class="curriculum-module">
+                    <div class="module-header">
+                        <div class="module-number">3</div>
+                        <div class="module-info">
+                            <div class="module-title">受託業務実務知識</div>
+                            <div class="module-subtitle">2レッスン構成</div>
+                        </div>
+                    </div>
+                    <div class="module-lessons">
+                        <span class="lesson-tag">契約・納期・品質基準</span>
+                        <span class="lesson-tag">顧客満足・継続関係</span>
+                    </div>
+                </div>
+
+                <div class="curriculum-module">
+                    <div class="module-header">
+                        <div class="module-number">4</div>
+                        <div class="module-info">
+                            <div class="module-title">統合演習・総まとめ</div>
+                            <div class="module-subtitle">2レッスン構成</div>
+                        </div>
+                    </div>
+                    <div class="module-lessons">
+                        <span class="lesson-tag">実務シミュレーション</span>
+                        <span class="lesson-tag">受託業務準備完了</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="business-value-section">
+            <div class="value-title">💼 Week 11で習得する実務価値</div>
+            <div class="value-grid">
+                <div class="value-card">
+                    <div class="value-icon">📋</div>
+                    <div class="value-name">プロジェクト管理力</div>
+                    <div class="value-description">スケジュール・進捗・品質・リスク管理による確実なプロジェクト推進能力</div>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">💬</div>
+                    <div class="value-name">コミュニケーション力</div>
+                    <div class="value-description">クライアント・チームメンバーとの効果的な意思疎通・関係構築スキル</div>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">🤝</div>
+                    <div class="value-name">要件定義力</div>
+                    <div class="value-description">顧客ニーズの正確な把握・システム要件への落とし込み・合意形成力</div>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">📊</div>
+                    <div class="value-name">報告・提案力</div>
+                    <div class="value-description">進捗・課題・成果の適切な報告・改善提案・エスカレーション判断力</div>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">💼</div>
+                    <div class="value-name">ビジネス理解力</div>
+                    <div class="value-description">契約・納期・品質基準・コスト意識によるビジネス感覚の醸成</div>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">⭐</div>
+                    <div class="value-name">顧客志向</div>
+                    <div class="value-description">顧客満足度向上・長期的関係構築・付加価値提供マインドセット</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="career-path">
+            <div class="career-title">🎯 学習→実務経験→キャリア発展の道筋</div>
+            <div class="career-steps">
+                <div class="career-step">
+                    <div class="career-step-number">1</div>
+                    <div class="career-step-icon">📚</div>
+                    <div class="career-step-title">Week 1-11<br>技術・実務学習</div>
+                    <div class="career-step-description">基礎技術からプロフェッショナルスキルまで体系的習得</div>
+                </div>
+                <div class="career-arrow">→</div>
+                <div class="career-step">
+                    <div class="career-step-number">2</div>
+                    <div class="career-step-icon">💼</div>
+                    <div class="career-step-title">受託業務実践<br>実案件経験</div>
+                    <div class="career-step-description">実際のクライアントワークによる実務経験積み重ね</div>
+                </div>
+                <div class="career-arrow">→</div>
+                <div class="career-step">
+                    <div class="career-step-icon">🏢</div>
+                    <div class="career-step-title">自社採用<br>正社員雇用</div>
+                    <div class="career-step-description">実績・スキルに基づく自社での正社員採用機会</div>
+                </div>
+                <div class="career-arrow">→</div>
+                <div class="career-step">
+                    <div class="career-step-icon">⭐</div>
+                    <div class="career-step-title">エンジニア<br>キャリア発展</div>
+                    <div class="career-step-description">シニアエンジニア・リードエンジニアへのステップアップ</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="final-motivation">
+            <div class="motivation-icon">🎊</div>
+            <div class="motivation-title">Week 11で実務スキルを習得し、プロフェッショナルへ！</div>
+            <div class="motivation-description">
+                Week 10で確立した技術基盤に、実務知識・ビジネススキル・コミュニケーション力を加えることで、真のプロフェッショナルWeb開発者として活躍できます。受託業務実践・自社採用・キャリア発展への確実な道筋が待っています。
+            </div>
+            <div class="motivation-action">
+                <div class="action-title">🚀 Week 11学習開始への準備</div>
+                <div class="action-steps">
+                    <div class="action-step">Week 10技術基盤の復習・定着</div>
+                    <div class="action-step">実務マインドセットの準備</div>
+                    <div class="action-step">ビジネススキル学習への意識転換</div>
+                    <div class="action-step">受託業務実践への期待と準備</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
