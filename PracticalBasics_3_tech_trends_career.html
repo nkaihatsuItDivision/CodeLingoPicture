@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>技術動向・キャリア開発</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #20c997;
+            padding-bottom: 15px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #6c757d;
+            margin-bottom: 40px;
+        }
+        
+        .trend-section {
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(135deg, #20c997, #0f7b5d);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .trends-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .trend-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .trend-card:hover {
+            border-color: #20c997;
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(32, 201, 151, 0.3);
+        }
+        
+        .trend-header {
+            background: linear-gradient(135deg, #20c997, #0f7b5d);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .trend-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .trend-name {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .trend-body {
+            padding: 20px;
+        }
+        
+        .trend-description {
+            font-size: 14px;
+            color: #6c757d;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        
+        .tech-examples {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+        
+        .tech-label {
+            font-size: 12px;
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 6px;
+        }
+        
+        .tech-list {
+            font-size: 13px;
+            color: #6c757d;
+            line-height: 1.4;
+        }
+        
+        .week10-connection {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+        
+        .connection-label {
+            font-size: 12px;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 6px;
+        }
+        
+        .connection-text {
+            font-size: 13px;
+            color: #856404;
+            line-height: 1.4;
+        }
+        
+        .career-impact {
+            background: #e3f2fd;
+            padding: 12px;
+            border-radius: 6px;
+        }
+        
+        .impact-label {
+            font-size: 12px;
+            font-weight: bold;
+            color: #1976d2;
+            margin-bottom: 6px;
+        }
+        
+        .impact-text {
+            font-size: 13px;
+            color: #1976d2;
+            line-height: 1.4;
+        }
+        
+        .growth-path {
+            background: linear-gradient(135deg, #f3e5f5, #e1bee7);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+        
+        .growth-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #7b1fa2;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .path-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        
+        .path-step {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid #e1bee7;
+            position: relative;
+        }
+        
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #7b1fa2, #4a148c);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .step-title {
+            font-weight: bold;
+            color: #7b1fa2;
+            margin-bottom: 10px;
+            margin-top: 10px;
+        }
+        
+        .step-desc {
+            font-size: 13px;
+            color: #6c757d;
+            line-height: 1.4;
+        }
+        
+        .skills-matrix {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 30px;
+        }
+        
+        .matrix-header {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .matrix-body {
+            padding: 20px;
+        }
+        
+        .skill-categories {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .skill-category {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .category-header {
+            background: linear-gradient(135deg, #20c997, #0f7b5d);
+            color: white;
+            padding: 12px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .category-skills {
+            padding: 15px;
+        }
+        
+        .skill-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f8f9fa;
+        }
+        
+        .skill-name {
+            font-size: 14px;
+            color: #495057;
+        }
+        
+        .skill-demand {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+        }
+        
+        .high-demand {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .medium-demand {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .emerging-demand {
+            background: #cce5ff;
+            color: #004085;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+            
+            .trends-grid,
+            .path-grid,
+            .skill-categories {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .trend-card,
+            .path-step {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">技術動向・キャリア開発</div>
+        <div class="subtitle">クラウド・AI・IoT技術トレンドと Week 10技術の発展性</div>
+        
+        <div class="trend-section">
+            <div class="section-title">主要技術トレンド</div>
+            <div class="trends-grid">
+                <div class="trend-card">
+                    <div class="trend-header">
+                        <div class="trend-icon">☁️</div>
+                        <div class="trend-name">クラウド技術</div>
+                    </div>
+                    <div class="trend-body">
+                        <div class="trend-description">
+                            インフラのクラウド化が急速に進展。DevOpsやマイクロサービス、サーバーレス技術が主流に。
+                        </div>
+                        <div class="tech-examples">
+                            <div class="tech-label">主要技術</div>
+                            <div class="tech-list">
+                                AWS・Azure・GCP<br>
+                                Docker・Kubernetes<br>
+                                Infrastructure as Code
+                            </div>
+                        </div>
+                        <div class="week10-connection">
+                            <div class="connection-label">Week 10技術との関連</div>
+                            <div class="connection-text">
+                                Spring Boot<br>
+                                ↓<br>
+                                クラウドネイティブ基盤技術
+                            </div>
+                        </div>
+                        <div class="career-impact">
+                            <div class="impact-label">キャリア影響</div>
+                            <div class="impact-text">
+                                クラウドエンジニア・DevOpsエンジニア・インフラエンジニアの需要急増
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="trend-card">
+                    <div class="trend-header">
+                        <div class="trend-icon">🤖</div>
+                        <div class="trend-name">AI・機械学習</div>
+                    </div>
+                    <div class="trend-body">
+                        <div class="trend-description">
+                            ChatGPT等の生成AI普及により、業務システムとの統合・AI活用アプリケーション開発が拡大。
+                        </div>
+                        <div class="tech-examples">
+                            <div class="tech-label">主要技術</div>
+                            <div class="tech-list">
+                                ChatGPT・GPT-4<br>
+                                TensorFlow・PyTorch<br>
+                                機械学習基盤・MLOps
+                            </div>
+                        </div>
+                        <div class="week10-connection">
+                            <div class="connection-label">Week 10技術との関連</div>
+                            <div class="connection-text">
+                                データベース設計・SQL<br>
+                                ↓<br>
+                                AI学習データ管理
+                            </div>
+                        </div>
+                        <div class="career-impact">
+                            <div class="impact-label">キャリア影響</div>
+                            <div class="impact-text">
+                                AIエンジニア・データサイエンティスト・MLエンジニアの価値向上
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="trend-card">
+                    <div class="trend-header">
+                        <div class="trend-icon">📱</div>
+                        <div class="trend-name">IoT・モバイル</div>
+                    </div>
+                    <div class="trend-body">
+                        <div class="trend-description">
+                            IoTデバイスとクラウドの連携、モバイルファースト設計、リアルタイム通信技術が重要に。
+                        </div>
+                        <div class="tech-examples">
+                            <div class="tech-label">主要技術</div>
+                            <div class="tech-list">
+                                React Native・Flutter<br>
+                                IoTクラウド連携<br>
+                                WebSocket・リアルタイム通信
+                            </div>
+                        </div>
+                        <div class="week10-connection">
+                            <div class="connection-label">Week 10技術との関連</div>
+                            <div class="connection-text">
+                                Ajax・非同期通信<br>
+                                ↓<br>
+                                IoTデバイス通信
+                            </div>
+                        </div>
+                        <div class="career-impact">
+                            <div class="impact-label">キャリア影響</div>
+                            <div class="impact-text">
+                                モバイルエンジニア・IoTエンジニア・フロントエンドエンジニアの需要拡大
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="growth-path">
+            <div class="growth-title">技術習得・成長パス</div>
+            <div class="path-grid">
+                <div class="path-step">
+                    <div class="step-number">1</div>
+                    <div class="step-title">基盤技術の習得</div>
+                    <div class="step-desc">
+                        Java・Spring Boot<br>
+                        データベース・SQL<br>
+                        （Week 10で完了）
+                    </div>
+                </div>
+                <div class="path-step">
+                    <div class="step-number">2</div>
+                    <div class="step-title">専門分野の選択</div>
+                    <div class="step-desc">
+                        クラウド・AI・IoT<br>
+                        興味・適性から選択<br>
+                        （6ヶ月-1年）
+                    </div>
+                </div>
+                <div class="path-step">
+                    <div class="step-number">3</div>
+                    <div class="step-title">実践経験の積み重ね</div>
+                    <div class="step-desc">
+                        実際のプロジェクト参加<br>
+                        資格取得・認定<br>
+                        （1-2年）
+                    </div>
+                </div>
+                <div class="path-step">
+                    <div class="step-number">4</div>
+                    <div class="step-title">専門性の確立</div>
+                    <div class="step-desc">
+                        技術リーダーシップ<br>
+                        設計・アーキテクチャ<br>
+                        （3-5年）
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="skills-matrix">
+            <div class="matrix-header">技術スキル需要マトリクス</div>
+            <div class="matrix-body">
+                <div class="skill-categories">
+                    <div class="skill-category">
+                        <div class="category-header">基盤技術（Week 10習得済み）</div>
+                        <div class="category-skills">
+                            <div class="skill-item">
+                                <span class="skill-name">Java・Spring Boot</span>
+                                <span class="skill-demand high-demand">需要高</span>
+                            </div>
+                            <div class="skill-item">
+                                <span class="skill-name">データベース・SQL</span>
+                                <span class="skill-demand high-demand">需要高</span>
+                            </div>
+                            <div class="skill-item">
+                                <span class="skill-name">Ajax・非同期通信</span>
+                                <span class="skill-demand high-demand">需要高</span>
+                            </div>
+                            <div class="skill-item">
+                                <span class="skill-name">システム統合・API</span>
+                                <span class="skill-demand high-demand">需要高</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-category">
+                        <div class="category-header">発展技術（今後習得推奨）</div>
+                        <div class="category-skills">
+                            <div class="skill-item">
+                                <span class="skill-name">AWS・クラウド技術</span>
+                                <span class="skill-demand emerging-demand">急成長</span>
+                            </div>
+                            <div class="skill-item">
+                                <span class="skill-name">AI・機械学習</span>
+                                <span class="skill-demand emerging-demand">急成長</span>
+                            </div>
+                            <div class="skill-item">
+                                <span class="skill-name">React・フロントエンド</span>
+                                <span class="skill-demand medium-demand">需要中</span>
+                            </div>
+                            <div class="skill-item">
+                                <span class="skill-name">DevOps・インフラ</span>
+                                <span class="skill-demand medium-demand">需要中</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

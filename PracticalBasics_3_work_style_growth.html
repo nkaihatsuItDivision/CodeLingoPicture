@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>働き方・成長環境</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #20c997;
+            padding-bottom: 15px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #6c757d;
+            margin-bottom: 40px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(135deg, #20c997, #0f7b5d);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .work-styles-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .work-style-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .work-style-card:hover {
+            border-color: #20c997;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(32, 201, 151, 0.3);
+        }
+        
+        .style-header {
+            background: linear-gradient(135deg, #20c997, #0f7b5d);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .style-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .style-name {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .style-body {
+            padding: 20px;
+        }
+        
+        .style-description {
+            font-size: 14px;
+            color: #6c757d;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .characteristics {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .char-label {
+            font-size: 12px;
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+        
+        .char-list {
+            font-size: 13px;
+            color: #6c757d;
+            line-height: 1.4;
+        }
+        
+        .suitable-for {
+            background: linear-gradient(135deg, #d1ecf1, #bee5eb);
+            padding: 12px;
+            border-radius: 6px;
+        }
+        
+        .suitable-label {
+            font-size: 12px;
+            font-weight: bold;
+            color: #0c5460;
+            margin-bottom: 6px;
+        }
+        
+        .suitable-text {
+            font-size: 13px;
+            color: #0c5460;
+            line-height: 1.4;
+        }
+        
+        .growth-opportunities {
+            background: linear-gradient(135deg, #f3e5f5, #e1bee7);
+            border-radius: 12px;
+            padding: 25px;
+        }
+        
+        .growth-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #7b1fa2;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .opportunities-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .opportunity-category {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            border: 2px solid #e1bee7;
+        }
+        
+        .opp-icon {
+            font-size: 32px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .opp-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #7b1fa2;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .opp-items {
+            display: grid;
+            gap: 8px;
+        }
+        
+        .opp-item {
+            background: #f8f9fa;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #495057;
+            border-left: 3px solid #7b1fa2;
+        }
+        
+        .career-paths {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 30px;
+        }
+        
+        .paths-header {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .paths-body {
+            padding: 20px;
+        }
+        
+        .paths-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .path-item {
+            text-align: center;
+            padding: 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .path-item:hover {
+            border-color: #20c997;
+            background: #f8f9fa;
+        }
+        
+        .path-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .path-name {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        .path-desc {
+            font-size: 12px;
+            color: #6c757d;
+            line-height: 1.4;
+        }
+        
+        .decision-matrix {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+        
+        .matrix-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .matrix-factor {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            border: 2px solid #ffeaa7;
+        }
+        
+        .factor-icon {
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .factor-name {
+            font-weight: bold;
+            color: #856404;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .factor-considerations {
+            font-size: 13px;
+            color: #6c757d;
+            line-height: 1.4;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+            
+            .work-styles-grid,
+            .opportunities-grid,
+            .paths-grid,
+            .matrix-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .work-style-card,
+            .opportunity-category {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">働き方・成長環境</div>
+        <div class="subtitle">勤務形態・ワークライフバランス・成長機会の多様性</div>
+        
+        <div class="section">
+            <div class="section-title">勤務形態の選択肢</div>
+            <div class="work-styles-grid">
+                <div class="work-style-card">
+                    <div class="style-header">
+                        <div class="style-icon">🏢</div>
+                        <div class="style-name">オフィス勤務</div>
+                    </div>
+                    <div class="style-body">
+                        <div class="style-description">
+                            チーム協業を重視した従来型の勤務形態。対面でのコミュニケーションと協働を基盤とする。
+                        </div>
+                        <div class="characteristics">
+                            <div class="char-label">特徴</div>
+                            <div class="char-list">
+                                • 対面での密なコミュニケーション<br>
+                                • チーム結束・文化共有<br>
+                                • 集中した作業環境<br>
+                                • 直接指導・メンタリング
+                            </div>
+                        </div>
+                        <div class="suitable-for">
+                            <div class="suitable-label">適している人・企業</div>
+                            <div class="suitable-text">
+                                大規模プロジェクト、SIer系企業、チーム協業を重視する新人エンジニア
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="work-style-card">
+                    <div class="style-header">
+                        <div class="style-icon">🏠</div>
+                        <div class="style-name">リモートワーク</div>
+                    </div>
+                    <div class="style-body">
+                        <div class="style-description">
+                            場所に縛られない柔軟な働き方。生産性向上と個人のライフスタイル重視。
+                        </div>
+                        <div class="characteristics">
+                            <div class="char-label">特徴</div>
+                            <div class="char-list">
+                                • 場所の制約なし<br>
+                                • 通勤時間の削減<br>
+                                • 個人の集中環境<br>
+                                • 成果重視の評価
+                            </div>
+                        </div>
+                        <div class="suitable-for">
+                            <div class="suitable-label">適している人・企業</div>
+                            <div class="suitable-text">
+                                自己管理能力が高い、Web企業・スタートアップ、グローバル展開企業
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="work-style-card">
+                    <div class="style-header">
+                        <div class="style-icon">🔄</div>
+                        <div class="style-name">ハイブリッド勤務</div>
+                    </div>
+                    <div class="style-body">
+                        <div class="style-description">
+                            オフィス勤務とリモートワークを組み合わせた現代的な働き方。多くの企業で標準化。
+                        </div>
+                        <div class="characteristics">
+                            <div class="char-label">特徴</div>
+                            <div class="char-list">
+                                • 柔軟性とバランス<br>
+                                • 協業と集中の両立<br>
+                                • 週2-3日オフィス出社<br>
+                                • 個人の選択制
+                            </div>
+                        </div>
+                        <div class="suitable-for">
+                            <div class="suitable-label">適している人・企業</div>
+                            <div class="suitable-text">
+                                バランスを重視する人、現代的な多くの IT企業、中規模チーム開発
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="work-style-card">
+                    <div class="style-header">
+                        <div class="style-icon">💼</div>
+                        <div class="style-name">フリーランス</div>
+                    </div>
+                    <div class="style-body">
+                        <div class="style-description">
+                            プロジェクト単位での契約。高い技術力と自己管理能力が前提だが、自由度と収入の可能性が高い。
+                        </div>
+                        <div class="characteristics">
+                            <div class="char-label">特徴</div>
+                            <div class="char-list">
+                                • 高い自由度・自己決定<br>
+                                • プロジェクト単位契約<br>
+                                • 収入の変動性<br>
+                                • 多様な経験機会
+                            </div>
+                        </div>
+                        <div class="suitable-for">
+                            <div class="suitable-label">適している人・企業</div>
+                            <div class="suitable-text">
+                                高技術力・豊富経験者、自立性の高い人、短期プロジェクト中心の案件
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="growth-opportunities">
+            <div class="growth-title">成長機会・支援制度</div>
+            <div class="opportunities-grid">
+                <div class="opportunity-category">
+                    <div class="opp-icon">📚</div>
+                    <div class="opp-title">学習・研修支援</div>
+                    <div class="opp-items">
+                        <div class="opp-item">技術研修・外部セミナー参加支援</div>
+                        <div class="opp-item">技術書籍・オンライン学習費用補助</div>
+                        <div class="opp-item">資格取得支援・受験費用補助</div>
+                        <div class="opp-item">勉強会・技術カンファレンス参加</div>
+                    </div>
+                </div>
+                
+                <div class="opportunity-category">
+                    <div class="opp-icon">👥</div>
+                    <div class="opp-title">キャリア・メンタリング</div>
+                    <div class="opp-items">
+                        <div class="opp-item">定期キャリア面談・相談</div>
+                        <div class="opp-item">先輩エンジニアによるメンター制度</div>
+                        <div class="opp-item">他部署・プロジェクト経験機会</div>
+                        <div class="opp-item">リーダーシップ研修・管理職準備</div>
+                    </div>
+                </div>
+                
+                <div class="opportunity-category">
+                    <div class="opp-icon">🎯</div>
+                    <div class="opp-title">キャリアパス支援</div>
+                    <div class="opp-items">
+                        <div class="opp-item">技術スペシャリストコース</div>
+                        <div class="opp-item">マネジメント・PL育成コース</div>
+                        <div class="opp-item">ビジネス・企画職への転換支援</div>
+                        <div class="opp-item">社内起業・新規事業挑戦機会</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="career-paths">
+            <div class="paths-header">多様なキャリア方向性</div>
+            <div class="paths-body">
+                <div class="paths-grid">
+                    <div class="path-item">
+                        <div class="path-icon">🔬</div>
+                        <div class="path-name">技術スペシャリスト</div>
+                        <div class="path-desc">
+                            特定技術分野の深い専門性を追求。技術リーダー・アーキテクト・エキスパート
+                        </div>
+                    </div>
+                    <div class="path-item">
+                        <div class="path-icon">👨‍💼</div>
+                        <div class="path-name">マネジメント</div>
+                        <div class="path-desc">
+                            チーム・組織のマネジメント。プロジェクトマネージャー・エンジニアリングマネージャー
+                        </div>
+                    </div>
+                    <div class="path-item">
+                        <div class="path-icon">📊</div>
+                        <div class="path-name">ビジネス志向</div>
+                        <div class="path-desc">
+                            技術とビジネスの橋渡し。プロダクトマネージャー・技術営業・コンサルタント
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="decision-matrix">
+            <div class="matrix-title">働き方選択の判断要素</div>
+            <div class="matrix-grid">
+                <div class="matrix-factor">
+                    <div class="factor-icon">💡</div>
+                    <div class="factor-name">技術情熱</div>
+                    <div class="factor-considerations">
+                        • 最新技術への関心度<br>
+                        • 継続学習へのモチベーション<br>
+                        • 技術的挑戦を楽しめるか<br>
+                        • 深い専門性への志向
+                    </div>
+                </div>
+                
+                <div class="matrix-factor">
+                    <div class="factor-icon">⚖️</div>
+                    <div class="factor-name">プライベート重視度</div>
+                    <div class="factor-considerations">
+                        • ワークライフバランス<br>
+                        • 家族・プライベート時間<br>
+                        • 通勤時間・場所の制約<br>
+                        • 柔軟な働き方の希望
+                    </div>
+                </div>
+                
+                <div class="matrix-factor">
+                    <div class="factor-icon">💰</div>
+                    <div class="factor-name">収入・成長期待</div>
+                    <div class="factor-considerations">
+                        • 収入向上への期待<br>
+                        • 短期vs長期でのリターン<br>
+                        • キャリア成長の重視度<br>
+                        • 収入の安定性の重要度
+                    </div>
+                </div>
+                
+                <div class="matrix-factor">
+                    <div class="factor-icon">🛡️</div>
+                    <div class="factor-name">安定性志向</div>
+                    <div class="factor-considerations">
+                        • 雇用の安定性<br>
+                        • 大手企業vs成長企業<br>
+                        • リスクの許容度<br>
+                        • 福利厚生の重要度
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

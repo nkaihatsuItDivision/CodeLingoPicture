@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>チーム開発・コミュニケーション文化</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #20c997;
+            padding-bottom: 15px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #6c757d;
+            margin-bottom: 40px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(135deg, #20c997, #0f7b5d);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .culture-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .culture-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .culture-card:hover {
+            border-color: #20c997;
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(32, 201, 151, 0.3);
+        }
+        
+        .culture-header {
+            background: linear-gradient(135deg, #20c997, #0f7b5d);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .culture-icon {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        
+        .culture-name {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .culture-body {
+            padding: 20px;
+        }
+        
+        .culture-description {
+            font-size: 14px;
+            color: #6c757d;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        
+        .culture-elements {
+            display: grid;
+            gap: 10px;
+        }
+        
+        .culture-element {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #495057;
+            border-left: 4px solid #20c997;
+            display: flex;
+            align-items: center;
+        }
+        
+        .element-icon {
+            font-size: 16px;
+            margin-right: 8px;
+        }
+        
+        .communication-tools {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+        
+        .tools-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1976d2;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .tool-category {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            border: 2px solid #bbdefb;
+        }
+        
+        .tool-icon {
+            font-size: 32px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .tool-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #1976d2;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .tool-items {
+            display: grid;
+            gap: 8px;
+        }
+        
+        .tool-item {
+            background: #f8f9fa;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #495057;
+            display: flex;
+            align-items: center;
+        }
+        
+        .tool-item-icon {
+            font-size: 14px;
+            margin-right: 8px;
+        }
+        
+        .development-methodologies {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .methodologies-header {
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .methodologies-body {
+            padding: 20px;
+        }
+        
+        .methodology-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .methodology-item {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .methodology-header {
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+            color: white;
+            padding: 12px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .methodology-content {
+            padding: 15px;
+        }
+        
+        .methodology-desc {
+            font-size: 14px;
+            color: #6c757d;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+        
+        .methodology-practices {
+            display: grid;
+            gap: 6px;
+        }
+        
+        .practice-item {
+            font-size: 12px;
+            color: #495057;
+            padding: 6px 8px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            border-left: 3px solid #6f42c1;
+        }
+        
+        .values-principles {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+        
+        .values-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .value-item {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            border: 2px solid #ffeaa7;
+            text-align: center;
+        }
+        
+        .value-icon {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .value-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .value-desc {
+            font-size: 13px;
+            color: #6c757d;
+            line-height: 1.4;
+        }
+        
+        .mindset-section {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+        
+        .mindset-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #155724;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .mindset-items {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .mindset-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #28a745;
+            display: flex;
+            align-items: center;
+        }
+        
+        .mindset-icon {
+            font-size: 24px;
+            margin-right: 15px;
+        }
+        
+        .mindset-content {
+            flex: 1;
+        }
+        
+        .mindset-name {
+            font-weight: bold;
+            color: #155724;
+            margin-bottom: 5px;
+        }
+        
+        .mindset-desc {
+            font-size: 13px;
+            color: #6c757d;
+            line-height: 1.4;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+            
+            .culture-grid,
+            .tools-grid,
+            .methodology-grid,
+            .values-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .culture-card,
+            .tool-category,
+            .methodology-item {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">チーム開発・コミュニケーション文化</div>
+        <div class="subtitle">IT業界特有の文化・コミュニケーション・開発手法</div>
+        
+        <div class="section">
+            <div class="section-title">IT業界特有の文化</div>
+            <div class="culture-grid">
+                <div class="culture-card">
+                    <div class="culture-header">
+                        <div class="culture-icon">🧠</div>
+                        <div class="culture-name">技術重視・問題解決文化</div>
+                    </div>
+                    <div class="culture-body">
+                        <div class="culture-description">
+                            技術力と論理的思考・問題解決能力が最も尊敬される環境。継続学習が当然視される文化。
+                        </div>
+                        <div class="culture-elements">
+                            <div class="culture-element">
+                                <div class="element-icon">⚡</div>
+                                技術力・問題解決能力への深い尊敬
+                            </div>
+                            <div class="culture-element">
+                                <div class="element-icon">📚</div>
+                                継続学習が当然の環境・支援制度
+                            </div>
+                            <div class="culture-element">
+                                <div class="element-icon">🌟</div>
+                                新技術への積極的取り組み推奨
+                            </div>
+                            <div class="culture-element">
+                                <div class="element-icon">🤝</div>
+                                オープンソース精神・知識共有重視
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="culture-card">
+                    <div class="culture-header">
+                        <div class="culture-icon">📝</div>
+                        <div class="culture-name">文書化・透明性文化</div>
+                    </div>
+                    <div class="culture-body">
+                        <div class="culture-description">
+                            情報の文書化と透明性を重視。GitHub等を活用した知識共有と情報の可視化。
+                        </div>
+                        <div class="culture-elements">
+                            <div class="culture-element">
+                                <div class="element-icon">📖</div>
+                                GitHub・Wiki等での文書化重視
+                            </div>
+                            <div class="culture-element">
+                                <div class="element-icon">🔍</div>
+                                透明性の高いプロジェクト管理
+                            </div>
+                            <div class="culture-element">
+                                <div class="element-icon">💬</div>
+                                チャットベースの情報共有
+                            </div>
+                            <div class="culture-element">
+                                <div class="element-icon">📊</div>
+                                データ・ログの活用重視
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="culture-card">
+                    <div class="culture-header">
+                        <div class="culture-icon">🔄</div>
+                        <div class="culture-name">継続改善・実験文化</div>
+                    </div>
+                    <div class="culture-body">
+                        <div class="culture-description">
+                            アジャイル・スクラム手法の普及。継続的な改善と実験・検証を重視する文化。
+                        </div>
+                        <div class="culture-elements">
+                            <div class="culture-element">
+                                <div class="element-icon">🔁</div>
+                                アジャイル・スクラム手法の普及
+                            </div>
+                            <div class="culture-element">
+                                <div class="element-icon">📈</div>
+                                振り返り・改善サイクルの重視
+                            </div>
+                            <div class="culture-element">
+                                <div class="element-icon">🧪</div>
+                                実験・検証重視の姿勢
+                            </div>
+                            <div class="culture-element">
+                                <div class="element-icon">🚀</div>
+                                MVP（最小実用製品）思考
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="culture-card">
+                    <div class="culture-header">
+                        <div class="culture-icon">💡</div>
+                        <div class="culture-name">学習・成長志向文化</div>
+                    </div>
+                    <div class="culture-body">
+                        <div class="culture-description">
+                            失敗を学習機会と捉え、ユーザー価値創造と社会課題解決への強い意識を持つ。
+                        </div>
+                        <div class="culture-elements">
+                            <div class="culture-element">
+                                <div class="element-icon">📖</div>
+                                失敗を学習機会と捉える文化
+                            </div>
+                            <div class="culture-element">
+                                <div class="element-icon">👥</div>
+                                ユーザー価値への強い意識
+                            </div>
+                            <div class="culture-element">
+                                <div class="element-icon">📊</div>
+                                データドリブンな意思決定
+                            </div>
+                            <div class="culture-element">
+                                <div class="element-icon">🌍</div>
+                                社会課題解決への関心
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="communication-tools">
+            <div class="tools-title">コミュニケーションツール・手法</div>
+            <div class="tools-grid">
+                <div class="tool-category">
+                    <div class="tool-icon">💬</div>
+                    <div class="tool-title">チャットツール中心</div>
+                    <div class="tool-items">
+                        <div class="tool-item">
+                            <div class="tool-item-icon">📱</div>
+                            Slack・Microsoft Teams
+                        </div>
+                        <div class="tool-item">
+                            <div class="tool-item-icon">🔔</div>
+                            リアルタイム情報共有
+                        </div>
+                        <div class="tool-item">
+                            <div class="tool-item-icon">🤖</div>
+                            Bot・自動通知活用
+                        </div>
+                        <div class="tool-item">
+                            <div class="tool-item-icon">🌐</div>
+                            リモート対応コミュニケーション
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tool-category">
+                    <div class="tool-icon">📚</div>
+                    <div class="tool-title">文書化・知識管理</div>
+                    <div class="tool-items">
+                        <div class="tool-item">
+                            <div class="tool-item-icon">📝</div>
+                            GitHub・GitLab
+                        </div>
+                        <div class="tool-item">
+                            <div class="tool-item-icon">📖</div>
+                            Confluence・Notion
+                        </div>
+                        <div class="tool-item">
+                            <div class="tool-item-icon">📋</div>
+                            技術仕様書・設計書
+                        </div>
+                        <div class="tool-item">
+                            <div class="tool-item-icon">🔍</div>
+                            検索可能な情報管理
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tool-category">
+                    <div class="tool-icon">🎯</div>
+                    <div class="tool-title">プロジェクト管理</div>
+                    <div class="tool-items">
+                        <div class="tool-item">
+                            <div class="tool-item-icon">📊</div>
+                            Jira・Linear・Asana
+                        </div>
+                        <div class="tool-item">
+                            <div class="tool-item-icon">📅</div>
+                            スプリント・イテレーション管理
+                        </div>
+                        <div class="tool-item">
+                            <div class="tool-item-icon">📈</div>
+                            進捗可視化・ダッシュボード
+                        </div>
+                        <div class="tool-item">
+                            <div class="tool-item-icon">🔄</div>
+                            継続的インテグレーション
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="development-methodologies">
+            <div class="methodologies-header">主要な開発手法・プロセス</div>
+            <div class="methodologies-body">
+                <div class="methodology-grid">
+                    <div class="methodology-item">
+                        <div class="methodology-header">アジャイル開発</div>
+                        <div class="methodology-content">
+                            <div class="methodology-desc">
+                                短期間での反復開発により、変化に柔軟に対応し継続的に価値を提供する手法。
+                            </div>
+                            <div class="methodology-practices">
+                                <div class="practice-item">短期間（1-4週間）のイテレーション</div>
+                                <div class="practice-item">顧客との継続的なフィードバック</div>
+                                <div class="practice-item">変化への柔軟な対応重視</div>
+                                <div class="practice-item">動くソフトウェアの早期提供</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="methodology-item">
+                        <div class="methodology-header">スクラム</div>
+                        <div class="methodology-content">
+                            <div class="methodology-desc">
+                                アジャイルの代表的フレームワーク。スプリント、デイリースタンドアップ、振り返りを核とする。
+                            </div>
+                            <div class="methodology-practices">
+                                <div class="practice-item">スプリント（1-4週間）単位開発</div>
+                                <div class="practice-item">デイリースタンドアップミーティング</div>
+                                <div class="practice-item">スプリントレビュー・振り返り</div>
+                                <div class="practice-item">スクラムマスター・プロダクトオーナー</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="methodology-item">
+                        <div class="methodology-header">DevOps</div>
+                        <div class="methodology-content">
+                            <div class="methodology-desc">
+                                開発（Dev）と運用（Ops）の統合により、継続的なデリバリーと品質向上を実現。
+                            </div>
+                            <div class="methodology-practices">
+                                <div class="practice-item">継続的インテグレーション（CI）</div>
+                                <div class="practice-item">継続的デプロイメント（CD）</div>
+                                <div class="practice-item">インフラのコード化（IaC）</div>
+                                <div class="practice-item">監視・ログ管理の自動化</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="methodology-item">
+                        <div class="methodology-header">リーン開発</div>
+                        <div class="methodology-content">
+                            <div class="methodology-desc">
+                                無駄を排除し、学習を最大化することで効率的に価値を創造する手法。
+                            </div>
+                            <div class="methodology-practices">
+                                <div class="practice-item">MVP（最小実用製品）開発</div>
+                                <div class="practice-item">仮説検証・実験重視</div>
+                                <div class="practice-item">データドリブンな意思決定</div>
+                                <div class="practice-item">継続的な学習・改善</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="values-principles">
+            <div class="values-title">重要な価値観・原則</div>
+            <div class="values-grid">
+                <div class="value-item">
+                    <div class="value-icon">🔍</div>
+                    <div class="value-name">透明性</div>
+                    <div class="value-desc">
+                        情報の可視化、プロセスの明確化、オープンなコミュニケーションを重視
+                    </div>
+                </div>
+                
+                <div class="value-item">
+                    <div class="value-icon">🤝</div>
+                    <div class="value-name">協働</div>
+                    <div class="value-desc">
+                        個人プレーよりチーム協働、知識共有、相互支援を重視する文化
+                    </div>
+                </div>
+                
+                <div class="value-item">
+                    <div class="value-icon">📈</div>
+                    <div class="value-name">継続改善</div>
+                    <div class="value-desc">
+                        現状に満足せず、常により良い方法を模索し改善を続ける姿勢
+                    </div>
+                </div>
+                
+                <div class="value-item">
+                    <div class="value-icon">💡</div>
+                    <div class="value-name">価値創造</div>
+                    <div class="value-desc">
+                        ユーザー・顧客への価値提供を最優先とし、技術を手段として捉える
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mindset-section">
+            <div class="mindset-title">エンジニアに求められるマインドセット</div>
+            <div class="mindset-items">
+                <div class="mindset-item">
+                    <div class="mindset-icon">🧠</div>
+                    <div class="mindset-content">
+                        <div class="mindset-name">論理的思考・問題解決思考</div>
+                        <div class="mindset-desc">複雑な課題を分解し、論理的に解決策を見つけ出す能力</div>
+                    </div>
+                </div>
+                
+                <div class="mindset-item">
+                    <div class="mindset-icon">📚</div>
+                    <div class="mindset-content">
+                        <div class="mindset-name">継続学習・成長志向</div>
+                        <div class="mindset-desc">技術の変化に対応し続ける自己学習と成長への意欲</div>
+                    </div>
+                </div>
+                
+                <div class="mindset-item">
+                    <div class="mindset-icon">🤝</div>
+                    <div class="mindset-content">
+                        <div class="mindset-name">チームワーク・知識共有</div>
+                        <div class="mindset-desc">個人の成果よりもチーム全体の成功を重視する協働精神</div>
+                    </div>
+                </div>
+                
+                <div class="mindset-item">
+                    <div class="mindset-icon">👥</div>
+                    <div class="mindset-content">
+                        <div class="mindset-name">ユーザー価値・社会貢献意識</div>
+                        <div class="mindset-desc">技術を通じてユーザーや社会に価値を提供する使命感</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 1-11習得技術の業界価値</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #20c997;
+            padding-bottom: 15px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #6c757d;
+            margin-bottom: 40px;
+        }
+
+        .value-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .category-card {
+            border-radius: 12px;
+            padding: 30px;
+            color: white;
+            text-align: center;
+            transform: translateY(0);
+            transition: all 0.3s ease;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.2);
+        }
+
+        .core-tech {
+            background: linear-gradient(135deg, #20c997, #0f7b5d);
+        }
+
+        .applied-tech {
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+        }
+
+        .practical-knowledge {
+            background: linear-gradient(135deg, #17a2b8, #0c5460);
+        }
+
+        .category-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .category-subtitle {
+            font-size: 14px;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .tech-list {
+            text-align: left;
+        }
+
+        .tech-item {
+            background: rgba(255,255,255,0.1);
+            margin-bottom: 12px;
+            padding: 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .tech-item:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateX(5px);
+        }
+
+        .tech-name {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .tech-value {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .value-matrix {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .matrix-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .matrix-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-left: 4px solid #20c997;
+        }
+
+        .matrix-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(32, 201, 151, 0.2);
+        }
+
+        .matrix-item h4 {
+            color: #20c997;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .value-indicators {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .indicator {
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .high-value {
+            background: #28a745;
+            color: white;
+        }
+
+        .medium-value {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .specialized-value {
+            background: #6f42c1;
+            color: white;
+        }
+
+        .universal {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .career-fit {
+            background: linear-gradient(135deg, #20c997, #0f7b5d);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .career-title {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .career-levels {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .level-card {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .level-card:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.02);
+        }
+
+        .level-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .level-match {
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .level-details {
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .competitive-advantage {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .advantage-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .advantage-content {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+            
+            .value-categories,
+            .matrix-grid,
+            .career-levels {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .category-card {
+                padding: 20px;
+            }
+            
+            .value-indicators {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Week 1-11習得技術の業界価値</h1>
+        <p class="subtitle">習得技術の業界価値マップ・汎用性・即戦力度の評価</p>
+
+        <div class="value-categories">
+            <div class="category-card core-tech">
+                <div class="category-title">コア技術</div>
+                <div class="category-subtitle">高価値・汎用性・全業界基盤技術</div>
+                <div class="tech-list">
+                    <div class="tech-item">
+                        <div class="tech-name">Java基礎・オブジェクト指向</div>
+                        <div class="tech-value">全業界基盤技術・エンタープライズシステム標準</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-name">Spring Boot</div>
+                        <div class="tech-value">Webアプリ開発標準フレームワーク・企業採用率No.1</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-name">データベース設計・SQL</div>
+                        <div class="tech-value">全システム必須技術・データ時代の必須スキル</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="category-card applied-tech">
+                <div class="category-title">応用技術</div>
+                <div class="category-subtitle">差別化・専門性・高度技術領域</div>
+                <div class="tech-list">
+                    <div class="tech-item">
+                        <div class="tech-name">システム統合・API設計</div>
+                        <div class="tech-value">マイクロサービス時代重要技術・システム連携専門性</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-name">Ajax・リアルタイム通信</div>
+                        <div class="tech-value">モダンUI開発必須技術・ユーザー体験向上</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-name">パフォーマンス最適化</div>
+                        <div class="tech-value">システム品質向上専門技術・上級エンジニア必須</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="category-card practical-knowledge">
+                <div class="category-title">実務知識</div>
+                <div class="category-subtitle">プロジェクト実践・チーム開発・品質管理</div>
+                <div class="tech-list">
+                    <div class="tech-item">
+                        <div class="tech-name">要件定義・設計手法</div>
+                        <div class="tech-value">プロジェクト上流工程・ビジネス価値創出</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-name">プロジェクト管理・チーム開発</div>
+                        <div class="tech-value">実践的開発現場知識・リーダーシップ基盤</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-name">品質管理・テスト手法</div>
+                        <div class="tech-value">システム品質保証・信頼性確保専門知識</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="value-matrix">
+            <div class="matrix-title">技術別業界価値評価</div>
+            <div class="matrix-grid">
+                <div class="matrix-item">
+                    <h4>Java・Spring Boot</h4>
+                    <div class="value-indicators">
+                        <span class="indicator high-value">高価値</span>
+                        <span class="indicator universal">全業界対応</span>
+                    </div>
+                    <p>エンタープライズ系・Web系・SIer全ての業界で高需要。求人数・年収水準ともに最高レベル。</p>
+                </div>
+                <div class="matrix-item">
+                    <h4>データベース・SQL</h4>
+                    <div class="value-indicators">
+                        <span class="indicator high-value">高価値</span>
+                        <span class="indicator universal">全業界必須</span>
+                    </div>
+                    <p>全てのシステムで必要な基礎技術。データ分析・AI時代において価値急上昇。</p>
+                </div>
+                <div class="matrix-item">
+                    <h4>API・システム統合</h4>
+                    <div class="value-indicators">
+                        <span class="indicator specialized-value">専門性</span>
+                        <span class="indicator high-value">高価値</span>
+                    </div>
+                    <p>マイクロサービス・クラウド時代の重要技術。上級エンジニア・アーキテクト必須スキル。</p>
+                </div>
+                <div class="matrix-item">
+                    <h4>Ajax・リアルタイム通信</h4>
+                    <div class="value-indicators">
+                        <span class="indicator specialized-value">専門性</span>
+                        <span class="indicator medium-value">成長価値</span>
+                    </div>
+                    <p>モダンWebアプリ・ユーザー体験向上で需要拡大。フロントエンド・フルスタック志向で高価値。</p>
+                </div>
+                <div class="matrix-item">
+                    <h4>要件定義・プロジェクト管理</h4>
+                    <div class="value-indicators">
+                        <span class="indicator high-value">高価値</span>
+                        <span class="indicator universal">全職種対応</span>
+                    </div>
+                    <p>技術者からビジネス側への発展基盤。PM・PO・コンサルタント等キャリア拡張に必須。</p>
+                </div>
+                <div class="matrix-item">
+                    <h4>パフォーマンス最適化・品質管理</h4>
+                    <div class="value-indicators">
+                        <span class="indicator specialized-value">専門性</span>
+                        <span class="indicator high-value">上級価値</span>
+                    </div>
+                    <p>システム品質・信頼性確保の専門知識。シニアエンジニア・アーキテクトレベルで高評価。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="career-fit">
+            <div class="career-title">エンジニアレベル別適合度評価</div>
+            <div class="career-levels">
+                <div class="level-card">
+                    <div class="level-title">ジュニアエンジニア要件</div>
+                    <div class="level-match">適合度: 100% 完全クリア</div>
+                    <div class="level-details">
+                        プログラミング基礎・Webアプリ開発・チーム開発理解の全要件を完全に満たしている。即戦力として確実にスタート可能。
+                    </div>
+                </div>
+                <div class="level-card">
+                    <div class="level-title">ミドルエンジニア要件</div>
+                    <div class="level-match">適合度: 75% 基盤完成</div>
+                    <div class="level-details">
+                        複雑システム設計・実装の基盤技術は完全習得済み。実践経験蓄積により短期間でミドルレベル到達可能。
+                    </div>
+                </div>
+                <div class="level-card">
+                    <div class="level-title">シニアエンジニア基盤</div>
+                    <div class="level-match">適合度: 50% 技術基盤確立</div>
+                    <div class="level-details">
+                        アーキテクチャ設計・技術戦略に必要な基礎技術は習得済み。実践経験とリーダーシップで発展可能。
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="competitive-advantage">
+            <div class="advantage-title">11週間学習の競争優位性</div>
+            <div class="advantage-content">
+                プログラミング未経験から「企業レベルシステム構築」「実務プロジェクト対応」「業界キャリア理解」まで統合的に習得。<br>
+                通常2-3年かかる基礎固めを11週間で完成し、確実な即戦力レベルと長期キャリア発展基盤を同時に確立。
+            </div>
+        </div>
+    </div>
+</body>
+</html>

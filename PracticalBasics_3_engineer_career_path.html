@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>エンジニアキャリアパス</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #20c997;
+            padding-bottom: 15px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #6c757d;
+            margin-bottom: 40px;
+        }
+        
+        .current-position {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .position-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .position-desc {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .career-timeline {
+            position: relative;
+            margin-bottom: 40px;
+        }
+        
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(135deg, #20c997, #0f7b5d);
+            transform: translateX(-50%);
+        }
+        
+        .career-stage {
+            position: relative;
+            margin-bottom: 60px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .stage-content {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 25px;
+            width: 45%;
+            transition: all 0.3s ease;
+        }
+        
+        .stage-content:hover {
+            border-color: #20c997;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(32, 201, 151, 0.3);
+        }
+        
+        .stage-left {
+            margin-right: auto;
+            margin-left: 0;
+        }
+        
+        .stage-right {
+            margin-left: auto;
+            margin-right: 0;
+        }
+        
+        .stage-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #20c997, #0f7b5d);
+            color: white;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            text-align: center;
+            z-index: 2;
+            border: 4px solid white;
+            box-shadow: 0 4px 16px rgba(32, 201, 151, 0.3);
+        }
+        
+        .stage-years {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .stage-name {
+            font-size: 12px;
+        }
+        
+        .stage-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .stage-description {
+            font-size: 14px;
+            color: #6c757d;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .stage-skills {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .skills-label {
+            font-size: 12px;
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+        
+        .skills-list {
+            font-size: 13px;
+            color: #6c757d;
+            line-height: 1.4;
+        }
+        
+        .stage-achievement {
+            background: linear-gradient(135deg, #d1ecf1, #bee5eb);
+            padding: 12px;
+            border-radius: 6px;
+        }
+        
+        .achievement-label {
+            font-size: 12px;
+            font-weight: bold;
+            color: #0c5460;
+            margin-bottom: 6px;
+        }
+        
+        .achievement-text {
+            font-size: 13px;
+            color: #0c5460;
+            line-height: 1.4;
+        }
+        
+        .current-level {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            border-color: #28a745 !important;
+        }
+        
+        .current-marker {
+            background: linear-gradient(135deg, #28a745, #1e7e34) !important;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 4px 16px rgba(40, 167, 69, 0.3); }
+            50% { box-shadow: 0 8px 32px rgba(40, 167, 69, 0.6); }
+            100% { box-shadow: 0 4px 16px rgba(40, 167, 69, 0.3); }
+        }
+        
+        .specialization-section {
+            margin-top: 40px;
+        }
+        
+        .section-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(135deg, #20c997, #0f7b5d);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .spec-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+        
+        .spec-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .spec-card:hover {
+            border-color: #20c997;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(32, 201, 151, 0.3);
+        }
+        
+        .spec-icon {
+            font-size: 32px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .spec-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .spec-desc {
+            font-size: 14px;
+            color: #6c757d;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        
+        .spec-requirements {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 6px;
+        }
+        
+        .req-label {
+            font-size: 12px;
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+        
+        .req-list {
+            font-size: 13px;
+            color: #6c757d;
+            line-height: 1.4;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+            
+            .timeline-line {
+                left: 30px;
+            }
+            
+            .career-stage {
+                flex-direction: column;
+                align-items: flex-start;
+                padding-left: 80px;
+            }
+            
+            .stage-content {
+                width: 100%;
+                margin: 0;
+            }
+            
+            .stage-center {
+                left: 30px;
+                width: 80px;
+                height: 80px;
+                font-size: 12px;
+            }
+            
+            .spec-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">エンジニアキャリアパス</div>
+        <div class="subtitle">ジュニア→ミドル→シニアの成長段階と専門分野選択</div>
+        
+        <div class="current-position">
+            <div class="position-title">🎯 現在のあなたの位置</div>
+            <div class="position-desc">
+                Week 10-11習得技術により<strong>ジュニアエンジニア要件を完全クリア</strong>！<br>
+                即戦力レベルの技術基盤が確立されています。
+            </div>
+        </div>
+        
+        <div class="career-timeline">
+            <div class="timeline-line"></div>
+            
+            <div class="career-stage">
+                <div class="stage-content stage-left current-level">
+                    <div class="stage-title">ジュニアエンジニア</div>
+                    <div class="stage-description">
+                        プログラミング基礎から基本的なWebアプリケーション開発まで。チーム開発の基本を理解し、指導のもとで実装を担当。
+                    </div>
+                    <div class="stage-skills">
+                        <div class="skills-label">必要スキル</div>
+                        <div class="skills-list">
+                            • プログラミング言語基礎（Java等）<br>
+                            • Webアプリケーション開発基本<br>
+                            • データベース操作・SQL<br>
+                            • バージョン管理（Git）<br>
+                            • チーム開発基礎
+                        </div>
+                    </div>
+                    <div class="stage-achievement">
+                        <div class="achievement-label">Week 10-11での達成度</div>
+                        <div class="achievement-text">
+                            <strong>100% 達成完了！</strong><br>
+                            すべての要件を満たし、即戦力レベルに到達済み
+                        </div>
+                    </div>
+                </div>
+                <div class="stage-center current-marker">
+                    <div class="stage-years">0-2年</div>
+                    <div class="stage-name">ジュニア</div>
+                </div>
+            </div>
+            
+            <div class="career-stage">
+                <div class="stage-content stage-right">
+                    <div class="stage-title">ミドルエンジニア</div>
+                    <div class="stage-description">
+                        複雑なシステムの設計・実装を担当。パフォーマンス最適化、後輩指導、プロジェクト管理にも関わる中核的存在。
+                    </div>
+                    <div class="stage-skills">
+                        <div class="skills-label">必要スキル</div>
+                        <div class="skills-list">
+                            • システム設計・アーキテクチャ基礎<br>
+                            • パフォーマンス最適化<br>
+                            • コードレビュー・品質管理<br>
+                            • 後輩指導・メンタリング<br>
+                            • プロジェクト管理基礎
+                        </div>
+                    </div>
+                    <div class="stage-achievement">
+                        <div class="achievement-label">成長の方向性</div>
+                        <div class="achievement-text">
+                            専門技術の深化、リーダーシップスキル、ビジネス理解の向上
+                        </div>
+                    </div>
+                </div>
+                <div class="stage-center">
+                    <div class="stage-years">3-5年</div>
+                    <div class="stage-name">ミドル</div>
+                </div>
+            </div>
+            
+            <div class="career-stage">
+                <div class="stage-content stage-left">
+                    <div class="stage-title">シニアエンジニア</div>
+                    <div class="stage-description">
+                        システム全体のアーキテクチャ設計、技術戦略立案、チーム・プロジェクトのマネジメント。技術リーダーとして組織をリード。
+                    </div>
+                    <div class="stage-skills">
+                        <div class="skills-label">必要スキル</div>
+                        <div class="skills-list">
+                            • 大規模システムアーキテクチャ設計<br>
+                            • 技術戦略・ロードマップ策定<br>
+                            • チームマネジメント<br>
+                            • ステークホルダー調整<br>
+                            • ビジネス価値創造
+                        </div>
+                    </div>
+                    <div class="stage-achievement">
+                        <div class="achievement-label">キャリア展開</div>
+                        <div class="achievement-text">
+                            技術・マネジメント・ビジネスの専門分野への分岐
+                        </div>
+                    </div>
+                </div>
+                <div class="stage-center">
+                    <div class="stage-years">5年以上</div>
+                    <div class="stage-name">シニア</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="specialization-section">
+            <div class="section-title">シニアレベル専門分岐</div>
+            <div class="spec-grid">
+                <div class="spec-card">
+                    <div class="spec-icon">🛠️</div>
+                    <div class="spec-title">テックリード</div>
+                    <div class="spec-desc">
+                        技術面のリーダーシップを発揮。アーキテクチャ設計、技術選定、開発チームの技術的指導を担当。
+                    </div>
+                    <div class="spec-requirements">
+                        <div class="req-label">重要スキル</div>
+                        <div class="req-list">
+                            • 深い技術専門性<br>
+                            • アーキテクチャ設計能力<br>
+                            • 技術的判断力・意思決定<br>
+                            • チーム技術指導
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="spec-card">
+                    <div class="spec-icon">📊</div>
+                    <div class="spec-title">プロジェクトマネージャー</div>
+                    <div class="spec-desc">
+                        プロジェクト全体の計画・進行管理。リソース調整、リスク管理、ステークホルダー間の調整を担当。
+                    </div>
+                    <div class="spec-requirements">
+                        <div class="req-label">重要スキル</div>
+                        <div class="req-list">
+                            • プロジェクト管理手法<br>
+                            • リーダーシップ・調整力<br>
+                            • リスク管理・問題解決<br>
+                            • コミュニケーション能力
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="spec-card">
+                    <div class="spec-icon">🎯</div>
+                    <div class="spec-title">プロダクトマネージャー</div>
+                    <div class="spec-desc">
+                        プロダクトの企画・戦略立案。市場分析、ユーザーニーズ把握、プロダクトロードマップ策定を担当。
+                    </div>
+                    <div class="spec-requirements">
+                        <div class="req-label">重要スキル</div>
+                        <div class="req-list">
+                            • ビジネス戦略・市場分析<br>
+                            • ユーザー理解・UX視点<br>
+                            • データ分析・意思決定<br>
+                            • 関係者調整・推進力
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="spec-card">
+                    <div class="spec-icon">🚀</div>
+                    <div class="spec-title">CTO・VPoE</div>
+                    <div class="spec-desc">
+                        組織全体の技術戦略・方針決定。技術組織構築、採用戦略、技術投資判断など経営レベルでの技術責任を担当。
+                    </div>
+                    <div class="spec-requirements">
+                        <div class="req-label">重要スキル</div>
+                        <div class="req-list">
+                            • 技術戦略・組織構築<br>
+                            • 経営視点・事業理解<br>
+                            • 採用・人材育成戦略<br>
+                            • 技術投資判断
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
