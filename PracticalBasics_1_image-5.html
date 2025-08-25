@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基本設計と詳細設計の違い</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #17a2b8;
+            padding-bottom: 15px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .category-header {
+            background: linear-gradient(135deg, #17a2b8, #0c5460);
+            color: white;
+            padding: 15px;
+            border-radius: 8px 8px 0 0;
+            font-weight: bold;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .category-content {
+            background: white;
+            padding: 20px;
+            border-radius: 0 0 8px 8px;
+            border: 2px solid #17a2b8;
+            border-top: none;
+            box-shadow: 0 4px 15px rgba(23, 162, 184, 0.1);
+            transition: all 0.3s ease;
+            min-height: 350px;
+        }
+
+        .category-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(23, 162, 184, 0.3);
+        }
+
+        .card-header {
+            font-size: 16px;
+            font-weight: bold;
+            color: #17a2b8;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .card-header .emoji {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+
+        .card-content {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .section {
+            margin-bottom: 15px;
+        }
+
+        .section-label {
+            font-weight: bold;
+            color: #17a2b8;
+            margin-bottom: 5px;
+        }
+
+        .concept-box {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border-left: 4px solid #17a2b8;
+        }
+
+        .concept-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #17a2b8;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 20px;
+            }
+
+            .title {
+                font-size: 22px;
+            }
+
+            .comparison-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .category-content {
+                padding: 15px;
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">基本設計と詳細設計の違い</div>
+
+        <div class="comparison-grid">
+            <div>
+                <div class="category-header">基本設計（外部設計）</div>
+                <div class="category-content">
+                    <div class="card-header">
+                        <span class="emoji">🏢</span>
+                        システム全体の構造
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-label">対象者：</div>
+                        <div class="card-content">お客様・プロジェクト管理者</div>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-label">内容：</div>
+                        <div class="card-content">
+                            • 画面設計・機能一覧<br>
+                            • システム構成<br>
+                            • 外部システム連携<br>
+                            • データフロー
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-label">Week 10例：</div>
+                        <div class="card-content">
+                            • 学生管理画面構成<br>
+                            • 検索・一覧・詳細画面<br>
+                            • エクスポート機能仕様
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="category-header">詳細設計（内部設計）</div>
+                <div class="category-content">
+                    <div class="card-header">
+                        <span class="emoji">⚙️</span>
+                        実装に必要な詳細
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-label">対象者：</div>
+                        <div class="card-content">プログラマー・開発者</div>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-label">内容：</div>
+                        <div class="card-content">
+                            • クラス設計・メソッド仕様<br>
+                            • データベース詳細設計<br>
+                            • API 仕様・エラー処理<br>
+                            • アルゴリズム・処理フロー
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-label">Week 10例：</div>
+                        <div class="card-content">
+                            • Entity・DTO クラス設計<br>
+                            • Service・Repository メソッド<br>
+                            • Ajax API 詳細仕様
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="concept-box">
+            <div class="concept-title">段階的な設計アプローチ</div>
+            基本設計でシステムの全体像を決め、詳細設計で実装の詳細を決めることで、<br>
+            効率的で品質の高い開発が可能になります。
+        </div>
+    </div>
+</body>
+</html>

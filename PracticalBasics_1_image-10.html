@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 11.2予告</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #17a2b8;
+            padding-bottom: 15px;
+        }
+
+        .next-step-box {
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #fff, #f8f9fa);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #17a2b8;
+            box-shadow: 0 4px 15px rgba(23, 162, 184, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(23, 162, 184, 0.3);
+        }
+
+        .card-header {
+            font-size: 18px;
+            font-weight: bold;
+            color: #17a2b8;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .card-header .emoji {
+            margin-right: 8px;
+            font-size: 20px;
+        }
+
+        .card-content {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .flow-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            margin: 20px 0;
+            background: linear-gradient(135deg, #e8f5e8, #c8e6c9);
+            border-radius: 8px;
+            font-weight: bold;
+            color: #2e7d32;
+            flex-wrap: wrap;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .arrow {
+            margin: 0 10px;
+            font-size: 18px;
+            color: #17a2b8;
+        }
+
+        .concept-box {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border-left: 4px solid #17a2b8;
+        }
+
+        .concept-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #17a2b8;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 20px;
+            }
+
+            .title {
+                font-size: 22px;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .card {
+                padding: 15px;
+            }
+
+            .card-header {
+                font-size: 16px;
+            }
+
+            .card-content {
+                font-size: 13px;
+            }
+
+            .flow-box {
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            .arrow {
+                margin: 0 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Week 11.2予告</div>
+
+        <div class="next-step-box">
+            <div style="font-size: 24px; margin-bottom: 15px;">🚀 次回予告：Week 11.2 開発現場の知識</div>
+            実務基礎知識から、さらに実践的な開発現場の知識へステップアップ！
+        </div>
+
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-header">
+                    <span class="emoji">📊</span>
+                    プロジェクト管理
+                </div>
+                <div class="card-content">
+                    • スケジュール管理・進捗管理<br>
+                    • リスク管理・課題管理<br>
+                    • アジャイル・スクラムの基本<br>
+                    • プロジェクト成功の要因
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="emoji">👥</span>
+                    チーム開発
+                </div>
+                <div class="card-content">
+                    • コミュニケーション手法<br>
+                    • レビュー・コードレビュー<br>
+                    • Git/GitHub 高度活用<br>
+                    • チーム内での役割分担
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="emoji">⚡</span>
+                    品質管理
+                </div>
+                <div class="card-content">
+                    • テスト戦略・品質基準<br>
+                    • バグ管理・障害対応<br>
+                    • 継続的インテグレーション<br>
+                    • 品質向上の仕組み
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-box">
+            Week 11.1実務基礎知識 <span class="arrow">→</span> Week 11.2開発現場の知識 <span class="arrow">→</span> Week 11.3キャリア基礎 <span class="arrow">→</span> 受託業務実践
+        </div>
+
+        <div class="concept-box">
+            <div class="concept-title">継続学習への期待</div>
+            Week 11.1で実務基礎知識の土台ができました。次回は更に実践的な<br>
+            「開発現場で実際に使われている知識」を座学中心で効率的に学びます。<br>
+            受託業務実践に向けて、着実にステップアップしていきましょう！
+        </div>
+    </div>
+</body>
+</html>

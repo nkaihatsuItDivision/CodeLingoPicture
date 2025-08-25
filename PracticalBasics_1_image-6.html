@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>開発ドキュメント概要</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #17a2b8;
+            padding-bottom: 15px;
+        }
+
+        .concept-box {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border-left: 4px solid #17a2b8;
+        }
+
+        .concept-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #17a2b8;
+            margin-bottom: 10px;
+        }
+
+        .purpose-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .purpose-item {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #ff9800;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .purpose-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(255, 152, 0, 0.3);
+        }
+
+        .card-header {
+            font-size: 18px;
+            font-weight: bold;
+            color: #e65100;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-header .emoji {
+            margin-right: 8px;
+            font-size: 20px;
+        }
+
+        .card-content {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .bottom-concept-box {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border-left: 4px solid #17a2b8;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 20px;
+            }
+
+            .title {
+                font-size: 22px;
+            }
+
+            .purpose-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .purpose-item {
+                padding: 15px;
+            }
+
+            .card-header {
+                font-size: 16px;
+            }
+
+            .card-content {
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">開発ドキュメント概要</div>
+
+        <div class="concept-box">
+            <div class="concept-title">開発ドキュメントとは</div>
+            システム開発において、設計内容、実装方法、テスト結果などを記録し、<br>
+            チームメンバーや将来の保守担当者に情報を伝えるための文書のことです。
+        </div>
+
+        <div class="purpose-grid">
+            <div class="purpose-item">
+                <div class="card-header">
+                    <span class="emoji">🤝</span>
+                    情報共有
+                </div>
+                <div class="card-content">
+                    チームメンバー間での<br>
+                    認識統一と情報伝達<br><br>
+                    • プロジェクト全体の方向性<br>
+                    • 設計思想の共有<br>
+                    • 作業分担の明確化
+                </div>
+            </div>
+
+            <div class="purpose-item">
+                <div class="card-header">
+                    <span class="emoji">✨</span>
+                    品質向上
+                </div>
+                <div class="card-content">
+                    設計の見直しと<br>
+                    レビューによる改善<br><br>
+                    • 設計の論理的検証<br>
+                    • バグの事前発見<br>
+                    • 品質基準の統一
+                </div>
+            </div>
+
+            <div class="purpose-item">
+                <div class="card-header">
+                    <span class="emoji">🔧</span>
+                    保守運用
+                </div>
+                <div class="card-content">
+                    将来の機能追加や<br>
+                    障害対応の効率化<br><br>
+                    • システム構造の理解支援<br>
+                    • 改修作業の効率化<br>
+                    • 運用手順の標準化
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-concept-box">
+            <div class="concept-title">文書作成の重要性</div>
+            Week 10で作成したような複雑なシステムでは、適切なドキュメントがないと<br>
+            後からの機能追加や修正が非常に困難になります。特にチーム開発では必須です。
+        </div>
+    </div>
+</body>
+</html>
