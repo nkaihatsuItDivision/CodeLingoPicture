@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>正しい指配置（ホームポジション）</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #6c757d;
+            margin-bottom: 35px;
+        }
+
+        .keyboard-section {
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .keyboard-container {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .keyboard-base {
+            background: linear-gradient(145deg, #2c3e50, #34495e);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            transform: perspective(1000px) rotateX(10deg);
+        }
+
+        .key-row {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 8px;
+            justify-content: center;
+        }
+
+        .key {
+            min-width: 40px;
+            height: 40px;
+            background: linear-gradient(145deg, #ecf0f1, #bdc3c7);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: #2c3e50;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .key.home-key {
+            background: linear-gradient(145deg, #ff6b6b, #ee5a52);
+            color: white;
+            transform: translateZ(5px);
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
+            animation: homeKeyPulse 2s infinite;
+        }
+
+        @keyframes homeKeyPulse {
+            0%, 100% { transform: translateZ(5px) scale(1); }
+            50% { transform: translateZ(8px) scale(1.05); }
+        }
+
+        .key.wide { min-width: 80px; }
+        .key.extra-wide { min-width: 120px; }
+        .key.space { min-width: 250px; }
+
+        .hands-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .hand {
+            position: absolute;
+            opacity: 0.3;
+            transition: opacity 0.3s ease;
+        }
+
+        .left-hand {
+            top: 60%;
+            left: 25%;
+            width: 120px;
+            height: 80px;
+            background: radial-gradient(ellipse, rgba(255, 107, 107, 0.6) 30%, transparent 70%);
+            border-radius: 40px 20px 30px 40px;
+            transform: rotate(-15deg);
+        }
+
+        .right-hand {
+            top: 60%;
+            right: 25%;
+            width: 120px;
+            height: 80px;
+            background: radial-gradient(ellipse, rgba(78, 205, 196, 0.6) 30%, transparent 70%);
+            border-radius: 20px 40px 40px 30px;
+            transform: rotate(15deg);
+        }
+
+        .finger-paths {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .finger-line {
+            position: absolute;
+            width: 2px;
+            background: linear-gradient(to bottom, transparent, rgba(255, 107, 107, 0.8), transparent);
+            border-radius: 2px;
+            animation: fingerMove 3s infinite;
+        }
+
+        .finger-line.right-finger {
+            background: linear-gradient(to bottom, transparent, rgba(78, 205, 196, 0.8), transparent);
+        }
+
+        @keyframes fingerMove {
+            0%, 100% { opacity: 0.3; height: 20px; }
+            50% { opacity: 1; height: 40px; }
+        }
+
+        .position-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .position-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .position-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .position-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .position-card:hover::before {
+            height: 5px;
+        }
+
+        .left-hand-card::before { background: linear-gradient(90deg, #ff6b6b, #ee5a52); }
+        .right-hand-card::before { background: linear-gradient(90deg, #4ecdc4, #26a69a); }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 24px;
+            color: white;
+        }
+
+        .left-hand-icon { background: linear-gradient(135deg, #ff6b6b, #ee5a52); }
+        .right-hand-icon { background: linear-gradient(135deg, #4ecdc4, #26a69a); }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .key-assignment {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .assigned-key {
+            background: rgba(0,0,0,0.1);
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .home-keys {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+        }
+
+        .efficiency-section {
+            background: linear-gradient(135deg, #e8f5e8, #c3e6cb);
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .efficiency-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #28a745;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #6c757d;
+            margin-bottom: 8px;
+        }
+
+        .stat-description {
+            font-size: 12px;
+            color: #6c757d;
+            line-height: 1.4;
+        }
+
+        .comparison-chart {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .chart-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .chart-bars {
+            display: flex;
+            align-items: end;
+            justify-content: space-around;
+            height: 100px;
+            margin-bottom: 15px;
+        }
+
+        .chart-bar {
+            width: 40px;
+            background: linear-gradient(to top, #ff6b6b, #ff8e8e);
+            border-radius: 4px 4px 0 0;
+            display: flex;
+            align-items: end;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            padding-bottom: 5px;
+        }
+
+        .bar-hunt-peck { height: 30%; }
+        .bar-home-position { 
+            height: 100%; 
+            background: linear-gradient(to top, #28a745, #34ce57);
+        }
+
+        .chart-labels {
+            display: flex;
+            justify-content: space-around;
+            font-size: 12px;
+            color: #6c757d;
+        }
+
+        .tips-section {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .tips-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .tip-item {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            border-left: 4px solid #ff9800;
+        }
+
+        .tip-item h4 {
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .tip-item p {
+            color: #6c757d;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .encouragement {
+            text-align: center;
+            font-size: 16px;
+            color: #ff6b6b;
+            font-weight: bold;
+            margin-top: 25px;
+            padding: 15px;
+            background: linear-gradient(135deg, #ffe0e0, #ffc8c8);
+            border-radius: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+                margin: 10px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+            
+            .position-cards {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .keyboard-base {
+                padding: 15px;
+                transform: perspective(600px) rotateX(5deg);
+            }
+            
+            .key {
+                min-width: 30px;
+                height: 30px;
+                font-size: 10px;
+            }
+            
+            .key.space {
+                min-width: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">⌨️ 正しい指配置（ホームポジション）</h1>
+        <p class="subtitle">効率的なタイピングの基礎となる、正しい指の配置をマスターしよう！</p>
+        
+        <div class="keyboard-section">
+            <h3 style="text-align: center; margin-bottom: 25px; color: #2c3e50;">ホームポジション配置図</h3>
+            <div class="keyboard-container">
+                <div class="keyboard-base">
+                    <div class="key-row">
+                        <div class="key">Q</div>
+                        <div class="key">W</div>
+                        <div class="key">E</div>
+                        <div class="key">R</div>
+                        <div class="key">T</div>
+                        <div class="key">Y</div>
+                        <div class="key">U</div>
+                        <div class="key">I</div>
+                        <div class="key">O</div>
+                        <div class="key">P</div>
+                    </div>
+                    <div class="key-row">
+                        <div class="key home-key">A</div>
+                        <div class="key home-key">S</div>
+                        <div class="key home-key">D</div>
+                        <div class="key home-key">F</div>
+                        <div class="key">G</div>
+                        <div class="key">H</div>
+                        <div class="key home-key">J</div>
+                        <div class="key home-key">K</div>
+                        <div class="key home-key">L</div>
+                        <div class="key home-key">;</div>
+                    </div>
+                    <div class="key-row">
+                        <div class="key">Z</div>
+                        <div class="key">X</div>
+                        <div class="key">C</div>
+                        <div class="key">V</div>
+                        <div class="key">B</div>
+                        <div class="key">N</div>
+                        <div class="key">M</div>
+                        <div class="key">,</div>
+                        <div class="key">.</div>
+                        <div class="key">/</div>
+                    </div>
+                    <div class="key-row">
+                        <div class="key space">Space</div>
+                    </div>
+                </div>
+                
+                <div class="hands-overlay">
+                    <div class="hand left-hand"></div>
+                    <div class="hand right-hand"></div>
+                </div>
+                
+                <div class="finger-paths">
+                    <div class="finger-line" style="left: 28%; top: 40%; height: 30px;"></div>
+                    <div class="finger-line" style="left: 32%; top: 40%; height: 35px;"></div>
+                    <div class="finger-line" style="left: 36%; top: 40%; height: 40px;"></div>
+                    <div class="finger-line" style="left: 40%; top: 40%; height: 35px;"></div>
+                    
+                    <div class="finger-line right-finger" style="right: 40%; top: 40%; height: 35px;"></div>
+                    <div class="finger-line right-finger" style="right: 36%; top: 40%; height: 40px;"></div>
+                    <div class="finger-line right-finger" style="right: 32%; top: 40%; height: 35px;"></div>
+                    <div class="finger-line right-finger" style="right: 28%; top: 40%; height: 30px;"></div>
+                </div>
+            </div>
+            <p style="text-align: center; color: #6c757d; font-size: 14px; margin-top: 20px;">
+                赤く光っているキー（ASDF・JKL;）がホームポジションです。手の影で指の配置を確認できます。
+            </p>
+        </div>
+        
+        <div class="position-cards">
+            <div class="position-card left-hand-card">
+                <div class="card-icon left-hand-icon">👈</div>
+                <div class="card-title">左手の配置</div>
+                <div style="margin-bottom: 15px; font-size: 13px; color: #6c757d;">基本ポジション：ASDF</div>
+                <div class="key-assignment">
+                    <div class="assigned-key home-keys">A</div>
+                    <div class="assigned-key home-keys">S</div>
+                    <div class="assigned-key home-keys">D</div>
+                    <div class="assigned-key home-keys">F</div>
+                </div>
+                <div style="font-size: 12px; color: #6c757d; line-height: 1.4;">
+                    <strong>小指：</strong>A, Q, Z, Tab, Shift<br>
+                    <strong>薬指：</strong>S, W, X<br>
+                    <strong>中指：</strong>D, E, C<br>
+                    <strong>人差し指：</strong>F, R, V, G, T, B
+                </div>
+            </div>
+            
+            <div class="position-card right-hand-card">
+                <div class="card-icon right-hand-icon">👉</div>
+                <div class="card-title">右手の配置</div>
+                <div style="margin-bottom: 15px; font-size: 13px; color: #6c757d;">基本ポジション：JKL;</div>
+                <div class="key-assignment">
+                    <div class="assigned-key home-keys">J</div>
+                    <div class="assigned-key home-keys">K</div>
+                    <div class="assigned-key home-keys">L</div>
+                    <div class="assigned-key home-keys">;</div>
+                </div>
+                <div style="font-size: 12px; color: #6c757d; line-height: 1.4;">
+                    <strong>人差し指：</strong>J, U, M, H, Y, N<br>
+                    <strong>中指：</strong>K, I, ,<br>
+                    <strong>薬指：</strong>L, O, .<br>
+                    <strong>小指：</strong>;, P, /, Enter, Shift
+                </div>
+            </div>
+        </div>
+        
+        <div class="efficiency-section">
+            <div class="efficiency-title">📈 ホームポジションの効果</div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">3倍</div>
+                    <div class="stat-label">タイピング速度向上</div>
+                    <div class="stat-description">正しいポジションで練習すると、速度が劇的に向上します</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-number">80%</div>
+                    <div class="stat-label">ミスタイプ削減</div>
+                    <div class="stat-description">指の位置が決まっていることで、打ち間違いが大幅に減少</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-number">50%</div>
+                    <div class="stat-label">疲労軽減</div>
+                    <div class="stat-description">無駄な動きがなくなり、長時間の入力でも疲れにくくなります</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">ブラインドタッチ習得</div>
+                    <div class="stat-description">キーボードを見ずに入力できるようになります</div>
+                </div>
+            </div>
+            
+            <div class="comparison-chart">
+                <div class="chart-title">⚡ 入力方式別パフォーマンス比較</div>
+                <div class="chart-bars">
+                    <div class="chart-bar bar-hunt-peck">30</div>
+                    <div class="chart-bar bar-home-position">100</div>
+                </div>
+                <div class="chart-labels">
+                    <span>指1本打ち<br><small>（見ながら打つ）</small></span>
+                    <span>ホームポジション<br><small>（正しい指配置）</small></span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tips-section">
+            <div class="tips-title">🎯 ホームポジション習得のコツ</div>
+            <div class="tips-grid">
+                <div class="tip-item">
+                    <h4>🏠 基本位置に必ず戻る</h4>
+                    <p>どのキーを押した後も、必ずASDF・JKL;の位置に指を戻す習慣をつけましょう。</p>
+                </div>
+                <div class="tip-item">
+                    <h4>👀 キーボードを見ない</h4>
+                    <p>最初は遅くても構いません。画面だけを見て、指の感覚でキーの位置を覚えましょう。</p>
+                </div>
+                <div class="tip-item">
+                    <h4>🎵 リズムを意識する</h4>
+                    <p>一定のリズムで打つことで、筋肉記憶として指の動きが定着しやすくなります。</p>
+                </div>
+                <div class="tip-item">
+                    <h4>⏰ 毎日少しずつ練習</h4>
+                    <p>1日10分でも継続すれば、1〜2週間でホームポジションが身につきます。</p>
+                </div>
+                <div class="tip-item">
+                    <h4>🔤 よく使う単語から始める</h4>
+                    <p>「the」「and」「you」など、頻出単語から練習すると効率的に上達できます。</p>
+                </div>
+                <div class="tip-item">
+                    <h4>✋ 正しい手首の位置</h4>
+                    <p>手首は浮かせて、指だけを動かすイメージで。手首をキーボードに置くと疲れやすくなります。</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="encouragement">
+            ✨ ホームポジションは一生使えるスキルです！最初は難しく感じても、必ず身につけば作業効率が劇的に向上します ✨
+        </div>
+    </div>
+</body>
+</html>

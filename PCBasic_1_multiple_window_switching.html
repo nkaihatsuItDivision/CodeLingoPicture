@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>13. 複数ウィンドウの切り替え</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #20c997, #17a2b8, #6f42c1);
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #6c757d;
+            margin-bottom: 35px;
+        }
+
+        .demo-section {
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 35px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .alt-tab-demo {
+            background: rgba(0,0,0,0.8);
+            border-radius: 12px;
+            padding: 30px;
+            position: relative;
+            margin: 20px 0;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .alt-tab-overlay {
+            background: rgba(255,255,255,0.95);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .alt-tab-title {
+            text-align: center;
+            color: #2c3e50;
+            font-weight: bold;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .window-switcher {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .window-preview {
+            background: white;
+            border-radius: 6px;
+            width: 120px;
+            height: 80px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .window-preview:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+        }
+
+        .window-preview.active {
+            border-color: #17a2b8;
+            background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+            transform: scale(1.05);
+        }
+
+        .preview-header {
+            height: 16px;
+            background: linear-gradient(90deg, var(--header-color-1), var(--header-color-2));
+            border-radius: 6px 6px 0 0;
+            display: flex;
+            align-items: center;
+            padding: 0 6px;
+        }
+
+        .preview-content {
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: calc(100% - 16px);
+            color: #495057;
+        }
+
+        .preview-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .preview-title {
+            font-size: 10px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .window-preview:nth-child(1) {
+            --header-color-1: #20c997;
+            --header-color-2: #17a2b8;
+        }
+
+        .window-preview:nth-child(2) {
+            --header-color-1: #6f42c1;
+            --header-color-2: #495057;
+        }
+
+        .window-preview:nth-child(3) {
+            --header-color-1: #fd7e14;
+            --header-color-2: #dc3545;
+        }
+
+        .window-preview:nth-child(4) {
+            --header-color-1: #17a2b8;
+            --header-color-2: #6f42c1;
+        }
+
+        .keyboard-hint {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            animation: float 2s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-5px); }
+        }
+
+        .key-combination {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin: 0 5px;
+        }
+
+        .key {
+            background: #495057;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .switching-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 35px;
+        }
+
+        .method-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .method-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .method-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .method-card:hover::before {
+            height: 5px;
+        }
+
+        .method-card:nth-child(1)::before {
+            background: linear-gradient(90deg, #17a2b8, #6f42c1);
+        }
+
+        .method-card:nth-child(2)::before {
+            background: linear-gradient(90deg, #20c997, #17a2b8);
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .card-icon-1 { background: linear-gradient(135deg, #17a2b8, #6f42c1); }
+        .card-icon-2 { background: linear-gradient(135deg, #20c997, #17a2b8); }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 12px;
+        }
+
+        .card-description {
+            color: #6c757d;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .shortcut-display {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .shortcut-keys {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .shortcut-key {
+            background: #495057;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .plus-sign {
+            color: #6c757d;
+            font-weight: bold;
+        }
+
+        .taskbar-demo {
+            background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 35px 0;
+        }
+
+        .taskbar-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 25px;
+        }
+
+        .taskbar {
+            background: #2c3e50;
+            height: 48px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            gap: 10px;
+            margin: 0 auto;
+            max-width: 500px;
+        }
+
+        .start-button {
+            background: linear-gradient(135deg, #17a2b8, #6f42c1);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .start-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .taskbar-apps {
+            display: flex;
+            gap: 8px;
+            margin-left: 15px;
+        }
+
+        .taskbar-app {
+            background: rgba(255,255,255,0.1);
+            width: 40px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            border: 2px solid transparent;
+        }
+
+        .taskbar-app:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .taskbar-app.active {
+            background: rgba(23, 162, 184, 0.8);
+            border-color: #20c997;
+        }
+
+        .efficiency-comparison {
+            background: linear-gradient(135deg, #fff3cd, #e2e3e5);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 35px 0;
+        }
+
+        .comparison-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 25px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .comparison-item {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .comparison-item h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .speed-indicator {
+            font-size: 32px;
+            margin: 10px 0;
+        }
+
+        .speed-fast { color: #28a745; }
+        .speed-slow { color: #ffc107; }
+
+        .tips-section {
+            background: linear-gradient(135deg, #e8f5e8, #fff3cd);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 35px 0;
+        }
+
+        .tips-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tip-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 10px 0;
+            color: #495057;
+        }
+
+        .tip-icon {
+            color: #17a2b8;
+            font-weight: bold;
+            margin-top: 2px;
+        }
+
+        .encouragement {
+            background: linear-gradient(135deg, #e8f5e8, #fff3cd);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 35px;
+            color: #495057;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+                margin: 10px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+            
+            .window-switcher {
+                gap: 10px;
+            }
+            
+            .window-preview {
+                width: 100px;
+                height: 70px;
+            }
+            
+            .switching-methods {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .taskbar {
+                max-width: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">⚡ 複数ウィンドウの切り替え</h1>
+        <p class="subtitle">効率的なウィンドウ切り替えをマスターして作業効率をアップしよう</p>
+        
+        <div class="demo-section">
+            <div class="alt-tab-demo">
+                <div class="alt-tab-overlay">
+                    <div class="alt-tab-title">Alt + Tab でウィンドウ切り替え</div>
+                    <div class="window-switcher">
+                        <div class="window-preview active">
+                            <div class="preview-header"></div>
+                            <div class="preview-content">
+                                <div class="preview-icon">📝</div>
+                                <div class="preview-title">メモ帳</div>
+                            </div>
+                        </div>
+                        <div class="window-preview">
+                            <div class="preview-header"></div>
+                            <div class="preview-content">
+                                <div class="preview-icon">🔢</div>
+                                <div class="preview-title">電卓</div>
+                            </div>
+                        </div>
+                        <div class="window-preview">
+                            <div class="preview-header"></div>
+                            <div class="preview-content">
+                                <div class="preview-icon">🌐</div>
+                                <div class="preview-title">ブラウザ</div>
+                            </div>
+                        </div>
+                        <div class="window-preview">
+                            <div class="preview-header"></div>
+                            <div class="preview-content">
+                                <div class="preview-icon">📁</div>
+                                <div class="preview-title">フォルダ</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="keyboard-hint">
+                        <span class="key-combination">
+                            <span class="key">Alt</span>
+                            <span>+</span>
+                            <span class="key">Tab</span>
+                        </span>
+                        を押してウィンドウを選択
+                    </div>
+                </div>
+            </div>
+            
+            <p style="text-align: center; color: #6c757d; margin-top: 15px; font-size: 14px;">
+                上のプレビューをクリックして切り替え体験をしてみましょう
+            </p>
+        </div>
+
+        <div class="switching-methods">
+            <div class="method-card">
+                <div class="card-icon card-icon-1">⌨️</div>
+                <div class="card-title">キーボード切り替え</div>
+                <div class="card-description">
+                    Alt + Tab を使った高速切り替え。Altキーを押したままTabキーを押すことで、開いているウィンドウを順番に切り替えできます。
+                </div>
+                <div class="shortcut-display">
+                    <div class="shortcut-keys">
+                        <span class="shortcut-key">Alt</span>
+                        <span class="plus-sign">+</span>
+                        <span class="shortcut-key">Tab</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="method-card">
+                <div class="card-icon card-icon-2">📋</div>
+                <div class="card-title">タスクバー切り替え</div>
+                <div class="card-description">
+                    画面下部のタスクバーにあるアプリアイコンをクリックして切り替え。視覚的に分かりやすく、マウス操作で簡単に切り替えできます。
+                </div>
+                <div class="shortcut-display">
+                    <div style="color: #6c757d; font-size: 14px;">
+                        👆 タスクバーのアイコンをクリック
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="taskbar-demo">
+            <div class="taskbar-title">タスクバーでの切り替え方法</div>
+            <div class="taskbar">
+                <div class="start-button">🪟</div>
+                <div class="taskbar-apps">
+                    <div class="taskbar-app active">📝</div>
+                    <div class="taskbar-app">🔢</div>
+                    <div class="taskbar-app">🌐</div>
+                    <div class="taskbar-app">📁</div>
+                    <div class="taskbar-app">🎵</div>
+                </div>
+            </div>
+            <p style="text-align: center; color: #6c757d; margin-top: 15px; font-size: 14px;">
+                開いているアプリが光って表示されます。クリックで即座に切り替え可能
+            </p>
+        </div>
+
+        <div class="efficiency-comparison">
+            <div class="comparison-title">切り替え方法の効率比較</div>
+            <div class="comparison-grid">
+                <div class="comparison-item">
+                    <h4>⌨️ キーボード切り替え</h4>
+                    <div class="speed-indicator speed-fast">⚡⚡⚡</div>
+                    <div>切り替え速度：<strong>高速</strong></div>
+                    <div>習得難易度：<strong>中級</strong></div>
+                </div>
+                <div class="comparison-item">
+                    <h4>🖱️ マウス切り替え</h4>
+                    <div class="speed-indicator speed-slow">⚡⚡</div>
+                    <div>切り替え速度：<strong>普通</strong></div>
+                    <div>習得難易度：<strong>初級</strong></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tips-section">
+            <div class="tips-title">
+                💡 効率的な切り替えのコツ
+            </div>
+            <div class="tip-item">
+                <span class="tip-icon">▶</span>
+                <span>Alt + Tab で Altキーを押したまま、Tabキーを複数回押すと次々に切り替わります</span>
+            </div>
+            <div class="tip-item">
+                <span class="tip-icon">▶</span>
+                <span>Shift + Alt + Tab で逆方向に切り替えることもできます</span>
+            </div>
+            <div class="tip-item">
+                <span class="tip-icon">▶</span>
+                <span>Windowsキー + 数字キー でタスクバーの特定位置のアプリを起動できます</span>
+            </div>
+            <div class="tip-item">
+                <span class="tip-icon">▶</span>
+                <span>よく使うアプリはタスクバーにピン留めしておくと便利です</span>
+            </div>
+        </div>
+
+        <div class="encouragement">
+            ✨ 複数ウィンドウの切り替えをマスターすれば、プロレベルの作業効率を実現できます！ ✨
+        </div>
+    </div>
+
+    <script>
+        // ウィンドウプレビュー切り替えデモ
+        const previews = document.querySelectorAll('.window-preview');
+        let currentIndex = 0;
+
+        previews.forEach((preview, index) => {
+            preview.addEventListener('click', () => {
+                // 全てのactiveクラスを削除
+                previews.forEach(p => p.classList.remove('active'));
+                
+                // クリックされたプレビューをアクティブに
+                preview.classList.add('active');
+                currentIndex = index;
+            });
+        });
+
+        // 自動切り替えデモ（3秒ごと）
+        setInterval(() => {
+            previews.forEach(p => p.classList.remove('active'));
+            currentIndex = (currentIndex + 1) % previews.length;
+            previews[currentIndex].classList.add('active');
+        }, 3000);
+
+        // タスクバーアプリ切り替えデモ
+        const taskbarApps = document.querySelectorAll('.taskbar-app');
+        
+        taskbarApps.forEach((app, index) => {
+            app.addEventListener('click', () => {
+                taskbarApps.forEach(a => a.classList.remove('active'));
+                app.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

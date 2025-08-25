@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>15. Ctrl+Cコピー操作の説明</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #20c997, #17a2b8, #6f42c1);
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #6c757d;
+            margin-bottom: 35px;
+        }
+
+        .demo-section {
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 35px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .keyboard-showcase {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 30px 0;
+            gap: 20px;
+        }
+
+        .key-3d {
+            background: linear-gradient(145deg, #495057, #2c3e50);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 
+                0 8px 16px rgba(0,0,0,0.3),
+                inset 0 2px 4px rgba(255,255,255,0.1),
+                inset 0 -2px 4px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .key-3d:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 12px 24px rgba(0,0,0,0.4),
+                inset 0 2px 4px rgba(255,255,255,0.2),
+                inset 0 -2px 4px rgba(0,0,0,0.4);
+        }
+
+        .key-3d.ctrl {
+            background: linear-gradient(145deg, #17a2b8, #20c997);
+            animation: glow-ctrl 2s infinite;
+        }
+
+        .key-3d.c-key {
+            background: linear-gradient(145deg, #6f42c1, #495057);
+            animation: glow-c 2s infinite 0.5s;
+        }
+
+        @keyframes glow-ctrl {
+            0%, 100% { box-shadow: 0 8px 16px rgba(0,0,0,0.3), inset 0 2px 4px rgba(255,255,255,0.1); }
+            50% { box-shadow: 0 8px 16px rgba(23, 162, 184, 0.6), inset 0 2px 4px rgba(255,255,255,0.2); }
+        }
+
+        @keyframes glow-c {
+            0%, 100% { box-shadow: 0 8px 16px rgba(0,0,0,0.3), inset 0 2px 4px rgba(255,255,255,0.1); }
+            50% { box-shadow: 0 8px 16px rgba(111, 66, 193, 0.6), inset 0 2px 4px rgba(255,255,255,0.2); }
+        }
+
+        .plus-symbol {
+            font-size: 24px;
+            color: #17a2b8;
+            font-weight: bold;
+        }
+
+        .copy-process {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 35px;
+        }
+
+        .process-step {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .process-step::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .process-step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .process-step:hover::before {
+            height: 5px;
+        }
+
+        .process-step:nth-child(1)::before {
+            background: linear-gradient(90deg, #20c997, #17a2b8);
+        }
+
+        .process-step:nth-child(2)::before {
+            background: linear-gradient(90deg, #17a2b8, #6f42c1);
+        }
+
+        .process-step:nth-child(3)::before {
+            background: linear-gradient(90deg, #6f42c1, #20c997);
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .step-number-1 { background: linear-gradient(135deg, #20c997, #17a2b8); }
+        .step-number-2 { background: linear-gradient(135deg, #17a2b8, #6f42c1); }
+        .step-number-3 { background: linear-gradient(135deg, #6f42c1, #20c997); }
+
+        .step-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 12px;
+        }
+
+        .step-description {
+            color: #6c757d;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .step-demo {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            font-size: 14px;
+            color: #495057;
+            position: relative;
+        }
+
+        .selected-text {
+            background: linear-gradient(135deg, #17a2b8, rgba(23, 162, 184, 0.3));
+            color: white;
+            padding: 2px 4px;
+            border-radius: 4px;
+            animation: selection-blink 2s infinite;
+        }
+
+        @keyframes selection-blink {
+            0%, 50%, 100% { background: linear-gradient(135deg, #17a2b8, rgba(23, 162, 184, 0.3)); }
+            25%, 75% { background: linear-gradient(135deg, #20c997, rgba(32, 201, 151, 0.3)); }
+        }
+
+        .clipboard-visualization {
+            background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 35px 0;
+        }
+
+        .clipboard-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 25px;
+        }
+
+        .clipboard-board {
+            background: #8b4513;
+            border-radius: 8px 8px 16px 16px;
+            width: 200px;
+            height: 250px;
+            margin: 0 auto;
+            position: relative;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+
+        .clipboard-clip {
+            background: linear-gradient(145deg, #c0c0c0, #a0a0a0);
+            width: 60px;
+            height: 15px;
+            border-radius: 8px;
+            position: absolute;
+            top: -7px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+
+        .clipboard-paper {
+            background: white;
+            width: 160px;
+            height: 200px;
+            margin: 20px auto 0;
+            border-radius: 4px;
+            position: relative;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .clipboard-content {
+            padding: 15px;
+            font-size: 12px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+
+        .copied-text {
+            background: linear-gradient(135deg, #20c997, rgba(32, 201, 151, 0.2));
+            color: #2c3e50;
+            padding: 2px 4px;
+            border-radius: 4px;
+            animation: fade-in 1s ease-in-out infinite alternate;
+        }
+
+        @keyframes fade-in {
+            0% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .efficiency-comparison {
+            background: linear-gradient(135deg, #fff3cd, #e2e3e5);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 35px 0;
+        }
+
+        .comparison-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 25px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .comparison-method {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .method-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .time-indicator {
+            font-size: 36px;
+            margin: 15px 0;
+        }
+
+        .time-fast { color: #28a745; }
+        .time-slow { color: #ffc107; }
+
+        .method-steps {
+            font-size: 14px;
+            color: #6c757d;
+            line-height: 1.4;
+        }
+
+        .advanced-shortcuts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .shortcut-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .shortcut-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+
+        .shortcut-keys {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .shortcut-key {
+            background: #495057;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .shortcut-plus {
+            color: #6c757d;
+            font-weight: bold;
+        }
+
+        .shortcut-function {
+            color: #2c3e50;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .tips-section {
+            background: linear-gradient(135deg, #e8f5e8, #fff3cd);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 35px 0;
+        }
+
+        .tips-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tip-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 10px 0;
+            color: #495057;
+        }
+
+        .tip-icon {
+            color: #17a2b8;
+            font-weight: bold;
+            margin-top: 2px;
+        }
+
+        .encouragement {
+            background: linear-gradient(135deg, #e8f5e8, #fff3cd);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 35px;
+            color: #495057;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+                margin: 10px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+            
+            .keyboard-showcase {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .copy-process {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .advanced-shortcuts {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">⌨️ Ctrl+Cコピー操作の説明</h1>
+        <p class="subtitle">効率的なコピー&ペースト操作で作業時間を大幅短縮しよう</p>
+        
+        <div class="demo-section">
+            <div class="keyboard-showcase">
+                <div class="key-3d ctrl">Ctrl</div>
+                <div class="plus-symbol">+</div>
+                <div class="key-3d c-key">C</div>
+            </div>
+            
+            <p style="text-align: center; color: #6c757d; margin-top: 20px; font-size: 16px;">
+                この2つのキーを同時に押すことで、選択したテキストをコピーできます
+            </p>
+        </div>
+
+        <div class="copy-process">
+            <div class="process-step">
+                <div class="step-number step-number-1">1</div>
+                <div class="step-title">テキストを選択</div>
+                <div class="step-description">
+                    コピーしたい文字をマウスでドラッグして選択状態（青くハイライト）にします。
+                </div>
+                <div class="step-demo">
+                    この<span class="selected-text">重要な情報</span>をコピーしたい
+                </div>
+            </div>
+            
+            <div class="process-step">
+                <div class="step-number step-number-2">2</div>
+                <div class="step-title">Ctrl+Cでコピー</div>
+                <div class="step-description">
+                    選択した状態でCtrlキーとCキーを同時に押します。選択したテキストがクリップボードに保存されます。
+                </div>
+                <div class="step-demo">
+                    💾 クリップボードに保存完了<br>
+                    <small style="color: #28a745;">✓ コピー成功</small>
+                </div>
+            </div>
+            
+            <div class="process-step">
+                <div class="step-number step-number-3">3</div>
+                <div class="step-title">Ctrl+Vで貼り付け</div>
+                <div class="step-description">
+                    貼り付けたい場所でCtrlキーとVキーを同時に押すと、コピーした内容が挿入されます。
+                </div>
+                <div class="step-demo">
+                    貼り付け結果:<br>
+                    <span style="background: #e8f5e8; padding: 2px 4px; border-radius: 4px;">重要な情報</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="clipboard-visualization">
+            <div class="clipboard-title">クリップボードの仕組み</div>
+            <div class="clipboard-board">
+                <div class="clipboard-clip"></div>
+                <div class="clipboard-paper">
+                    <div class="clipboard-content">
+                        📋 クリップボード<br>
+                        <hr style="margin: 8px 0; border: none; height: 1px; background: #ddd;">
+                        最後にコピーした内容:<br><br>
+                        <span class="copied-text">重要な情報</span><br><br>
+                        <small style="color: #6c757d;">※ 新しくコピーすると<br>内容が更新されます</small>
+                    </div>
+                </div>
+            </div>
+            <p style="text-align: center; color: #495057; margin-top: 15px; font-size: 14px;">
+                クリップボードは一時的にデータを保存する「見えない箱」です
+            </p>
+        </div>
+
+        <div class="efficiency-comparison">
+            <div class="comparison-title">効率性の比較</div>
+            <div class="comparison-grid">
+                <div class="comparison-method">
+                    <div class="method-title">⌨️ ショートカット使用</div>
+                    <div class="time-indicator time-fast">⚡ 3秒</div>
+                    <div class="method-steps">
+                        1. テキスト選択<br>
+                        2. Ctrl+C（コピー）<br>
+                        3. Ctrl+V（貼り付け）
+                    </div>
+                </div>
+                
+                <div class="comparison-method">
+                    <div class="method-title">🖱️ マウス操作のみ</div>
+                    <div class="time-indicator time-slow">🐌 15秒</div>
+                    <div class="method-steps">
+                        1. テキスト選択<br>
+                        2. 右クリック→コピー<br>
+                        3. 右クリック→貼り付け
+                    </div>
+                </div>
+            </div>
+            
+            <p style="text-align: center; color: #28a745; font-weight: bold; margin-top: 20px;">
+                ショートカットキーで <strong>5倍の作業効率</strong> を実現！
+            </p>
+        </div>
+
+        <div class="advanced-shortcuts">
+            <div class="shortcut-card">
+                <div class="shortcut-keys">
+                    <span class="shortcut-key">Ctrl</span>
+                    <span class="shortcut-plus">+</span>
+                    <span class="shortcut-key">A</span>
+                </div>
+                <div class="shortcut-function">全て選択</div>
+            </div>
+            
+            <div class="shortcut-card">
+                <div class="shortcut-keys">
+                    <span class="shortcut-key">Ctrl</span>
+                    <span class="shortcut-plus">+</span>
+                    <span class="shortcut-key">X</span>
+                </div>
+                <div class="shortcut-function">切り取り</div>
+            </div>
+            
+            <div class="shortcut-card">
+                <div class="shortcut-keys">
+                    <span class="shortcut-key">Ctrl</span>
+                    <span class="shortcut-plus">+</span>
+                    <span class="shortcut-key">V</span>
+                </div>
+                <div class="shortcut-function">貼り付け</div>
+            </div>
+            
+            <div class="shortcut-card">
+                <div class="shortcut-keys">
+                    <span class="shortcut-key">Ctrl</span>
+                    <span class="shortcut-plus">+</span>
+                    <span class="shortcut-key">Z</span>
+                </div>
+                <div class="shortcut-function">元に戻す</div>
+            </div>
+        </div>
+
+        <div class="tips-section">
+            <div class="tips-title">
+                💡 コピー操作の上達のコツ
+            </div>
+            <div class="tip-item">
+                <span class="tip-icon">▶</span>
+                <span>Ctrl+Aで全選択してから、Ctrl+Cで文書全体をコピーできます</span>
+            </div>
+            <div class="tip-item">
+                <span class="tip-icon">▶</span>
+                <span>Ctrl+Xは「切り取り」で、コピー後に元の文字が消えます</span>
+            </div>
+            <div class="tip-item">
+                <span class="tip-icon">▶</span>
+                <span>画像やファイルも同じ方法でコピー&ペーストできます</span>
+            </div>
+            <div class="tip-item">
+                <span class="tip-icon">▶</span>
+                <span>Ctrl+Zで「元に戻す」ができるので、間違いを恐れずに練習しましょう</span>
+            </div>
+        </div>
+
+        <div class="encouragement">
+            ✨ Ctrl+Cをマスターすれば、パソコン作業の効率が劇的に向上します！ ✨
+        </div>
+    </div>
+
+    <script>
+        // キーボードエフェクトの実装
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key.toLowerCase() === 'c') {
+                // Ctrl+C が押された場合の視覚フィードバック
+                const ctrlKey = document.querySelector('.key-3d.ctrl');
+                const cKey = document.querySelector('.key-3d.c-key');
+                
+                ctrlKey.style.transform = 'translateY(2px)';
+                cKey.style.transform = 'translateY(2px)';
+                
+                setTimeout(() => {
+                    ctrlKey.style.transform = 'translateY(-2px)';
+                    cKey.style.transform = 'translateY(-2px)';
+                }, 100);
+                
+                // 成功メッセージを表示
+                showCopySuccess();
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (!e.ctrlKey) {
+                const ctrlKey = document.querySelector('.key-3d.ctrl');
+                const cKey = document.querySelector('.key-3d.c-key');
+                
+                ctrlKey.style.transform = '';
+                cKey.style.transform = '';
+            }
+        });
+
+        function showCopySuccess() {
+            // 成功メッセージの作成
+            const message = document.createElement('div');
+            message.textContent = '✅ コピー成功！';
+            message.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: linear-gradient(135deg, #28a745, #20c997);
+                color: white;
+                padding: 15px 30px;
+                border-radius: 8px;
+                font-weight: bold;
+                z-index: 1000;
+                box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+                animation: copySuccessAnimation 2s ease-in-out;
+            `;
+            
+            // アニメーションのスタイルを追加
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes copySuccessAnimation {
+                    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+                    20% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+                    80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+                    100% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+                }
+            `;
+            document.head.appendChild(style);
+            document.body.appendChild(message);
+            
+            // 2秒後に削除
+            setTimeout(() => {
+                document.body.removeChild(message);
+                document.head.removeChild(style);
+            }, 2000);
+        }
+
+        // 選択テキストのアニメーション
+        setInterval(() => {
+            const selectedText = document.querySelector('.selected-text');
+            if (selectedText) {
+                selectedText.style.animation = 'none';
+                setTimeout(() => {
+                    selectedText.style.animation = 'selection-blink 2s infinite';
+                }, 10);
+            }
+        }, 4000);
+    </script>
+</body>
+</html>

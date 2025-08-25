@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>16. PC操作スキル証明書</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #20c997, #17a2b8, #6f42c1);
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #6c757d;
+            margin-bottom: 35px;
+        }
+
+        .certificate {
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            border: 3px solid;
+            border-image: linear-gradient(90deg, #20c997, #17a2b8, #6f42c1) 1;
+            border-radius: 16px;
+            padding: 40px;
+            margin: 20px 0;
+            position: relative;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .certificate::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(32, 201, 151, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(23, 162, 184, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(111, 66, 193, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .certificate-header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .certificate-title {
+            font-size: 32px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #20c997, #17a2b8, #6f42c1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .certificate-subtitle {
+            font-size: 18px;
+            color: #495057;
+            font-weight: 500;
+        }
+
+        .recipient-info {
+            text-align: center;
+            margin: 30px 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .recipient-text {
+            font-size: 16px;
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+
+        .recipient-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            border-bottom: 2px solid #17a2b8;
+            padding-bottom: 5px;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .completion-date {
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .skills-section {
+            margin: 35px 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .skills-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 25px;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .skill-item {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .skill-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .skill-item:hover::before {
+            height: 5px;
+        }
+
+        .skill-item:nth-child(1)::before { background: linear-gradient(90deg, #20c997, #17a2b8); }
+        .skill-item:nth-child(2)::before { background: linear-gradient(90deg, #17a2b8, #6f42c1); }
+        .skill-item:nth-child(3)::before { background: linear-gradient(90deg, #6f42c1, #fd7e14); }
+        .skill-item:nth-child(4)::before { background: linear-gradient(90deg, #fd7e14, #dc3545); }
+        .skill-item:nth-child(5)::before { background: linear-gradient(90deg, #dc3545, #20c997); }
+
+        .skill-icon {
+            font-size: 32px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .skill-name {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .skill-progress {
+            width: 100%;
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .skill-progress-bar {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 2s ease-in-out;
+            background: linear-gradient(90deg, var(--skill-color-1), var(--skill-color-2));
+        }
+
+        .skill-percentage {
+            text-align: center;
+            font-size: 12px;
+            color: #6c757d;
+            font-weight: bold;
+        }
+
+        .skill-item:nth-child(1) {
+            --skill-color-1: #20c997;
+            --skill-color-2: #17a2b8;
+        }
+
+        .skill-item:nth-child(2) {
+            --skill-color-1: #17a2b8;
+            --skill-color-2: #6f42c1;
+        }
+
+        .skill-item:nth-child(3) {
+            --skill-color-1: #6f42c1;
+            --skill-color-2: #fd7e14;
+        }
+
+        .skill-item:nth-child(4) {
+            --skill-color-1: #fd7e14;
+            --skill-color-2: #dc3545;
+        }
+
+        .skill-item:nth-child(5) {
+            --skill-color-1: #dc3545;
+            --skill-color-2: #20c997;
+        }
+
+        .achievement-level {
+            text-align: center;
+            margin: 30px 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .level-badge {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #2c3e50;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            display: inline-block;
+            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.3);
+            animation: badge-glow 3s infinite;
+        }
+
+        @keyframes badge-glow {
+            0%, 100% { box-shadow: 0 8px 20px rgba(255, 215, 0, 0.3); }
+            50% { box-shadow: 0 8px 30px rgba(255, 215, 0, 0.5), 0 0 20px rgba(255, 215, 0, 0.2); }
+        }
+
+        .level-description {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #495057;
+        }
+
+        .certificate-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e9ecef;
+            position: relative;
+            z-index: 2;
+        }
+
+        .signature-section {
+            text-align: center;
+        }
+
+        .signature-line {
+            width: 150px;
+            height: 2px;
+            background: #17a2b8;
+            margin: 10px auto;
+        }
+
+        .signature-label {
+            font-size: 12px;
+            color: #6c757d;
+        }
+
+        .certificate-seal {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #20c997, #17a2b8, #6f42c1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            animation: seal-rotate 10s linear infinite;
+        }
+
+        @keyframes seal-rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .next-steps {
+            background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 35px 0;
+        }
+
+        .next-steps-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 25px;
+        }
+
+        .next-step-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .next-step-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .next-step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .next-step-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .next-step-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .next-step-description {
+            font-size: 14px;
+            color: #6c757d;
+            line-height: 1.4;
+        }
+
+        .celebration {
+            text-align: center;
+            margin: 35px 0;
+        }
+
+        .celebration-message {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #20c997, #17a2b8, #6f42c1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: celebration-pulse 2s infinite;
+        }
+
+        @keyframes celebration-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ffd700;
+            animation: confetti-fall 3s infinite linear;
+        }
+
+        .confetti:nth-child(1) { left: 10%; animation-delay: 0s; background: #20c997; }
+        .confetti:nth-child(2) { left: 20%; animation-delay: 0.5s; background: #17a2b8; }
+        .confetti:nth-child(3) { left: 30%; animation-delay: 1s; background: #6f42c1; }
+        .confetti:nth-child(4) { left: 40%; animation-delay: 1.5s; background: #fd7e14; }
+        .confetti:nth-child(5) { left: 50%; animation-delay: 2s; background: #dc3545; }
+        .confetti:nth-child(6) { left: 60%; animation-delay: 0.3s; background: #ffd700; }
+        .confetti:nth-child(7) { left: 70%; animation-delay: 0.8s; background: #20c997; }
+        .confetti:nth-child(8) { left: 80%; animation-delay: 1.3s; background: #17a2b8; }
+        .confetti:nth-child(9) { left: 90%; animation-delay: 1.8s; background: #6f42c1; }
+
+        @keyframes confetti-fall {
+            0% { 
+                top: -10px; 
+                transform: rotate(0deg);
+                opacity: 1;
+            }
+            100% { 
+                top: 100vh; 
+                transform: rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+                margin: 10px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+            
+            .certificate {
+                padding: 25px;
+            }
+            
+            .certificate-title {
+                font-size: 24px;
+            }
+            
+            .skills-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 15px;
+            }
+            
+            .certificate-footer {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .next-step-cards {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            
+            .next-steps {
+                display: none;
+            }
+            
+            .confetti {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 紙吹雪エフェクト -->
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+
+    <div class="container">
+        <h1 class="title">🏆 PC操作スキル証明書</h1>
+        <p class="subtitle">Week 0.1 PC基本操作の習得を証明する公式証明書</p>
+        
+        <div class="certificate">
+            <div class="certificate-header">
+                <div class="certificate-title">PC基本操作マスター認定証</div>
+                <div class="certificate-subtitle">Certificate of PC Basic Operations Mastery</div>
+            </div>
+            
+            <div class="recipient-info">
+                <div class="recipient-text">この証明書は</div>
+                <div class="recipient-name" contenteditable="true">あなたの名前</div>
+                <div class="recipient-text">がWeek 0.1 PC基本操作を完全習得したことを証明します</div>
+                <div class="completion-date" id="completionDate">完了日: 2025年8月26日</div>
+            </div>
+            
+            <div class="skills-section">
+                <div class="skills-title">習得済みスキル一覧</div>
+                <div class="skills-grid">
+                    <div class="skill-item">
+                        <div class="skill-icon">🖱️</div>
+                        <div class="skill-name">マウス操作</div>
+                        <div class="skill-progress">
+                            <div class="skill-progress-bar" style="width: 0%" data-width="95%"></div>
+                        </div>
+                        <div class="skill-percentage">95%</div>
+                    </div>
+                    
+                    <div class="skill-item">
+                        <div class="skill-icon">⌨️</div>
+                        <div class="skill-name">キーボード操作</div>
+                        <div class="skill-progress">
+                            <div class="skill-progress-bar" style="width: 0%" data-width="90%"></div>
+                        </div>
+                        <div class="skill-percentage">90%</div>
+                    </div>
+                    
+                    <div class="skill-item">
+                        <div class="skill-icon">🪟</div>
+                        <div class="skill-name">ウィンドウ管理</div>
+                        <div class="skill-progress">
+                            <div class="skill-progress-bar" style="width: 0%" data-width="88%"></div>
+                        </div>
+                        <div class="skill-percentage">88%</div>
+                    </div>
+                    
+                    <div class="skill-item">
+                        <div class="skill-icon">📋</div>
+                        <div class="skill-name">ショートカット</div>
+                        <div class="skill-progress">
+                            <div class="skill-progress-bar" style="width: 0%" data-width="85%"></div>
+                        </div>
+                        <div class="skill-percentage">85%</div>
+                    </div>
+                    
+                    <div class="skill-item">
+                        <div class="skill-icon">⚡</div>
+                        <div class="skill-name">作業効率</div>
+                        <div class="skill-progress">
+                            <div class="skill-progress-bar" style="width: 0%" data-width="92%"></div>
+                        </div>
+                        <div class="skill-percentage">92%</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="achievement-level">
+                <div class="level-badge">🌟 PC操作マスター</div>
+                <div class="level-description">
+                    すべての基本操作を習得し、効率的なパソコン作業が可能なレベルに到達しました
+                </div>
+            </div>
+            
+            <div class="certificate-footer">
+                <div class="signature-section">
+                    <div class="signature-line"></div>
+                    <div class="signature-label">認定責任者</div>
+                </div>
+                
+                <div class="certificate-seal">✓</div>
+                
+                <div class="signature-section">
+                    <div class="signature-line"></div>
+                    <div class="signature-label">発行日付</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="celebration">
+            <div class="celebration-message">🎉 おめでとうございます！ 🎉</div>
+        </div>
+
+        <div class="next-steps">
+            <div class="next-steps-title">🚀 次のステップへ進みましょう</div>
+            <div class="next-step-cards">
+                <div class="next-step-card">
+                    <div class="next-step-icon">🌐</div>
+                    <div class="next-step-title">Week 1: Web基礎</div>
+                    <div class="next-step-description">
+                        HTML・CSS・JavaScriptを学んで、Webページを作成しよう
+                    </div>
+                </div>
+                
+                <div class="next-step-card">
+                    <div class="next-step-icon">☕</div>
+                    <div class="next-step-title">Week 2: Java入門</div>
+                    <div class="next-step-description">
+                        プログラミングの世界に足を踏み入れ、論理的思考を身につけよう
+                    </div>
+                </div>
+                
+                <div class="next-step-card">
+                    <div class="next-step-icon">🎯</div>
+                    <div class="next-step-title">スキルアップ継続</div>
+                    <div class="next-step-description">
+                        習得したPC操作をベースに、さらなるスキル向上を目指しましょう
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 証明書の動的な日付設定
+        document.addEventListener('DOMContentLoaded', () => {
+            const today = new Date();
+            const dateStr = `完了日: ${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日`;
+            document.getElementById('completionDate').textContent = dateStr;
+            
+            // プログレスバーのアニメーション
+            setTimeout(() => {
+                const progressBars = document.querySelectorAll('.skill-progress-bar');
+                progressBars.forEach(bar => {
+                    const targetWidth = bar.getAttribute('data-width');
+                    bar.style.width = targetWidth;
+                });
+            }, 500);
+            
+            // 名前フィールドのプレースホルダー効果
+            const nameField = document.querySelector('.recipient-name');
+            nameField.addEventListener('click', () => {
+                if (nameField.textContent === 'あなたの名前') {
+                    nameField.textContent = '';
+                }
+            });
+            
+            nameField.addEventListener('blur', () => {
+                if (nameField.textContent.trim() === '') {
+                    nameField.textContent = 'あなたの名前';
+                }
+            });
+        });
+
+        // 印刷機能
+        function printCertificate() {
+            window.print();
+        }
+
+        // 証明書のダウンロード機能（簡易版）
+        function downloadCertificate() {
+            const element = document.querySelector('.certificate');
+            const opt = {
+                margin: 1,
+                filename: 'PC操作スキル証明書.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            
+            // html2pdfライブラリが利用可能な場合
+            if (typeof html2pdf !== 'undefined') {
+                html2pdf().set(opt).from(element).save();
+            } else {
+                // フォールバック: 印刷ダイアログを開く
+                printCertificate();
+            }
+        }
+
+        // 次のステップカードのクリックイベント
+        document.querySelectorAll('.next-step-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const title = card.querySelector('.next-step-title').textContent;
+                alert(`${title}の詳細については、メインカリキュラムをご確認ください！`);
+            });
+        });
+
+        // キーボードショートカットでの印刷
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'p') {
+                e.preventDefault();
+                printCertificate();
+            }
+        });
+
+        // 成就感を演出するサウンド効果（Web Audio API使用）
+        function playSuccessSound() {
+            if (typeof AudioContext !== 'undefined' || typeof webkitAudioContext !== 'undefined') {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // 成功音の生成
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+                oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
+                oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2); // G5
+                
+                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.5);
+            }
+        }
+
+        // ページ読み込み完了時に成功音を再生
+        window.addEventListener('load', () => {
+            setTimeout(playSuccessSound, 1000);
+        });
+    </script>
+</body>
+</html>
