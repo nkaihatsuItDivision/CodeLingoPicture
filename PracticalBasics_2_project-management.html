@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 11.2 プロジェクト管理概念図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #fd7e14;
+            padding-bottom: 15px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 40px;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .management-card {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(253, 126, 20, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .management-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(253, 126, 20, 0.4);
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-number {
+            background: rgba(255, 255, 255, 0.2);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .detail-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .detail-list li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .detail-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .example-section {
+            background: linear-gradient(135deg, #17a2b8, #0c5460);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+
+        .example-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .example-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #fff;
+        }
+
+        .example-item strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #fff;
+        }
+
+        .phase-timeline {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .phase-item {
+            text-align: center;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .phase-duration {
+            background: #fff;
+            color: #fd7e14;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+
+        .summary-section {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .summary-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            .title {
+                font-size: 24px;
+            }
+
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .management-card {
+                padding: 20px;
+            }
+
+            .phase-timeline {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .phase-item {
+                min-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">プロジェクト管理概念図</h1>
+        <p class="subtitle">スケジュール管理・進捗管理・リスク管理の基本体系</p>
+
+        <div class="main-grid">
+            <div class="management-card">
+                <h2 class="card-title">
+                    <span class="card-number">1</span>
+                    スケジュール管理
+                </h2>
+                <ul class="detail-list">
+                    <li>プロジェクト期間: 3ヶ月設定</li>
+                    <li>フェーズ1: 要件定義・設計（1ヶ月）</li>
+                    <li>フェーズ2: 実装・テスト（1.5ヶ月）</li>
+                    <li>フェーズ3: 統合・リリース（0.5ヶ月）</li>
+                    <li>マイルストーンによる進行管理</li>
+                </ul>
+                <div class="phase-timeline">
+                    <div class="phase-item">
+                        <div class="phase-duration">1ヶ月</div>
+                        <div>要件・設計</div>
+                    </div>
+                    <div class="phase-item">
+                        <div class="phase-duration">1.5ヶ月</div>
+                        <div>実装・テスト</div>
+                    </div>
+                    <div class="phase-item">
+                        <div class="phase-duration">0.5ヶ月</div>
+                        <div>統合・リリース</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="management-card">
+                <h2 class="card-title">
+                    <span class="card-number">2</span>
+                    進捗管理
+                </h2>
+                <ul class="detail-list">
+                    <li>日次: 個人作業の進捗確認</li>
+                    <li>週次: チーム全体の進捗報告</li>
+                    <li>月次: プロジェクト全体の進捗評価</li>
+                    <li>遅延要因の早期発見と対策</li>
+                    <li>成果物の品質と進度のバランス</li>
+                </ul>
+            </div>
+
+            <div class="management-card">
+                <h2 class="card-title">
+                    <span class="card-number">3</span>
+                    リスク管理
+                </h2>
+                <ul class="detail-list">
+                    <li>リスク識別: 問題要因洗い出し</li>
+                    <li>リスク分析: 影響度・確率評価</li>
+                    <li>リスク対策: 回避・軽減・受容</li>
+                    <li>リスク監視: 定期確認・対策実行</li>
+                    <li>コンティンジェンシープラン策定</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="example-section">
+            <h2 class="example-title">Week 10システム開発での実践例</h2>
+            <div class="example-grid">
+                <div class="example-item">
+                    <strong>Week 10.1-10.4:</strong>
+                    高度検索機能（1週間）<br>
+                    複合条件・動的フィルタリング実装
+                </div>
+                <div class="example-item">
+                    <strong>Week 10.5-10.6:</strong>
+                    削除・一括操作（0.5週間）<br>
+                    安全な削除処理・チェックボックス連携
+                </div>
+                <div class="example-item">
+                    <strong>Week 10.7:</strong>
+                    データエクスポート（0.3週間）<br>
+                    CSV・Excel出力機能
+                </div>
+                <div class="example-item">
+                    <strong>Week 10.8:</strong>
+                    Ajax・非同期通信（0.7週間）<br>
+                    リアルタイム検索・UX向上
+                </div>
+                <div class="example-item">
+                    <strong>Week 10.9:</strong>
+                    パフォーマンス最適化（0.7週間）<br>
+                    インデックス・効率的クエリ
+                </div>
+                <div class="example-item">
+                    <strong>Week 10.10:</strong>
+                    システム統合完成（0.8週間）<br>
+                    総合テスト・運用準備
+                </div>
+            </div>
+        </div>
+
+        <div class="summary-section">
+            <h2 class="summary-title">🎯 プロジェクト管理の効果</h2>
+            <p>スケジュール・進捗・リスクの3要素を統合管理することで、<br>
+            品質とスピードを両立した確実なシステム開発が実現できます</p>
+        </div>
+    </div>
+</body>
+</html>

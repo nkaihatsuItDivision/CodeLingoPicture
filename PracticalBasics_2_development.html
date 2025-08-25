@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 11.1→11.2発展図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #fd7e14;
+            padding-bottom: 15px;
+        }
+        
+        .development-flow {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 30px;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        
+        .phase-box {
+            background: linear-gradient(135deg, #17a2b8, #0c5460);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(23, 162, 184, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .phase-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(23, 162, 184, 0.4);
+        }
+        
+        .phase-box.week11-2 {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            box-shadow: 0 4px 16px rgba(253, 126, 20, 0.3);
+        }
+        
+        .phase-box.week11-2:hover {
+            box-shadow: 0 8px 24px rgba(253, 126, 20, 0.4);
+        }
+        
+        .phase-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .phase-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .knowledge-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .knowledge-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .knowledge-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .knowledge-list li::before {
+            content: "✓";
+            margin-right: 10px;
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .development-arrow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+        }
+        
+        .step-number {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+        
+        .step-text {
+            text-align: center;
+            color: #2c3e50;
+            font-weight: bold;
+            font-size: 16px;
+            line-height: 1.4;
+        }
+        
+        .integration-section {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+        
+        .integration-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .integration-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .integration-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .integration-item:hover {
+            transform: translateY(-3px);
+        }
+        
+        .integration-item h4 {
+            color: #fd7e14;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .integration-item p {
+            color: #495057;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .result-box {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .result-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .result-text {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+            
+            .development-flow {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .development-arrow {
+                min-height: auto;
+                padding: 15px 0;
+            }
+            
+            .phase-box {
+                padding: 20px;
+            }
+            
+            .phase-title {
+                font-size: 18px;
+            }
+            
+            .integration-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Week 11.1 → 11.2 発展図</h1>
+        
+        <div class="development-flow">
+            <!-- Week 11.1 実務基礎知識 -->
+            <div class="phase-box">
+                <div class="phase-title">Week 11.1</div>
+                <div class="phase-subtitle">実務基礎知識</div>
+                <ul class="knowledge-list">
+                    <li>要件定義の基本概念</li>
+                    <li>設計の基本概念</li>
+                    <li>ドキュメントの基本概念</li>
+                    <li>システム開発工程の理解</li>
+                    <li>成果物の目的・役割</li>
+                </ul>
+            </div>
+            
+            <!-- 発展の流れ -->
+            <div class="development-arrow">
+                <div class="step-number">+</div>
+                <div class="step-text">発展<br>統合<br>実践化</div>
+            </div>
+            
+            <!-- Week 11.2 開発現場知識 -->
+            <div class="phase-box week11-2">
+                <div class="phase-title">Week 11.2</div>
+                <div class="phase-subtitle">開発現場知識</div>
+                <ul class="knowledge-list">
+                    <li>プロジェクト管理の基本</li>
+                    <li>チーム開発の基本</li>
+                    <li>品質管理の基本</li>
+                    <li>現場での実践方法</li>
+                    <li>協調作業の仕組み</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- 統合効果 -->
+        <div class="integration-section">
+            <h2 class="integration-title">Week 11.1 + 11.2 統合効果</h2>
+            <div class="integration-grid">
+                <div class="integration-item">
+                    <h4>要件定義 + プロジェクト管理</h4>
+                    <p>要件定義の知識を、実際のプロジェクト管理でどう活用するかを理解。スケジュール管理・進捗管理での要件定義の重要性を実感。</p>
+                </div>
+                <div class="integration-item">
+                    <h4>設計 + チーム開発</h4>
+                    <p>設計の知識を、チーム開発でどう共有・実装するかを理解。役割分担・協調作業での設計の活用方法を習得。</p>
+                </div>
+                <div class="integration-item">
+                    <h4>ドキュメント + 品質管理</h4>
+                    <p>ドキュメントの知識を、品質管理でどう活用するかを理解。コードレビュー・テストでのドキュメント活用を実感。</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 最終結果 -->
+        <div class="result-box">
+            <div class="result-title">Week 11.2完了後の状態</div>
+            <div class="result-text">
+                実務基礎知識を現場で活用する方法を理解し、<br>
+                チーム開発で「困らない」レベルの知識を確保
+            </div>
+        </div>
+    </div>
+</body>
+</html>

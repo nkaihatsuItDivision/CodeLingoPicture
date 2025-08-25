@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 11.2 チーム開発役割分担図</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #fd7e14;
+            padding-bottom: 15px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 40px;
+        }
+
+        .roles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .role-card {
+            background: linear-gradient(135deg, #fd7e14, #e55100);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(253, 126, 20, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .role-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(253, 126, 20, 0.4);
+        }
+
+        .role-icon {
+            background: rgba(255, 255, 255, 0.2);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 15px;
+            margin: 0 auto 15px auto;
+        }
+
+        .role-title {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .role-subtitle {
+            text-align: center;
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+
+        .role-duties {
+            list-style: none;
+            margin-bottom: 15px;
+        }
+
+        .role-duties li {
+            margin-bottom: 6px;
+            padding-left: 15px;
+            position: relative;
+            font-size: 14px;
+        }
+
+        .role-duties li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .responsibility {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 6px;
+            border-left: 4px solid #fff;
+            font-size: 13px;
+        }
+
+        .communication-section {
+            background: linear-gradient(135deg, #17a2b8, #0c5460);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .communication-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .communication-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .communication-type {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .communication-details {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .communication-time {
+            background: #fff;
+            color: #17a2b8;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .collaboration-section {
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .team-example {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .team-member {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 18px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .member-role {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .member-tasks {
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .summary-section {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .summary-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            .title {
+                font-size: 24px;
+            }
+
+            .roles-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .role-card {
+                padding: 20px;
+            }
+
+            .communication-grid,
+            .team-example {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">チーム開発役割分担図</h1>
+        <p class="subtitle">各役職の責任・コミュニケーション・協調作業の体系</p>
+
+        <div class="roles-grid">
+            <div class="role-card">
+                <div class="role-icon">👨‍💼</div>
+                <h2 class="role-title">プロジェクトマネージャー</h2>
+                <p class="role-subtitle">(PM)</p>
+                <ul class="role-duties">
+                    <li>全体統括・指揮</li>
+                    <li>進捗管理・調整</li>
+                    <li>顧客対応・要件調整</li>
+                    <li>リソース配分・管理</li>
+                </ul>
+                <div class="responsibility">
+                    <strong>責任:</strong> プロジェクト成功・納期・品質
+                </div>
+            </div>
+
+            <div class="role-card">
+                <div class="role-icon">👨‍💻</div>
+                <h2 class="role-title">システムエンジニア</h2>
+                <p class="role-subtitle">(SE)</p>
+                <ul class="role-duties">
+                    <li>要件定義・分析</li>
+                    <li>システム設計・構成</li>
+                    <li>技術検討・選定</li>
+                    <li>仕様書作成・管理</li>
+                </ul>
+                <div class="responsibility">
+                    <strong>責任:</strong> システム設計・技術品質
+                </div>
+            </div>
+
+            <div class="role-card">
+                <div class="role-icon">⌨️</div>
+                <h2 class="role-title">プログラマー</h2>
+                <p class="role-subtitle">(PG)</p>
+                <ul class="role-duties">
+                    <li>機能実装・開発</li>
+                    <li>単体テスト実行</li>
+                    <li>バグ修正・調整</li>
+                    <li>コードレビュー参加</li>
+                </ul>
+                <div class="responsibility">
+                    <strong>責任:</strong> コード品質・実装完了
+                </div>
+            </div>
+
+            <div class="role-card">
+                <div class="role-icon">🔍</div>
+                <h2 class="role-title">テスター</h2>
+                <p class="role-subtitle">(QA)</p>
+                <ul class="role-duties">
+                    <li>テスト計画・策定</li>
+                    <li>テスト実行・検証</li>
+                    <li>品質評価・報告</li>
+                    <li>不具合管理・追跡</li>
+                </ul>
+                <div class="responsibility">
+                    <strong>責任:</strong> 品質保証・リスク発見
+                </div>
+            </div>
+        </div>
+
+        <div class="communication-section">
+            <h2 class="section-title">🗣️ コミュニケーション手法</h2>
+            <div class="communication-grid">
+                <div class="communication-item">
+                    <div class="communication-type">朝礼</div>
+                    <div class="communication-details">当日作業・課題共有<br>チーム状況の確認</div>
+                    <span class="communication-time">15分</span>
+                </div>
+                <div class="communication-item">
+                    <div class="communication-type">週次報告</div>
+                    <div class="communication-details">進捗・課題・来週予定<br>チーム全体の調整</div>
+                    <span class="communication-time">60分</span>
+                </div>
+                <div class="communication-item">
+                    <div class="communication-type">レビュー会議</div>
+                    <div class="communication-details">成果物確認・改善<br>品質向上・知識共有</div>
+                    <span class="communication-time">120分</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="collaboration-section">
+            <h2 class="section-title">👥 協調作業例（Week 10システム4名チーム）</h2>
+            <div class="team-example">
+                <div class="team-member">
+                    <div class="member-role">リーダー</div>
+                    <div class="member-tasks">
+                        全体統括・調整<br>
+                        Week 10.10統合作業<br>
+                        システム完成責任
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="member-role">メンバー1</div>
+                    <div class="member-tasks">
+                        Week 10.1-10.4<br>
+                        検索機能担当<br>
+                        複合条件・動的フィルタ
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="member-role">メンバー2</div>
+                    <div class="member-tasks">
+                        Week 10.5-10.8<br>
+                        操作機能担当<br>
+                        削除・Ajax実装
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="member-role">メンバー3</div>
+                    <div class="member-tasks">
+                        Week 10.9最適化<br>
+                        テスト担当<br>
+                        パフォーマンス向上
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="summary-section">
+            <h2 class="summary-title">🎯 チーム開発の価値</h2>
+            <p>明確な役割分担と効果的なコミュニケーションにより、<br>
+            個人では実現困難な大規模システム開発を成功に導きます</p>
+        </div>
+    </div>
+</body>
+</html>
