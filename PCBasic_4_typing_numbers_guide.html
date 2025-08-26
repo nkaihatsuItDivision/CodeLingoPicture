@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数字キー対応図</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --purple-color: #9b59b6;
+            --text-color: #2c3e50;
+            --light-text: #7f8c8d;
+            --background: #f8f9fa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: var(--text-color);
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--light-text);
+            font-size: 16px;
+            margin-bottom: 40px;
+        }
+
+        .keyboard-section {
+            margin-bottom: 40px;
+        }
+
+        .keyboard-container {
+            background: var(--background);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .number-row {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .key {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .key.left-pinky { background-color: var(--danger-color); }
+        .key.left-ring { background-color: var(--warning-color); }
+        .key.left-middle { background-color: var(--success-color); }
+        .key.left-index { background-color: var(--primary-color); }
+        .key.right-index { background-color: var(--primary-color); }
+        .key.right-middle { background-color: var(--success-color); }
+        .key.right-ring { background-color: var(--warning-color); }
+        .key.right-pinky { background-color: var(--danger-color); }
+
+        .finger-legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        .programming-examples {
+            background: var(--background);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .example-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .example-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 10px;
+        }
+
+        .example-code {
+            font-family: 'Monaco', 'Consolas', monospace;
+            background: var(--background);
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            color: var(--secondary-color);
+            line-height: 1.5;
+        }
+
+        .tips-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+
+        .tips-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .tips-list {
+            list-style: none;
+        }
+
+        .tips-list li {
+            padding: 8px 0;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .tips-list li:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success-color);
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .key {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+            
+            .finger-legend {
+                gap: 10px;
+            }
+            
+            .example-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>数字キー対応図</h1>
+        <p class="subtitle">プログラミング必須の数字入力をマスターしよう</p>
+        
+        <div class="keyboard-section">
+            <div class="keyboard-container">
+                <div class="number-row">
+                    <div class="key left-pinky">1</div>
+                    <div class="key left-ring">2</div>
+                    <div class="key left-middle">3</div>
+                    <div class="key left-index">4</div>
+                    <div class="key left-index">5</div>
+                    <div class="key right-index">6</div>
+                    <div class="key right-index">7</div>
+                    <div class="key right-middle">8</div>
+                    <div class="key right-ring">9</div>
+                    <div class="key right-pinky">0</div>
+                </div>
+                
+                <div class="finger-legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: var(--danger-color);"></div>
+                        <span>小指</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: var(--warning-color);"></div>
+                        <span>薬指</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: var(--success-color);"></div>
+                        <span>中指</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: var(--primary-color);"></div>
+                        <span>人差し指</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="programming-examples">
+            <h2 style="color: var(--text-color); margin-bottom: 10px;">プログラミングでよく使う数字パターン</h2>
+            <p style="color: var(--light-text); margin-bottom: 20px;">これらのパターンを素早く正確に入力できるよう練習しましょう</p>
+            
+            <div class="example-grid">
+                <div class="example-card">
+                    <div class="example-title">年月日・時刻</div>
+                    <div class="example-code">2025/08/26<br>14:30:00<br>2025-08-26</div>
+                </div>
+                
+                <div class="example-card">
+                    <div class="example-title">配列・リスト</div>
+                    <div class="example-code">[1, 2, 3, 4, 5]<br>(10, 20, 30)<br>{1: "one", 2: "two"}</div>
+                </div>
+                
+                <div class="example-card">
+                    <div class="example-title">基本数値</div>
+                    <div class="example-code">100, 200, 300<br>1000, 2000<br>0.5, 1.5, 2.0</div>
+                </div>
+                
+                <div class="example-card">
+                    <div class="example-title">HTMLサイズ指定</div>
+                    <div class="example-code">width="300"<br>height="200"<br>font-size: 16px;</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tips-section">
+            <div class="tips-title">数字入力のコツ</div>
+            <ul class="tips-list">
+                <li>ホームポジション（ASDF JKL;）から指を上に伸ばして数字キーを押す</li>
+                <li>数字を押した後は必ずホームポジションに戻る習慣をつける</li>
+                <li>小指と薬指は力を入れすぎず、軽やかにタッチする</li>
+                <li>0（ゼロ）と O（オー）の区別を意識して正確に入力する</li>
+                <li>数字の組み合わせは一文字ずつではなく、単語として覚える</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

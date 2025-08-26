@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>オンライン練習サイトの活用方法</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --purple-color: #9b59b6;
+            --text-color: #2c3e50;
+            --light-text: #7f8c8d;
+            --background: #f8f9fa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: var(--text-color);
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--light-text);
+            font-size: 16px;
+            margin-bottom: 40px;
+        }
+
+        .browser-mockup {
+            background: var(--background);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .browser-header {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 0;
+        }
+
+        .browser-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot.red { background-color: var(--danger-color); }
+        .dot.yellow { background-color: var(--warning-color); }
+        .dot.green { background-color: var(--success-color); }
+
+        .address-bar {
+            flex: 1;
+            background: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            margin-left: 15px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+            color: var(--text-color);
+        }
+
+        .browser-content {
+            background: white;
+            padding: 30px;
+            border-radius: 0 0 10px 10px;
+            min-height: 300px;
+        }
+
+        .site-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .site-title {
+            font-size: 24px;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .site-subtitle {
+            color: var(--light-text);
+            font-size: 14px;
+        }
+
+        .practice-area {
+            background: var(--background);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 2px dashed var(--primary-color);
+        }
+
+        .practice-text {
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 18px;
+            line-height: 1.8;
+            color: var(--text-color);
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .input-area {
+            background: white;
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 16px;
+            width: 100%;
+            outline: none;
+        }
+
+        .stats-area {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .menu-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: var(--background);
+            border-radius: 8px;
+            color: var(--text-color);
+            font-size: 14px;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+
+        .tab.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .activity-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .method-card {
+            background: var(--background);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .method-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .method-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 10px;
+        }
+
+        .method-description {
+            color: var(--light-text);
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .method-tips {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .method-tips strong {
+            color: var(--primary-color);
+        }
+
+        .week03-connection {
+            background: linear-gradient(135deg, var(--purple-color), #8e44ad);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+
+        .connection-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .connection-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .connection-list li {
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            position: relative;
+            padding-left: 35px;
+        }
+
+        .connection-list li:before {
+            content: '🔗';
+            position: absolute;
+            left: 12px;
+            top: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .browser-content {
+                padding: 15px;
+            }
+            
+            .activity-methods {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-area {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .menu-tabs {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>オンライン練習サイトの活用方法</h1>
+        <p class="subtitle">Week 0.3の技術を活用して継続的なタイピング練習環境を構築しよう</p>
+        
+        <div class="browser-mockup">
+            <div class="browser-header">
+                <div class="browser-dots">
+                    <div class="dot red"></div>
+                    <div class="dot yellow"></div>
+                    <div class="dot green"></div>
+                </div>
+                <div class="address-bar">https://typing-practice-example.com</div>
+            </div>
+            
+            <div class="browser-content">
+                <div class="site-header">
+                    <div class="site-title">タイピング練習サイト</div>
+                    <div class="site-subtitle">プログラミング特化練習</div>
+                </div>
+                
+                <div class="menu-tabs">
+                    <div class="tab active">基礎練習</div>
+                    <div class="tab">プログラミング</div>
+                    <div class="tab">速度測定</div>
+                    <div class="tab">弱点克服</div>
+                </div>
+                
+                <div class="practice-area">
+                    <div class="practice-text">
+                        const userName = "student";<br>
+                        let score = 100;<br>
+                        if (score >= 80) {<br>
+                        &nbsp;&nbsp;console.log("合格です！");<br>
+                        }
+                    </div>
+                    <input type="text" class="input-area" placeholder="ここに上記のコードを正確に入力してください...">
+                </div>
+                
+                <div class="stats-area">
+                    <div class="stat-card">
+                        <span class="stat-number">45</span>
+                        <span class="stat-label">WPM</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">96%</span>
+                        <span class="stat-label">正確率</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">7日</span>
+                        <span class="stat-label">連続練習</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">85%</span>
+                        <span class="stat-label">進捗</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="activity-methods">
+            <div class="method-card">
+                <div class="method-icon" style="background-color: var(--success-color);">⏰</div>
+                <div class="method-title">毎日15分の継続練習</div>
+                <div class="method-description">
+                    短時間でも毎日継続することで、確実にタイピング速度と正確性が向上します。朝の時間や休憩時間を活用しましょう。
+                </div>
+                <div class="method-tips">
+                    <strong>コツ：</strong> 同じ時間帯に練習することで習慣化しやすくなります
+                </div>
+            </div>
+            
+            <div class="method-card">
+                <div class="method-icon" style="background-color: var(--warning-color);">🎯</div>
+                <div class="method-title">弱点特化練習</div>
+                <div class="method-description">
+                    統計データから苦手な文字や記号を特定し、重点的に練習します。プログラミング記号（{ } [ ] ; :）の練習も忘れずに。
+                </div>
+                <div class="method-tips">
+                    <strong>重要：</strong> 苦手分野を放置せず、集中的に改善することが上達の近道です
+                </div>
+            </div>
+            
+            <div class="method-card">
+                <div class="method-icon" style="background-color: var(--primary-color);">📊</div>
+                <div class="method-title">進捗記録システム</div>
+                <div class="method-description">
+                    WPM、正確率、練習時間を記録して成長を可視化します。Week 0.3で学んだファイル管理技術で練習記録を整理しましょう。
+                </div>
+                <div class="method-tips">
+                    <strong>活用法：</strong> 週ごとの成長グラフを作成してモチベーション維持に活用
+                </div>
+            </div>
+            
+            <div class="method-card">
+                <div class="method-icon" style="background-color: var(--purple-color);">🏆</div>
+                <div class="method-title">モチベーション維持</div>
+                <div class="method-description">
+                    小さな向上でも記録し、達成感を大切にします。目標設定は現実的に、段階的にレベルアップしていきましょう。
+                </div>
+                <div class="method-tips">
+                    <strong>目標例：</strong> 1週間で正確率95%達成、1ヶ月でWPM50達成など
+                </div>
+            </div>
+        </div>
+
+        <div class="week03-connection">
+            <div class="connection-title">
+                <span>🔗</span> Week 0.3技術との連携活用
+            </div>
+            <div style="color: rgba(255, 255, 255, 0.9); margin-bottom: 20px;">
+                インターネット活用で学んだ技術を練習環境構築に活用しましょう
+            </div>
+            <ul class="connection-list">
+                <li><strong>ブラウザ操作：</strong> 複数の練習サイトをタブで効率管理</li>
+                <li><strong>ブックマーク：</strong> お気に入り練習サイトを整理してアクセス高速化</li>
+                <li><strong>検索活用：</strong> 「タイピング練習 プログラミング」で最適サイトを発見</li>
+                <li><strong>学習記録：</strong> デジタルファイルで練習データを体系的に管理</li>
+                <li><strong>情報収集：</strong> タイピング技術向上の最新情報を効率的に収集</li>
+                <li><strong>コミュニティ：</strong> オンライン学習コミュニティで仲間と切磋琢磨</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

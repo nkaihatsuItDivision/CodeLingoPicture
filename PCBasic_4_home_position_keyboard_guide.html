@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 0.4 - ホームポジション対応図</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 1100px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 28px;
+            margin: 0 0 10px 0;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 16px;
+            margin: 0;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+
+
+        /* キーボード */
+        .keyboard-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            border: 2px solid #e9ecef;
+        }
+
+        .keyboard {
+            background: #2c3e50;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            margin: 0 auto;
+            max-width: 900px;
+        }
+
+        .key-row {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 8px;
+            gap: 4px;
+        }
+
+        .key {
+            width: 50px;
+            height: 50px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        /* キーの色分け（指に対応） */
+        .key-pinky-left { background: #e74c3c; border-color: #c0392b; }
+        .key-ring-left { background: #f39c12; border-color: #d68910; }
+        .key-middle-left { background: #27ae60; border-color: #229954; }
+        .key-index-left { background: #3498db; border-color: #2980b9; }
+        .key-index-right { background: #3498db; border-color: #2980b9; }
+        .key-middle-right { background: #27ae60; border-color: #229954; }
+        .key-ring-right { background: #f39c12; border-color: #d68910; }
+        .key-pinky-right { background: #e74c3c; border-color: #c0392b; }
+
+        /* ホームポジションキーの強調 */
+        .home-key {
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8), inset 0 0 10px rgba(255, 255, 255, 0.3);
+            border-color: #fff !important;
+            border-width: 3px;
+        }
+
+        .home-key::after {
+            content: '●';
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            font-size: 8px;
+            color: #fff;
+        }
+
+        /* 特殊キー */
+        .key-wide { width: 70px; }
+        .key-wider { width: 90px; }
+        .key-extra-wide { width: 110px; }
+        .key-space { width: 250px; background: #9b59b6; border-color: #8e44ad; }
+
+        .key-normal {
+            background: #34495e;
+            border-color: #2c3e50;
+            color: #bdc3c7;
+        }
+
+        /* 数字行 */
+        .number-row .key {
+            height: 45px;
+            font-size: 13px;
+        }
+
+        /* 説明セクション */
+        .explanation {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            border-left: 5px solid #3498db;
+        }
+
+        .color-legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .color-box {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 12px;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .legend-text {
+            flex: 1;
+        }
+
+        .legend-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 4px;
+        }
+
+        .legend-keys {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        /* ホームポジション説明 */
+        .home-position-box {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .home-position-box h3 {
+            margin: 0 0 15px 0;
+            font-size: 20px;
+        }
+
+        .home-keys {
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 8px;
+            margin: 10px 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+
+
+
+            .keyboard {
+                padding: 15px;
+            }
+
+            .key {
+                width: 35px;
+                height: 35px;
+                font-size: 11px;
+            }
+
+            .key-space {
+                width: 180px;
+            }
+
+            .color-legend {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>ホームポジション対応図</h1>
+            <p>10本の指とキーボードの担当領域</p>
+        </div>
+
+        <div class="main-content">
+
+
+            <!-- キーボード -->
+            <div class="keyboard-section">
+                <h3 style="color: #2c3e50; margin-bottom: 20px; text-align: center;">キーボード担当領域</h3>
+                
+                <div class="home-position-box">
+                    <h3>ホームポジション（基本位置）</h3>
+                    <div class="home-keys">A S D F　　J K L ;</div>
+                    <p style="margin: 10px 0 0 0; font-size: 14px; opacity: 0.9;">
+                        全ての指はこの位置に戻ってくる
+                    </p>
+                </div>
+
+                <div class="keyboard">
+                    <!-- 数字行 -->
+                    <div class="key-row number-row">
+                        <div class="key key-pinky-left">1</div>
+                        <div class="key key-ring-left">2</div>
+                        <div class="key key-middle-left">3</div>
+                        <div class="key key-index-left">4</div>
+                        <div class="key key-index-left">5</div>
+                        <div class="key key-index-right">6</div>
+                        <div class="key key-index-right">7</div>
+                        <div class="key key-middle-right">8</div>
+                        <div class="key key-ring-right">9</div>
+                        <div class="key key-pinky-right">0</div>
+                    </div>
+
+                    <!-- QWERTY行 -->
+                    <div class="key-row">
+                        <div class="key key-pinky-left">Q</div>
+                        <div class="key key-ring-left">W</div>
+                        <div class="key key-middle-left">E</div>
+                        <div class="key key-index-left">R</div>
+                        <div class="key key-index-left">T</div>
+                        <div class="key key-index-right">Y</div>
+                        <div class="key key-index-right">U</div>
+                        <div class="key key-middle-right">I</div>
+                        <div class="key key-ring-right">O</div>
+                        <div class="key key-pinky-right">P</div>
+                    </div>
+
+                    <!-- ホーム行 -->
+                    <div class="key-row">
+                        <div class="key key-pinky-left home-key">A</div>
+                        <div class="key key-ring-left home-key">S</div>
+                        <div class="key key-middle-left home-key">D</div>
+                        <div class="key key-index-left home-key">F</div>
+                        <div class="key key-index-right home-key">J</div>
+                        <div class="key key-middle-right home-key">K</div>
+                        <div class="key key-ring-right home-key">L</div>
+                        <div class="key key-pinky-right home-key">;</div>
+                    </div>
+
+                    <!-- 下段行 -->
+                    <div class="key-row">
+                        <div class="key key-pinky-left">Z</div>
+                        <div class="key key-ring-left">X</div>
+                        <div class="key key-middle-left">C</div>
+                        <div class="key key-index-left">V</div>
+                        <div class="key key-index-left">B</div>
+                        <div class="key key-index-right">N</div>
+                        <div class="key key-index-right">M</div>
+                        <div class="key key-middle-right">,</div>
+                        <div class="key key-ring-right">.</div>
+                        <div class="key key-pinky-right">/</div>
+                    </div>
+
+                    <!-- スペース行 -->
+                    <div class="key-row">
+                        <div class="key key-space">スペース</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 説明 -->
+            <div class="explanation">
+                <h3 style="color: #2c3e50; margin: 0 0 20px 0;">指の担当領域について</h3>
+                
+                <div class="color-legend">
+                    <div class="legend-item">
+                        <div class="color-box pinky"></div>
+                        <div class="legend-text">
+                            <div class="legend-title">小指（赤）</div>
+                            <div class="legend-keys">左: Q A Z, Tab, Shift | 右: P ; /, Enter, Shift</div>
+                        </div>
+                    </div>
+                    
+                    <div class="legend-item">
+                        <div class="color-box ring"></div>
+                        <div class="legend-text">
+                            <div class="legend-title">薬指（オレンジ）</div>
+                            <div class="legend-keys">左: W S X, 数字2 | 右: O L ., 数字9</div>
+                        </div>
+                    </div>
+                    
+                    <div class="legend-item">
+                        <div class="color-box middle"></div>
+                        <div class="legend-text">
+                            <div class="legend-title">中指（緑）</div>
+                            <div class="legend-keys">左: E D C, 数字3 | 右: I K ,, 数字8</div>
+                        </div>
+                    </div>
+                    
+                    <div class="legend-item">
+                        <div class="color-box index"></div>
+                        <div class="legend-text">
+                            <div class="legend-title">人差し指（青）</div>
+                            <div class="legend-keys">左: R F V, T G B, 数字4,5 | 右: Y H N, U J M, 数字6,7</div>
+                        </div>
+                    </div>
+                    
+                    <div class="legend-item">
+                        <div class="color-box thumb"></div>
+                        <div class="legend-text">
+                            <div class="legend-title">親指（紫）</div>
+                            <div class="legend-keys">両手: スペースキー</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 25px; padding: 15px; background: #fff3cd; border-radius: 8px; border-left: 4px solid #ffc107;">
+                    <strong>💡 重要ポイント:</strong>
+                    <ul style="margin: 10px 0 0 20px; color: #856404;">
+                        <li>ホームポジション（A S D F / J K L ;）に指を置く</li>
+                        <li>各指は決められた縦列を担当する</li>
+                        <li>人差し指は2列ずつ担当（最も器用な指）</li>
+                        <li>キーを押した後は必ずホームポジションに戻る</li>
+                        <li>白い●マークがホームポジションキーの目印</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

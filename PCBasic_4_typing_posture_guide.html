@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 0.4 - 正しいタイピング姿勢ガイド</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 28px;
+            margin: 0 0 10px 0;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 16px;
+            margin: 0;
+        }
+
+
+
+        /* チェックリスト */
+        .checklist {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 30px;
+            border-left: 5px solid #3498db;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .checklist h3 {
+            color: #2c3e50;
+            font-size: 20px;
+            margin: 0 0 20px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .checklist h3::before {
+            content: '✓';
+            background: #27ae60;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .check-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .icon-1 { background: #e74c3c; }
+        .icon-2 { background: #f39c12; }
+        .icon-3 { background: #27ae60; }
+        .icon-4 { background: #9b59b6; }
+        .icon-5 { background: #8e44ad; }
+
+        .check-text {
+            flex: 1;
+        }
+
+        .check-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 4px;
+        }
+
+        .check-desc {
+            color: #7f8c8d;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            .checklist {
+                padding: 20px;
+            }
+
+            .check-item {
+                margin-bottom: 12px;
+                padding: 10px;
+            }
+
+            .check-icon {
+                width: 20px;
+                height: 20px;
+                font-size: 11px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>正しいタイピング姿勢ガイド</h1>
+            <p>効率的で疲れにくいタイピングのための基本チェックポイント</p>
+        </div>
+
+
+
+        <div class="checklist">
+            <h3>正しいタイピング姿勢のチェックポイント</h3>
+            
+            <div class="check-item">
+                <div class="check-icon icon-1">1</div>
+                <div class="check-text">
+                    <div class="check-title">背筋・首の位置</div>
+                    <div class="check-desc">背筋を真っ直ぐ伸ばし、首が前に突き出さないように注意。画面の上端が目の高さかやや下になるよう調整し、軽く見下ろすような角度がベスト。</div>
+                </div>
+            </div>
+            
+            <div class="check-item">
+                <div class="check-icon icon-2">2</div>
+                <div class="check-text">
+                    <div class="check-title">画面との距離</div>
+                    <div class="check-desc">モニターとの距離は60-70cm程度を保つ。腕を伸ばした時に画面に手が届く程度が目安。近すぎると目の疲労、遠すぎると前傾姿勢の原因に。</div>
+                </div>
+            </div>
+            
+            <div class="check-item">
+                <div class="check-icon icon-3">3</div>
+                <div class="check-text">
+                    <div class="check-title">手首・腕の位置</div>
+                    <div class="check-desc">手首はキーボード面と平行に保ち、浮かせた状態で入力する。手首をキーボードに置かない。肘の角度は90度程度、肩はリラックスした自然な状態を維持。</div>
+                </div>
+            </div>
+            
+            <div class="check-item">
+                <div class="check-icon icon-4">4</div>
+                <div class="check-text">
+                    <div class="check-title">足・椅子の高さ</div>
+                    <div class="check-desc">足の裏全体が床にしっかりつく椅子の高さに調整。太ももが床と平行かやや下向きになるように。足台を使用してもOK。膝の角度は90度以上を保つ。</div>
+                </div>
+            </div>
+
+            <div class="check-item">
+                <div class="check-icon" style="background: #8e44ad;">5</div>
+                <div class="check-text">
+                    <div class="check-title">休憩とストレッチ</div>
+                    <div class="check-desc">30分に1回程度、画面から目を離し遠くを見る。1時間に1回は立ち上がって軽いストレッチを行う。首回し、肩回し、手首のストレッチが効果的。</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
