@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>フォルダ作成手順</title>
+    <style>
+        body {
+            font-family: 'Yu Gothic', 'Hiragino Sans', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .main-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .intro-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .intro-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+        }
+
+        .folder-create-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            color: white;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+
+        .plus-indicator {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 30px;
+            height: 30px;
+            background: #2ecc71;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .intro-text {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .step-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .step-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #3498db, #2ecc71);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .step-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .step-description {
+            font-size: 14px;
+            color: #7f8c8d;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .visual-demo {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .visual-demo:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+        }
+
+        .demo-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #3498db;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .demo-sequence {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .demo-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .demo-visual {
+            width: 100px;
+            height: 80px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: white;
+            margin-bottom: 15px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .demo-visual:hover {
+            transform: scale(1.1);
+        }
+
+        .right-click-visual { 
+            background: linear-gradient(135deg, #e74c3c, #c0392b); 
+            cursor: pointer;
+        }
+
+        .menu-visual { 
+            background: linear-gradient(135deg, #9b59b6, #8e44ad); 
+            animation: fadeIn 2s infinite;
+        }
+
+        .new-folder-visual { 
+            background: linear-gradient(135deg, #f39c12, #e67e22); 
+        }
+
+        .name-input-visual { 
+            background: linear-gradient(135deg, #2ecc71, #27ae60); 
+        }
+
+        @keyframes fadeIn {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        .arrow {
+            font-size: 30px;
+            color: #3498db;
+            margin: 0 10px;
+        }
+
+        .demo-label {
+            font-size: 12px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .context-menu-simulation {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 8px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            position: absolute;
+            top: -20px;
+            right: -10px;
+            min-width: 150px;
+            z-index: 10;
+            animation: popIn 0.3s ease;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .context-menu-item {
+            padding: 8px 16px;
+            font-size: 12px;
+            color: #495057;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .context-menu-item:hover {
+            background: #e9ecef;
+        }
+
+        .highlighted-item {
+            background: #007bff !important;
+            color: white !important;
+            font-weight: bold;
+        }
+
+        .practical-tips {
+            background: linear-gradient(135deg, #e8f8f5, #d5f4e6);
+            padding: 30px;
+            border-radius: 20px;
+            border-left: 4px solid #2ecc71;
+            margin-bottom: 30px;
+        }
+
+        .practical-tips h3 {
+            color: #27ae60;
+            margin: 0 0 20px 0;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .tip-item {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 3px solid #27ae60;
+        }
+
+        .tip-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .tip-description {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .week-connection {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 4px solid #f39c12;
+            margin-top: 30px;
+        }
+
+        .week-connection h3 {
+            color: #e67e22;
+            margin: 0 0 15px 0;
+            font-size: 20px;
+        }
+
+        .week-connection p {
+            color: #2c3e50;
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .main-title {
+                font-size: 24px;
+            }
+            
+            .steps-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .step-card {
+                padding: 25px;
+            }
+            
+            .demo-sequence {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .arrow {
+                transform: rotate(90deg);
+            }
+            
+            .tips-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="main-title">📁 フォルダ作成の手順</h1>
+        
+        <!-- イントロセクション -->
+        <div class="intro-section">
+            <div class="folder-create-icon">
+                📁
+                <div class="plus-indicator">+</div>
+            </div>
+            <p class="intro-text">
+                新しいフォルダを作成して、ファイルを整理しましょう！<br>
+                Week 0.1で練習した<strong>右クリック</strong>の技術がここで活躍します。<br>
+                <strong>たった4ステップで簡単に作成できます</strong>
+            </p>
+        </div>
+
+        <!-- ステップ説明 -->
+        <div class="steps-container">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3 class="step-title">空いている場所で右クリック</h3>
+                <p class="step-description">
+                    フォルダを作りたい場所（デスクトップやドキュメント）の
+                    何もない空いている部分で右クリックします。
+                    Week 0.1で練習した通り、マウスの右ボタンを1回押します。
+                </p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3 class="step-title">メニューから「新規作成」を探す</h3>
+                <p class="step-description">
+                    右クリックすると小さなメニューが表示されます。
+                    その中から「新規作成」という項目を見つけて
+                    マウスカーソルを合わせます（まだクリックしません）。
+                </p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3 class="step-title">「フォルダー」をクリック</h3>
+                <p class="step-description">
+                    「新規作成」にカーソルを合わせると、さらに小さなメニューが現れます。
+                    その中の「フォルダー」を左クリックします。
+                    これで新しいフォルダが作成されます。
+                </p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h3 class="step-title">フォルダ名を入力して完了</h3>
+                <p class="step-description">
+                    「新しいフォルダー」という名前で作成されるので、
+                    わかりやすい名前に変更しましょう。名前を入力して
+                    Enterキーを押せば完成です！
+                </p>
+            </div>
+        </div>
+
+        <!-- 視覚的デモンストレーション -->
+        <div class="visual-demo">
+            <h3 class="demo-title">👆 操作の流れを視覚で確認</h3>
+            <div class="demo-sequence">
+                <div class="demo-step">
+                    <div class="demo-visual right-click-visual">
+                        🖱️
+                        <div class="context-menu-simulation">
+                            <div class="context-menu-item">表示</div>
+                            <div class="context-menu-item">並べ替え</div>
+                            <div class="context-menu-item highlighted-item">新規作成 ▶</div>
+                            <div class="context-menu-item">貼り付け</div>
+                            <div class="context-menu-item">プロパティ</div>
+                        </div>
+                    </div>
+                    <div class="demo-label">右クリック</div>
+                </div>
+
+                <div class="arrow">→</div>
+
+                <div class="demo-step">
+                    <div class="demo-visual menu-visual">📋</div>
+                    <div class="demo-label">メニュー表示</div>
+                </div>
+
+                <div class="arrow">→</div>
+
+                <div class="demo-step">
+                    <div class="demo-visual new-folder-visual">📁</div>
+                    <div class="demo-label">フォルダー選択</div>
+                </div>
+
+                <div class="arrow">→</div>
+
+                <div class="demo-step">
+                    <div class="demo-visual name-input-visual">✏️</div>
+                    <div class="demo-label">名前入力</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 実践的なコツ -->
+        <div class="practical-tips">
+            <h3>💡 フォルダ作成のコツ</h3>
+            <div class="tips-grid">
+                <div class="tip-item">
+                    <div class="tip-title">🎯 わかりやすい名前を付ける</div>
+                    <p class="tip-description">
+                        「新しいフォルダー」のままにせず、中身がわかる名前に変更しましょう。
+                        「家計簿2024」「旅行写真」など具体的な名前がおすすめです。
+                    </p>
+                </div>
+
+                <div class="tip-item">
+                    <div class="tip-title">📅 日付を活用する</div>
+                    <p class="tip-description">
+                        「2024年10月」「プロジェクトA_2024」など、
+                        日付を含めると時系列で整理しやすくなります。
+                    </p>
+                </div>
+
+                <div class="tip-item">
+                    <div class="tip-title">🔤 半角英数字も使える</div>
+                    <p class="tip-description">
+                        「Documents」「Pictures_2024」など、
+                        半角英数字も使用可能です。ただし、日本語の方がわかりやすい場合が多いです。
+                    </p>
+                </div>
+
+                <div class="tip-item">
+                    <div class="tip-title">⚠️ 避けるべき文字</div>
+                    <p class="tip-description">
+                        「\」「/」「:」「*」「?」「<」「>」「|」「"」は
+                        フォルダ名に使えません。普通の文字なら問題ありません。
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Week 0.1との連携 -->
+        <div class="week-connection">
+            <h3>🔗 Week 0.1技術の活用</h3>
+            <p>
+                <strong>右クリックの技術がそのまま活用できます！</strong><br>
+                • Week 0.1で練習した「右クリック」操作が核心技術<br>
+                • マウスカーソルの正確な移動も必要（Week 0.1で習得済み）<br>
+                • キーボード入力（フォルダ名入力）も Week 0.1の復習<br>
+                • <strong>安心ポイント：</strong>間違って作成しても、削除すれば元通りです
+            </p>
+        </div>
+    </div>
+</body>
+</html>

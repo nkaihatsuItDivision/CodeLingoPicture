@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ファイルのコピー操作</title>
+    <style>
+        body {
+            font-family: 'Yu Gothic', 'Hiragino Sans', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .main-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .intro-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .intro-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+        }
+
+        .copy-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            color: white;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+
+        .duplicate-indicator {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 30px;
+            height: 30px;
+            background: #3498db;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .intro-text {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .keyboard-demo {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .keyboard-demo:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+        }
+
+        .demo-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2ecc71;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .keyboard-sequence {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .keyboard-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .key-combination {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .keyboard-key {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .keyboard-key:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+
+        .ctrl-key {
+            animation: keyPulse 2s ease-in-out infinite;
+        }
+
+        .c-key {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            animation: keyPulse 2s ease-in-out infinite 0.5s;
+        }
+
+        .v-key {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            animation: keyPulse 2s ease-in-out infinite 1s;
+        }
+
+        @keyframes keyPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .plus-sign {
+            font-size: 24px;
+            color: #f39c12;
+            font-weight: bold;
+        }
+
+        .step-label {
+            font-size: 14px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .arrow-between {
+            font-size: 30px;
+            color: #3498db;
+            margin: 0 20px;
+        }
+
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .step-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .step-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .step-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .step-description {
+            font-size: 14px;
+            color: #7f8c8d;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .shortcut-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid;
+            margin-top: 15px;
+        }
+
+        .step1-info { border-left-color: #3498db; }
+        .step2-info { border-left-color: #2ecc71; }
+        .step3-info { border-left-color: #f39c12; }
+        .step4-info { border-left-color: #e74c3c; }
+
+        .info-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .info-text {
+            font-size: 12px;
+            color: #555;
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        .copy-vs-move {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .copy-vs-move:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+        }
+
+        .comparison-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #3498db;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .comparison-card {
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .copy-card {
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.1), rgba(39, 174, 96, 0.1));
+            border: 2px solid rgba(46, 204, 113, 0.3);
+        }
+
+        .move-card {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(41, 128, 185, 0.1));
+            border: 2px solid rgba(52, 152, 219, 0.3);
+        }
+
+        .comparison-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: white;
+            margin: 0 auto 20px;
+        }
+
+        .copy-comparison-icon {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+        }
+
+        .move-comparison-icon {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+
+        .comparison-card-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .copy-card-title { color: #27ae60; }
+        .move-card-title { color: #2980b9; }
+
+        .comparison-description {
+            font-size: 14px;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+        .practical-tips {
+            background: linear-gradient(135deg, #e8f8f5, #d5f4e6);
+            padding: 30px;
+            border-radius: 20px;
+            border-left: 4px solid #2ecc71;
+            margin-bottom: 30px;
+        }
+
+        .practical-tips h3 {
+            color: #27ae60;
+            margin: 0 0 20px 0;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .tip-item {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 3px solid #27ae60;
+        }
+
+        .tip-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .tip-description {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .week-connection {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 4px solid #f39c12;
+            margin-top: 30px;
+        }
+
+        .week-connection h3 {
+            color: #e67e22;
+            margin: 0 0 15px 0;
+            font-size: 20px;
+        }
+
+        .week-connection p {
+            color: #2c3e50;
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .main-title {
+                font-size: 24px;
+            }
+            
+            .keyboard-sequence {
+                flex-wrap: wrap;
+                gap: 20px;
+            }
+            
+            .keyboard-key {
+                width: 50px;
+                height: 50px;
+                font-size: 16px;
+            }
+            
+            .comparison-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .steps-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .step-card {
+                padding: 25px;
+            }
+            
+            .tips-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="main-title">📋 ファイルのコピー操作</h1>
+        
+        <!-- イントロセクション -->
+        <div class="intro-section">
+            <div class="copy-icon">
+                📄
+                <div class="duplicate-indicator">2</div>
+            </div>
+            <p class="intro-text">
+                Week 0.1で練習した<strong>ショートカットキー</strong>が大活躍！<br>
+                Ctrl+C（コピー）とCtrl+V（貼り付け）で簡単にファイルを複製できます。<br>
+                <strong>元のファイルを残したまま、別の場所にも同じファイルを作成</strong>
+            </p>
+        </div>
+
+        <!-- キーボード操作デモ -->
+        <div class="keyboard-demo">
+            <h3 class="demo-title">⌨️ ショートカットキーの組み合わせ</h3>
+            <div class="keyboard-sequence">
+                <div class="keyboard-step">
+                    <div class="key-combination">
+                        <div class="keyboard-key ctrl-key">Ctrl</div>
+                        <div class="plus-sign">+</div>
+                        <div class="keyboard-key c-key">C</div>
+                    </div>
+                    <div class="step-label">コピー</div>
+                </div>
+
+                <div class="arrow-between">→</div>
+
+                <div class="keyboard-step">
+                    <div class="key-combination">
+                        <div class="keyboard-key ctrl-key">Ctrl</div>
+                        <div class="plus-sign">+</div>
+                        <div class="keyboard-key v-key">V</div>
+                    </div>
+                    <div class="step-label">貼り付け</div>
+                </div>
+            </div>
+            <p style="text-align: center; color: #7f8c8d; font-size: 14px; margin: 0;">
+                Week 0.1で習得したショートカットキーが実用化されます！
+            </p>
+        </div>
+
+        <!-- ステップ説明 -->
+        <div class="steps-container">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3 class="step-title">コピーしたいファイルを選択</h3>
+                <p class="step-description">
+                    コピーしたいファイルを1回クリックして選択します。
+                    選択されると、ファイルが青くハイライトされます。
+                    複数のファイルを選択することも可能です。
+                </p>
+                <div class="shortcut-info step1-info">
+                    <div class="info-title">📌 選択のコツ</div>
+                    <div class="info-text">
+                        ファイル名の部分をクリックします。
+                        アイコン部分でも選択できますが、名前の方が確実です。
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3 class="step-title">Ctrl+C でコピー</h3>
+                <p class="step-description">
+                    選択したファイルをコピーします。Ctrlキーを押しながら
+                    Cキーを押します。コピーされても見た目は変わりませんが、
+                    コンピューターの記憶にファイル情報が保存されます。
+                </p>
+                <div class="shortcut-info step2-info">
+                    <div class="info-title">📌 操作のポイント</div>
+                    <div class="info-text">
+                        Ctrlキーを先に押して、押したままCキーを押します。
+                        両方同時に押すイメージです。Week 0.1の復習ですね！
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3 class="step-title">貼り付け先に移動</h3>
+                <p class="step-description">
+                    ファイルをコピーしたい場所に移動します。
+                    別のフォルダを開いたり、デスクトップに移動したりして、
+                    貼り付けたい場所を表示します。
+                </p>
+                <div class="shortcut-info step3-info">
+                    <div class="info-title">📌 移動方法</div>
+                    <div class="info-text">
+                        エクスプローラーで別のフォルダを開いたり、
+                        ナビゲーションペインをクリックして移動します。
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h3 class="step-title">Ctrl+V で貼り付け</h3>
+                <p class="step-description">
+                    貼り付けたい場所で Ctrl+V を押します。
+                    コピーしたファイルがその場所に複製されます。
+                    元のファイルはそのまま残り、新しいコピーが作成されます。
+                </p>
+                <div class="shortcut-info step4-info">
+                    <div class="info-title">📌 貼り付け成功の確認</div>
+                    <div class="info-text">
+                        同じファイルが新しい場所に現れれば成功です。
+                        元の場所にもファイルが残っているはずです。
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- コピーと移動の比較 -->
+        <div class="copy-vs-move">
+            <h3 class="comparison-title">🔄 コピーと移動の違い</h3>
+            <div class="comparison-grid">
+                <div class="comparison-card copy-card">
+                    <div class="comparison-icon copy-comparison-icon">📋</div>
+                    <h4 class="comparison-card-title copy-card-title">コピー（Ctrl+C → Ctrl+V）</h4>
+                    <p class="comparison-description">
+                        元のファイルは残ったまま、別の場所に同じファイルの複製を作成します。
+                        バックアップや、複数の場所で同じファイルを使いたい時に便利です。
+                    </p>
+                </div>
+
+                <div class="comparison-card move-card">
+                    <div class="comparison-icon move-comparison-icon">🔄</div>
+                    <h4 class="comparison-card-title move-card-title">移動（ドラッグ&ドロップ）</h4>
+                    <p class="comparison-description">
+                        元の場所からファイルを別の場所に移動させます。
+                        ファイルは1つのままで、場所だけが変わります。
+                        整理や分類の時に使用します。
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 実用的なコツ -->
+        <div class="practical-tips">
+            <h3>💡 ファイルコピーの実用テクニック</h3>
+            <div class="tips-grid">
+                <div class="tip-item">
+                    <div class="tip-title">🎯 バックアップ活用</div>
+                    <p class="tip-description">
+                        重要なファイルは別のフォルダにコピーしてバックアップを作りましょう。
+                        「重要書類」「バックアップ」などのフォルダに保存すると安心です。
+                    </p>
+                </div>
+
+                <div class="tip-item">
+                    <div class="tip-title">📁 複数場所での活用</div>
+                    <p class="tip-description">
+                        同じ写真を「旅行フォルダ」と「家族写真フォルダ」の両方に置きたい時に、
+                        コピー機能が活躍します。
+                    </p>
+                </div>
+
+                <div class="tip-item">
+                    <div class="tip-title">⏱️ 連続コピー</div>
+                    <p class="tip-description">
+                        一度Ctrl+Cでコピーすれば、Ctrl+Vを複数回押すことで、
+                        同じファイルを複数の場所に貼り付けることができます。
+                    </p>
+                </div>
+
+                <div class="tip-item">
+                    <div class="tip-title">🔍 名前の自動変更</div>
+                    <p class="tip-description">
+                        同じフォルダ内にコピーすると、自動的に「写真 - コピー.jpg」
+                        のように名前が変更されて保存されます。
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Week 0.1との連携 -->
+        <div class="week-connection">
+            <h3>🔗 Week 0.1技術の実用化</h3>
+            <p>
+                <strong>ショートカットキーが実際のファイル管理で大活躍！</strong><br>
+                • Week 0.1で練習した「Ctrl+C」「Ctrl+V」が核心技術<br>
+                • キーボードとマウスの組み合わせ操作（Week 0.1で習得済み）<br>
+                • 複数キー同時押しの技術が実践で威力発揮<br>
+                • <strong>効率アップ実感：</strong>右クリックメニューより圧倒的に高速<br>
+                • <strong>安心ポイント：</strong>コピーなので元ファイルは絶対に消えません
+            </p>
+        </div>
+    </div>
+</body>
+</html>

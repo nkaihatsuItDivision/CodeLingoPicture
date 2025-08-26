@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ファイル検索機能の説明</title>
+    <style>
+        body {
+            font-family: 'Yu Gothic', 'Hiragino Sans', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .main-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .intro-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .intro-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+        }
+
+        .search-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            color: white;
+            margin: 0 auto 20px;
+            position: relative;
+            animation: search-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes search-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .magnifying-effect {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 35px;
+            height: 35px;
+            background: #f39c12;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            animation: magnify-bounce 1.5s ease-in-out infinite;
+        }
+
+        @keyframes magnify-bounce {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.2) rotate(15deg); }
+        }
+
+        .intro-text {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .search-box-demo {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .search-box-demo:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+        }
+
+        .demo-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #3498db;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .explorer-window-sim {
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 2px solid #dee2e6;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .window-header-sim {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .search-bar-area {
+            background: white;
+            padding: 15px 20px;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .search-box {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #3498db;
+            border-radius: 25px;
+            font-size: 14px;
+            background: white;
+            position: relative;
+            box-shadow: 0 2px 10px rgba(52, 152, 219, 0.1);
+            animation: search-box-glow 3s ease-in-out infinite;
+        }
+
+        @keyframes search-box-glow {
+            0%, 100% { box-shadow: 0 2px 10px rgba(52, 152, 219, 0.1); }
+            50% { box-shadow: 0 4px 20px rgba(52, 152, 219, 0.3); }
+        }
+
+        .search-placeholder {
+            color: #7f8c8d;
+            font-style: italic;
+        }
+
+        .search-typing-effect {
+            color: #2c3e50;
+            animation: typing-blink 1s step-end infinite;
+        }
+
+        @keyframes typing-blink {
+            0%, 50% { border-right: 2px solid #3498db; }
+            51%, 100% { border-right: 2px solid transparent; }
+        }
+
+        .search-button {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .search-results-area {
+            padding: 20px;
+            background: white;
+        }
+
+        .result-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .result-item:hover {
+            background: #e3f2fd;
+            transform: translateX(5px);
+        }
+
+        .result-icon {
+            font-size: 24px;
+            margin-right: 15px;
+        }
+
+        .result-info {
+            flex: 1;
+        }
+
+        .result-name {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 3px;
+        }
+
+        .result-path {
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+
+        .search-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .method-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .method-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+
+        .method-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 35px;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .method1-icon { background: linear-gradient(135deg, #3498db, #2980b9); }
+        .method2-icon { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+        .method3-icon { background: linear-gradient(135deg, #f39c12, #e67e22); }
+
+        .method-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .method-description {
+            font-size: 14px;
+            color: #7f8c8d;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .method-example {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid;
+            margin-top: 15px;
+        }
+
+        .method1-example { border-left-color: #3498db; }
+        .method2-example { border-left-color: #2ecc71; }
+        .method3-example { border-left-color: #f39c12; }
+
+        .example-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .example-text {
+            font-size: 12px;
+            color: #555;
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        .search-tips {
+            background: linear-gradient(135deg, #e8f8f5, #d5f4e6);
+            padding: 30px;
+            border-radius: 20px;
+            border-left: 4px solid #2ecc71;
+            margin-bottom: 30px;
+        }
+
+        .search-tips h3 {
+            color: #27ae60;
+            margin: 0 0 20px 0;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .tip-item {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 3px solid #27ae60;
+        }
+
+        .tip-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .tip-description {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .completion-message {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            margin-top: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .completion-message::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .completion-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin: 0 auto 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .completion-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .completion-text {
+            font-size: 16px;
+            line-height: 1.6;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .main-title {
+                font-size: 24px;
+            }
+            
+            .search-methods {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .method-card {
+                padding: 25px;
+            }
+            
+            .search-bar-area {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .search-box {
+                width: 100%;
+            }
+            
+            .tips-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .completion-title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="main-title">🔍 ファイル検索機能</h1>
+        
+        <!-- イントロセクション -->
+        <div class="intro-section">
+            <div class="search-icon">
+                🔍
+                <div class="magnifying-effect">✨</div>
+            </div>
+            <p class="intro-text">
+                ファイルが見つからない時の強い味方！<br>
+                <strong>検索機能</strong>を使えば、ファイル名の一部を覚えているだけで<br>
+                コンピューター全体からファイルを素早く見つけることができます。
+            </p>
+        </div>
+
+        <!-- 検索ボックスデモ -->
+        <div class="search-box-demo">
+            <h3 class="demo-title">📋 検索ボックスの使用例</h3>
+            <div class="explorer-window-sim">
+                <div class="window-header-sim">📁 エクスプローラー - ファイル検索</div>
+                <div class="search-bar-area">
+                    <input type="text" class="search-box" placeholder="ファイル名の一部を入力..." value="家計簿" readonly>
+                    <button class="search-button">🔍 検索</button>
+                </div>
+                <div class="search-results-area">
+                    <div class="result-item">
+                        <div class="result-icon">📊</div>
+                        <div class="result-info">
+                            <div class="result-name">家計簿2024.xlsx</div>
+                            <div class="result-path">C:\Users\ユーザー名\Documents\</div>
+                        </div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-icon">📄</div>
+                        <div class="result-info">
+                            <div class="result-name">家計簿テンプレート.docx</div>
+                            <div class="result-path">C:\Users\ユーザー名\Desktop\</div>
+                        </div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-icon">📂</div>
+                        <div class="result-info">
+                            <div class="result-name">家計簿データ</div>
+                            <div class="result-path">C:\Users\ユーザー名\Documents\</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 検索方法の説明 -->
+        <div class="search-methods">
+            <div class="method-card">
+                <div class="method-icon method1-icon">🔍</div>
+                <h3 class="method-title">エクスプローラー検索</h3>
+                <p class="method-description">
+                    エクスプローラーの右上にある検索ボックスにファイル名の一部を入力します。
+                    現在開いているフォルダとその中のサブフォルダから検索されます。
+                </p>
+                <div class="method-example method1-example">
+                    <div class="example-title">📌 使用例</div>
+                    <div class="example-text">
+                        「写真」と入力 → 「旅行写真.jpg」「家族写真2024.png」などが見つかる<br>
+                        「レポート」と入力 → 「月次レポート.docx」「年間レポート.pdf」などが表示
+                    </div>
+                </div>
+            </div>
+
+            <div class="method-card">
+                <div class="method-icon method2-icon">⚡</div>
+                <h3 class="method-title">スタートメニュー検索</h3>
+                <p class="method-description">
+                    Windowsボタン（スタートボタン）をクリックして、直接ファイル名を入力します。
+                    コンピューター全体からファイルやプログラムを検索できます。
+                </p>
+                <div class="method-example method2-example">
+                    <div class="example-title">📌 使用例</div>
+                    <div class="example-text">
+                        スタートボタンクリック → 「計算機」と入力 → 計算機アプリが表示<br>
+                        スタートボタンクリック → 「家計簿」と入力 → 関連ファイルが表示
+                    </div>
+                </div>
+            </div>
+
+            <div class="method-card">
+                <div class="method-icon method3-icon">🎯</div>
+                <h3 class="method-title">特定フォルダ内検索</h3>
+                <p class="method-description">
+                    デスクトップ、ドキュメント、ピクチャなど、特定のフォルダを開いてから
+                    そのフォルダ内だけを対象に検索することもできます。
+                </p>
+                <div class="method-example method3-example">
+                    <div class="example-title">📌 使用例</div>
+                    <div class="example-text">
+                        ピクチャフォルダを開く → 検索ボックスに「2024」と入力<br>
+                        → 2024年の写真だけが検索結果に表示される
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 検索のコツ -->
+        <div class="search-tips">
+            <h3>💡 効果的な検索のコツ</h3>
+            <div class="tips-grid">
+                <div class="tip-item">
+                    <div class="tip-title">🔤 部分一致で検索</div>
+                    <p class="tip-description">
+                        ファイル名全体を覚えていなくても大丈夫。
+                        「家計」「写真」「レポート」など、一部分だけでも検索できます。
+                    </p>
+                </div>
+
+                <div class="tip-item">
+                    <div class="tip-title">📅 日付で絞り込み</div>
+                    <p class="tip-description">
+                        「2024」「10月」などの日付情報を含めると、
+                        時期を限定して検索できます。
+                    </p>
+                </div>
+
+                <div class="tip-item">
+                    <div class="tip-title">📁 拡張子で検索</div>
+                    <p class="tip-description">
+                        「.jpg」「.docx」「.pdf」など、ファイルの種類で
+                        検索することも可能です。
+                    </p>
+                </div>
+
+                <div class="tip-item">
+                    <div class="tip-title">⏱️ 最近使用したファイル</div>
+                    <p class="tip-description">
+                        最近開いたファイルは、スタートメニューの
+                        「最近使用したファイル」からも確認できます。
+                    </p>
+                </div>
+
+                <div class="tip-item">
+                    <div class="tip-title">🔍 検索結果の確認</div>
+                    <p class="tip-description">
+                        検索結果をダブルクリックすると、そのファイルが開きます。
+                        右クリックで「フォルダーを開く」を選ぶと、保存場所がわかります。
+                    </p>
+                </div>
+
+                <div class="tip-item">
+                    <div class="tip-title">🎯 検索範囲の調整</div>
+                    <p class="tip-description">
+                        見つからない時は検索範囲を広げましょう。
+                        「PC」全体で検索すると、すべてのドライブから見つかります。
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Week 0.2完了メッセージ -->
+        <div class="completion-message">
+            <div class="completion-icon">🎉</div>
+            <h3 class="completion-title">Week 0.2 完了おめでとうございます！</h3>
+            <p class="completion-text">
+                ファイル・フォルダ操作の基本技術を習得しました！<br>
+                Week 0.1の基本操作技術と組み合わせて、<br>
+                デジタルファイルを自在に管理できるようになりました。<br><br>
+                <strong>次はWeek 1へ！本格的なプログラミング学習の始まりです。</strong>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

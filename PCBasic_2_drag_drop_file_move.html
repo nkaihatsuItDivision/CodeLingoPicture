@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ドラッグ&ドロップでのファイル移動</title>
+    <style>
+        body {
+            font-family: 'Yu Gothic', 'Hiragino Sans', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .main-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .intro-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .intro-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+        }
+
+        .drag-drop-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #3498db, #2ecc71);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            color: white;
+            margin: 0 auto 20px;
+            position: relative;
+            animation: dragMotion 3s ease-in-out infinite;
+        }
+
+        @keyframes dragMotion {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(20px); }
+        }
+
+        .drag-arrow {
+            position: absolute;
+            top: 50%;
+            right: -40px;
+            transform: translateY(-50%);
+            font-size: 30px;
+            color: #f39c12;
+            animation: arrowPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes arrowPulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .intro-text {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .demo-area {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .demo-area:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+        }
+
+        .demo-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #3498db;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .drag-demo-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 40px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .demo-folder {
+            width: 200px;
+            height: 150px;
+            border: 3px dashed #bdc3c7;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .source-folder {
+            border-color: #3498db;
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(41, 128, 185, 0.1));
+        }
+
+        .target-folder {
+            border-color: #2ecc71;
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.1), rgba(39, 174, 96, 0.1));
+        }
+
+        .target-folder.highlight {
+            border-color: #f39c12;
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.2), rgba(230, 126, 34, 0.2));
+            transform: scale(1.05);
+        }
+
+        .folder-icon {
+            font-size: 60px;
+            margin-bottom: 10px;
+        }
+
+        .folder-label {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        .draggable-file {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 40px;
+            cursor: move;
+            transition: all 0.3s ease;
+            top: 40px;
+            left: 60px;
+            z-index: 10;
+            animation: fileMove 4s ease-in-out infinite;
+        }
+
+        @keyframes fileMove {
+            0%, 25% { 
+                left: 60px; 
+                transform: scale(1); 
+            }
+            50%, 75% { 
+                left: 420px; 
+                transform: scale(0.9); 
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
+            }
+            100% { 
+                left: 60px; 
+                transform: scale(1); 
+            }
+        }
+
+        .file-label {
+            font-size: 8px;
+            margin-top: 2px;
+            text-align: center;
+        }
+
+        .drag-path {
+            position: absolute;
+            top: 80px;
+            left: 140px;
+            right: 140px;
+            height: 2px;
+            background: linear-gradient(to right, #3498db, #f39c12, #2ecc71);
+            border-radius: 1px;
+            opacity: 0.7;
+            animation: pathGlow 4s ease-in-out infinite;
+        }
+
+        @keyframes pathGlow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .step-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .step-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #3498db, #2ecc71);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .step-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .step-description {
+            font-size: 14px;
+            color: #7f8c8d;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .mouse-instruction {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid;
+            margin-top: 15px;
+        }
+
+        .step1-instruction { border-left-color: #3498db; }
+        .step2-instruction { border-left-color: #f39c12; }
+        .step3-instruction { border-left-color: #e74c3c; }
+        .step4-instruction { border-left-color: #2ecc71; }
+
+        .instruction-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .instruction-text {
+            font-size: 12px;
+            color: #555;
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        .advantages-section {
+            background: linear-gradient(135deg, #e8f8f5, #d5f4e6);
+            padding: 30px;
+            border-radius: 20px;
+            border-left: 4px solid #2ecc71;
+            margin-bottom: 30px;
+        }
+
+        .advantages-section h3 {
+            color: #27ae60;
+            margin: 0 0 20px 0;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .advantages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .advantage-item {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 3px solid #27ae60;
+        }
+
+        .advantage-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .advantage-description {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .week-connection {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 4px solid #f39c12;
+            margin-top: 30px;
+        }
+
+        .week-connection h3 {
+            color: #e67e22;
+            margin: 0 0 15px 0;
+            font-size: 20px;
+        }
+
+        .week-connection p {
+            color: #2c3e50;
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .main-title {
+                font-size: 24px;
+            }
+            
+            .drag-demo-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .demo-folder {
+                width: 150px;
+                height: 120px;
+            }
+            
+            .draggable-file {
+                position: static;
+                margin: 20px auto;
+                animation: none;
+            }
+            
+            .drag-path {
+                display: none;
+            }
+            
+            .steps-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .step-card {
+                padding: 25px;
+            }
+            
+            .advantages-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="main-title">🔄 ドラッグ&ドロップでファイル移動</h1>
+        
+        <!-- イントロセクション -->
+        <div class="intro-section">
+            <div class="drag-drop-icon">
+                📄
+                <div class="drag-arrow">→</div>
+            </div>
+            <p class="intro-text">
+                Week 0.1で練習した<strong>ドラッグ&ドロップ</strong>の技術が大活躍！<br>
+                ファイルを掴んで移動させる、直感的で楽しい操作方法です。<br>
+                <strong>マウスだけで簡単にファイルを整理できます</strong>
+            </p>
+        </div>
+
+        <!-- デモンストレーション -->
+        <div class="demo-area">
+            <h3 class="demo-title">📋 ドラッグ&ドロップの動作イメージ</h3>
+            <div class="drag-demo-container">
+                <div class="demo-folder source-folder">
+                    <div class="folder-icon">📁</div>
+                    <div class="folder-label">移動元フォルダ<br>（デスクトップなど）</div>
+                </div>
+
+                <div class="draggable-file">
+                    📄
+                    <div class="file-label">写真.jpg</div>
+                </div>
+
+                <div class="demo-folder target-folder">
+                    <div class="folder-icon">📁</div>
+                    <div class="folder-label">移動先フォルダ<br>（ピクチャなど）</div>
+                </div>
+
+                <div class="drag-path"></div>
+            </div>
+            <p style="text-align: center; color: #7f8c8d; font-size: 14px; margin: 0;">
+                ファイルを掴んで移動先にドロップする様子
+            </p>
+        </div>
+
+        <!-- ステップ説明 -->
+        <div class="steps-container">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3 class="step-title">ファイルの上でマウスボタンを押す</h3>
+                <p class="step-description">
+                    移動したいファイルの上にマウスカーソルを合わせて、
+                    左ボタンを押します（まだ離しません）。
+                    ファイルが「掴まれた」状態になります。
+                </p>
+                <div class="mouse-instruction step1-instruction">
+                    <div class="instruction-title">📌 マウス操作のポイント</div>
+                    <div class="instruction-text">
+                        左ボタンを「押したまま」がポイントです。
+                        クリックして離すのではなく、押し続けます。
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3 class="step-title">ボタンを押したまま移動先まで移動</h3>
+                <p class="step-description">
+                    左ボタンを押したまま、マウスを移動先のフォルダまで
+                    ゆっくりと移動させます。ファイルがマウスについて
+                    移動する様子が確認できます。
+                </p>
+                <div class="mouse-instruction step2-instruction">
+                    <div class="instruction-title">📌 移動のコツ</div>
+                    <div class="instruction-text">
+                        慌てずにゆっくりと移動しましょう。
+                        途中でボタンを離してしまっても大丈夫、やり直せます。
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3 class="step-title">移動先フォルダの上でボタンを離す</h3>
+                <p class="step-description">
+                    移動先のフォルダの上にマウスカーソルが来たら、
+                    左ボタンを離します。これで「ドロップ」完了です。
+                    ファイルが移動先フォルダに移動されます。
+                </p>
+                <div class="mouse-instruction step3-instruction">
+                    <div class="instruction-title">📌 ドロップの目印</div>
+                    <div class="instruction-text">
+                        移動先フォルダが少し光ったり、色が変わったりします。
+                        この状態でボタンを離せば成功です。
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h3 class="step-title">移動完了を確認</h3>
+                <p class="step-description">
+                    移動先フォルダを開いて、ファイルが正しく移動されているか
+                    確認しましょう。移動元にはファイルがなくなり、
+                    移動先に表示されていれば成功です！
+                </p>
+                <div class="mouse-instruction step4-instruction">
+                    <div class="instruction-title">📌 確認方法</div>
+                    <div class="instruction-text">
+                        移動先フォルダをダブルクリックで開いて確認。
+                        ファイルが見つからない場合は、検索機能も使えます。
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ドラッグ&ドロップの利点 -->
+        <div class="advantages-section">
+            <h3>✨ ドラッグ&ドロップの利点</h3>
+            <div class="advantages-grid">
+                <div class="advantage-item">
+                    <div class="advantage-title">🚀 速くて簡単</div>
+                    <p class="advantage-description">
+                        右クリック→切り取り→移動→貼り付けより、
+                        はるかに早く直感的にファイル移動ができます。
+                    </p>
+                </div>
+
+                <div class="advantage-item">
+                    <div class="advantage-title">👀 視覚的でわかりやすい</div>
+                    <p class="advantage-description">
+                        ファイルがマウスについて移動する様子が見えるので、
+                        どこに移動しているかが一目でわかります。
+                    </p>
+                </div>
+
+                <div class="advantage-item">
+                    <div class="advantage-title">🔄 やり直しが簡単</div>
+                    <p class="advantage-description">
+                        間違った場所にドロップしても、
+                        すぐに再度ドラッグ&ドロップで修正できます。
+                    </p>
+                </div>
+
+                <div class="advantage-item">
+                    <div class="advantage-title">📁 複数ファイル対応</div>
+                    <p class="advantage-description">
+                        複数のファイルを選択してから同時に
+                        ドラッグ&ドロップすることも可能です。
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Week 0.1との連携 -->
+        <div class="week-connection">
+            <h3>🔗 Week 0.1技術の完全活用</h3>
+            <p>
+                <strong>ドラッグ&ドロップがそのまま実用化！</strong><br>
+                • Week 0.1で練習した「掴んで移動」の技術が核心<br>
+                • マウスの精密な移動操作（Week 0.1で習得済み）<br>
+                • 左ボタンの「押したまま」操作の実践活用<br>
+                • <strong>成長実感：</strong>練習した技術が実際のファイル管理で威力を発揮します！<br>
+                • <strong>安心ポイント：</strong>失敗しても、再度ドラッグ&ドロップで簡単に修正可能
+            </p>
+        </div>
+    </div>
+</body>
+</html>

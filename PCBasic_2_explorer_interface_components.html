@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>エクスプローラーの基本画面構成</title>
+    <style>
+        body {
+            font-family: 'Yu Gothic', 'Hiragino Sans', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .main-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .explorer-window {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .explorer-window:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+        }
+
+        .window-header {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            height: 40px;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            color: white;
+            position: relative;
+        }
+
+        .window-controls {
+            margin-left: auto;
+            display: flex;
+            gap: 8px;
+        }
+
+        .window-control {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .minimize { background: #f39c12; }
+        .maximize { background: #2ecc71; }
+        .close { background: #e74c3c; }
+
+        .ribbon-area {
+            background: #f8f9fa;
+            height: 60px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ribbon-area::after {
+            content: "リボン（ツールバー）";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(52, 152, 219, 0.9);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            animation: highlight-ribbon 3s infinite;
+        }
+
+        @keyframes highlight-ribbon {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        .ribbon-tabs {
+            display: flex;
+            gap: 20px;
+        }
+
+        .ribbon-tab {
+            padding: 8px 15px;
+            background: rgba(52, 152, 219, 0.1);
+            border-radius: 5px;
+            font-size: 12px;
+            color: #3498db;
+            cursor: pointer;
+        }
+
+        .address-bar-area {
+            background: #fff;
+            height: 40px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            position: relative;
+        }
+
+        .address-bar-area::after {
+            content: "アドレスバー";
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            background: rgba(46, 204, 113, 0.9);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+            animation: highlight-address 3s infinite 1s;
+        }
+
+        @keyframes highlight-address {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        .address-bar {
+            flex: 1;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            padding: 8px 12px;
+            font-size: 13px;
+            color: #495057;
+        }
+
+        .main-area {
+            display: flex;
+            height: 400px;
+        }
+
+        .navigation-pane {
+            width: 250px;
+            background: #f8f9fa;
+            border-right: 1px solid #e9ecef;
+            padding: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .navigation-pane::after {
+            content: "ナビゲーション\Aペイン";
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(243, 156, 18, 0.9);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+            white-space: pre;
+            text-align: center;
+            animation: highlight-nav 3s infinite 2s;
+        }
+
+        @keyframes highlight-nav {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 10px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            font-size: 13px;
+            color: #495057;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .nav-item:hover {
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .nav-icon {
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .main-pane {
+            flex: 1;
+            padding: 15px;
+            position: relative;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .main-pane::after {
+            content: "メインペイン\A（ファイル・フォルダ表示エリア）";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(231, 76, 60, 0.9);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            white-space: pre;
+            text-align: center;
+            animation: highlight-main 3s infinite 3s;
+        }
+
+        @keyframes highlight-main {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            font-size: 13px;
+            cursor: pointer;
+            opacity: 0.3;
+        }
+
+        .file-icon {
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .components-explanation {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .component-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .component-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+        }
+
+        .component-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .ribbon-icon { background: linear-gradient(135deg, #3498db, #2980b9); }
+        .address-icon { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+        .nav-icon-card { background: linear-gradient(135deg, #f39c12, #e67e22); }
+        .main-icon { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+
+        .component-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .component-description {
+            font-size: 14px;
+            color: #7f8c8d;
+            line-height: 1.6;
+        }
+
+        .tip-section {
+            background: linear-gradient(135deg, #e8f8f5, #d5f4e6);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 4px solid #2ecc71;
+            margin-top: 30px;
+        }
+
+        .tip-section h3 {
+            color: #27ae60;
+            margin: 0 0 15px 0;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tip-section p {
+            color: #2c3e50;
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .main-title {
+                font-size: 24px;
+            }
+            
+            .main-area {
+                height: 300px;
+            }
+            
+            .navigation-pane {
+                width: 200px;
+            }
+            
+            .components-explanation {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="main-title">🖥️ エクスプローラーの画面構成</h1>
+        
+        <!-- エクスプローラー画面の模式図 -->
+        <div class="explorer-window">
+            <div class="window-header">
+                <span>📁 エクスプローラー</span>
+                <div class="window-controls">
+                    <div class="window-control minimize"></div>
+                    <div class="window-control maximize"></div>
+                    <div class="window-control close"></div>
+                </div>
+            </div>
+            
+            <div class="ribbon-area">
+                <div class="ribbon-tabs">
+                    <div class="ribbon-tab">ファイル</div>
+                    <div class="ribbon-tab">ホーム</div>
+                    <div class="ribbon-tab">共有</div>
+                    <div class="ribbon-tab">表示</div>
+                </div>
+            </div>
+            
+            <div class="address-bar-area">
+                <div class="address-bar">📁 PC > ドキュメント > マイファイル</div>
+            </div>
+            
+            <div class="main-area">
+                <div class="navigation-pane">
+                    <div class="nav-item">
+                        <span class="nav-icon">💻</span>
+                        <span>PC</span>
+                    </div>
+                    <div class="nav-item">
+                        <span class="nav-icon">🏠</span>
+                        <span>デスクトップ</span>
+                    </div>
+                    <div class="nav-item">
+                        <span class="nav-icon">📄</span>
+                        <span>ドキュメント</span>
+                    </div>
+                    <div class="nav-item">
+                        <span class="nav-icon">⬇️</span>
+                        <span>ダウンロード</span>
+                    </div>
+                    <div class="nav-item">
+                        <span class="nav-icon">🖼️</span>
+                        <span>ピクチャ</span>
+                    </div>
+                </div>
+                
+                <div class="main-pane">
+                    <div class="file-item">
+                        <span class="file-icon">📁</span>
+                        <span>サンプルフォルダ</span>
+                    </div>
+                    <div class="file-item">
+                        <span class="file-icon">📄</span>
+                        <span>サンプル文書.docx</span>
+                    </div>
+                    <div class="file-item">
+                        <span class="file-icon">🖼️</span>
+                        <span>写真.jpg</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 各エリアの詳細説明 -->
+        <div class="components-explanation">
+            <div class="component-card">
+                <div class="component-icon ribbon-icon">🧰</div>
+                <h3 class="component-title">リボン（ツールバー）</h3>
+                <p class="component-description">
+                    ファイル操作に使うボタンが並んでいるエリアです。
+                    コピー、貼り付け、削除、新規作成などの操作を行えます。
+                    まずは「見る場所」として覚えておきましょう。
+                </p>
+            </div>
+
+            <div class="component-card">
+                <div class="component-icon address-icon">📍</div>
+                <h3 class="component-title">アドレスバー</h3>
+                <p class="component-description">
+                    今いる場所（フォルダの位置）を表示します。
+                    「PC＞ドキュメント＞マイファイル」のように、
+                    現在の階層がわかります。迷子防止に役立ちます。
+                </p>
+            </div>
+
+            <div class="component-card">
+                <div class="component-icon nav-icon-card">🧭</div>
+                <h3 class="component-title">ナビゲーションペイン</h3>
+                <p class="component-description">
+                    左側のエリアで、よく使うフォルダにすぐ移動できます。
+                    デスクトップ、ドキュメント、ダウンロードなどが
+                    常に表示されているので、素早くアクセスできます。
+                </p>
+            </div>
+
+            <div class="component-card">
+                <div class="component-icon main-icon">📋</div>
+                <h3 class="component-title">メインペイン</h3>
+                <p class="component-description">
+                    実際のファイルとフォルダが表示されるメインエリアです。
+                    ここでファイルの一覧を見たり、ダブルクリックで
+                    開いたりする、最も重要な操作エリアです。
+                </p>
+            </div>
+        </div>
+
+        <!-- 使い方のコツ -->
+        <div class="tip-section">
+            <h3>💡 エクスプローラー活用のコツ</h3>
+            <p>
+                <strong>最初は「見るだけ」でOK！</strong><br>
+                • メインペインでファイル一覧を確認<br>
+                • ナビゲーションペインで移動<br>
+                • アドレスバーで現在位置を確認<br>
+                • リボンは慣れてから使い始めましょう<br><br>
+                <strong>安心ポイント：</strong>「見るだけ」なら何も壊れません。最初はじっくり観察してください！
+            </p>
+        </div>
+    </div>
+</body>
+</html>

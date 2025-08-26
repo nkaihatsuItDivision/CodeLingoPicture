@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>重要な場所（デスクトップ、ドキュメント等）</title>
+    <style>
+        body {
+            font-family: 'Yu Gothic', 'Hiragino Sans', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .main-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .intro-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .intro-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+        }
+
+        .house-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #3498db, #2ecc71);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            color: white;
+            margin: 0 auto 20px;
+        }
+
+        .intro-text {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .locations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .location-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .location-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+
+        .location-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: white;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .desktop-icon { background: linear-gradient(135deg, #3498db, #2980b9); }
+        .documents-icon { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+        .downloads-icon { background: linear-gradient(135deg, #f39c12, #e67e22); }
+        .pictures-icon { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+
+        .location-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .location-description {
+            font-size: 14px;
+            color: #7f8c8d;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .usage-examples {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid;
+            margin-top: 15px;
+        }
+
+        .desktop-examples { border-left-color: #3498db; }
+        .documents-examples { border-left-color: #2ecc71; }
+        .downloads-examples { border-left-color: #f39c12; }
+        .pictures-examples { border-left-color: #e74c3c; }
+
+        .usage-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .usage-list {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .comparison-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .comparison-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+        }
+
+        .comparison-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #3498db;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+            background: white;
+        }
+
+        .comparison-table tbody tr:nth-child(even) td {
+            background: #f8f9fa;
+        }
+
+        .comparison-table tbody tr:hover td {
+            background: #e3f2fd;
+        }
+
+        .location-name {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .best-practices {
+            background: linear-gradient(135deg, #e8f8f5, #d5f4e6);
+            padding: 30px;
+            border-radius: 20px;
+            border-left: 4px solid #2ecc71;
+            margin-top: 30px;
+        }
+
+        .best-practices h3 {
+            color: #27ae60;
+            margin: 0 0 20px 0;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .practices-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .practice-item {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 3px solid #27ae60;
+        }
+
+        .practice-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .practice-description {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .main-title {
+                font-size: 24px;
+            }
+            
+            .locations-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .location-card {
+                padding: 25px;
+            }
+            
+            .comparison-table {
+                font-size: 12px;
+            }
+            
+            .comparison-table th,
+            .comparison-table td {
+                padding: 10px;
+            }
+            
+            .practices-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="main-title">🏠 重要な場所 - ファイルの住所を知ろう</h1>
+        
+        <!-- イントロセクション -->
+        <div class="intro-section">
+            <div class="house-icon">🏘️</div>
+            <p class="intro-text">
+                コンピューターの中には、ファイルを整理するための「決まった場所」があります。<br>
+                まるで家の中の「リビング」「キッチン」「寝室」のように、それぞれに役割があります。<br>
+                <strong>主要な4つの場所を覚えて、ファイル管理の達人になりましょう！</strong>
+            </p>
+        </div>
+
+        <!-- 主要な場所の詳細 -->
+        <div class="locations-grid">
+            <div class="location-card">
+                <div class="location-icon desktop-icon">🖥️</div>
+                <h3 class="location-title">デスクトップ</h3>
+                <p class="location-description">
+                    パソコンを起動して最初に見える画面のことです。
+                    よく使うファイルやフォルダを置いて、すぐにアクセスできます。
+                    玄関のような役割で、いつでも目につく場所です。
+                </p>
+                <div class="usage-examples desktop-examples">
+                    <div class="usage-title">📌 こんな時に使おう</div>
+                    <div class="usage-list">
+                        • よく開くファイルのショートカット<br>
+                        • 一時的に使うファイル<br>
+                        • すぐに見つけたい重要な文書<br>
+                        • ダウンロードしたファイルの仕分け前
+                    </div>
+                </div>
+            </div>
+
+            <div class="location-card">
+                <div class="location-icon documents-icon">📄</div>
+                <h3 class="location-title">ドキュメント</h3>
+                <p class="location-description">
+                    文書ファイルを保存する標準的な場所です。
+                    Word、Excel、PowerPointなどで作成したファイルは
+                    ここに保存するのが一般的です。書斎のような役割です。
+                </p>
+                <div class="usage-examples documents-examples">
+                    <div class="usage-title">📌 こんな時に使おう</div>
+                    <div class="usage-list">
+                        • 作成した文書、表計算ファイル<br>
+                        • プロジェクト関連の資料<br>
+                        • 学習用ノート、レポート<br>
+                        • 仕事関連の重要書類
+                    </div>
+                </div>
+            </div>
+
+            <div class="location-card">
+                <div class="location-icon downloads-icon">⬇️</div>
+                <h3 class="location-title">ダウンロード</h3>
+                <p class="location-description">
+                    インターネットからダウンロードしたファイルが
+                    自動的に保存される場所です。宅配ボックスのような
+                    役割で、外から届いたファイルの受け取り場所です。
+                </p>
+                <div class="usage-examples downloads-examples">
+                    <div class="usage-title">📌 こんな時に使おう</div>
+                    <div class="usage-list">
+                        • ウェブからダウンロードした画像<br>
+                        • ソフトウェアのインストールファイル<br>
+                        • PDFカタログ、資料<br>
+                        • メール添付ファイル
+                    </div>
+                </div>
+            </div>
+
+            <div class="location-card">
+                <div class="location-icon pictures-icon">🖼️</div>
+                <h3 class="location-title">ピクチャ</h3>
+                <p class="location-description">
+                    写真や画像ファイルを保存する専用の場所です。
+                    デジカメの写真、スクリーンショット、イラストなどを
+                    整理して保存します。アルバム置き場のような役割です。
+                </p>
+                <div class="usage-examples pictures-examples">
+                    <div class="usage-title">📌 こんな時に使おう</div>
+                    <div class="usage-list">
+                        • デジカメ・スマホの写真<br>
+                        • スクリーンショット画像<br>
+                        • イラスト、図面ファイル<br>
+                        • ウェブから保存した画像
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 比較表 -->
+        <div class="comparison-section">
+            <h3 class="comparison-title">📊 各場所の特徴比較</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>場所</th>
+                        <th>主な用途</th>
+                        <th>アクセス頻度</th>
+                        <th>整理のしやすさ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="location-name">🖥️ デスクトップ</td>
+                        <td>頻繁に使うファイルの一時置き場</td>
+                        <td>非常に高い</td>
+                        <td>★★☆☆☆</td>
+                    </tr>
+                    <tr>
+                        <td class="location-name">📄 ドキュメント</td>
+                        <td>文書ファイルの長期保存</td>
+                        <td>高い</td>
+                        <td>★★★★★</td>
+                    </tr>
+                    <tr>
+                        <td class="location-name">⬇️ ダウンロード</td>
+                        <td>外部ファイルの受け取り・仕分け前</td>
+                        <td>中程度</td>
+                        <td>★★☆☆☆</td>
+                    </tr>
+                    <tr>
+                        <td class="location-name">🖼️ ピクチャ</td>
+                        <td>画像・写真の専門保存場所</td>
+                        <td>中程度</td>
+                        <td>★★★★☆</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ベストプラクティス -->
+        <div class="best-practices">
+            <h3>💡 効果的な使い分けのコツ</h3>
+            <div class="practices-grid">
+                <div class="practice-item">
+                    <div class="practice-title">🎯 目的別整理</div>
+                    <p class="practice-description">
+                        作業の種類に応じて場所を使い分けます。
+                        文書はドキュメント、画像はピクチャという基本を守りましょう。
+                    </p>
+                </div>
+
+                <div class="practice-item">
+                    <div class="practice-title">🧹 定期的な整理</div>
+                    <p class="practice-description">
+                        デスクトップとダウンロードは定期的に整理します。
+                        週1回程度、不要なファイルを削除し、必要なファイルを適切な場所に移動しましょう。
+                    </p>
+                </div>
+
+                <div class="practice-item">
+                    <div class="practice-title">📂 フォルダ活用</div>
+                    <p class="practice-description">
+                        各場所の中でさらにフォルダを作成して分類します。
+                        「2024年」「プロジェクトA」などの名前で整理すると見つけやすくなります。
+                    </p>
+                </div>
+
+                <div class="practice-item">
+                    <div class="practice-title">🔍 検索活用</div>
+                    <p class="practice-description">
+                        ファイルが見つからない時は、各場所で検索機能を活用しましょう。
+                        ファイル名の一部を覚えていれば簡単に見つかります。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
