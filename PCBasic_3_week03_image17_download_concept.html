@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>画像17: ダウンロードの仕組み</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .title {
+            font-size: 28px;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+
+        .download-concept {
+            background: radial-gradient(circle at center, #f0f8ff 0%, #e6f3ff 100%);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 30px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .concept-title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 40px;
+        }
+
+        .download-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 40px 0;
+            position: relative;
+        }
+
+        .internet-cloud {
+            position: relative;
+            text-align: center;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .cloud-icon {
+            font-size: 80px;
+            color: #3498db;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 4px 8px rgba(52, 152, 219, 0.3));
+        }
+
+        .cloud-label {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 16px;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .computer-device {
+            position: relative;
+            text-align: center;
+            animation: float 4s ease-in-out infinite 1s;
+        }
+
+        .computer-icon {
+            font-size: 80px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 4px 8px rgba(44, 62, 80, 0.3));
+        }
+
+        .computer-label {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 16px;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(44, 62, 80, 0.3);
+        }
+
+        .download-arrow {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .arrow-line {
+            width: 200px;
+            height: 6px;
+            background: linear-gradient(90deg, #e74c3c 0%, #c0392b 100%);
+            border-radius: 3px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .arrow-line::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.8) 50%, transparent 100%);
+            animation: flow 2s ease-in-out infinite;
+        }
+
+        .arrow-head {
+            font-size: 40px;
+            color: #e74c3c;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .download-label {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .file-types {
+            display: flex;
+            justify-content: space-around;
+            margin: 40px 0;
+            gap: 20px;
+        }
+
+        .file-type {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 2px solid #ecf0f1;
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .file-type:nth-child(1) { animation-delay: 0.2s; }
+        .file-type:nth-child(2) { animation-delay: 0.4s; }
+        .file-type:nth-child(3) { animation-delay: 0.6s; }
+        .file-type:nth-child(4) { animation-delay: 0.8s; }
+
+        .file-type:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .file-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .pdf-icon { color: #dc3545; }
+        .image-icon { color: #28a745; }
+        .zip-icon { color: #ffc107; }
+        .doc-icon { color: #007bff; }
+
+        .file-name {
+            color: #2c3e50;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .file-desc {
+            color: #6c757d;
+            font-size: 12px;
+        }
+
+        .download-folder {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border: 2px solid #f39c12;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .folder-icon {
+            font-size: 48px;
+            color: #f39c12;
+            margin-bottom: 15px;
+            animation: wiggle 2s ease-in-out infinite;
+        }
+
+        .folder-title {
+            color: #856404;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .folder-path {
+            color: #856404;
+            font-size: 14px;
+            font-family: monospace;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 8px 15px;
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        .safety-checklist {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border-left: 5px solid #28a745;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .checklist-title {
+            color: #155724;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .check-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            border: 1px solid #c3e6cb;
+        }
+
+        .check-icon {
+            color: #28a745;
+            font-size: 18px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .check-text {
+            color: #155724;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .check-text strong {
+            color: #0f3621;
+        }
+
+        .process-steps {
+            background: radial-gradient(circle at center, #e8f4fd 0%, #c3e8ff 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .steps-title {
+            color: #2c3e50;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .steps-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(44, 62, 80, 0.1);
+        }
+
+        .step-item:last-child {
+            border-bottom: none;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            background: #3498db;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .step-text {
+            color: #2c3e50;
+            font-size: 16px;
+            flex: 1;
+            line-height: 1.5;
+        }
+
+        .highlight {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+
+        @keyframes flow {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-8px); }
+            60% { transform: translateX(-50%) translateY(-4px); }
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .title { font-size: 22px; }
+            .container { padding: 20px; }
+            .download-flow { flex-direction: column; gap: 30px; }
+            .arrow-line { width: 100px; transform: rotate(90deg); }
+            .download-label { top: 10px; left: 120px; transform: none; }
+            .file-types { flex-wrap: wrap; }
+            .cloud-icon, .computer-icon { font-size: 60px; }
+            .check-items { grid-template-columns: 1fr; }
+            .step-text { font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">📥 ファイルダウンロードの仕組み</div>
+
+        <div class="download-concept">
+            <div class="concept-title">インターネットからパソコンへのファイル転送</div>
+
+            <div class="download-flow">
+                <div class="internet-cloud">
+                    <div class="cloud-icon">☁️</div>
+                    <div class="cloud-label">インターネット</div>
+                </div>
+
+                <div class="download-arrow">
+                    <div class="download-label">ダウンロード</div>
+                    <div class="arrow-line"></div>
+                    <div class="arrow-head">▶️</div>
+                </div>
+
+                <div class="computer-device">
+                    <div class="computer-icon">💻</div>
+                    <div class="computer-label">あなたのパソコン</div>
+                </div>
+            </div>
+
+            <div class="file-types">
+                <div class="file-type">
+                    <div class="file-icon pdf-icon">📄</div>
+                    <div class="file-name">PDFファイル</div>
+                    <div class="file-desc">文書・マニュアル</div>
+                </div>
+                <div class="file-type">
+                    <div class="file-icon image-icon">🖼️</div>
+                    <div class="file-name">画像ファイル</div>
+                    <div class="file-desc">写真・イラスト</div>
+                </div>
+                <div class="file-type">
+                    <div class="file-icon zip-icon">🗜️</div>
+                    <div class="file-name">圧縮ファイル</div>
+                    <div class="file-desc">ZIP・RAR</div>
+                </div>
+                <div class="file-type">
+                    <div class="file-icon doc-icon">📝</div>
+                    <div class="file-name">文書ファイル</div>
+                    <div class="file-desc">Word・Excel</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="download-folder">
+            <div class="folder-icon">📁</div>
+            <div class="folder-title">ダウンロードフォルダ</div>
+            <div class="folder-path">C:\Users\ユーザー名\Downloads</div>
+        </div>
+
+        <div class="safety-checklist">
+            <div class="checklist-title">
+                <span>🛡️</span>
+                安全なダウンロードのチェックポイント
+            </div>
+            <div class="check-items">
+                <div class="check-item">
+                    <div class="check-icon">✅</div>
+                    <div class="check-text">
+                        <strong>信頼できるサイトから：</strong><br>
+                        公式サイトや有名なダウンロードサイトを利用
+                    </div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon">✅</div>
+                    <div class="check-text">
+                        <strong>HTTPSでの接続確認：</strong><br>
+                        鍵マーク（🔒）があることを確認
+                    </div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon">✅</div>
+                    <div class="check-text">
+                        <strong>ファイルサイズの確認：</strong><br>
+                        予想されるサイズと大きく異なる場合は注意
+                    </div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon">✅</div>
+                    <div class="check-text">
+                        <strong>ウイルス対策ソフト：</strong><br>
+                        ダウンロード後の自動スキャンを有効化
+                    </div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon">✅</div>
+                    <div class="check-text">
+                        <strong>拡張子の確認：</strong><br>
+                        .exe や .bat ファイルは特に慎重に扱う
+                    </div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon">✅</div>
+                    <div class="check-text">
+                        <strong>ダウンロード履歴の管理：</strong><br>
+                        どこから何をダウンロードしたか記録
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="process-steps">
+            <div class="steps-title">
+                <span>📋</span>
+                ダウンロードの基本手順
+            </div>
+            <ul class="steps-list">
+                <li class="step-item">
+                    <div class="step-number">1</div>
+                    <div class="step-text"><span class="highlight">ダウンロードリンク</span>を探してクリックします</div>
+                </li>
+                <li class="step-item">
+                    <div class="step-number">2</div>
+                    <div class="step-text">ブラウザに<span class="highlight">「ダウンロード開始」</span>の確認画面が表示されます</div>
+                </li>
+                <li class="step-item">
+                    <div class="step-number">3</div>
+                    <div class="step-text">ファイルは通常<span class="highlight">「ダウンロードフォルダ」</span>に自動保存されます</div>
+                </li>
+                <li class="step-item">
+                    <div class="step-number">4</div>
+                    <div class="step-text">ダウンロード完了後、<span class="highlight">ウイルススキャン</span>を実行（自動/手動）</div>
+                </li>
+                <li class="step-item">
+                    <div class="step-number">5</div>
+                    <div class="step-text">安全が確認できたら<span class="highlight">ファイルを開く</span>または適切なフォルダに移動</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

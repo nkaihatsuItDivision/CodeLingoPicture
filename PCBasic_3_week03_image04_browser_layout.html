@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 0.3 画像4: ブラウザ画面の構成</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .browser-mockup {
+            background: #f5f5f5;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .browser-header {
+            background: #e8e8e8;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .control-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .control-btn.close { background: #ff5f57; }
+        .control-btn.minimize { background: #ffbd2e; }
+        .control-btn.maximize { background: #28ca42; }
+
+        .tab-bar {
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            border-bottom: 1px solid #e0e0e0;
+            position: relative;
+        }
+
+        .tab {
+            background: #f0f0f0;
+            border: 1px solid #d0d0d0;
+            border-bottom: none;
+            border-radius: 8px 8px 0 0;
+            padding: 10px 15px;
+            margin-right: 5px;
+            font-size: 14px;
+            color: #666;
+            position: relative;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .tab.active {
+            background: white;
+            color: #333;
+            border-bottom: 1px solid white;
+            margin-bottom: -1px;
+        }
+
+        .tab-close {
+            margin-left: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .new-tab-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: #666;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .toolbar {
+            background: white;
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            gap: 10px;
+            border-bottom: 1px solid #e0e0e0;
+            position: relative;
+        }
+
+        .nav-button {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #d0d0d0;
+            border-radius: 4px;
+            background: #f8f8f8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            color: #666;
+            position: relative;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .nav-button.back { animation-delay: 0s; }
+        .nav-button.forward { animation-delay: 0.3s; }
+        .nav-button.refresh { animation-delay: 0.6s; }
+
+        .nav-button:hover {
+            background: #e8e8e8;
+        }
+
+        .address-bar {
+            flex: 1;
+            height: 32px;
+            border: 1px solid #d0d0d0;
+            border-radius: 16px;
+            padding: 0 15px;
+            font-size: 14px;
+            background: white;
+            display: flex;
+            align-items: center;
+            position: relative;
+            animation: pulse 2s ease-in-out infinite;
+            animation-delay: 1s;
+        }
+
+        .security-icon {
+            color: #2ecc71;
+            margin-right: 8px;
+            font-size: 16px;
+        }
+
+        .bookmark-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #d0d0d0;
+            border-radius: 4px;
+            background: #f8f8f8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            color: #666;
+            margin-left: 10px;
+            animation: float 3s ease-in-out infinite;
+            animation-delay: 1.3s;
+        }
+
+        .menu-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            color: #666;
+            animation: float 3s ease-in-out infinite;
+            animation-delay: 1.6s;
+        }
+
+        .content-area {
+            background: white;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #999;
+        }
+
+        .label {
+            position: absolute;
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .label-1 { top: -12px; left: 50%; transform: translateX(-50%); }
+        .label-2 { top: 50%; left: -12px; transform: translateY(-50%); }
+        .label-3 { top: 50%; left: -12px; transform: translateY(-50%); }
+        .label-4 { top: 50%; right: -12px; transform: translateY(-50%); }
+        .label-5 { top: 50%; right: -12px; transform: translateY(-50%); }
+        .label-6 { top: 50%; right: -12px; transform: translateY(-50%); }
+        .label-7 { top: 50%; right: -12px; transform: translateY(-50%); }
+
+        .explanations {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .explanation-item {
+            background: radial-gradient(circle at center, #e8f4fd 0%, #c3e8ff 100%);
+            border-radius: 12px;
+            padding: 15px;
+            border-left: 4px solid;
+            animation: ripple 4s ease-in-out infinite;
+        }
+
+        .explanation-item:nth-child(1) { border-left-color: #e74c3c; animation-delay: 0s; }
+        .explanation-item:nth-child(2) { border-left-color: #3498db; animation-delay: 0.5s; }
+        .explanation-item:nth-child(3) { border-left-color: #2ecc71; animation-delay: 1s; }
+        .explanation-item:nth-child(4) { border-left-color: #f39c12; animation-delay: 1.5s; }
+        .explanation-item:nth-child(5) { border-left-color: #9b59b6; animation-delay: 2s; }
+        .explanation-item:nth-child(6) { border-left-color: #1abc9c; animation-delay: 2.5s; }
+        .explanation-item:nth-child(7) { border-left-color: #34495e; animation-delay: 3s; }
+
+        .explanation-number {
+            display: inline-block;
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            text-align: center;
+            line-height: 24px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .explanation-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .explanation-text {
+            font-size: 14px;
+            color: #34495e;
+            line-height: 1.5;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-3px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        @keyframes ripple {
+            0% { opacity: 0.8; transform: scale(0.98); }
+            50% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0.8; transform: scale(0.98); }
+        }
+
+        @media (max-width: 768px) {
+            .title { font-size: 22px; }
+            .container { padding: 20px; }
+            .explanations { grid-template-columns: 1fr; }
+            .address-bar { font-size: 12px; }
+            .content-area { height: 200px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">🌐 ブラウザ画面の各部分を覚えよう</div>
+        
+        <div class="browser-mockup">
+            <div class="browser-header">
+                <div class="window-controls">
+                    <div class="control-btn close"></div>
+                    <div class="control-btn minimize"></div>
+                    <div class="control-btn maximize"></div>
+                </div>
+            </div>
+            
+            <div class="tab-bar">
+                <div class="tab active">
+                    Google検索
+                    <span class="tab-close">×</span>
+                </div>
+                <div class="tab">
+                    新しいタブ
+                    <span class="tab-close">×</span>
+                </div>
+                <button class="new-tab-btn">+</button>
+                <div class="label label-1">1</div>
+            </div>
+            
+            <div class="toolbar">
+                <div class="nav-button back">
+                    ←
+                    <div class="label label-2">2</div>
+                </div>
+                <div class="nav-button forward">
+                    →
+                    <div class="label label-3">3</div>
+                </div>
+                <div class="nav-button refresh">
+                    ↻
+                    <div class="label label-4">4</div>
+                </div>
+                
+                <div class="address-bar">
+                    <span class="security-icon">🔒</span>
+                    https://www.google.com
+                    <div class="label label-5">5</div>
+                </div>
+                
+                <div class="bookmark-btn">
+                    ☆
+                    <div class="label label-6">6</div>
+                </div>
+                
+                <div class="menu-btn">
+                    ⋮
+                    <div class="label label-7">7</div>
+                </div>
+            </div>
+            
+            <div class="content-area">
+                ここにWebページの内容が表示されます
+            </div>
+        </div>
+
+        <div class="explanations">
+            <div class="explanation-item">
+                <div class="explanation-title">
+                    <span class="explanation-number">1</span>タブ
+                </div>
+                <div class="explanation-text">
+                    複数のWebページを同時に開けます。クリックでタブを切り替え、×で閉じることができます。
+                </div>
+            </div>
+
+            <div class="explanation-item">
+                <div class="explanation-title">
+                    <span class="explanation-number">2</span>戻るボタン
+                </div>
+                <div class="explanation-text">
+                    前に見ていたページに戻ります。履歴がない場合はグレーアウトします。
+                </div>
+            </div>
+
+            <div class="explanation-item">
+                <div class="explanation-title">
+                    <span class="explanation-number">3</span>進むボタン
+                </div>
+                <div class="explanation-text">
+                    戻った後に、次のページに進みます。通常はグレーアウトしています。
+                </div>
+            </div>
+
+            <div class="explanation-item">
+                <div class="explanation-title">
+                    <span class="explanation-number">4</span>更新ボタン
+                </div>
+                <div class="explanation-text">
+                    現在のページを再度読み込みます。最新の情報を確認したい時に使います。
+                </div>
+            </div>
+
+            <div class="explanation-item">
+                <div class="explanation-title">
+                    <span class="explanation-number">5</span>アドレスバー
+                </div>
+                <div class="explanation-text">
+                    現在のページのURLが表示されます。ここに新しいURLを入力して移動できます。
+                </div>
+            </div>
+
+            <div class="explanation-item">
+                <div class="explanation-title">
+                    <span class="explanation-number">6</span>ブックマーク
+                </div>
+                <div class="explanation-text">
+                    お気に入りのページを保存します。☆をクリックするとブックマークに追加されます。
+                </div>
+            </div>
+
+            <div class="explanation-item">
+                <div class="explanation-title">
+                    <span class="explanation-number">7</span>メニュー
+                </div>
+                <div class="explanation-text">
+                    ブラウザの設定や機能にアクセスします。履歴、ダウンロード、設定などがあります。
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>画像15: セキュリティ表示の確認</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .title {
+            font-size: 28px;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .security-example {
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .secure-example {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border: 3px solid #28a745;
+        }
+
+        .insecure-example {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            border: 3px solid #dc3545;
+        }
+
+        .security-badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            border-radius: 20px;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .secure-badge {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            animation: safePulse 2s ease-in-out infinite;
+        }
+
+        .insecure-badge {
+            background: linear-gradient(135deg, #dc3545 0%, #e74c3c 100%);
+            animation: dangerPulse 2s ease-in-out infinite;
+        }
+
+        .browser-bar {
+            background: #f8f9fa;
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 2px solid;
+        }
+
+        .secure-bar {
+            border-color: #28a745;
+            background: linear-gradient(135deg, #f8fff8 0%, #e8f5e8 100%);
+        }
+
+        .insecure-bar {
+            border-color: #dc3545;
+            background: linear-gradient(135deg, #fff8f8 0%, #fce8e8 100%);
+        }
+
+        .address-display {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 15px;
+            background: white;
+            border-radius: 25px;
+            border: 2px solid;
+            font-size: 16px;
+            position: relative;
+        }
+
+        .secure-address {
+            border-color: #28a745;
+            color: #155724;
+        }
+
+        .insecure-address {
+            border-color: #dc3545;
+            color: #721c24;
+        }
+
+        .security-icon {
+            font-size: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .secure-icon {
+            color: #28a745;
+        }
+
+        .insecure-icon {
+            color: #dc3545;
+        }
+
+        .protocol-highlight {
+            font-weight: bold;
+            padding: 3px 8px;
+            border-radius: 6px;
+        }
+
+        .https-highlight {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .http-highlight {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-message {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .secure-status {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #28a745;
+        }
+
+        .insecure-status {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #dc3545;
+        }
+
+        .explanation-text {
+            margin-top: 15px;
+            font-size: 14px;
+            line-height: 1.5;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .secure-explanation {
+            background: rgba(40, 167, 69, 0.1);
+            color: #155724;
+        }
+
+        .insecure-explanation {
+            background: rgba(220, 53, 69, 0.1);
+            color: #721c24;
+        }
+
+        .security-details {
+            background: radial-gradient(circle at center, #e8f4fd 0%, #c3e8ff 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .details-title {
+            color: #2c3e50;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .detail-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid;
+        }
+
+        .secure-card {
+            border-left-color: #28a745;
+        }
+
+        .insecure-card {
+            border-left-color: #dc3545;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .secure-title {
+            color: #155724;
+        }
+
+        .insecure-title {
+            color: #721c24;
+        }
+
+        .card-content {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .secure-content {
+            color: #155724;
+        }
+
+        .insecure-content {
+            color: #721c24;
+        }
+
+        .warning-section {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border-left: 5px solid #ffc107;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .warning-title {
+            color: #856404;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .warning-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .warning-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 10px 0;
+            color: #856404;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .warning-icon {
+            margin-right: 12px;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .highlight {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        @keyframes safePulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(40, 167, 69, 0.5); }
+            50% { box-shadow: 0 0 25px rgba(40, 167, 69, 0.8); }
+        }
+
+        @keyframes dangerPulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(220, 53, 69, 0.5); }
+            50% { box-shadow: 0 0 25px rgba(220, 53, 69, 0.8); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-3px); }
+        }
+
+        @media (max-width: 768px) {
+            .title { font-size: 22px; }
+            .container { padding: 20px; }
+            .comparison-container { grid-template-columns: 1fr; gap: 20px; }
+            .details-grid { grid-template-columns: 1fr; }
+            .address-display { font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">🔒 サイトのセキュリティ表示</div>
+
+        <div class="comparison-container">
+            <!-- 安全なサイト -->
+            <div class="security-example secure-example">
+                <div class="security-badge secure-badge">
+                    <span>🔒</span>
+                    安全なサイト
+                </div>
+
+                <div class="browser-bar secure-bar">
+                    <div class="address-display secure-address">
+                        <span class="security-icon secure-icon">🔒</span>
+                        <span class="protocol-highlight https-highlight">https://</span>www.example-bank.co.jp
+                    </div>
+                </div>
+
+                <div class="status-message secure-status">
+                    ✅ この接続は保護されています
+                </div>
+
+                <div class="explanation-text secure-explanation">
+                    <strong>HTTPS接続：</strong>データが暗号化されており、第三者による盗聴や改ざんから保護されています。個人情報の入力も安全です。
+                </div>
+            </div>
+
+            <!-- 危険なサイト -->
+            <div class="security-example insecure-example">
+                <div class="security-badge insecure-badge">
+                    <span>⚠️</span>
+                    危険なサイト
+                </div>
+
+                <div class="browser-bar insecure-bar">
+                    <div class="address-display insecure-address">
+                        <span class="security-icon insecure-icon">⚠️</span>
+                        <span class="protocol-highlight http-highlight">http://</span>www.suspicious-site.com
+                    </div>
+                </div>
+
+                <div class="status-message insecure-status">
+                    ⚠️ この接続は保護されていません
+                </div>
+
+                <div class="explanation-text insecure-explanation">
+                    <strong>HTTP接続：</strong>データが暗号化されておらず、通信内容が第三者に読み取られる可能性があります。個人情報の入力は危険です。
+                </div>
+            </div>
+        </div>
+
+        <div class="security-details">
+            <div class="details-title">
+                <span>🛡️</span>
+                セキュリティ表示の詳細
+            </div>
+            <div class="details-grid">
+                <div class="detail-card secure-card">
+                    <div class="card-title secure-title">
+                        <span>🔒</span>
+                        HTTPS（安全）
+                    </div>
+                    <div class="card-content secure-content">
+                        <strong>特徴：</strong><br>
+                        • 緑色の鍵マーク（🔒）<br>
+                        • 「https://」で開始<br>
+                        • 「保護されています」表示<br>
+                        • データが暗号化される<br>
+                        • 個人情報入力に適している
+                    </div>
+                </div>
+
+                <div class="detail-card insecure-card">
+                    <div class="card-title insecure-title">
+                        <span>⚠️</span>
+                        HTTP（危険）
+                    </div>
+                    <div class="card-content insecure-content">
+                        <strong>特徴：</strong><br>
+                        • 赤い警告マーク（⚠️）<br>
+                        • 「http://」で開始<br>
+                        • 「保護されていません」表示<br>
+                        • データが平文で送信<br>
+                        • 個人情報入力は避けるべき
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="warning-section">
+            <div class="warning-title">
+                <span>⚠️</span>
+                セキュリティチェックポイント
+            </div>
+            <ul class="warning-list">
+                <li class="warning-item">
+                    <span class="warning-icon">🔍</span>
+                    <span><strong>アドレスバーを必ず確認：</strong>「https://」で始まっているか確認しましょう</span>
+                </li>
+                <li class="warning-item">
+                    <span class="warning-icon">🔒</span>
+                    <span><strong>鍵マークの色をチェック：</strong><span class="highlight">緑色は安全、赤色は危険</span>です</span>
+                </li>
+                <li class="warning-item">
+                    <span class="warning-icon">💳</span>
+                    <span><strong>個人情報入力時は特に注意：</strong>クレジットカード情報はHTTPSサイトでのみ入力</span>
+                </li>
+                <li class="warning-item">
+                    <span class="warning-icon">🚫</span>
+                    <span><strong>怪しいサイトは避ける：</strong>警告が表示されたサイトでの重要な操作は控えましょう</span>
+                </li>
+                <li class="warning-item">
+                    <span class="warning-icon">📱</span>
+                    <span><strong>モバイルでも同様：</strong>スマートフォンブラウザでも同じセキュリティ表示を確認</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

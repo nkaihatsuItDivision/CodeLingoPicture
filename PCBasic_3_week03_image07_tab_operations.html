@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 0.3 画像7: タブの基本操作</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .browser-demo {
+            background: #f5f5f5;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        .window-controls {
+            background: #e8e8e8;
+            padding: 10px 15px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .control-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .control-btn.close { background: #ff5f57; }
+        .control-btn.minimize { background: #ffbd2e; }
+        .control-btn.maximize { background: #28ca42; }
+
+        .tab-container {
+            background: #f0f0f0;
+            display: flex;
+            align-items: end;
+            padding: 0 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab {
+            background: #d0d0d0;
+            border: 1px solid #c0c0c0;
+            border-bottom: none;
+            border-radius: 8px 8px 0 0;
+            padding: 12px 15px;
+            margin-right: 2px;
+            font-size: 14px;
+            color: #666;
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            max-width: 200px;
+            min-width: 120px;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            background: white;
+            color: #333;
+            border-bottom: 1px solid white;
+            margin-bottom: -1px;
+            z-index: 2;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .tab.inactive {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .tab.inactive:nth-child(2) { animation-delay: 0.5s; }
+        .tab.inactive:nth-child(3) { animation-delay: 1s; }
+        .tab.inactive:nth-child(4) { animation-delay: 1.5s; }
+
+        .tab-icon {
+            width: 16px;
+            height: 16px;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: white;
+        }
+
+        .google-icon { background: #4285f4; }
+        .youtube-icon { background: #ff0000; }
+        .github-icon { background: #333333; }
+        .news-icon { background: #0078d4; }
+
+        .tab-title {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .tab-close {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: all 0.2s;
+        }
+
+        .tab-close:hover {
+            background: rgba(0,0,0,0.2);
+            opacity: 1;
+        }
+
+        .new-tab-btn {
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: #666;
+            cursor: pointer;
+            padding: 12px;
+            border-radius: 4px;
+            margin-left: 5px;
+            transition: all 0.2s;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .new-tab-btn:hover {
+            background: rgba(0,0,0,0.1);
+        }
+
+        .highlight-bubble {
+            position: absolute;
+            background: #e74c3c;
+            color: white;
+            border-radius: 20px;
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+            z-index: 10;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .highlight-bubble::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: #e74c3c;
+        }
+
+        .content-area {
+            background: white;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #666;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+
+        .operations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .operation-card {
+            background: radial-gradient(circle at center, #e8f4fd 0%, #c3e8ff 100%);
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 5px solid;
+            animation: ripple 4s ease-in-out infinite;
+        }
+
+        .operation-card.switch { border-left-color: #3498db; animation-delay: 0s; }
+        .operation-card.close { border-left-color: #e74c3c; animation-delay: 0.5s; }
+        .operation-card.new { border-left-color: #2ecc71; animation-delay: 1s; }
+        .operation-card.reorder { border-left-color: #f39c12; animation-delay: 1.5s; }
+
+        .operation-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .operation-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        .operation-description {
+            font-size: 14px;
+            color: #34495e;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .operation-shortcut {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 12px;
+            color: #666;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .drag-demo {
+            background: #f8f9fa;
+            border: 2px dashed #3498db;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .drag-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .drag-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .drag-tab {
+            background: #3498db;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 14px;
+            position: relative;
+            cursor: move;
+        }
+
+        .drag-tab.moving {
+            animation: float 1s ease-in-out infinite;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+
+        .drag-arrow {
+            font-size: 24px;
+            color: #3498db;
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes ripple {
+            0% { opacity: 0.8; transform: scale(0.98); }
+            50% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0.8; transform: scale(0.98); }
+        }
+
+        @media (max-width: 768px) {
+            .title { font-size: 22px; }
+            .container { padding: 20px; }
+            .operations-grid { grid-template-columns: 1fr; }
+            .tab { min-width: 100px; max-width: 150px; }
+            .drag-tabs { flex-direction: column; gap: 10px; }
+            .drag-arrow { transform: rotate(90deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">📑 タブを便利に使いこなそう</div>
+        
+        <div class="browser-demo">
+            <div class="window-controls">
+                <div class="control-btn close"></div>
+                <div class="control-btn minimize"></div>
+                <div class="control-btn maximize"></div>
+            </div>
+            
+            <div class="tab-container">
+                <div class="tab active">
+                    <div class="tab-icon google-icon">G</div>
+                    <div class="tab-title">Google検索</div>
+                    <div class="tab-close">×</div>
+                </div>
+                
+                <div class="tab inactive">
+                    <div class="tab-icon youtube-icon">Y</div>
+                    <div class="tab-title">YouTube</div>
+                    <div class="tab-close">×</div>
+                </div>
+                
+                <div class="tab inactive">
+                    <div class="tab-icon github-icon">G</div>
+                    <div class="tab-title">GitHub</div>
+                    <div class="tab-close">×</div>
+                </div>
+                
+                <div class="tab inactive">
+                    <div class="tab-icon news-icon">N</div>
+                    <div class="tab-title">ニュース</div>
+                    <div class="tab-close">×</div>
+                </div>
+                
+                <button class="new-tab-btn">+</button>
+            </div>
+            
+            <div class="content-area">
+                現在アクティブなタブ（Google検索）の内容が表示されています
+            </div>
+        </div>
+
+        <div class="operations-grid">
+            <div class="operation-card switch">
+                <div class="operation-title">
+                    <span class="operation-icon">👆</span>タブの切り替え
+                </div>
+                <div class="operation-description">
+                    タブの名前部分をクリックすると、そのタブがアクティブになります。アクティブなタブは白い背景で表示されます。
+                </div>
+                <div class="operation-shortcut">ショートカット: Ctrl + Tab</div>
+            </div>
+
+            <div class="operation-card close">
+                <div class="operation-title">
+                    <span class="operation-icon">❌</span>タブを閉じる
+                </div>
+                <div class="operation-description">
+                    各タブの右端にある「×」をクリックすると、そのタブを閉じることができます。最後のタブを閉じるとブラウザが終了します。
+                </div>
+                <div class="operation-shortcut">ショートカット: Ctrl + W</div>
+            </div>
+
+            <div class="operation-card new">
+                <div class="operation-title">
+                    <span class="operation-icon">➕</span>新しいタブ
+                </div>
+                <div class="operation-description">
+                    「+」ボタンをクリックすると新しいタブが開きます。複数のサイトを同時に見たい時に便利です。
+                </div>
+                <div class="operation-shortcut">ショートカット: Ctrl + T</div>
+            </div>
+
+            <div class="operation-card reorder">
+                <div class="operation-title">
+                    <span class="operation-icon">🔄</span>タブの並び替え
+                </div>
+                <div class="operation-description">
+                    タブをドラッグして左右に動かすことで、タブの順序を変更できます。よく使うタブを左側に配置すると便利です。
+                </div>
+                <div class="operation-shortcut">方法: タブをドラッグ&ドロップ</div>
+            </div>
+        </div>
+
+        <div class="drag-demo">
+            <div class="drag-title">📱 タブの並び替え（ドラッグ&ドロップ）</div>
+            <div class="drag-tabs">
+                <div class="drag-tab">タブA</div>
+                <div class="drag-arrow">⇄</div>
+                <div class="drag-tab moving">タブB（移動中）</div>
+                <div class="drag-arrow">⇄</div>
+                <div class="drag-tab">タブC</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 0.3 画像6: ナビゲーションボタンの解説</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .navigation-showcase {
+            background: radial-gradient(circle at center, #e8f4fd 0%, #c3e8ff 100%);
+            border-radius: 15px;
+            padding: 40px 40px 120px 40px;
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .toolbar-demo {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .nav-button {
+            width: 36px;
+            height: 36px;
+            border: 1px solid #d0d0d0;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button.active {
+            background: #3498db;
+            color: white;
+            border-color: #2980b9;
+            animation: float 2s ease-in-out infinite;
+        }
+
+        .nav-button.disabled {
+            background: #f8f8f8;
+            color: #ccc;
+            border-color: #e8e8e8;
+            cursor: not-allowed;
+        }
+
+        .nav-button.enabled {
+            background: #f8f8f8;
+            color: #666;
+            border-color: #d0d0d0;
+        }
+
+        .nav-button.enabled:hover {
+            background: #e8e8e8;
+        }
+
+        .button-label {
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2c3e50;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .button-explanation {
+            position: absolute;
+            top: 80px;
+            background: white;
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 12px;
+            color: #2c3e50;
+            line-height: 1.4;
+            width: 160px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            animation: ripple 3s ease-in-out infinite;
+        }
+
+        .nav-button:nth-child(1) .button-explanation {
+            left: -140px;
+        }
+
+        .nav-button:nth-child(2) .button-explanation {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .nav-button:nth-child(4) .button-explanation {
+            right: -300px;
+        }
+
+        .separator {
+            width: 2px;
+            height: 24px;
+            background: #e0e0e0;
+        }
+
+        .states-comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .state-box {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid;
+            animation: ripple 4s ease-in-out infinite;
+        }
+
+        .state-box.available { 
+            border-left-color: #2ecc71; 
+            animation-delay: 0s; 
+        }
+
+        .state-box.unavailable { 
+            border-left-color: #e74c3c; 
+            animation-delay: 1s; 
+        }
+
+        .state-box.refresh { 
+            border-left-color: #f39c12; 
+            animation-delay: 2s; 
+        }
+
+        .state-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .state-icon {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+
+        .state-demo {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .state-description {
+            font-size: 14px;
+            color: #34495e;
+            line-height: 1.5;
+        }
+
+        .flow-demonstration {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+            position: relative;
+        }
+
+        .flow-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .flow-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .flow-step {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            min-width: 120px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .flow-step:nth-child(1) { animation-delay: 0s; }
+        .flow-step:nth-child(2) { animation-delay: 0.5s; }
+        .flow-step:nth-child(3) { animation-delay: 1s; }
+        .flow-step:nth-child(4) { animation-delay: 1.5s; }
+        .flow-step:nth-child(5) { animation-delay: 2s; }
+
+        .flow-arrow {
+            font-size: 24px;
+            color: #3498db;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .flow-page {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .flow-action {
+            font-size: 12px;
+            color: #3498db;
+            font-weight: bold;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes ripple {
+            0% { opacity: 0.8; transform: scale(0.98); }
+            50% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0.8; transform: scale(0.98); }
+        }
+
+        @media (max-width: 768px) {
+            .title { font-size: 22px; }
+            .container { padding: 20px; }
+            .navigation-showcase { padding: 25px 25px 100px 25px; }
+            .states-comparison { grid-template-columns: 1fr; }
+            .flow-steps { 
+                flex-direction: column; 
+                gap: 15px;
+            }
+            .flow-arrow { 
+                transform: rotate(90deg); 
+                margin: -10px 0;
+            }
+            .button-explanation {
+                width: 120px;
+                font-size: 11px;
+                padding: 8px;
+            }
+            .nav-button:nth-child(1) .button-explanation {
+                left: -100px;
+            }
+            .nav-button:nth-child(4) .button-explanation {
+                right: -170px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">🧭 ナビゲーションボタンを使いこなそう</div>
+        
+        <div class="navigation-showcase">
+            <div class="toolbar-demo">
+                <div class="nav-button enabled">
+                    ←
+                    <div class="button-label">戻る</div>
+                    <div class="button-explanation">
+                        前のページに戻る<br>
+                        (履歴が必要)
+                    </div>
+                </div>
+                
+                <div class="nav-button disabled">
+                    →
+                    <div class="button-label">進む</div>
+                    <div class="button-explanation">
+                        「戻る」の後に<br>
+                        次へ進む
+                    </div>
+                </div>
+                
+                <div class="separator"></div>
+                
+                <div class="nav-button active">
+                    ↻
+                    <div class="button-label">更新</div>
+                    <div class="button-explanation">
+                        ページを<br>
+                        再読み込み
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="states-comparison">
+            <div class="state-box available">
+                <div class="state-title">
+                    <span class="state-icon">✅</span>使用可能な状態
+                </div>
+                <div class="state-demo">
+                    <div class="nav-button enabled">←</div>
+                    <div class="nav-button enabled">↻</div>
+                </div>
+                <div class="state-description">
+                    ボタンが濃い色で表示され、クリックできます。戻るボタンは履歴がある時、更新ボタンは常に使用可能です。
+                </div>
+            </div>
+
+            <div class="state-box unavailable">
+                <div class="state-title">
+                    <span class="state-icon">❌</span>使用不可の状態
+                </div>
+                <div class="state-demo">
+                    <div class="nav-button disabled">←</div>
+                    <div class="nav-button disabled">→</div>
+                </div>
+                <div class="state-description">
+                    ボタンが薄い色（グレー）で表示され、クリックしても反応しません。履歴がない場合や、進む先がない場合です。
+                </div>
+            </div>
+
+            <div class="state-box refresh">
+                <div class="state-title">
+                    <span class="state-icon">🔄</span>更新ボタンの活用
+                </div>
+                <div class="state-demo">
+                    <div class="nav-button active">↻</div>
+                </div>
+                <div class="state-description">
+                    ページの情報が古い場合や、エラーが発生した時に使います。最新の情報を取得できます。
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-demonstration">
+            <div class="flow-title">📱 ナビゲーションの流れを理解しよう</div>
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="flow-page">ページA</div>
+                    <div class="flow-action">最初のページ</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="flow-page">ページB</div>
+                    <div class="flow-action">リンククリック</div>
+                </div>
+                <div class="flow-arrow">←</div>
+                <div class="flow-step">
+                    <div class="flow-page">ページA</div>
+                    <div class="flow-action">「戻る」クリック</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="flow-page">ページB</div>
+                    <div class="flow-action">「進む」クリック</div>
+                </div>
+                <div class="flow-arrow">↻</div>
+                <div class="flow-step">
+                    <div class="flow-page">ページB</div>
+                    <div class="flow-action">「更新」クリック</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>画像10: ブックマーク追加後の確認</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .title {
+            font-size: 28px;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+
+        .browser-window {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .browser-header {
+            display: flex;
+            align-items: center;
+            background: #e9ecef;
+            padding: 12px 15px;
+            border-radius: 12px 12px 0 0;
+            gap: 10px;
+        }
+
+        .browser-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .control-btn {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            border: none;
+        }
+
+        .close { background: #ff5f56; }
+        .minimize { background: #ffbd2e; }
+        .maximize { background: #27ca3f; }
+
+        .address-bar-container {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            margin: 0 15px;
+            gap: 10px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .nav-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            background: #f8f9fa;
+            color: #6c757d;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .address-bar {
+            flex: 1;
+            padding: 8px 40px 8px 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 20px;
+            background: white;
+            font-size: 14px;
+            color: #495057;
+            position: relative;
+        }
+
+        .security-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #28a745;
+            font-size: 14px;
+        }
+
+        .star-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ffc107;
+            font-size: 18px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        .bookmark-bar {
+            background: #f8f9fa;
+            padding: 8px 15px;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .bookmark-item {
+            padding: 6px 12px;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            color: #495057;
+            font-size: 13px;
+            text-decoration: none;
+            position: relative;
+        }
+
+        .bookmark-item.new {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            border-color: #fdcb6e;
+            color: #2d3436;
+            font-weight: bold;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .page-content {
+            padding: 30px 15px;
+            text-align: center;
+        }
+
+        .google-logo {
+            font-size: 72px;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .google-logo .g1 { color: #4285f4; }
+        .google-logo .o1 { color: #ea4335; }
+        .google-logo .o2 { color: #fbbc05; }
+        .google-logo .g2 { color: #4285f4; }
+        .google-logo .l { color: #34a853; }
+        .google-logo .e { color: #ea4335; }
+
+        .success-message {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border: 2px solid #28a745;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            position: relative;
+            animation: slideIn 0.8s ease-out;
+        }
+
+        .success-icon {
+            color: #28a745;
+            font-size: 36px;
+            margin-bottom: 10px;
+            animation: bounce 1s ease-in-out;
+        }
+
+        .success-text {
+            color: #155724;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .success-detail {
+            color: #155724;
+            font-size: 14px;
+        }
+
+        .explanation {
+            background: radial-gradient(circle at center, #e8f4fd 0%, #c3e8ff 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .explanation-title {
+            color: #2c3e50;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .step-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(44, 62, 80, 0.1);
+        }
+
+        .step-item:last-child {
+            border-bottom: none;
+        }
+
+        .step-number {
+            width: 28px;
+            height: 28px;
+            background: #3498db;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .step-text {
+            color: #2c3e50;
+            font-size: 16px;
+            flex: 1;
+        }
+
+        .highlight {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes glow {
+            0% { opacity: 0.7; }
+            100% { opacity: 1; text-shadow: 0 0 8px #ffc107; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        @media (max-width: 768px) {
+            .title { font-size: 22px; }
+            .container { padding: 20px; }
+            .google-logo { font-size: 48px; }
+            .address-bar-container { margin: 0 8px; }
+            .bookmark-bar { flex-wrap: wrap; }
+            .step-text { font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">📌 ブックマーク追加完了の確認</div>
+
+        <div class="browser-window">
+            <div class="browser-header">
+                <div class="browser-controls">
+                    <button class="control-btn close"></button>
+                    <button class="control-btn minimize"></button>
+                    <button class="control-btn maximize"></button>
+                </div>
+
+                <div class="address-bar-container">
+                    <div class="nav-buttons">
+                        <button class="nav-btn">←</button>
+                        <button class="nav-btn">→</button>
+                        <button class="nav-btn">🔄</button>
+                    </div>
+                    <div class="address-bar">
+                        <span class="security-icon">🔒</span>
+                        https://www.google.com
+                        <span class="star-icon">★</span>
+                    </div>
+                    <button class="nav-btn">⋮</button>
+                </div>
+            </div>
+
+            <div class="bookmark-bar">
+                <a href="#" class="bookmark-item">よく使うサイト</a>
+                <a href="#" class="bookmark-item new">Google検索</a>
+                <a href="#" class="bookmark-item">ニュース</a>
+                <a href="#" class="bookmark-item">天気予報</a>
+            </div>
+
+            <div class="page-content">
+                <div class="google-logo">
+                    <span class="g1">G</span><span class="o1">o</span><span class="o2">o</span><span class="g2">g</span><span class="l">l</span><span class="e">e</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="success-message">
+            <div class="success-icon">✅</div>
+            <div class="success-text">ブックマークが正常に追加されました！</div>
+            <div class="success-detail">「Google検索」がブックマークバーに表示されています</div>
+        </div>
+
+        <div class="explanation">
+            <div class="explanation-title">
+                <span>💡</span>
+                ブックマーク追加後の確認ポイント
+            </div>
+            <ul class="step-list">
+                <li class="step-item">
+                    <div class="step-number">1</div>
+                    <div class="step-text"><span class="highlight">星マーク（★）が金色</span>に変わり、お気に入りに登録済みを示します</div>
+                </li>
+                <li class="step-item">
+                    <div class="step-number">2</div>
+                    <div class="step-text"><span class="highlight">ブックマークバー</span>に「Google検索」が追加され、すぐにクリックできます</div>
+                </li>
+                <li class="step-item">
+                    <div class="step-number">3</div>
+                    <div class="step-text">次回から<span class="highlight">1回クリック</span>でこのサイトにアクセス可能になります</div>
+                </li>
+                <li class="step-item">
+                    <div class="step-number">4</div>
+                    <div class="step-text">ブックマークは<span class="highlight">並び順を変更</span>したり、フォルダで整理することもできます</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

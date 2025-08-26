@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>インターネットの概念図</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 900px;
+            width: 100%;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .internet-diagram {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            background: radial-gradient(circle at center, #e8f4fd 0%, #c3e8ff 30%, #a8d8ff 60%, #8cc8ff 100%);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        /* 波紋効果で全体のつながりを表現 */
+        .wave {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid rgba(52, 152, 219, 0.3);
+            border-radius: 50%;
+            animation: ripple 4s ease-out infinite;
+        }
+        
+        .wave1 {
+            width: 300px;
+            height: 300px;
+            animation-delay: 0s;
+        }
+        
+        .wave2 {
+            width: 400px;
+            height: 400px;
+            animation-delay: 1s;
+        }
+        
+        .wave3 {
+            width: 500px;
+            height: 500px;
+            animation-delay: 2s;
+        }
+        
+        .earth {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 50%, #3498db 100%);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            z-index: 10;
+            animation: pulse 3s ease-in-out infinite;
+        }
+        
+        .earth::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            width: 25px;
+            height: 18px;
+            background: #2ecc71;
+            border-radius: 50% 20% 50% 20%;
+            transform: rotate(45deg);
+        }
+        
+        .earth::after {
+            content: '';
+            position: absolute;
+            bottom: 20px;
+            right: 18px;
+            width: 22px;
+            height: 15px;
+            background: #27ae60;
+            border-radius: 30% 50% 30% 50%;
+            transform: rotate(-30deg);
+        }
+        
+        .computer-zone {
+            position: absolute;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .zone1 {
+            top: 60px;
+            left: 120px;
+            width: 100px;
+            height: 100px;
+            background: rgba(231, 76, 60, 0.1);
+            border: 2px dashed rgba(231, 76, 60, 0.4);
+        }
+        
+        .zone2 {
+            top: 80px;
+            right: 100px;
+            width: 90px;
+            height: 90px;
+            background: rgba(155, 89, 182, 0.1);
+            border: 2px dashed rgba(155, 89, 182, 0.4);
+        }
+        
+        .zone3 {
+            bottom: 120px;
+            left: 140px;
+            width: 85px;
+            height: 85px;
+            background: rgba(230, 126, 34, 0.1);
+            border: 2px dashed rgba(230, 126, 34, 0.4);
+        }
+        
+        .zone4 {
+            bottom: 100px;
+            right: 120px;
+            width: 95px;
+            height: 95px;
+            background: rgba(46, 204, 113, 0.1);
+            border: 2px dashed rgba(46, 204, 113, 0.4);
+        }
+        
+        .zone5 {
+            top: 170px;
+            left: 60px;
+            width: 80px;
+            height: 80px;
+            background: rgba(52, 152, 219, 0.1);
+            border: 2px dashed rgba(52, 152, 219, 0.4);
+        }
+        
+        .zone6 {
+            top: 190px;
+            right: 70px;
+            width: 88px;
+            height: 88px;
+            background: rgba(241, 196, 15, 0.1);
+            border: 2px dashed rgba(241, 196, 15, 0.4);
+        }
+        
+        .computer {
+            width: 45px;
+            height: 32px;
+            background: #34495e;
+            border-radius: 6px 6px 3px 3px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            position: relative;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .computer::before {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            right: 3px;
+            bottom: 6px;
+            background: #3498db;
+            border-radius: 3px;
+        }
+        
+        .computer::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 15px;
+            right: 15px;
+            height: 6px;
+            background: #2c3e50;
+            border-radius: 0 0 15px 15px;
+        }
+        
+        .computer1 { animation-delay: 0s; }
+        .computer2 { animation-delay: 0.5s; }
+        .computer3 { animation-delay: 1s; }
+        .computer4 { animation-delay: 1.5s; }
+        .computer5 { animation-delay: 2s; }
+        .computer6 { animation-delay: 2.5s; }
+        
+        .country-label {
+            position: absolute;
+            font-size: 11px;
+            font-weight: bold;
+            color: #2c3e50;
+            background: rgba(255,255,255,0.95);
+            padding: 3px 6px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            white-space: nowrap;
+        }
+        
+        .label1 {
+            top: 30px;
+            left: 135px;
+        }
+        
+        .label2 {
+            top: 50px;
+            right: 115px;
+        }
+        
+        .label3 {
+            bottom: 90px;
+            left: 155px;
+        }
+        
+        .label4 {
+            bottom: 70px;
+            right: 135px;
+        }
+        
+        .label5 {
+            top: 140px;
+            left: 65px;
+        }
+        
+        .label6 {
+            top: 160px;
+            right: 85px;
+        }
+        
+        .description {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #34495e;
+        }
+        
+        .highlight {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .network-info {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .info-item {
+            background: rgba(52, 152, 219, 0.1);
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            color: #2c3e50;
+            border-left: 3px solid #3498db;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
+            50% { transform: translate(-50%, -50%) scale(1.05); box-shadow: 0 12px 25px rgba(0,0,0,0.4); }
+        }
+        
+        @keyframes ripple {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .title {
+                font-size: 22px;
+            }
+            
+            .internet-diagram {
+                height: 400px;
+            }
+            
+            .description {
+                font-size: 14px;
+            }
+            
+            .info-item {
+                font-size: 12px;
+                padding: 6px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">🌍 インターネット = 世界中のコンピュータがつながった巨大なネットワーク</div>
+        
+        <div class="internet-diagram">
+            <!-- 波紋効果で全体のつながりを表現 -->
+            <div class="wave wave1"></div>
+            <div class="wave wave2"></div>
+            <div class="wave wave3"></div>
+            
+            <!-- 地球（中央） -->
+            <div class="earth">
+                <div style="text-align: center;">
+                    🌐<br>
+                    ネットワーク<br>
+                    中枢
+                </div>
+            </div>
+            
+            <!-- 各国・地域のコンピュータゾーン -->
+            <div class="computer-zone zone1">
+                <div class="computer computer1"></div>
+            </div>
+            <div class="computer-zone zone2">
+                <div class="computer computer2"></div>
+            </div>
+            <div class="computer-zone zone3">
+                <div class="computer computer3"></div>
+            </div>
+            <div class="computer-zone zone4">
+                <div class="computer computer4"></div>
+            </div>
+            <div class="computer-zone zone5">
+                <div class="computer computer5"></div>
+            </div>
+            <div class="computer-zone zone6">
+                <div class="computer computer6"></div>
+            </div>
+            
+            <!-- 国・地域ラベル -->
+            <div class="country-label label1">🗾 日本</div>
+            <div class="country-label label2">🇺🇸 アメリカ</div>
+            <div class="country-label label3">🇪🇺 ヨーロッパ</div>
+            <div class="country-label label4">🌏 アジア</div>
+            <div class="country-label label5">🇨🇦 カナダ</div>
+            <div class="country-label label6">🇦🇺 オーストラリア</div>
+        </div>
+        
+        <div class="description">
+            <p>インターネットは、世界中のコンピュータが<span class="highlight">見えない回線</span>でつながった巨大なシステムです。</p>
+            <div class="network-info">
+                <div class="info-item">🌐 約50億台のデバイスが接続</div>
+                <div class="info-item">⚡ 光の速度で情報を送受信</div>
+                <div class="info-item">🔄 24時間365日稼働</div>
+            </div>
+            <p style="margin-top: 15px;">あなたのパソコンも、この巨大な<span class="highlight">情報の海</span>の一部として世界とつながります！</p>
+        </div>
+    </div>
+</body>
+</html>

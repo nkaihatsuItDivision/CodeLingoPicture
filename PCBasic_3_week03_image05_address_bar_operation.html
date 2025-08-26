@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 0.3 画像5: アドレスバーの操作</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .steps-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .step {
+            background: radial-gradient(circle at center, #e8f4fd 0%, #c3e8ff 100%);
+            border-radius: 15px;
+            padding: 25px;
+            position: relative;
+            animation: ripple 4s ease-in-out infinite;
+        }
+
+        .step:nth-child(1) { animation-delay: 0s; }
+        .step:nth-child(2) { animation-delay: 1s; }
+        .step:nth-child(3) { animation-delay: 2s; }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .step-number {
+            background: #3498db;
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-right: 15px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .step-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .step-instruction {
+            font-size: 16px;
+            color: #34495e;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .browser-toolbar {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-button {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #d0d0d0;
+            border-radius: 4px;
+            background: #f8f8f8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: #999;
+        }
+
+        .address-bar {
+            flex: 1;
+            height: 36px;
+            border-radius: 18px;
+            padding: 0 15px;
+            font-size: 16px;
+            background: white;
+            display: flex;
+            align-items: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .address-bar.inactive {
+            border: 1px solid #d0d0d0;
+            color: #999;
+        }
+
+        .address-bar.active {
+            border: 2px solid #3498db;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.3);
+            color: #333;
+        }
+
+        .address-bar.completed {
+            border: 2px solid #2ecc71;
+            box-shadow: 0 0 10px rgba(46, 204, 113, 0.3);
+            color: #333;
+        }
+
+        .cursor {
+            width: 2px;
+            height: 20px;
+            background: #333;
+            animation: blink 1s infinite;
+        }
+
+        .security-icon {
+            color: #999;
+            margin-right: 8px;
+        }
+
+        .security-icon.secure {
+            color: #2ecc71;
+        }
+
+        .suggestion-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #d0d0d0;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 10;
+        }
+
+        .suggestion-item {
+            padding: 10px 15px;
+            font-size: 14px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .suggestion-item:hover {
+            background: #f8f9fa;
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .suggestion-icon {
+            margin-right: 10px;
+            color: #666;
+        }
+
+        .enter-key {
+            position: absolute;
+            right: -60px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #3498db;
+            color: white;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 14px;
+            font-weight: bold;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .arrow {
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            color: #3498db;
+            animation: float 2s ease-in-out infinite;
+        }
+
+        .tips {
+            background: #fff3cd;
+            border: 2px solid #f39c12;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .tips-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .tips-icon {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+
+        .tips-list {
+            font-size: 14px;
+            color: #856404;
+            line-height: 1.6;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(-50%); }
+            50% { transform: translateY(-58px); }
+        }
+
+        @keyframes ripple {
+            0% { opacity: 0.8; transform: scale(0.98); }
+            50% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0.8; transform: scale(0.98); }
+        }
+
+        @media (max-width: 768px) {
+            .title { font-size: 22px; }
+            .container { padding: 20px; }
+            .steps-container { gap: 20px; }
+            .step { padding: 20px; }
+            .step-title { font-size: 18px; }
+            .address-bar { font-size: 14px; }
+            .enter-key { right: -50px; padding: 6px 10px; font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">🌐 アドレスバーの使い方</div>
+        
+        <div class="steps-container">
+            <!-- Step 1: 準備 -->
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <div class="step-title">アドレスバーをクリック</div>
+                </div>
+                <div class="step-instruction">
+                    まずはアドレスバー（URLが表示されている部分）をクリックして、入力できる状態にします。
+                </div>
+                <div class="browser-toolbar">
+                    <div class="nav-button">←</div>
+                    <div class="nav-button">→</div>
+                    <div class="nav-button">↻</div>
+                    <div class="address-bar inactive">
+                        <span class="security-icon">🔒</span>
+                        既存のURLがここに表示されています
+                        <div class="arrow">👆</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: 入力中 -->
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">2</div>
+                    <div class="step-title">URLを入力</div>
+                </div>
+                <div class="step-instruction">
+                    「google.com」と入力します。入力中はアドレスバーが青い枠で囲まれ、カーソルが点滅します。
+                </div>
+                <div class="browser-toolbar">
+                    <div class="nav-button">←</div>
+                    <div class="nav-button">→</div>
+                    <div class="nav-button">↻</div>
+                    <div class="address-bar active">
+                        google.com<div class="cursor"></div>
+                        <div class="suggestion-dropdown">
+                            <div class="suggestion-item">
+                                <span class="suggestion-icon">🔍</span>
+                                google.com
+                            </div>
+                            <div class="suggestion-item">
+                                <span class="suggestion-icon">🌐</span>
+                                www.google.com
+                            </div>
+                            <div class="suggestion-item">
+                                <span class="suggestion-icon">📜</span>
+                                google.com - 履歴から
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: 実行 -->
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Enterキーで移動</div>
+                </div>
+                <div class="step-instruction">
+                    入力が完了したら「Enter」キーを押します。するとそのWebサイトに移動します。
+                </div>
+                <div class="browser-toolbar">
+                    <div class="nav-button">←</div>
+                    <div class="nav-button">→</div>
+                    <div class="nav-button">↻</div>
+                    <div class="address-bar completed">
+                        <span class="security-icon secure">🔒</span>
+                        https://www.google.com
+                        <div class="enter-key">Enter</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tips">
+            <div class="tips-title">
+                <span class="tips-icon">💡</span>
+                アドレスバーの便利な機能
+            </div>
+            <div class="tips-list">
+                • <strong>自動補完</strong>: 入力途中で候補が表示されます<br>
+                • <strong>履歴表示</strong>: 以前訪問したサイトが優先的に表示されます<br>
+                • <strong>検索機能</strong>: URLではなく検索したい言葉を入力しても検索できます<br>
+                • <strong>セキュリティ表示</strong>: 🔒マークで安全なサイトかどうか分かります
+            </div>
+        </div>
+    </div>
+</body>
+</html>

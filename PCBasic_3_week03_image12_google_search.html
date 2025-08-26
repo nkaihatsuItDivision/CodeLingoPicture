@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>画像12: Google検索画面</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .title {
+            font-size: 28px;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+
+        .browser-window {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .browser-header {
+            display: flex;
+            align-items: center;
+            background: #e9ecef;
+            padding: 12px 15px;
+            border-radius: 12px 12px 0 0;
+            gap: 10px;
+        }
+
+        .browser-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .control-btn {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            border: none;
+        }
+
+        .close { background: #ff5f56; }
+        .minimize { background: #ffbd2e; }
+        .maximize { background: #27ca3f; }
+
+        .address-bar {
+            flex: 1;
+            padding: 8px 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 20px;
+            background: white;
+            margin: 0 15px;
+            font-size: 14px;
+            color: #495057;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .security-icon {
+            color: #28a745;
+            font-size: 14px;
+        }
+
+        .google-page {
+            background: white;
+            padding: 60px 20px;
+            min-height: 500px;
+            border-radius: 0 0 12px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .google-logo {
+            font-size: 90px;
+            font-weight: normal;
+            margin-bottom: 30px;
+            letter-spacing: -5px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .google-logo .g1 { color: #4285f4; }
+        .google-logo .o1 { color: #ea4335; }
+        .google-logo .o2 { color: #fbbc05; }
+        .google-logo .g2 { color: #4285f4; }
+        .google-logo .l { color: #34a853; }
+        .google-logo .e { color: #ea4335; }
+
+        .search-container {
+            width: 100%;
+            max-width: 580px;
+            position: relative;
+            margin-bottom: 35px;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 12px 45px 12px 16px;
+            border: 1px solid #dfe1e5;
+            border-radius: 24px;
+            font-size: 16px;
+            outline: none;
+            box-shadow: 0 2px 5px 1px rgba(64,60,67,.16);
+            transition: all 0.3s ease;
+            background: white;
+            box-sizing: border-box;
+        }
+
+        .search-box:focus {
+            box-shadow: 0 2px 8px 1px rgba(64,60,67,.24);
+            border-color: rgba(223,225,229,0);
+        }
+
+        .search-icons {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .search-icon {
+            color: #9aa0a6;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .search-icon:hover {
+            color: #5f6368;
+        }
+
+        .suggestions-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #dfe1e5;
+            border-top: none;
+            border-radius: 0 0 24px 24px;
+            box-shadow: 0 2px 8px 1px rgba(64,60,67,.24);
+            z-index: 10;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .suggestion-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: background-color 0.2s ease;
+        }
+
+        .suggestion-item:hover {
+            background: #f8f9fa;
+        }
+
+        .suggestion-item.highlighted {
+            background: #e8f0fe;
+        }
+
+        .suggestion-icon {
+            color: #9aa0a6;
+            font-size: 16px;
+        }
+
+        .suggestion-text {
+            color: #3c4043;
+            font-size: 16px;
+        }
+
+        .search-text {
+            font-weight: bold;
+            color: #1a73e8;
+        }
+
+        .search-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .search-btn {
+            padding: 10px 20px;
+            border: 1px solid #f8f9fa;
+            border-radius: 4px;
+            background: #f8f9fa;
+            color: #3c4043;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .search-btn:hover {
+            box-shadow: 0 1px 1px rgba(0,0,0,.1);
+            background: #f1f3f4;
+        }
+
+        .language-links {
+            margin-top: 25px;
+            font-size: 13px;
+            color: #1a0dab;
+        }
+
+        .language-links a {
+            color: #1a0dab;
+            text-decoration: none;
+            margin: 0 3px;
+        }
+
+        .language-links a:hover {
+            text-decoration: underline;
+        }
+
+        .explanation {
+            background: radial-gradient(circle at center, #e8f4fd 0%, #c3e8ff 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .explanation-title {
+            color: #2c3e50;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .step-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(44, 62, 80, 0.1);
+        }
+
+        .step-item:last-child {
+            border-bottom: none;
+        }
+
+        .step-number {
+            width: 28px;
+            height: 28px;
+            background: #3498db;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .step-text {
+            color: #2c3e50;
+            font-size: 16px;
+            flex: 1;
+            line-height: 1.5;
+        }
+
+        .highlight {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .feature-highlight {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border-left: 5px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .feature-title {
+            color: #856404;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-text {
+            color: #856404;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .title { font-size: 22px; }
+            .container { padding: 20px; }
+            .google-logo { font-size: 60px; }
+            .search-container { max-width: 100%; }
+            .search-buttons { flex-direction: column; align-items: center; }
+            .step-text { font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">🔍 Google検索画面の基本</div>
+
+        <div class="browser-window">
+            <div class="browser-header">
+                <div class="browser-controls">
+                    <button class="control-btn close"></button>
+                    <button class="control-btn minimize"></button>
+                    <button class="control-btn maximize"></button>
+                </div>
+
+                <div class="address-bar">
+                    <span class="security-icon">🔒</span>
+                    https://www.google.com
+                </div>
+            </div>
+
+            <div class="google-page">
+                <div class="google-logo">
+                    <span class="g1">G</span><span class="o1">o</span><span class="o2">o</span><span class="g2">g</span><span class="l">l</span><span class="e">e</span>
+                </div>
+
+                <div class="search-container">
+                    <input type="text" class="search-box" value="プログラミング 初心者" readonly>
+                    <div class="search-icons">
+                        <span class="search-icon">🎤</span>
+                        <span class="search-icon">🔍</span>
+                    </div>
+
+                    <div class="suggestions-dropdown">
+                        <div class="suggestion-item highlighted">
+                            <span class="suggestion-icon">🔍</span>
+                            <span class="suggestion-text"><span class="search-text">プログラミング 初心者</span> 本</span>
+                        </div>
+                        <div class="suggestion-item">
+                            <span class="suggestion-icon">🔍</span>
+                            <span class="suggestion-text"><span class="search-text">プログラミング 初心者</span> 学習</span>
+                        </div>
+                        <div class="suggestion-item">
+                            <span class="suggestion-icon">🔍</span>
+                            <span class="suggestion-text"><span class="search-text">プログラミング 初心者</span> 入門</span>
+                        </div>
+                        <div class="suggestion-item">
+                            <span class="suggestion-icon">🔍</span>
+                            <span class="suggestion-text"><span class="search-text">プログラミング 初心者</span> サイト</span>
+                        </div>
+                        <div class="suggestion-item">
+                            <span class="suggestion-icon">🔍</span>
+                            <span class="suggestion-text"><span class="search-text">プログラミング 初心者</span> 勉強方法</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="search-buttons">
+                    <button class="search-btn">Google検索</button>
+                    <button class="search-btn">I'm Feeling Lucky</button>
+                </div>
+
+                <div class="language-links">
+                    Google offered in:
+                    <a href="#">English</a>
+                    <a href="#">한국어</a>
+                    <a href="#">中文(繁體)</a>
+                    <a href="#">中文(简体)</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="feature-highlight">
+            <div class="feature-title">
+                <span>💡</span>
+                検索候補（サジェスト）機能
+            </div>
+            <div class="feature-text">
+                入力途中で関連するキーワード候補が表示されます。マウスクリックまたは矢印キー（↑↓）で選択可能です。
+            </div>
+        </div>
+
+        <div class="explanation">
+            <div class="explanation-title">
+                <span>🎯</span>
+                Google検索の基本操作
+            </div>
+            <ul class="step-list">
+                <li class="step-item">
+                    <div class="step-number">1</div>
+                    <div class="step-text"><span class="highlight">検索ボックス</span>にキーワードを入力します（例：「プログラミング 初心者」）</div>
+                </li>
+                <li class="step-item">
+                    <div class="step-number">2</div>
+                    <div class="step-text"><span class="highlight">検索候補</span>が自動で表示されるので、適切なものを選択できます</div>
+                </li>
+                <li class="step-item">
+                    <div class="step-number">3</div>
+                    <div class="step-text"><span class="highlight">「Google検索」</span>ボタンをクリック、またはEnterキーで検索を実行</div>
+                </li>
+                <li class="step-item">
+                    <div class="step-number">4</div>
+                    <div class="step-text"><span class="highlight">音声検索</span>（🎤）アイコンで声による検索も可能</div>
+                </li>
+                <li class="step-item">
+                    <div class="step-number">5</div>
+                    <div class="step-text"><span class="highlight">「I'm Feeling Lucky」</span>は最初の検索結果に直接ジャンプする機能</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>画像14: 高度な検索テクニック</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 1100px;
+            width: 100%;
+        }
+
+        .title {
+            font-size: 28px;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+
+        .search-interface {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .search-header {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .google-logo-small {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .google-logo-small .g1 { color: #4285f4; }
+        .google-logo-small .o1 { color: #ea4335; }
+        .google-logo-small .o2 { color: #fbbc05; }
+        .google-logo-small .g2 { color: #4285f4; }
+        .google-logo-small .l { color: #34a853; }
+        .google-logo-small .e { color: #ea4335; }
+
+        .search-query {
+            color: #70757a;
+            font-size: 14px;
+            flex: 1;
+        }
+
+        .search-tabs {
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            border-bottom: 1px solid #e9ecef;
+            gap: 30px;
+        }
+
+        .search-tab {
+            padding: 12px 0;
+            color: #70757a;
+            font-size: 14px;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-tab.active {
+            color: #1a73e8;
+            border-bottom-color: #1a73e8;
+            font-weight: 500;
+        }
+
+        .search-tab:hover {
+            color: #1a73e8;
+        }
+
+        .search-tools-bar {
+            background: #f8f9fa;
+            padding: 12px 20px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .results-info {
+            color: #70757a;
+            font-size: 14px;
+            flex: 1;
+        }
+
+        .tools-button {
+            padding: 8px 16px;
+            border: 1px solid #dadce0;
+            border-radius: 24px;
+            background: white;
+            color: #3c4043;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tools-button.active {
+            background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
+            color: white;
+            border-color: #1a73e8;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        .tools-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            z-index: 10;
+            margin-top: 8px;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .dropdown-section {
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f3f4;
+        }
+
+        .dropdown-section:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-label {
+            color: #5f6368;
+            font-size: 13px;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-bottom: 1px solid #f1f3f4;
+            margin-bottom: 8px;
+        }
+
+        .dropdown-option {
+            padding: 10px 16px;
+            color: #3c4043;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .dropdown-option:hover {
+            background: #f8f9fa;
+        }
+
+        .dropdown-option.selected {
+            background: #e8f0fe;
+            color: #1a73e8;
+            font-weight: 500;
+        }
+
+        .checkmark {
+            color: #1a73e8;
+            font-size: 16px;
+        }
+
+        .results-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .result-column {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 20px;
+            border: 2px solid #dee2e6;
+        }
+
+        .result-column.filtered {
+            background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+            border-color: #4caf50;
+        }
+
+        .column-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .before-title {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .after-title {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .result-count {
+            color: #70757a;
+            font-size: 14px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .sample-result {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid #dadce0;
+        }
+
+        .sample-result.recent {
+            border-left-color: #4caf50;
+            background: linear-gradient(135deg, #f1f8e9 0%, #ffffff 100%);
+        }
+
+        .sample-result.old {
+            opacity: 0.6;
+            border-left-color: #ff9800;
+            background: linear-gradient(135deg, #fafafa 0%, #ffffff 100%);
+        }
+
+        .result-title {
+            color: #1a0dab;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .result-date {
+            color: #70757a;
+            font-size: 12px;
+        }
+
+        .recent-indicator {
+            color: #4caf50;
+            font-weight: bold;
+        }
+
+        .old-indicator {
+            color: #ff9800;
+            font-weight: bold;
+        }
+
+        .explanation {
+            background: radial-gradient(circle at center, #e8f4fd 0%, #c3e8ff 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .explanation-title {
+            color: #2c3e50;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .step-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(44, 62, 80, 0.1);
+        }
+
+        .step-item:last-child {
+            border-bottom: none;
+        }
+
+        .step-number {
+            width: 28px;
+            height: 28px;
+            background: #3498db;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .step-text {
+            color: #2c3e50;
+            font-size: 16px;
+            flex: 1;
+            line-height: 1.5;
+        }
+
+        .highlight {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .techniques-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .technique-card {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 5px solid #ff9800;
+        }
+
+        .technique-title {
+            color: #e65100;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .technique-example {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 12px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 14px;
+            color: #bf360c;
+            margin: 10px 0;
+            border: 1px solid #ffcc02;
+        }
+
+        .technique-description {
+            color: #e65100;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 8px rgba(26, 115, 232, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(26, 115, 232, 0.6); }
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .title { font-size: 22px; }
+            .container { padding: 20px; }
+            .results-comparison { grid-template-columns: 1fr; }
+            .techniques-grid { grid-template-columns: 1fr; }
+            .search-tabs { flex-wrap: wrap; }
+            .step-text { font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">🛠️ 高度な検索テクニック</div>
+
+        <div class="search-interface">
+            <div class="search-header">
+                <div class="google-logo-small">
+                    <span class="g1">G</span><span class="o1">o</span><span class="o2">o</span><span class="g2">g</span><span class="l">l</span><span class="e">e</span>
+                </div>
+                <div class="search-query">プログラミング 初心者</div>
+            </div>
+
+            <div class="search-tabs">
+                <div class="search-tab active">すべて</div>
+                <div class="search-tab">画像</div>
+                <div class="search-tab">動画</div>
+                <div class="search-tab">ニュース</div>
+                <div class="search-tab">ショッピング</div>
+                <div class="search-tab">もっと見る</div>
+            </div>
+
+            <div class="search-tools-bar">
+                <div class="results-info">約 1,450,000 件の結果</div>
+                <div class="tools-button active">
+                    ツール
+                    <div class="tools-dropdown">
+                        <div class="dropdown-section">
+                            <div class="dropdown-label">期間</div>
+                            <div class="dropdown-option">指定なし</div>
+                            <div class="dropdown-option">1時間以内</div>
+                            <div class="dropdown-option">24時間以内</div>
+                            <div class="dropdown-option">1週間以内</div>
+                            <div class="dropdown-option">1ヶ月以内</div>
+                            <div class="dropdown-option selected">
+                                1年以内
+                                <span class="checkmark">✓</span>
+                            </div>
+                            <div class="dropdown-option">期間指定...</div>
+                        </div>
+                        <div class="dropdown-section">
+                            <div class="dropdown-label">言語</div>
+                            <div class="dropdown-option">すべての言語</div>
+                            <div class="dropdown-option">日本語</div>
+                            <div class="dropdown-option">英語</div>
+                        </div>
+                        <div class="dropdown-section">
+                            <div class="dropdown-label">地域</div>
+                            <div class="dropdown-option">すべての国と地域</div>
+                            <div class="dropdown-option">日本</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tools-button">セーフサーチ</div>
+            </div>
+        </div>
+
+        <div class="results-comparison">
+            <div class="result-column">
+                <div class="column-title before-title">期間指定前</div>
+                <div class="result-count">約 1,450,000 件の結果</div>
+                
+                <div class="sample-result recent">
+                    <div class="result-title">プログラミング初心者向けガイド</div>
+                    <div class="result-date"><span class="recent-indicator">新</span> 2025年7月15日</div>
+                </div>
+                
+                <div class="sample-result old">
+                    <div class="result-title">プログラミング入門講座</div>
+                    <div class="result-date"><span class="old-indicator">旧</span> 2020年3月8日</div>
+                </div>
+                
+                <div class="sample-result old">
+                    <div class="result-title">初心者のためのコーディング</div>
+                    <div class="result-date"><span class="old-indicator">旧</span> 2018年11月22日</div>
+                </div>
+                
+                <div class="sample-result recent">
+                    <div class="result-title">2024年版プログラミング学習法</div>
+                    <div class="result-date"><span class="recent-indicator">新</span> 2024年12月3日</div>
+                </div>
+            </div>
+
+            <div class="result-column filtered">
+                <div class="column-title after-title">期間指定後（1年以内）</div>
+                <div class="result-count">約 286,000 件の結果</div>
+                
+                <div class="sample-result recent">
+                    <div class="result-title">プログラミング初心者向けガイド</div>
+                    <div class="result-date"><span class="recent-indicator">新</span> 2025年7月15日</div>
+                </div>
+                
+                <div class="sample-result recent">
+                    <div class="result-title">2024年版プログラミング学習法</div>
+                    <div class="result-date"><span class="recent-indicator">新</span> 2024年12月3日</div>
+                </div>
+                
+                <div class="sample-result recent">
+                    <div class="result-title">最新の開発ツール入門</div>
+                    <div class="result-date"><span class="recent-indicator">新</span> 2025年5月20日</div>
+                </div>
+                
+                <div class="sample-result recent">
+                    <div class="result-title">AI時代のプログラミング</div>
+                    <div class="result-date"><span class="recent-indicator">新</span> 2025年1月8日</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="explanation">
+            <div class="explanation-title">
+                <span>🎯</span>
+                期間指定検索の活用方法
+            </div>
+            <ul class="step-list">
+                <li class="step-item">
+                    <div class="step-number">1</div>
+                    <div class="step-text">検索結果の下にある<span class="highlight">「ツール」</span>ボタンをクリックします</div>
+                </li>
+                <li class="step-item">
+                    <div class="step-number">2</div>
+                    <div class="step-text"><span class="highlight">「期間」</span>セクションから適切な期間を選択（例：1年以内）</div>
+                </li>
+                <li class="step-item">
+                    <div class="step-number">3</div>
+                    <div class="step-text">検索結果が<span class="highlight">新しい情報に絞り込まれ</span>、より関連性の高い結果が表示</div>
+                </li>
+                <li class="step-item">
+                    <div class="step-number">4</div>
+                    <div class="step-text">技術情報や<span class="highlight">最新トレンド</span>を調べる際に特に有効です</div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="techniques-grid">
+            <div class="technique-card">
+                <div class="technique-title">
+                    <span>🔍</span>
+                    完全一致検索
+                </div>
+                <div class="technique-example">"プログラミング初心者"</div>
+                <div class="technique-description">
+                    ダブルクォーテーション（""）で囲むと、その通りのフレーズを検索
+                </div>
+            </div>
+
+            <div class="technique-card">
+                <div class="technique-title">
+                    <span>➕</span>
+                    必須キーワード
+                </div>
+                <div class="technique-example">プログラミング +Python</div>
+                <div class="technique-description">
+                    +をつけたキーワードは必ず含まれる結果のみを表示
+                </div>
+            </div>
+
+            <div class="technique-card">
+                <div class="technique-title">
+                    <span>➖</span>
+                    除外検索
+                </div>
+                <div class="technique-example">プログラミング -有料</div>
+                <div class="technique-description">
+                    -をつけたキーワードを含む結果を除外して検索
+                </div>
+            </div>
+
+            <div class="technique-card">
+                <div class="technique-title">
+                    <span>🌐</span>
+                    サイト指定検索
+                </div>
+                <div class="technique-example">site:qiita.com プログラミング</div>
+                <div class="technique-description">
+                    特定のサイト内での検索に限定できます
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
