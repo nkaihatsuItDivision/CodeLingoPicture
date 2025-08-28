@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>魅力2: 論理思考の発達</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logical-thinking-container {
+            max-width: 1000px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .logical-thinking-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 30% 30%, rgba(255,255,255,0.15) 0%, transparent 50%),
+                radial-gradient(circle at 70% 70%, rgba(255,255,255,0.1) 0%, transparent 50%);
+            animation: logic-shimmer 5s ease-in-out infinite;
+        }
+
+        @keyframes logic-shimmer {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(180deg); }
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .main-visual {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 40px 0;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .brain-section {
+            text-align: center;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .brain-emoji {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            display: block;
+            animation: brain-pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes brain-pulse {
+            0%, 100% { 
+                transform: scale(1);
+                filter: drop-shadow(0 0 10px #3498db);
+            }
+            50% { 
+                transform: scale(1.1);
+                filter: drop-shadow(0 0 20px #2980b9);
+            }
+        }
+
+        .circuit-section {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+            height: 200px;
+            background: linear-gradient(135deg, #ecf0f1 0%, #bdc3c7 100%);
+            border-radius: 15px;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .circuit-board {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(90deg, #3498db 2px, transparent 2px),
+                linear-gradient(0deg, #3498db 2px, transparent 2px),
+                linear-gradient(45deg, transparent 48%, #2980b9 48%, #2980b9 52%, transparent 52%);
+            background-size: 30px 30px, 30px 30px, 20px 20px;
+            opacity: 0.3;
+            animation: circuit-flow 4s linear infinite;
+        }
+
+        @keyframes circuit-flow {
+            0% { background-position: 0 0, 0 0, 0 0; }
+            100% { background-position: 30px 0, 0 30px, 20px 20px; }
+        }
+
+        .circuit-title {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            margin-top: 60px;
+            color: #2c3e50;
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+
+        .thinking-process {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .process-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            border: 2px solid #3498db;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .process-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(52, 152, 219, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .process-card:hover::before {
+            left: 100%;
+        }
+
+        .process-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(52, 152, 219, 0.2);
+            border-color: #2980b9;
+        }
+
+        .process-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .process-title {
+            color: #2980b9;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .process-description {
+            color: #6c757d;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .flowchart-section {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .flowchart-title {
+            text-align: center;
+            color: #e65100;
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+        }
+
+        .flowchart {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .flowchart-step {
+            background: white;
+            border-radius: 10px;
+            padding: 15px 25px;
+            box-shadow: 0 5px 15px rgba(230, 81, 0, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            min-width: 200px;
+            text-align: center;
+        }
+
+        .flowchart-step:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(230, 81, 0, 0.3);
+        }
+
+        .flowchart-step.start {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            color: white;
+            border-radius: 25px;
+        }
+
+        .flowchart-step.decision {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            transform: rotate(45deg);
+            width: 120px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .flowchart-step.decision-text {
+            transform: rotate(-45deg);
+        }
+
+        .flowchart-step.process {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+
+        .flowchart-step.end {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            border-radius: 25px;
+        }
+
+        .flowchart-arrow {
+            font-size: 2rem;
+            color: #e65100;
+            animation: flow-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes flow-pulse {
+            0%, 100% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+
+        .logical-benefits {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .benefit-card {
+            background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 5px solid #4caf50;
+            transition: all 0.3s ease;
+        }
+
+        .benefit-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 10px 20px rgba(76, 175, 80, 0.2);
+        }
+
+        .benefit-card h4 {
+            color: #2e7d32;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .benefit-card p {
+            color: #388e3c;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .logic-training {
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .logic-training h2 {
+            color: #7b1fa2;
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+        }
+
+        .training-exercises {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .exercise-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            border-top: 4px solid #9c27b0;
+            transition: all 0.3s ease;
+        }
+
+        .exercise-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(156, 39, 176, 0.2);
+        }
+
+        .exercise-card h4 {
+            color: #8e24aa;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .exercise-card p {
+            color: #9c27b0;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .real-world-applications {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .real-world-applications h2 {
+            color: #1976d2;
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+        }
+
+        .applications-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .application-item {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .application-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(25, 118, 210, 0.2);
+        }
+
+        .application-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .application-title {
+            color: #1565c0;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .application-desc {
+            color: #1976d2;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .encouragement {
+            background: linear-gradient(135deg, #fff8e1 0%, #fff3c4 100%);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .encouragement h2 {
+            color: #f57f17;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .encouragement p {
+            color: #f9a825;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .success-icon {
+            font-size: 3rem;
+            margin: 20px 0;
+            display: block;
+            animation: logic-bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes logic-bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0) rotate(0deg); }
+            40% { transform: translateY(-10px) rotate(-3deg); }
+            60% { transform: translateY(-5px) rotate(3deg); }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .main-visual {
+                flex-direction: column;
+            }
+            
+            .brain-emoji {
+                font-size: 3rem;
+            }
+            
+            .thinking-process {
+                grid-template-columns: 1fr;
+            }
+            
+            .flowchart {
+                padding: 0 20px;
+            }
+            
+            .flowchart-step.decision {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .logical-benefits {
+                grid-template-columns: 1fr;
+            }
+            
+            .training-exercises {
+                grid-template-columns: 1fr;
+            }
+            
+            .applications-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="logical-thinking-container">
+        <div class="header">
+            <h1>🧠 魅力2: 論理思考の発達</h1>
+            <p>問題分析、順序立てた思考力</p>
+        </div>
+
+        <div class="content">
+            <div class="main-visual">
+                <div class="brain-section">
+                    <span class="brain-emoji">🧠</span>
+                    <h2 style="color: #3498db; margin-bottom: 10px;">思考の整理</h2>
+                    <p style="color: #6c757d;">複雑な問題も<br><strong>順序立てて解決</strong></p>
+                </div>
+
+                <div class="circuit-section">
+                    <div class="circuit-board"></div>
+                    <div class="circuit-title">論理回路のように<br>正確で効率的な思考</div>
+                </div>
+            </div>
+
+            <div class="thinking-process">
+                <div class="process-card">
+                    <span class="process-icon">🔍</span>
+                    <h3 class="process-title">分析力</h3>
+                    <p class="process-description">複雑な問題を構成要素に分解し、本質を見極める能力を身につけます。</p>
+                </div>
+
+                <div class="process-card">
+                    <span class="process-icon">📋</span>
+                    <h3 class="process-title">構造化思考</h3>
+                    <p class="process-description">情報を整理し、関係性を明確にして、体系的に理解する思考法を習得します。</p>
+                </div>
+
+                <div class="process-card">
+                    <span class="process-icon">⚙️</span>
+                    <h3 class="process-title">論理的推論</h3>
+                    <p class="process-description">前提から結論への筋道を明確にし、矛盾のない論理展開を行う力を養います。</p>
+                </div>
+
+                <div class="process-card">
+                    <span class="process-icon">🎯</span>
+                    <h3 class="process-title">効率化思考</h3>
+                    <p class="process-description">最適な解決策を見つけるため、複数の選択肢を比較検討する能力を育てます。</p>
+                </div>
+            </div>
+
+            <div class="flowchart-section">
+                <h2 class="flowchart-title">🔄 論理的思考の流れ</h2>
+                <div class="flowchart">
+                    <div class="flowchart-step start">問題発見</div>
+                    <div class="flowchart-arrow">⬇️</div>
+                    <div class="flowchart-step process">情報収集・分析</div>
+                    <div class="flowchart-arrow">⬇️</div>
+                    <div class="flowchart-step decision">
+                        <div class="decision-text">判断</div>
+                    </div>
+                    <div class="flowchart-arrow">⬇️</div>
+                    <div class="flowchart-step process">解決策実装</div>
+                    <div class="flowchart-arrow">⬇️</div>
+                    <div class="flowchart-step end">結果評価</div>
+                </div>
+            </div>
+
+            <div class="logical-benefits">
+                <div class="benefit-card">
+                    <h4>📊 データ分析力</h4>
+                    <p>大量の情報から重要な洞察を見つけ出し、データに基づいた意思決定ができるようになります。</p>
+                </div>
+
+                <div class="benefit-card">
+                    <h4>🎯 問題解決スピード</h4>
+                    <p>論理的なアプローチにより、問題の根本原因を素早く特定し、効率的な解決策を見つけられます。</p>
+                </div>
+
+                <div class="benefit-card">
+                    <h4>🔧 設計思考</h4>
+                    <p>システムやプロセスを体系的に設計し、将来の問題を予防する先見性を身につけられます。</p>
+                </div>
+
+                <div class="benefit-card">
+                    <h4>💡 創造的解決</h4>
+                    <p>論理的基盤があることで、既存の枠にとらわれない革新的なアイデアを生み出せるようになります。</p>
+                </div>
+
+                <div class="benefit-card">
+                    <h4>🤝 説得力向上</h4>
+                    <p>論理的な説明により、他者に自分の考えを分かりやすく伝え、合意を形成する能力が向上します。</p>
+                </div>
+
+                <div class="benefit-card">
+                    <h4>📈 継続改善</h4>
+                    <p>現状を客観的に分析し、常により良い方法を模索する改善マインドが身につきます。</p>
+                </div>
+            </div>
+
+            <div class="logic-training">
+                <h2>🏋️ 論理思考トレーニング</h2>
+                <div class="training-exercises">
+                    <div class="exercise-card">
+                        <h4>🔍 デバッグ練習</h4>
+                        <p>エラーの原因を論理的に特定し、段階的に問題を解決する過程で推論力を鍛えます。</p>
+                    </div>
+
+                    <div class="exercise-card">
+                        <h4>📐 アルゴリズム設計</h4>
+                        <p>効率的な処理手順を考案することで、手順化・最適化の思考パターンを習得します。</p>
+                    </div>
+
+                    <div class="exercise-card">
+                        <h4>🏗️ システム設計</h4>
+                        <p>全体と部分の関係を整理し、構造化された設計思考を身につけます。</p>
+                    </div>
+
+                    <div class="exercise-card">
+                        <h4>🧪 テスト設計</h4>
+                        <p>様々なケースを想定し、論理的にテストケースを作成する分析力を養います。</p>
+                    </div>
+
+                    <div class="exercise-card">
+                        <h4>📊 データ構造選択</h4>
+                        <p>問題に最適なデータ構造を選択することで、効率化思考を鍛えます。</p>
+                    </div>
+
+                    <div class="exercise-card">
+                        <h4>🔄 リファクタリング</h4>
+                        <p>既存のコードを改善することで、継続的な最適化思考を身につけます。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="real-world-applications">
+                <h2>🌍 実社会での応用</h2>
+                <div class="applications-grid">
+                    <div class="application-item">
+                        <span class="application-icon">💼</span>
+                        <div class="application-title">ビジネス戦略</div>
+                        <p class="application-desc">市場分析と論理的判断による戦略立案</p>
+                    </div>
+
+                    <div class="application-item">
+                        <span class="application-icon">📊</span>
+                        <div class="application-title">投資判断</div>
+                        <p class="application-desc">リスクとリターンの論理的評価</p>
+                    </div>
+
+                    <div class="application-item">
+                        <span class="application-icon">🏥</span>
+                        <div class="application-title">医療診断</div>
+                        <p class="application-desc">症状から原因への論理的推論</p>
+                    </div>
+
+                    <div class="application-item">
+                        <span class="application-icon">⚖️</span>
+                        <div class="application-title">法的判断</div>
+                        <p class="application-desc">証拠に基づく論理的な法的推論</p>
+                    </div>
+
+                    <div class="application-item">
+                        <span class="application-icon">🔬</span>
+                        <div class="application-title">科学研究</div>
+                        <p class="application-desc">仮説検証による客観的分析</p>
+                    </div>
+
+                    <div class="application-item">
+                        <span class="application-icon">🏗️</span>
+                        <div class="application-title">プロジェクト管理</div>
+                        <p class="application-desc">計画と実行の論理的管理</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="encouragement">
+                <span class="success-icon">⚡</span>
+                <h2>思考力は一生の財産</h2>
+                <p>プログラミングで鍛えられる論理思考は、<strong>どんな分野でも活用できる万能スキル</strong>です。複雑な問題を整理し、筋道立てて解決する能力は、仕事はもちろん、日常生活のあらゆる場面で力を発揮します。<br><br>
+                <strong>「なぜ？」「どうやって？」「もっと良い方法は？」</strong>という論理的な問いかけが自然にできるようになると、人生のクオリティが大きく向上します。<br><br>
+                論理思考は筋肉と同じで、使えば使うほど強化されます。<strong>プログラミング学習を通じて、あなたの思考力を飛躍的に向上させましょう</strong>。</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

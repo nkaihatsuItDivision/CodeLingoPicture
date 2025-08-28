@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 0.1「PC基本操作」での成長</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(52, 152, 219, 0.2);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 25px 50px rgba(52, 152, 219, 0.3);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            padding: 40px;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .lesson-number {
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 25px;
+            display: inline-block;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
+
+        .content {
+            padding: 50px;
+        }
+
+        .before-after {
+            display: grid;
+            grid-template-columns: 1fr 80px 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+            align-items: center;
+        }
+
+        .before-section, .after-section {
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .before-section {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            border: 2px solid #e57373;
+        }
+
+        .after-section {
+            background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+            border: 2px solid #81c784;
+        }
+
+        .transformation-arrow {
+            text-align: center;
+            font-size: 3em;
+            color: #3498db;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .skills-acquired {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .skill-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid #3498db;
+            transition: all 0.3s ease;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(52, 152, 219, 0.2);
+            border-left-width: 8px;
+        }
+
+        .skill-card h3 {
+            color: #3498db;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .skill-card .icon {
+            font-size: 1.8em;
+        }
+
+        .skill-level {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .level-bar {
+            flex: 1;
+            height: 8px;
+            background: #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .level-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3498db, #2980b9);
+            border-radius: 4px;
+            transition: width 2s ease-out;
+        }
+
+        .level-fill.mouse { width: 95%; }
+        .level-fill.keyboard { width: 90%; }
+        .level-fill.window { width: 88%; }
+        .level-fill.shortcut { width: 85%; }
+
+        .shortcuts-showcase {
+            background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+
+        .shortcuts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .shortcut-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #3498db;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .shortcut-item:hover {
+            background: #3498db;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .shortcut-keys {
+            font-family: monospace;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .achievement-summary {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .achievement-summary h2 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .progress-indicators {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .progress-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            min-width: 120px;
+        }
+
+        .progress-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .content {
+                padding: 30px 20px;
+            }
+            
+            .before-after {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .transformation-arrow {
+                transform: rotate(90deg);
+                font-size: 2em;
+            }
+            
+            .skills-acquired {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .shortcuts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .progress-indicators {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="lesson-number">Week 0.1</div>
+            <h1>PC基本操作での成長</h1>
+            <p>マウス操作レベル → PC操作マスターへ</p>
+        </div>
+
+        <div class="content">
+            <div class="before-after">
+                <div class="before-section">
+                    <h3>💭 1週間前のあなた</h3>
+                    <div style="font-size: 2em; margin: 15px 0;">😰</div>
+                    <ul style="list-style: none; text-align: left;">
+                        <li>❌ マウス操作が不安</li>
+                        <li>❌ キーボード入力が遅い</li>
+                        <li>❌ ウィンドウ操作がわからない</li>
+                        <li>❌ ショートカットキーって何？</li>
+                    </ul>
+                </div>
+
+                <div class="transformation-arrow">
+                    ➡️
+                </div>
+
+                <div class="after-section">
+                    <h3>🎯 今のあなた</h3>
+                    <div style="font-size: 2em; margin: 15px 0;">😊</div>
+                    <ul style="list-style: none; text-align: left;">
+                        <li>✅ マウス操作が自然にできる</li>
+                        <li>✅ 効率的なキーボード操作</li>
+                        <li>✅ ウィンドウ管理をマスター</li>
+                        <li>✅ ショートカットキーを活用</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="skills-acquired">
+                <div class="skill-card">
+                    <h3><span class="icon">🖱️</span>マウス操作</h3>
+                    <div class="skill-level">
+                        <span>習熟度</span>
+                        <div class="level-bar">
+                            <div class="level-fill mouse"></div>
+                        </div>
+                        <span>95%</span>
+                    </div>
+                    <p>クリック、右クリック、ドラッグ&ドロップを自在に操作。精密な操作が可能になりました。</p>
+                </div>
+
+                <div class="skill-card">
+                    <h3><span class="icon">⌨️</span>キーボード操作</h3>
+                    <div class="skill-level">
+                        <span>習熟度</span>
+                        <div class="level-bar">
+                            <div class="level-fill keyboard"></div>
+                        </div>
+                        <span>90%</span>
+                    </div>
+                    <p>ブラインドタッチの基礎を習得。文字入力からファンクションキーまで活用できます。</p>
+                </div>
+
+                <div class="skill-card">
+                    <h3><span class="icon">🪟</span>ウィンドウ操作</h3>
+                    <div class="skill-level">
+                        <span>習熟度</span>
+                        <div class="level-bar">
+                            <div class="level-fill window"></div>
+                        </div>
+                        <span>88%</span>
+                    </div>
+                    <p>最小化、最大化、サイズ変更、複数ウィンドウの切り替えが自然にできます。</p>
+                </div>
+
+                <div class="skill-card">
+                    <h3><span class="icon">⚡</span>ショートカットキー</h3>
+                    <div class="skill-level">
+                        <span>習熟度</span>
+                        <div class="level-bar">
+                            <div class="level-fill shortcut"></div>
+                        </div>
+                        <span>85%</span>
+                    </div>
+                    <p>コピー、ペースト、保存など、効率的な作業に欠かせないキー操作をマスター。</p>
+                </div>
+            </div>
+
+            <div class="shortcuts-showcase">
+                <h3 style="color: #3498db; text-align: center; margin-bottom: 20px;">
+                    ⚡ 習得したショートカットキー
+                </h3>
+                <div class="shortcuts-grid">
+                    <div class="shortcut-item">
+                        <div class="shortcut-keys">Ctrl + C</div>
+                        <div>コピー</div>
+                    </div>
+                    <div class="shortcut-item">
+                        <div class="shortcut-keys">Ctrl + V</div>
+                        <div>ペースト</div>
+                    </div>
+                    <div class="shortcut-item">
+                        <div class="shortcut-keys">Ctrl + S</div>
+                        <div>保存</div>
+                    </div>
+                    <div class="shortcut-item">
+                        <div class="shortcut-keys">Alt + Tab</div>
+                        <div>アプリ切替</div>
+                    </div>
+                    <div class="shortcut-item">
+                        <div class="shortcut-keys">Win + D</div>
+                        <div>デスクトップ</div>
+                    </div>
+                    <div class="shortcut-item">
+                        <div class="shortcut-keys">Ctrl + Z</div>
+                        <div>元に戻す</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="achievement-summary">
+                <h2>🎉 PC基本操作 完全習得！</h2>
+                <p>もうマウス操作に不安はありません。効率的なPC操作により、学習やプログラミングに集中できる基盤が完成しました。</p>
+                
+                <div class="progress-indicators">
+                    <div class="progress-item">
+                        <div class="progress-number">4</div>
+                        <div>操作技術習得</div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-number">15</div>
+                        <div>ショートカット</div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-number">100%</div>
+                        <div>操作自信度</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

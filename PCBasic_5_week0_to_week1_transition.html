@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 0完了、Week 1への扉を開く</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 25%, #6c5ce7 50%, #a29bfe 75%, #fd79a8 100%);
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+            animation: skyTransition 15s ease-in-out infinite;
+        }
+
+        @keyframes skyTransition {
+            0%, 100% { 
+                background: linear-gradient(135deg, #74b9ff 0%, #0984e3 25%, #6c5ce7 50%, #a29bfe 75%, #fd79a8 100%); 
+            }
+            33% { 
+                background: linear-gradient(135deg, #fd79a8 0%, #fdcb6e 25%, #e17055 50%, #74b9ff 75%, #0984e3 100%); 
+            }
+            66% { 
+                background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 25%, #74b9ff 50%, #fdcb6e 75%, #fd79a8 100%); 
+            }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .main-scene {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+            padding: 50px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .main-scene:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 35px 70px rgba(0,0,0,0.25);
+        }
+
+        .scene-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(116, 185, 255, 0.1) 0%, transparent 70%);
+            animation: atmosphereGlow 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes atmosphereGlow {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.1); }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .main-title {
+            font-size: 3.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #0984e3 0%, #6c5ce7 50%, #fd79a8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .door-scene {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 40px 0;
+            position: relative;
+            z-index: 10;
+            height: 400px;
+        }
+
+        .door-container {
+            position: relative;
+            perspective: 1000px;
+        }
+
+        .door {
+            width: 300px;
+            height: 380px;
+            background: linear-gradient(135deg, #8b4513 0%, #654321 100%);
+            border-radius: 15px 15px 0 0;
+            position: relative;
+            transform-origin: left center;
+            transition: transform 3s ease-in-out;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            cursor: pointer;
+        }
+
+        .door.opening {
+            transform: rotateY(-120deg);
+        }
+
+        .door-frame {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            border-radius: 20px 20px 5px 5px;
+            z-index: -1;
+        }
+
+        .door-handle {
+            position: absolute;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 15px;
+            height: 15px;
+            background: #f39c12;
+            border-radius: 50%;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+        }
+
+        .door-panels {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            right: 30px;
+            bottom: 30px;
+        }
+
+        .door-panel {
+            background: rgba(255,255,255,0.1);
+            border: 3px solid #654321;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .door-panel:first-child {
+            height: 45%;
+        }
+
+        .door-panel:last-child {
+            height: 45%;
+            margin-bottom: 0;
+        }
+
+        .week0-sign {
+            position: absolute;
+            left: -150px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 10px 20px rgba(231, 76, 60, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .week0-sign::after {
+            content: '';
+            position: absolute;
+            right: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 10px solid transparent;
+            border-left-color: #c0392b;
+        }
+
+
+
+        .path-visualization {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 50px 0;
+            position: relative;
+            z-index: 10;
+        }
+
+        .journey-step {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            min-width: 200px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .journey-step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .step-completed {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+        }
+
+        .step-current {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .step-future {
+            background: linear-gradient(135deg, #ecf0f1 0%, #bdc3c7 100%);
+            color: #7f8c8d;
+        }
+
+        .step-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .step-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .step-desc {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .path-arrow {
+            font-size: 2rem;
+            color: #3498db;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .motivation-section {
+            background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .motivation-title {
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .motivation-content {
+            font-size: 1.3rem;
+            line-height: 1.7;
+        }
+
+        .start-button {
+            background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            border-radius: 25px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(0, 184, 148, 0.3);
+            position: relative;
+            z-index: 10;
+            display: block;
+            margin: 30px auto 0;
+        }
+
+        .start-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(0, 184, 148, 0.4);
+        }
+
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .floating-icon {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.6;
+            animation: floatAround 15s linear infinite;
+        }
+
+        @keyframes floatAround {
+            0% { transform: translateX(-100px) translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateX(calc(100vw + 100px)) translateY(-50px) rotate(360deg); opacity: 0; }
+        }
+
+        .floating-icon:nth-child(1) { top: 20%; animation-delay: 0s; color: #ff6b95; }
+        .floating-icon:nth-child(2) { top: 40%; animation-delay: 3s; color: #74b9ff; }
+        .floating-icon:nth-child(3) { top: 60%; animation-delay: 6s; color: #fdcb6e; }
+        .floating-icon:nth-child(4) { top: 80%; animation-delay: 9s; color: #6c5ce7; }
+        .floating-icon:nth-child(5) { top: 30%; animation-delay: 12s; color: #00b894; }
+
+        @media (max-width: 768px) {
+            .main-scene {
+                padding: 30px;
+            }
+            
+            .main-title {
+                font-size: 2.5rem;
+            }
+            
+            .door-scene {
+                height: 300px;
+            }
+            
+            .door {
+                width: 200px;
+                height: 280px;
+            }
+            
+            .week0-sign {
+                display: none;
+            }
+            
+            .path-visualization {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .path-arrow {
+                transform: rotate(90deg);
+            }
+
+            .journey-step {
+                min-width: 80%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-elements">
+        <div class="floating-icon">🚀</div>
+        <div class="floating-icon">💻</div>
+        <div class="floating-icon">🌟</div>
+        <div class="floating-icon">🔥</div>
+        <div class="floating-icon">⚡</div>
+    </div>
+
+    <div class="container">
+        <div class="main-scene">
+            <div class="scene-background"></div>
+            
+            <div class="header">
+                <h1 class="main-title">🚪 Week 0完了、Week 1への扉を開く</h1>
+                <p class="subtitle">新しい学習の旅の始まり - プログラミングの世界への第一歩</p>
+            </div>
+
+            <div class="door-scene">
+                <div class="week0-sign">
+                    Week 0<br>完了！<br>🎉
+                </div>
+                
+                <div class="door-container">
+                    <div class="door-frame"></div>
+                    <div class="door" id="transitionDoor">
+                        <div class="door-panels">
+                            <div class="door-panel"></div>
+                            <div class="door-panel"></div>
+                        </div>
+                        <div class="door-handle"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="path-visualization">
+                <div class="journey-step step-completed">
+                    <div class="step-icon">✅</div>
+                    <div class="step-title">Week 0 完了</div>
+                    <div class="step-desc">PC基礎・学習準備</div>
+                </div>
+                
+                <div class="path-arrow">→</div>
+                
+                <div class="journey-step step-current">
+                    <div class="step-icon">🚪</div>
+                    <div class="step-title">今ここ</div>
+                    <div class="step-desc">新しい扉を開く瞬間</div>
+                </div>
+                
+                <div class="path-arrow">→</div>
+                
+                <div class="journey-step step-future">
+                    <div class="step-icon">🌐</div>
+                    <div class="step-title">Week 1 開始</div>
+                    <div class="step-desc">Web技術の習得</div>
+                </div>
+                
+                <div class="path-arrow">→</div>
+                
+                <div class="journey-step step-future">
+                    <div class="step-icon">🎯</div>
+                    <div class="step-title">最終目標</div>
+                    <div class="step-desc">即戦力エンジニア</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="motivation-section">
+            <h2 class="motivation-title">🌟 新たな冒険の始まり</h2>
+            <div class="motivation-content">
+                <strong>おめでとうございます！あなたはWeek 0を完走しました。</strong><br><br>
+                
+                PC初心者だった数日前の自分を振り返ってください。<br>
+                今のあなたは、プログラミング学習に必要なすべての基盤を習得しています。<br><br>
+                
+                Week 1では、ついに<strong>「プログラミング」</strong>が始まります。<br>
+                HTML・CSS・JavaScriptを学び、<strong>あなた自身のWebサイト</strong>を作成します。<br><br>
+                
+                <strong>この扉の向こうには、無限の可能性が広がっています。</strong><br>
+                <strong>自信を持って、新しい世界に足を踏み入れましょう！</strong>
+            </div>
+
+            <button class="start-button" onclick="openDoor()">
+                🚀 Week 1へ進む準備完了！扉を開こう
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let doorOpened = false;
+
+        function openDoor() {
+            if (!doorOpened) {
+                const door = document.getElementById('transitionDoor');
+                door.classList.add('opening');
+                doorOpened = true;
+                
+                // 効果音の代わりに視覚的フィードバック
+                document.body.style.animation = 'none';
+                setTimeout(() => {
+                    document.body.style.animation = 'skyTransition 15s ease-in-out infinite';
+                }, 100);
+
+                // ボタンテキスト変更
+                const button = document.querySelector('.start-button');
+                button.innerHTML = '✨ 扉が開きました！Week 1で会いましょう！';
+                button.style.background = 'linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%)';
+            }
+        }
+
+        // 自動で扉を開くデモ（5秒後）
+        setTimeout(() => {
+            if (!doorOpened) {
+                openDoor();
+            }
+        }, 5000);
+
+        // インタラクティブ要素
+        document.addEventListener('DOMContentLoaded', function() {
+            // ホバー効果
+            const door = document.getElementById('transitionDoor');
+            door.addEventListener('mouseenter', function() {
+                if (!doorOpened) {
+                    this.style.transform = 'rotateY(-10deg)';
+                }
+            });
+
+            door.addEventListener('mouseleave', function() {
+                if (!doorOpened) {
+                    this.style.transform = 'rotateY(0deg)';
+                }
+            });
+
+            // クリックで扉を開く
+            door.addEventListener('click', openDoor);
+
+            // スクロール時のアニメーション
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animation = 'fadeInUp 0.8s ease forwards';
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.journey-step').forEach(el => {
+                observer.observe(el);
+            });
+
+            // パーティクル効果のシミュレーション
+            function createSparkle() {
+                const sparkle = document.createElement('div');
+                sparkle.innerHTML = '✨';
+                sparkle.style.position = 'fixed';
+                sparkle.style.left = Math.random() * window.innerWidth + 'px';
+                sparkle.style.top = Math.random() * window.innerHeight + 'px';
+                sparkle.style.fontSize = Math.random() * 20 + 10 + 'px';
+                sparkle.style.pointerEvents = 'none';
+                sparkle.style.zIndex = '1000';
+                sparkle.style.animation = 'sparkleAnimation 2s ease-out forwards';
+                
+                document.body.appendChild(sparkle);
+                
+                setTimeout(() => {
+                    if (sparkle.parentNode) {
+                        sparkle.parentNode.removeChild(sparkle);
+                    }
+                }, 2000);
+            }
+
+            // 扉が開いた時のお祝い効果
+            const originalOpenDoor = window.openDoor;
+            window.openDoor = function() {
+                originalOpenDoor();
+                
+                // スパークル効果
+                for (let i = 0; i < 15; i++) {
+                    setTimeout(() => createSparkle(), i * 100);
+                }
+            };
+        });
+
+        // CSS追加
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            @keyframes sparkleAnimation {
+                0% {
+                    opacity: 0;
+                    transform: scale(0) rotate(0deg);
+                }
+                50% {
+                    opacity: 1;
+                    transform: scale(1) rotate(180deg);
+                }
+                100% {
+                    opacity: 0;
+                    transform: scale(0.5) rotate(360deg);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

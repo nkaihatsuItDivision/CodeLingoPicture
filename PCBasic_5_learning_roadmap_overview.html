@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>これから始まる学習の全体像</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            transition: all 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .main-title {
+            font-size: 2.8rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .roadmap-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .week-block {
+            background: linear-gradient(135deg, #f8f9ff 0%, #e3e8ff 100%);
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 5px solid #3498db;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .week-block:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(52, 152, 219, 0.2);
+        }
+
+        .week-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .week-number {
+            background: #3498db;
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            font-size: 0.9rem;
+        }
+
+        .week-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .week-content {
+            font-size: 1rem;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .skill-tag {
+            background: #3498db;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .milestone-section {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .milestone-title {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .milestone-content {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #ecf0f1;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            border-radius: 10px;
+            animation: progressAnimation 3s ease-in-out;
+        }
+
+        @keyframes progressAnimation {
+            from { width: 0%; }
+            to { width: 100%; }
+        }
+
+        .phase-divider {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .phase-title {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .phase-1 { border-left-color: #e74c3c; }
+        .phase-1 .week-number { background: #e74c3c; }
+        .phase-1 .skill-tag { background: #e74c3c; }
+
+        .phase-2 { border-left-color: #3498db; }
+        .phase-2 .week-number { background: #3498db; }
+        .phase-2 .skill-tag { background: #3498db; }
+
+        .phase-3 { border-left-color: #2ecc71; }
+        .phase-3 .week-number { background: #2ecc71; }
+        .phase-3 .skill-tag { background: #2ecc71; }
+
+        .phase-4 { border-left-color: #9b59b6; }
+        .phase-4 .week-number { background: #9b59b6; }
+        .phase-4 .skill-tag { background: #9b59b6; }
+
+        .icon {
+            font-size: 1.8rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .main-title {
+                font-size: 2rem;
+            }
+            
+            .roadmap-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="main-title">🗺️ これから始まる学習の全体像</h1>
+            <p class="subtitle">PC初心者から即戦力エンジニアまでの12週間完全ロードマップ</p>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+        </div>
+
+        <!-- Phase 1: Web基礎 -->
+        <div class="phase-divider">
+            <div class="phase-title">📱 Phase 1: Web基礎習得</div>
+        </div>
+        
+        <div class="roadmap-container">
+            <div class="week-block phase-1">
+                <div class="week-header">
+                    <div class="week-number">W1</div>
+                    <div class="week-title">Web基礎</div>
+                </div>
+                <div class="week-content">
+                    Webページの構造・スタイル・JavaScript基礎を習得し、レスポンシブなポートフォリオサイトを作成
+                </div>
+                <div class="skill-tags">
+                    <div class="skill-tag">HTML</div>
+                    <div class="skill-tag">CSS</div>
+                    <div class="skill-tag">JavaScript</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 2: Java基礎 -->
+        <div class="phase-divider">
+            <div class="phase-title">☕ Phase 2: Java基礎習得</div>
+        </div>
+
+        <div class="roadmap-container">
+            <div class="week-block phase-2">
+                <div class="week-header">
+                    <div class="week-number">W2</div>
+                    <div class="week-title">Java入門</div>
+                </div>
+                <div class="week-content">
+                    Javaの基本文法を学び、コンソールアプリケーションを作成。変数・条件分岐・繰り返し・メソッドを習得
+                </div>
+                <div class="skill-tags">
+                    <div class="skill-tag">Eclipse</div>
+                    <div class="skill-tag">基本文法</div>
+                    <div class="skill-tag">メソッド</div>
+                </div>
+            </div>
+
+            <div class="week-block phase-2">
+                <div class="week-header">
+                    <div class="week-number">W3</div>
+                    <div class="week-title">Java基礎固め</div>
+                </div>
+                <div class="week-content">
+                    ArrayList・String操作・ファイル入出力・例外処理を学び、実用的なツールアプリケーションを完成
+                </div>
+                <div class="skill-tags">
+                    <div class="skill-tag">ArrayList</div>
+                    <div class="skill-tag">ファイル処理</div>
+                    <div class="skill-tag">例外処理</div>
+                </div>
+            </div>
+
+            <div class="week-block phase-2">
+                <div class="week-header">
+                    <div class="week-number">W4</div>
+                    <div class="week-title">OOP基礎</div>
+                </div>
+                <div class="week-content">
+                    オブジェクト指向プログラミングの基礎。クラス・オブジェクト・カプセル化を学び設計思考を習得
+                </div>
+                <div class="skill-tags">
+                    <div class="skill-tag">クラス設計</div>
+                    <div class="skill-tag">カプセル化</div>
+                    <div class="skill-tag">オブジェクト</div>
+                </div>
+            </div>
+
+            <div class="week-block phase-2">
+                <div class="week-header">
+                    <div class="week-number">W5</div>
+                    <div class="week-title">OOP応用</div>
+                </div>
+                <div class="week-content">
+                    継承・ポリモーフィズム・抽象化・Lombokライブラリを習得し、エンタープライズレベルのシステム構築
+                </div>
+                <div class="skill-tags">
+                    <div class="skill-tag">継承</div>
+                    <div class="skill-tag">ポリモーフィズム</div>
+                    <div class="skill-tag">Lombok</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 3: 実務技術 -->
+        <div class="phase-divider">
+            <div class="phase-title">🛠️ Phase 3: 実務技術習得</div>
+        </div>
+
+        <div class="roadmap-container">
+            <div class="week-block phase-3">
+                <div class="week-header">
+                    <div class="week-number">W6</div>
+                    <div class="week-title">Git/GitHub</div>
+                </div>
+                <div class="week-content">
+                    バージョン管理システムを習得。チーム開発の基盤となるGit操作・GitHub連携・PR作成を完全マスター
+                </div>
+                <div class="skill-tags">
+                    <div class="skill-tag">Git</div>
+                    <div class="skill-tag">GitHub</div>
+                    <div class="skill-tag">チーム開発</div>
+                </div>
+            </div>
+
+            <div class="week-block phase-3">
+                <div class="week-header">
+                    <div class="week-number">W7</div>
+                    <div class="week-title">データベース</div>
+                </div>
+                <div class="week-content">
+                    SQL・データベース設計・正規化を習得。MySQL活用とテーブル設計によるデータ管理の基盤を構築
+                </div>
+                <div class="skill-tags">
+                    <div class="skill-tag">SQL</div>
+                    <div class="skill-tag">MySQL</div>
+                    <div class="skill-tag">DB設計</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 4: Spring Boot & 実戦 -->
+        <div class="phase-divider">
+            <div class="phase-title">🚀 Phase 4: Spring Boot & 企業レベル実戦</div>
+        </div>
+
+        <div class="roadmap-container">
+            <div class="week-block phase-4">
+                <div class="week-header">
+                    <div class="week-number">W8</div>
+                    <div class="week-title">Spring Boot基礎</div>
+                </div>
+                <div class="week-content">
+                    企業標準フレームワークSpring Bootを習得。DI・MVC・Thymeleafによる本格的なWebアプリケーション開発
+                </div>
+                <div class="skill-tags">
+                    <div class="skill-tag">Spring Boot</div>
+                    <div class="skill-tag">MVC</div>
+                    <div class="skill-tag">Thymeleaf</div>
+                </div>
+            </div>
+
+            <div class="week-block phase-4">
+                <div class="week-header">
+                    <div class="week-number">W9</div>
+                    <div class="week-title">機能実装</div>
+                </div>
+                <div class="week-content">
+                    CRUD操作・バリデーション・セッション管理による完全な学生管理システムを段階的に構築・完成
+                </div>
+                <div class="skill-tags">
+                    <div class="skill-tag">CRUD</div>
+                    <div class="skill-tag">バリデーション</div>
+                    <div class="skill-tag">セッション</div>
+                </div>
+            </div>
+
+            <div class="week-block phase-4">
+                <div class="week-header">
+                    <div class="week-number">W10</div>
+                    <div class="week-title">企業レベル完成</div>
+                </div>
+                <div class="week-content">
+                    Ajax・ファイル処理・セキュリティ・パフォーマンス最適化により企業運用レベルのシステムを完成
+                </div>
+                <div class="skill-tags">
+                    <div class="skill-tag">Ajax</div>
+                    <div class="skill-tag">セキュリティ</div>
+                    <div class="skill-tag">最適化</div>
+                </div>
+            </div>
+
+            <div class="week-block phase-4">
+                <div class="week-header">
+                    <div class="week-number">W11</div>
+                    <div class="week-title">実務基礎知識</div>
+                </div>
+                <div class="week-content">
+                    要件定義・設計・ドキュメント・プロジェクト管理・IT業界知識を統合し、即戦力レベルを達成
+                </div>
+                <div class="skill-tags">
+                    <div class="skill-tag">要件定義</div>
+                    <div class="skill-tag">プロジェクト管理</div>
+                    <div class="skill-tag">業界知識</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="milestone-section">
+            <div class="milestone-title">
+                <span class="icon">🎯</span>
+                12週間後のあなた
+                <span class="icon">📍</span>
+            </div>
+            <div class="milestone-content">
+                <strong>「PC初心者」から「企業運用レベルシステムを開発できる即戦力エンジニア」</strong><br>
+                HTML・CSS・JavaScript・Java・Spring Boot・データベース・Git<br>
+                すべてを統合した本格的なWebアプリケーション開発力を習得<br><br>
+                <strong>推定学習時間：約87-104時間</strong> | <strong>実装予定行数：数千行超</strong><br>
+                <strong>最終成果物：企業レベルの学生管理システム + ポートフォリオ</strong>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

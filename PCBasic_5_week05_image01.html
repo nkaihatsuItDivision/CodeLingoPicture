@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>たった1週間前のあなた - PC初心者状態</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #ff6b6b, #feca57, #ff9ff3, #54a0ff);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .clock-icon {
+            font-size: 32px;
+            color: #3498db;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+
+        .timeline {
+            display: inline-block;
+            background: #e74c3c;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .struggle-section {
+            background: #fff5f5;
+            padding: 30px;
+            border-radius: 15px;
+            border-left: 5px solid #e74c3c;
+        }
+
+        .struggle-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #c0392b;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .worry-icon {
+            font-size: 24px;
+            color: #e74c3c;
+        }
+
+        .struggle-list {
+            list-style: none;
+        }
+
+        .struggle-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(231, 76, 60, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .struggle-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .cross-icon {
+            color: #e74c3c;
+            font-size: 18px;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .struggle-text {
+            font-size: 14px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+
+        .mindset-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            border-left: 5px solid #95a5a6;
+        }
+
+        .mindset-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #5d6d7e;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .thought-icon {
+            font-size: 24px;
+            color: #95a5a6;
+        }
+
+        .thought-bubble {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(149, 165, 166, 0.1);
+            margin: 15px 0;
+        }
+
+        .thought-bubble::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 30px;
+            border: 8px solid transparent;
+            border-bottom-color: white;
+        }
+
+        .thought-text {
+            font-size: 15px;
+            color: #34495e;
+            font-style: italic;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .character {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .character-emoji {
+            font-size: 80px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .character-status {
+            background: #ecf0f1;
+            padding: 15px;
+            border-radius: 10px;
+            color: #5d6d7e;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .bottom-message {
+            text-align: center;
+            margin-top: 40px;
+            padding: 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            color: white;
+        }
+
+        .bottom-message-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .bottom-message-text {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+            
+            .container {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">
+                <span class="clock-icon">⏰</span>
+                たった1週間前のあなた
+            </h1>
+            <p class="subtitle">まだ覚えていますか？Week 0.1を始めた時の状況を</p>
+            <div class="timeline">Week 0開始時点</div>
+        </div>
+
+        <div class="character">
+            <span class="character-emoji">😰</span>
+            <div class="character-status">
+                PC初心者 - すべてが未知の世界
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <div class="struggle-section">
+                <h2 class="struggle-title">
+                    <span class="worry-icon">😟</span>
+                    具体的な困りごと
+                </h2>
+                <ul class="struggle-list">
+                    <li class="struggle-item">
+                        <span class="cross-icon">❌</span>
+                        <div class="struggle-text">
+                            <strong>マウス操作すら不安だった</strong><br>
+                            クリックやダブルクリックのタイミングが分からない
+                        </div>
+                    </li>
+                    <li class="struggle-item">
+                        <span class="cross-icon">❌</span>
+                        <div class="struggle-text">
+                            <strong>キーボード入力に時間がかかった</strong><br>
+                            一文字ずつ指で探しながら入力
+                        </div>
+                    </li>
+                    <li class="struggle-item">
+                        <span class="cross-icon">❌</span>
+                        <div class="struggle-text">
+                            <strong>ファイルとフォルダの違いが分からない</strong><br>
+                            データがどこに保存されているか不明
+                        </div>
+                    </li>
+                    <li class="struggle-item">
+                        <span class="cross-icon">❌</span>
+                        <div class="struggle-text">
+                            <strong>インターネット検索も一苦労</strong><br>
+                            欲しい情報になかなか辿り着けない
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="mindset-section">
+                <h2 class="mindset-title">
+                    <span class="thought-icon">💭</span>
+                    その時の心境
+                </h2>
+                <div class="thought-bubble">
+                    <div class="thought-text">
+                        「プログラミングなんて<br>
+                        自分にはできない...」
+                    </div>
+                </div>
+                <div class="thought-bubble">
+                    <div class="thought-text">
+                        「パソコンって<br>
+                        こんなに難しいの？」
+                    </div>
+                </div>
+                <div class="thought-bubble">
+                    <div class="thought-text">
+                        「本当に学習を<br>
+                        続けられるかな...」
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-message">
+            <div class="bottom-message-title">これが、Week 0開始時点でのあなたでした。</div>
+            <div class="bottom-message-text">
+                誰もが最初は同じスタート地点。不安や困難は当然のことです。
+            </div>
+        </div>
+    </div>
+</body>
+</html>

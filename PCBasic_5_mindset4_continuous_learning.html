@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心構え4: 継続学習の重要性</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .continuous-learning-container {
+            max-width: 1000px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .continuous-learning-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: shimmer 4s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(180deg); }
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .growth-curve-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 40px 0;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .curve-visual {
+            flex: 1;
+            min-width: 300px;
+            height: 250px;
+            position: relative;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 20px;
+            border: 2px solid #2ecc71;
+        }
+
+        .curve-title {
+            text-align: center;
+            color: #27ae60;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .simple-chart {
+            position: absolute;
+            bottom: 50px;
+            left: 20px;
+            right: 20px;
+            height: 120px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .chart-bar-simple {
+            background: linear-gradient(to top, #27ae60 0%, #2ecc71 100%);
+            border-radius: 4px 4px 0 0;
+            flex: 1;
+            box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
+        }
+
+        .chart-bar-simple:nth-child(1) { height: 20px; }
+        .chart-bar-simple:nth-child(2) { height: 40px; }
+        .chart-bar-simple:nth-child(3) { height: 70px; }
+        .chart-bar-simple:nth-child(4) { height: 100px; }
+        .chart-bar-simple:nth-child(5) { 
+            height: 120px; 
+            background: linear-gradient(to top, #f39c12 0%, #f1c40f 100%);
+        }
+
+        .growth-line-simple {
+            position: absolute;
+            bottom: 60px;
+            left: 25px;
+            right: 25px;
+            height: 60px;
+            pointer-events: none;
+        }
+
+        .growth-line-simple::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, #e74c3c 0%, #f39c12 50%, #2ecc71 100%);
+            transform: rotate(20deg);
+            transform-origin: left bottom;
+            border-radius: 2px;
+        }
+
+        .chart-icon-simple {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 1.5rem;
+        }
+
+        .simple-labels {
+            position: absolute;
+            bottom: 25px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #6c757d;
+            font-weight: bold;
+        }
+
+        .calendar-section {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .calendar-title {
+            text-align: center;
+            color: #27ae60;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.2);
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .calendar-header {
+            background: #2ecc71;
+            color: white;
+            font-size: 0.8rem;
+        }
+
+        .calendar-completed {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            animation: completedPulse 2s ease-in-out infinite;
+        }
+
+        .calendar-today {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            animation: todayGlow 1.5s ease-in-out infinite alternate;
+        }
+
+        .calendar-future {
+            background: #ecf0f1;
+            color: #95a5a6;
+        }
+
+        @keyframes completedPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes todayGlow {
+            0% { box-shadow: 0 0 5px rgba(243, 156, 18, 0.5); }
+            100% { box-shadow: 0 0 20px rgba(243, 156, 18, 0.8); }
+        }
+
+        .habit-tracker {
+            background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .habit-tracker h2 {
+            color: #2e7d32;
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+        }
+
+        .habit-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .habit-item {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 5px solid #4caf50;
+            transition: all 0.3s ease;
+        }
+
+        .habit-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 10px 20px rgba(76, 175, 80, 0.2);
+        }
+
+        .habit-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .habit-title {
+            color: #2e7d32;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .habit-streak {
+            background: #4caf50;
+            color: white;
+            border-radius: 15px;
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .habit-progress {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .habit-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50, #8bc34a);
+            border-radius: 4px;
+            transition: width 2s ease-in-out;
+        }
+
+        .habit-description {
+            color: #388e3c;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .benefits-section {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .benefits-section h2 {
+            color: #e65100;
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .benefit-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .benefit-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(230, 81, 0, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .benefit-card:hover::before {
+            left: 100%;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(230, 81, 0, 0.2);
+        }
+
+        .benefit-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .benefit-title {
+            color: #e65100;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .benefit-description {
+            color: #bf360c;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .motivation-quotes {
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .motivation-quotes h2 {
+            color: #7b1fa2;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+        }
+
+        .quote-carousel {
+            position: relative;
+            height: 120px;
+            overflow: hidden;
+        }
+
+        .quote {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            color: #8e24aa;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        .quote.active {
+            opacity: 1;
+        }
+
+        .encouragement {
+            background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .encouragement h2 {
+            color: #2e7d32;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .encouragement p {
+            color: #388e3c;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .success-icon {
+            font-size: 3rem;
+            margin: 20px 0;
+            display: block;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .growth-curve-section {
+                flex-direction: column;
+            }
+            
+            .curve-visual, .calendar-section {
+                min-width: 100%;
+            }
+            
+            .simple-chart {
+                height: 100px;
+            }
+            
+            .chart-bar-simple:nth-child(5) { 
+                height: 100px; 
+            }
+            
+            .habit-items {
+                grid-template-columns: 1fr;
+            }
+            
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="continuous-learning-container">
+        <div class="header">
+            <h1>📅 心構え4: 継続学習の重要性</h1>
+            <p>毎日の積み重ねによる成長カーブ</p>
+        </div>
+
+        <div class="content">
+            <div class="growth-curve-section">
+                <div class="curve-visual">
+                    <div class="chart-icon-simple">📈</div>
+                    <div class="curve-title">成長の軌跡</div>
+                    <div class="simple-chart">
+                        <div class="chart-bar-simple"></div>
+                        <div class="chart-bar-simple"></div>
+                        <div class="chart-bar-simple"></div>
+                        <div class="chart-bar-simple"></div>
+                        <div class="chart-bar-simple"></div>
+                    </div>
+                    <div class="simple-labels">
+                        <span>開始</span>
+                        <span>1ヶ月</span>
+                        <span>3ヶ月</span>
+                        <span>6ヶ月</span>
+                        <span>1年</span>
+                    </div>
+                </div>
+
+                <div class="calendar-section">
+                    <div class="calendar-title">📅 学習カレンダー</div>
+                    <div class="calendar-grid">
+                        <div class="calendar-day calendar-header">日</div>
+                        <div class="calendar-day calendar-header">月</div>
+                        <div class="calendar-day calendar-header">火</div>
+                        <div class="calendar-day calendar-header">水</div>
+                        <div class="calendar-day calendar-header">木</div>
+                        <div class="calendar-day calendar-header">金</div>
+                        <div class="calendar-day calendar-header">土</div>
+                        
+                        <div class="calendar-day calendar-future"></div>
+                        <div class="calendar-day calendar-completed">1</div>
+                        <div class="calendar-day calendar-completed">2</div>
+                        <div class="calendar-day calendar-completed">3</div>
+                        <div class="calendar-day calendar-completed">4</div>
+                        <div class="calendar-day calendar-completed">5</div>
+                        <div class="calendar-day calendar-completed">6</div>
+                        
+                        <div class="calendar-day calendar-completed">7</div>
+                        <div class="calendar-day calendar-completed">8</div>
+                        <div class="calendar-day calendar-completed">9</div>
+                        <div class="calendar-day calendar-completed">10</div>
+                        <div class="calendar-day calendar-completed">11</div>
+                        <div class="calendar-day calendar-completed">12</div>
+                        <div class="calendar-day calendar-completed">13</div>
+                        
+                        <div class="calendar-day calendar-completed">14</div>
+                        <div class="calendar-day calendar-completed">15</div>
+                        <div class="calendar-day calendar-completed">16</div>
+                        <div class="calendar-day calendar-completed">17</div>
+                        <div class="calendar-day calendar-completed">18</div>
+                        <div class="calendar-day calendar-completed">19</div>
+                        <div class="calendar-day calendar-completed">20</div>
+                        
+                        <div class="calendar-day calendar-completed">21</div>
+                        <div class="calendar-day calendar-completed">22</div>
+                        <div class="calendar-day calendar-completed">23</div>
+                        <div class="calendar-day calendar-completed">24</div>
+                        <div class="calendar-day calendar-completed">25</div>
+                        <div class="calendar-day calendar-completed">26</div>
+                        <div class="calendar-day calendar-today">27</div>
+                        
+                        <div class="calendar-day calendar-future">28</div>
+                        <div class="calendar-day calendar-future">29</div>
+                        <div class="calendar-day calendar-future">30</div>
+                        <div class="calendar-day calendar-future">31</div>
+                        <div class="calendar-day calendar-future"></div>
+                        <div class="calendar-day calendar-future"></div>
+                        <div class="calendar-day calendar-future"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="habit-tracker">
+                <h2>🎯 継続学習の習慣化</h2>
+                <div class="habit-items">
+                    <div class="habit-item">
+                        <div class="habit-header">
+                            <div class="habit-title">📚 毎日30分学習</div>
+                            <div class="habit-streak">26日連続</div>
+                        </div>
+                        <div class="habit-progress">
+                            <div class="habit-progress-fill" style="width: 87%;"></div>
+                        </div>
+                        <div class="habit-description">
+                            短時間でも毎日続けることで、確実に知識が積み重なっています。
+                        </div>
+                    </div>
+
+                    <div class="habit-item">
+                        <div class="habit-header">
+                            <div class="habit-title">💻 実践コーディング</div>
+                            <div class="habit-streak">22日連続</div>
+                        </div>
+                        <div class="habit-progress">
+                            <div class="habit-progress-fill" style="width: 73%;"></div>
+                        </div>
+                        <div class="habit-description">
+                            理論だけでなく、実際に手を動かすことで理解が深まっています。
+                        </div>
+                    </div>
+
+                    <div class="habit-item">
+                        <div class="habit-header">
+                            <div class="habit-title">📝 学習記録</div>
+                            <div class="habit-streak">20日連続</div>
+                        </div>
+                        <div class="habit-progress">
+                            <div class="habit-progress-fill" style="width: 67%;"></div>
+                        </div>
+                        <div class="habit-description">
+                            学んだことを記録することで、振り返りと定着が効率化されています。
+                        </div>
+                    </div>
+
+                    <div class="habit-item">
+                        <div class="habit-header">
+                            <div class="habit-title">🤔 復習時間</div>
+                            <div class="habit-streak">18日連続</div>
+                        </div>
+                        <div class="habit-progress">
+                            <div class="habit-progress-fill" style="width: 60%;"></div>
+                        </div>
+                        <div class="habit-description">
+                            定期的な復習により、忘却曲線に負けない記憶の定着を実現しています。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="benefits-section">
+                <h2>🌟 継続学習がもたらす効果</h2>
+                <div class="benefits-grid">
+                    <div class="benefit-card">
+                        <span class="benefit-icon">🧠</span>
+                        <h3 class="benefit-title">記憶の定着</h3>
+                        <p class="benefit-description">毎日少しずつ学習することで、長期記憶に定着し、知識が確実に身につきます。</p>
+                    </div>
+
+                    <div class="benefit-card">
+                        <span class="benefit-icon">📈</span>
+                        <h3 class="benefit-title">複利効果</h3>
+                        <p class="benefit-description">学習は複利のように働き、時間が経つほど成長の加速度が増していきます。</p>
+                    </div>
+
+                    <div class="benefit-card">
+                        <span class="benefit-icon">💪</span>
+                        <h3 class="benefit-title">習慣の力</h3>
+                        <p class="benefit-description">継続することで学習が習慣となり、努力なしに自然に続けられるようになります。</p>
+                    </div>
+
+                    <div class="benefit-card">
+                        <span class="benefit-icon">🎯</span>
+                        <h3 class="benefit-title">集中力向上</h3>
+                        <p class="benefit-description">毎日決まった時間に学習することで、集中力と学習効率が向上します。</p>
+                    </div>
+
+                    <div class="benefit-card">
+                        <span class="benefit-icon">🌱</span>
+                        <h3 class="benefit-title">自信の構築</h3>
+                        <p class="benefit-description">継続できている自分への自信が、さらなる挑戦への原動力となります。</p>
+                    </div>
+
+                    <div class="benefit-card">
+                        <span class="benefit-icon">🔄</span>
+                        <h3 class="benefit-title">学習体質</h3>
+                        <p class="benefit-description">学習すること自体が自然になり、生涯学習者としての基盤が築かれます。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="motivation-quotes">
+                <h2>💫 継続の力を支える言葉</h2>
+                <div class="quote-carousel">
+                    <div class="quote active">
+                        「千里の道も一歩から」<br>
+                        <small>- どんな大きな目標も、小さな一歩の積み重ねから始まります -</small>
+                    </div>
+                    <div class="quote">
+                        「継続は力なり」<br>
+                        <small>- 小さな努力でも続けることで、大きな力となります -</small>
+                    </div>
+                    <div class="quote">
+                        「学習に終わりはない」<br>
+                        <small>- 毎日が新しい発見と成長の機会です -</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="encouragement">
+                <span class="success-icon">🌟</span>
+                <h2>小さな積み重ねが、大きな変化を生む</h2>
+                <p>継続学習の最大の魅力は、<strong>気づかないうちに大きな成長を遂げている</strong>ことです。毎日30分の学習も、1ヶ月で15時間、1年で約180時間になります。<br><br>
+                完璧を目指さず、<strong>「今日も少しだけ前進する」</strong>という気持ちで続けることが大切。あなたの未来の姿は、今日の小さな学習の積み重ねによって決まります。<br><br>
+                <strong>継続こそが、あなたを理想の自分に導く最も確実な道</strong>なのです。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Quote carousel functionality
+        const quotes = document.querySelectorAll('.quote');
+        let currentQuote = 0;
+
+        function showNextQuote() {
+            quotes[currentQuote].classList.remove('active');
+            currentQuote = (currentQuote + 1) % quotes.length;
+            quotes[currentQuote].classList.add('active');
+        }
+
+        setInterval(showNextQuote, 4000);
+    </script>
+</body>
+</html>

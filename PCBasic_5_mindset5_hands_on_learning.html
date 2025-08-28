@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心構え5: 実践重視の学習法</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hands-on-container {
+            max-width: 1000px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .hands-on-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: shimmer 4s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(180deg); }
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .main-visual {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 40px 0;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .hands-section {
+            text-align: center;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .hands-emoji {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            display: block;
+            animation: typing 2s ease-in-out infinite;
+        }
+
+        @keyframes typing {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .code-editor {
+            flex: 2;
+            min-width: 300px;
+            background: #2c3e50;
+            border-radius: 15px;
+            padding: 20px;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(52, 73, 94, 0.3);
+        }
+
+        .editor-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #34495e;
+        }
+
+        .editor-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot.red { background: #e74c3c; }
+        .dot.yellow { background: #f1c40f; }
+        .dot.green { background: #2ecc71; }
+
+        .editor-title {
+            color: #ecf0f1;
+            margin-left: 15px;
+            font-size: 0.9rem;
+        }
+
+        .code-content {
+            color: #ecf0f1;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .code-line {
+            margin-bottom: 5px;
+            animation: codeLine 0.8s ease-in-out;
+        }
+
+        .code-line:nth-child(1) { animation-delay: 0.2s; }
+        .code-line:nth-child(2) { animation-delay: 0.4s; }
+        .code-line:nth-child(3) { animation-delay: 0.6s; }
+        .code-line:nth-child(4) { animation-delay: 0.8s; }
+        .code-line:nth-child(5) { animation-delay: 1.0s; }
+
+        @keyframes codeLine {
+            0% { opacity: 0; transform: translateX(-20px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+
+        .keyword { color: #3498db; }
+        .string { color: #2ecc71; }
+        .comment { color: #95a5a6; }
+        .method { color: #f1c40f; }
+
+        .learning-cycle {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .cycle-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            border: 2px solid #3498db;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cycle-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(52, 152, 219, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .cycle-card:hover::before {
+            left: 100%;
+        }
+
+        .cycle-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(52, 152, 219, 0.2);
+            border-color: #2980b9;
+        }
+
+        .cycle-number {
+            background: #3498db;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin: 0 auto 15px;
+        }
+
+        .cycle-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .cycle-title {
+            color: #2980b9;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .cycle-description {
+            color: #6c757d;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .comparison-section {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .comparison-title {
+            text-align: center;
+            color: #e65100;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .comparison-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .traditional-learning {
+            border-left: 5px solid #e74c3c;
+        }
+
+        .hands-on-learning {
+            border-left: 5px solid #2ecc71;
+        }
+
+        .comparison-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .comparison-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .comparison-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .comparison-card-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+
+        .traditional-learning .comparison-card-title {
+            color: #c0392b;
+        }
+
+        .hands-on-learning .comparison-card-title {
+            color: #27ae60;
+        }
+
+        .comparison-points {
+            list-style: none;
+            padding: 0;
+        }
+
+        .comparison-points li {
+            margin-bottom: 12px;
+            padding-left: 25px;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .traditional-learning .comparison-points li::before {
+            content: '❌';
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .hands-on-learning .comparison-points li::before {
+            content: '✅';
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .traditional-learning .comparison-points li {
+            color: #e74c3c;
+        }
+
+        .hands-on-learning .comparison-points li {
+            color: #27ae60;
+        }
+
+        .benefits-section {
+            background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .benefits-section h2 {
+            color: #2e7d32;
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .benefit-item {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid #4caf50;
+            transition: all 0.3s ease;
+        }
+
+        .benefit-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 10px 20px rgba(76, 175, 80, 0.2);
+        }
+
+        .benefit-item h4 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .benefit-item p {
+            color: #388e3c;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .practice-tips {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .practice-tips h2 {
+            color: #1976d2;
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .tip-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            border-top: 4px solid #2196f3;
+            transition: all 0.3s ease;
+        }
+
+        .tip-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(33, 150, 243, 0.2);
+        }
+
+        .tip-card h4 {
+            color: #1976d2;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tip-card p {
+            color: #1565c0;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .encouragement {
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .encouragement h2 {
+            color: #7b1fa2;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .encouragement p {
+            color: #8e24aa;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .success-icon {
+            font-size: 3rem;
+            margin: 20px 0;
+            display: block;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .main-visual {
+                flex-direction: column;
+            }
+            
+            .hands-emoji {
+                font-size: 3rem;
+            }
+            
+            .learning-cycle {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tips-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hands-on-container">
+        <div class="header">
+            <h1>✋ 心構え5: 実践重視の学習法</h1>
+            <p>手を動かす体験型学習スタイル</p>
+        </div>
+
+        <div class="content">
+            <div class="main-visual">
+                <div class="hands-section">
+                    <span class="hands-emoji">✋</span>
+                    <h2 style="color: #3498db; margin-bottom: 10px;">手を動かして学ぼう</h2>
+                    <p style="color: #6c757d;">読むだけでなく、<br><strong>実際にやってみる</strong></p>
+                </div>
+
+                <div class="code-editor">
+                    <div class="editor-header">
+                        <div class="editor-dots">
+                            <div class="dot red"></div>
+                            <div class="dot yellow"></div>
+                            <div class="dot green"></div>
+                        </div>
+                        <div class="editor-title">MyFirstProgram.java</div>
+                    </div>
+                    <div class="code-content">
+                        <div class="code-line"><span class="keyword">public class</span> MyFirstProgram {</div>
+                        <div class="code-line">    <span class="keyword">public static void</span> <span class="method">main</span>(String[] args) {</div>
+                        <div class="code-line">        System.out.<span class="method">println</span>(<span class="string">"Hello, World!"</span>);</div>
+                        <div class="code-line">        <span class="comment">// 実際に動かして確認！</span></div>
+                        <div class="code-line">    }</div>
+                        <div class="code-line">}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="learning-cycle">
+                <div class="cycle-card">
+                    <div class="cycle-number">1</div>
+                    <span class="cycle-icon">📖</span>
+                    <h3 class="cycle-title">理論を学ぶ</h3>
+                    <p class="cycle-description">基本的な概念や仕組みを理解する。ただし、ここで止まってはいけません！</p>
+                </div>
+
+                <div class="cycle-card">
+                    <div class="cycle-number">2</div>
+                    <span class="cycle-icon">💻</span>
+                    <h3 class="cycle-title">実際に書く</h3>
+                    <p class="cycle-description">学んだことを実際にコードに書いてみる。手を動かすことで理解が深まります。</p>
+                </div>
+
+                <div class="cycle-card">
+                    <div class="cycle-number">3</div>
+                    <span class="cycle-icon">▶️</span>
+                    <h3 class="cycle-title">動作確認</h3>
+                    <p class="cycle-description">作ったプログラムを実際に実行して、期待通りに動くか確認します。</p>
+                </div>
+
+                <div class="cycle-card">
+                    <div class="cycle-number">4</div>
+                    <span class="cycle-icon">🔧</span>
+                    <h3 class="cycle-title">改良・改善</h3>
+                    <p class="cycle-description">動作を確認したら、より良くするための改良や新しい機能を追加してみます。</p>
+                </div>
+            </div>
+
+            <div class="comparison-section">
+                <h2 class="comparison-title">🔄 学習法の比較</h2>
+                <div class="comparison-grid">
+                    <div class="comparison-card traditional-learning">
+                        <div class="comparison-header">
+                            <div class="comparison-icon">📚</div>
+                            <h3 class="comparison-card-title">従来の理論中心学習</h3>
+                        </div>
+                        <ul class="comparison-points">
+                            <li>本やスライドを読むだけ</li>
+                            <li>理解したつもりになりやすい</li>
+                            <li>実際に使えるかは不明</li>
+                            <li>エラーに対処できない</li>
+                            <li>記憶に定着しにくい</li>
+                            <li>応用力が身につかない</li>
+                        </ul>
+                    </div>
+
+                    <div class="comparison-card hands-on-learning">
+                        <div class="comparison-header">
+                            <div class="comparison-icon">💻</div>
+                            <h3 class="comparison-card-title">実践重視の体験学習</h3>
+                        </div>
+                        <ul class="comparison-points">
+                            <li>実際に手を動かして学習</li>
+                            <li>本当の理解が得られる</li>
+                            <li>すぐに実用できる技術</li>
+                            <li>エラー対処スキルも習得</li>
+                            <li>体験として記憶に残る</li>
+                            <li>応用力・創造力が向上</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="benefits-section">
+                <h2>🌟 実践学習の圧倒的メリット</h2>
+                <div class="benefits-grid">
+                    <div class="benefit-item">
+                        <h4>🎯 確実な理解</h4>
+                        <p>実際にやってみることで、理論だけでは見えない部分まで深く理解できます。</p>
+                    </div>
+
+                    <div class="benefit-item">
+                        <h4>💪 問題解決力</h4>
+                        <p>エラーや予期しない動作に遭遇することで、自然と問題解決スキルが身につきます。</p>
+                    </div>
+
+                    <div class="benefit-item">
+                        <h4>🧠 記憶定着</h4>
+                        <p>手を動かした体験は、読むだけよりもはるかに記憶に定着しやすくなります。</p>
+                    </div>
+
+                    <div class="benefit-item">
+                        <h4>🔄 応用力</h4>
+                        <p>基本を実際に使った経験があると、新しい場面での応用がしやすくなります。</p>
+                    </div>
+
+                    <div class="benefit-item">
+                        <h4>✨ 創造性</h4>
+                        <p>実際に作る過程で、「こうしたらどうだろう？」という創造性が自然と湧いてきます。</p>
+                    </div>
+
+                    <div class="benefit-item">
+                        <h4>🎉 達成感</h4>
+                        <p>実際に動くものを作った時の達成感は、継続学習への強いモチベーションとなります。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="practice-tips">
+                <h2>💡 効果的な実践学習のコツ</h2>
+                <div class="tips-grid">
+                    <div class="tip-card">
+                        <h4>🚀 小さく始める</h4>
+                        <p>最初は簡単なものから始めて、徐々に複雑なものに挑戦。成功体験を積み重ねることが大切です。</p>
+                    </div>
+
+                    <div class="tip-card">
+                        <h4>🔍 エラーを恐れない</h4>
+                        <p>エラーは学習の絶好の機会。なぜエラーが起きたのかを調べることで、理解が深まります。</p>
+                    </div>
+
+                    <div class="tip-card">
+                        <h4>🎨 アレンジを加える</h4>
+                        <p>基本ができたら、自分なりのアレンジを加えてみる。オリジナリティが創造力を育てます。</p>
+                    </div>
+
+                    <div class="tip-card">
+                        <h4>📝 記録を残す</h4>
+                        <p>作ったものやつまづいた点を記録。後で見返すと、自分の成長を実感できます。</p>
+                    </div>
+
+                    <div class="tip-card">
+                        <h4>🔄 反復練習</h4>
+                        <p>同じような処理を何度も書くことで、自然と手が覚え、考えなくても書けるようになります。</p>
+                    </div>
+
+                    <div class="tip-card">
+                        <h4>🎯 目的を明確に</h4>
+                        <p>「何のために作るのか」を明確にすることで、より集中して取り組むことができます。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="encouragement">
+                <span class="success-icon">🛠️</span>
+                <h2>作って、動かして、理解する</h2>
+                <p><strong>プログラミングは「作ることで学ぶ」技術です</strong>。理論を100冊読むよりも、1つのプログラムを実際に作って動かす方が、はるかに多くのことを学べます。<br><br>
+                最初は小さなプログラムでも構いません。<strong>実際に手を動かし、コードを書き、実行し、エラーと格闘する</strong>。この過程こそが、あなたを真のプログラマーに育てる最良の方法なのです。<br><br>
+                <strong>さあ、今すぐ手を動かして、学習を始めましょう！</strong></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

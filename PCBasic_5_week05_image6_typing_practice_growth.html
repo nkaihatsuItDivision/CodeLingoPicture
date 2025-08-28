@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 0.4「タイピング練習」での成長</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(52, 152, 219, 0.2);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 25px 50px rgba(52, 152, 219, 0.3);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            padding: 40px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '⌨️';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 5em;
+            opacity: 0.2;
+            animation: typing-animation 2s ease-in-out infinite;
+        }
+
+        @keyframes typing-animation {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-5px) scale(1.1); }
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .lesson-number {
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 25px;
+            display: inline-block;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
+
+        .content {
+            padding: 50px;
+        }
+
+        .speed-comparison {
+            display: grid;
+            grid-template-columns: 1fr 80px 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+            align-items: center;
+        }
+
+        .speed-before, .speed-after {
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .speed-before {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            border: 2px solid #e57373;
+        }
+
+        .speed-after {
+            background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+            border: 2px solid #81c784;
+        }
+
+        .speed-meter {
+            background: #f8f9fa;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            margin: 20px auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .speed-number {
+            font-size: 2em;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .speed-before .speed-number {
+            color: #d32f2f;
+        }
+
+        .speed-after .speed-number {
+            color: #388e3c;
+        }
+
+        .speed-unit {
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+
+        .transformation-arrow {
+            text-align: center;
+            font-size: 3em;
+            color: #3498db;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .skill-panel {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid #3498db;
+            transition: all 0.3s ease;
+        }
+
+        .skill-panel:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(52, 152, 219, 0.2);
+            border-left-width: 8px;
+        }
+
+        .skill-panel h3 {
+            color: #3498db;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .skill-panel .icon {
+            font-size: 1.8em;
+        }
+
+        .keyboard-layout {
+            background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+
+        .keyboard-visual {
+            background: #2c3e50;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .keyboard-row {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 8px;
+        }
+
+        .key {
+            background: linear-gradient(135deg, #ecf0f1, #bdc3c7);
+            color: #2c3e50;
+            padding: 10px;
+            border-radius: 5px;
+            min-width: 35px;
+            text-align: center;
+            font-family: monospace;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: all 0.2s ease;
+        }
+
+        .key:hover {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .key.wide {
+            min-width: 80px;
+        }
+
+        .key.space {
+            min-width: 200px;
+        }
+
+        .finger-colors {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .finger-guide {
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.9em;
+        }
+
+        .finger-guide.left-pinky { background: #ffebee; color: #c62828; }
+        .finger-guide.left-ring { background: #e8f5e8; color: #2e7d32; }
+        .finger-guide.left-middle { background: #e3f2fd; color: #1565c0; }
+        .finger-guide.left-index { background: #fff3e0; color: #ef6c00; }
+        .finger-guide.right-index { background: #fff3e0; color: #ef6c00; }
+        .finger-guide.right-middle { background: #e3f2fd; color: #1565c0; }
+        .finger-guide.right-ring { background: #e8f5e8; color: #2e7d32; }
+        .finger-guide.right-pinky { background: #ffebee; color: #c62828; }
+
+        .programming-symbols {
+            background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+
+        .symbols-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .symbol-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #ff9800;
+            transition: all 0.3s ease;
+        }
+
+        .symbol-card:hover {
+            background: #ff9800;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .symbol-display {
+            font-size: 2em;
+            font-family: monospace;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .progress-section {
+            background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+
+        .progress-bars {
+            display: grid;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .progress-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .progress-label {
+            min-width: 150px;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 20px;
+            background: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+            transition: width 2s ease-out;
+        }
+
+        .progress-fill.accuracy { 
+            background: linear-gradient(90deg, #2ecc71, #27ae60); 
+            width: 95%;
+        }
+        .progress-fill.speed { 
+            background: linear-gradient(90deg, #3498db, #2980b9); 
+            width: 85%;
+        }
+        .progress-fill.symbols { 
+            background: linear-gradient(90deg, #f39c12, #e67e22); 
+            width: 90%;
+        }
+        .progress-fill.blind { 
+            background: linear-gradient(90deg, #9b59b6, #8e44ad); 
+            width: 88%;
+        }
+
+        .achievement-summary {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .typing-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .content {
+                padding: 30px 20px;
+            }
+            
+            .speed-comparison {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .transformation-arrow {
+                transform: rotate(90deg);
+                font-size: 2em;
+            }
+            
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .keyboard-row {
+                flex-wrap: wrap;
+            }
+            
+            .key {
+                padding: 8px;
+                min-width: 30px;
+            }
+            
+            .key.space {
+                min-width: 150px;
+            }
+            
+            .symbols-grid {
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="lesson-number">Week 0.4</div>
+            <h1>タイピング練習での成長</h1>
+            <p>人差し指打法 → 10指ブラインドタッチマスター</p>
+        </div>
+
+        <div class="content">
+            <div class="speed-comparison">
+                <div class="speed-before">
+                    <h3>💭 学習前の速度</h3>
+                    <div class="speed-meter">
+                        <div class="speed-number">15</div>
+                        <div class="speed-unit">WPM</div>
+                    </div>
+                    <ul style="list-style: none; text-align: left;">
+                        <li>❌ 人差し指中心の入力</li>
+                        <li>❌ キーボードを見ながら入力</li>
+                        <li>❌ 記号の入力が困難</li>
+                        <li>❌ 入力ミスが頻発</li>
+                    </ul>
+                </div>
+
+                <div class="transformation-arrow">
+                    ➡️
+                </div>
+
+                <div class="speed-after">
+                    <h3>🎯 学習後の速度</h3>
+                    <div class="speed-meter">
+                        <div class="speed-number">45</div>
+                        <div class="speed-unit">WPM</div>
+                    </div>
+                    <ul style="list-style: none; text-align: left;">
+                        <li>✅ 10指すべてを活用</li>
+                        <li>✅ 画面を見ながら入力</li>
+                        <li>✅ プログラミング記号も自在</li>
+                        <li>✅ 高い入力精度を実現</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="skills-grid">
+                <div class="skill-panel">
+                    <h3><span class="icon">✋</span>10指タッチタイピング</h3>
+                    <p>すべての指を正しいポジションで使い、効率的なタイピングを実現。ホームポジションからの指の移動パターンを完全習得しました。</p>
+                </div>
+
+                <div class="skill-panel">
+                    <h3><span class="icon">👀</span>ブラインドタッチ</h3>
+                    <p>キーボードを見ずに画面を見ながら入力できるように。プログラミング中のコード確認がスムーズになりました。</p>
+                </div>
+
+                <div class="skill-panel">
+                    <h3><span class="icon">🔣</span>プログラミング記号</h3>
+                    <p>{ } [ ] ( ) ; : " ' など、プログラミングに必要な記号類の入力を完全マスター。開発効率が大幅向上しました。</p>
+                </div>
+
+                <div class="skill-panel">
+                    <h3><span class="icon">📊</span>継続練習システム</h3>
+                    <p>日々の練習習慣を確立し、進捗管理システムを構築。継続的なスキル向上の基盤を作りました。</p>
+                </div>
+            </div>
+
+            <div class="keyboard-layout">
+                <h3 style="color: #3498db; text-align: center; margin-bottom: 20px;">
+                    ⌨️ マスターしたキーボードレイアウト
+                </h3>
+                <div class="keyboard-visual">
+                    <div class="keyboard-row">
+                        <div class="key">1</div>
+                        <div class="key">2</div>
+                        <div class="key">3</div>
+                        <div class="key">4</div>
+                        <div class="key">5</div>
+                        <div class="key">6</div>
+                        <div class="key">7</div>
+                        <div class="key">8</div>
+                        <div class="key">9</div>
+                        <div class="key">0</div>
+                        <div class="key">-</div>
+                        <div class="key">=</div>
+                    </div>
+                    <div class="keyboard-row">
+                        <div class="key">Q</div>
+                        <div class="key">W</div>
+                        <div class="key">E</div>
+                        <div class="key">R</div>
+                        <div class="key">T</div>
+                        <div class="key">Y</div>
+                        <div class="key">U</div>
+                        <div class="key">I</div>
+                        <div class="key">O</div>
+                        <div class="key">P</div>
+                        <div class="key">[</div>
+                        <div class="key">]</div>
+                    </div>
+                    <div class="keyboard-row">
+                        <div class="key">A</div>
+                        <div class="key">S</div>
+                        <div class="key">D</div>
+                        <div class="key">F</div>
+                        <div class="key">G</div>
+                        <div class="key">H</div>
+                        <div class="key">J</div>
+                        <div class="key">K</div>
+                        <div class="key">L</div>
+                        <div class="key">;</div>
+                        <div class="key">'</div>
+                    </div>
+                    <div class="keyboard-row">
+                        <div class="key">Z</div>
+                        <div class="key">X</div>
+                        <div class="key">C</div>
+                        <div class="key">V</div>
+                        <div class="key">B</div>
+                        <div class="key">N</div>
+                        <div class="key">M</div>
+                        <div class="key">,</div>
+                        <div class="key">.</div>
+                        <div class="key">/</div>
+                    </div>
+                    <div class="keyboard-row">
+                        <div class="key space">スペース</div>
+                    </div>
+                </div>
+
+                <div class="finger-colors">
+                    <div class="finger-guide left-pinky">左小指</div>
+                    <div class="finger-guide left-ring">左薬指</div>
+                    <div class="finger-guide left-middle">左中指</div>
+                    <div class="finger-guide left-index">左人差指</div>
+                    <div class="finger-guide right-index">右人差指</div>
+                    <div class="finger-guide right-middle">右中指</div>
+                    <div class="finger-guide right-ring">右薬指</div>
+                    <div class="finger-guide right-pinky">右小指</div>
+                </div>
+            </div>
+
+            <div class="programming-symbols">
+                <h3 style="color: #ff9800; text-align: center; margin-bottom: 20px;">
+                    🔣 習得したプログラミング記号
+                </h3>
+                <div class="symbols-grid">
+                    <div class="symbol-card">
+                        <div class="symbol-display">{ }</div>
+                        <div>中括弧</div>
+                        <small>ブロック定義</small>
+                    </div>
+                    <div class="symbol-card">
+                        <div class="symbol-display">[ ]</div>
+                        <div>角括弧</div>
+                        <small>配列アクセス</small>
+                    </div>
+                    <div class="symbol-card">
+                        <div class="symbol-display">( )</div>
+                        <div>丸括弧</div>
+                        <small>メソッド呼出</small>
+                    </div>
+                    <div class="symbol-card">
+                        <div class="symbol-display">;</div>
+                        <div>セミコロン</div>
+                        <small>文の終端</small>
+                    </div>
+                    <div class="symbol-card">
+                        <div class="symbol-display">:</div>
+                        <div>コロン</div>
+                        <small>ラベル・型</small>
+                    </div>
+                    <div class="symbol-card">
+                        <div class="symbol-display">" '</div>
+                        <div>引用符</div>
+                        <small>文字列定義</small>
+                    </div>
+                    <div class="symbol-card">
+                        <div class="symbol-display">< ></div>
+                        <div>不等号</div>
+                        <small>比較演算</small>
+                    </div>
+                    <div class="symbol-card">
+                        <div class="symbol-display">= ==</div>
+                        <div>等号</div>
+                        <small>代入・比較</small>
+                    </div>
+                    <div class="symbol-card">
+                        <div class="symbol-display">+ - * /</div>
+                        <div>演算子</div>
+                        <small>四則演算</small>
+                    </div>
+                    <div class="symbol-card">
+                        <div class="symbol-display">& | !</div>
+                        <div>論理演算</div>
+                        <small>条件処理</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="progress-section">
+                <h3 style="color: #27ae60; text-align: center; margin-bottom: 20px;">
+                    📊 タイピングスキル習得状況
+                </h3>
+                <div class="progress-bars">
+                    <div class="progress-item">
+                        <div class="progress-label">入力精度</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill accuracy">95%</div>
+                        </div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-label">入力速度</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill speed">85%</div>
+                        </div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-label">記号入力</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill symbols">90%</div>
+                        </div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-label">ブラインド</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill blind">88%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="achievement-summary">
+                <h2>🎉 タイピング技術 完全習得！</h2>
+                <p>10指ブラインドタッチをマスターし、プログラミングに必要なタイピング技術をすべて習得しました。効率的な入力により、学習やコーディングに集中できる基盤が完成しました。</p>
+                
+                <div class="typing-stats">
+                    <div class="stat-card">
+                        <div class="stat-number">45</div>
+                        <div>WPM速度</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">95%</div>
+                        <div>入力精度</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">20+</div>
+                        <div>プログラミング記号</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">10</div>
+                        <div>活用指数</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">300%</div>
+                        <div>速度向上率</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
