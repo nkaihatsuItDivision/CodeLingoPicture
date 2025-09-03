@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>開発者ツールの画面構成</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #17a2b8;
+            padding-bottom: 15px;
+        }
+        
+        .browser-window {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            overflow: hidden;
+            margin-bottom: 30px;
+            border: 2px solid #e9ecef;
+        }
+        
+        .browser-header {
+            background: linear-gradient(135deg, #f1f3f4, #e8eaed);
+            padding: 12px 16px;
+            border-bottom: 2px solid #dadce0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .browser-controls {
+            display: flex;
+            gap: 8px;
+            margin-right: 16px;
+        }
+        
+        .control-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        
+        .close { background: linear-gradient(135deg, #ff6b6b, #ff5252); }
+        .minimize { background: linear-gradient(135deg, #ffd93d, #ffc107); }
+        .maximize { background: linear-gradient(135deg, #51cf66, #4caf50); }
+        
+        .address-bar {
+            flex: 1;
+            background: white;
+            border: 2px solid #dadce0;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 14px;
+            color: #5f6368;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .webpage-area {
+            height: 300px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            position: relative;
+        }
+        
+        .webpage-content {
+            text-align: center;
+            z-index: 2;
+        }
+        
+        .webpage-content h1 {
+            margin: 0 0 16px 0;
+            font-weight: 600;
+            font-size: 28px;
+        }
+        
+        .webpage-content p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 16px;
+        }
+        
+        .webpage-annotation {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #2c3e50;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            border: 2px solid #17a2b8;
+        }
+        
+        .separator {
+            height: 6px;
+            background: linear-gradient(90deg, #17a2b8, #20c997, #17a2b8);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .separator-icon {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #17a2b8;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 2px solid #17a2b8;
+        }
+        
+        .devtools-area {
+            background: linear-gradient(135deg, #f8f9ff, #eef2ff);
+            position: relative;
+        }
+        
+        .devtools-annotation {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(111, 66, 193, 0.3);
+            z-index: 3;
+        }
+        
+        .devtools-tabs {
+            background: linear-gradient(135deg, #f1f3f4, #e8eaed);
+            display: flex;
+            border-bottom: 2px solid #dadce0;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .devtools-tab {
+            padding: 14px 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            color: #5f6368;
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .devtools-tab:hover {
+            background: rgba(23, 162, 184, 0.1);
+            color: #17a2b8;
+        }
+        
+        .devtools-tab.active {
+            color: #17a2b8;
+            border-bottom-color: #17a2b8;
+            background: white;
+            font-weight: bold;
+        }
+        
+        .network-highlight {
+            background: linear-gradient(135deg, #17a2b8, #20c997) !important;
+            color: white !important;
+            border-radius: 8px 8px 0 0;
+            box-shadow: 0 -2px 8px rgba(23, 162, 184, 0.3);
+        }
+        
+        .devtools-content {
+            min-height: 250px;
+            background: white;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .network-table {
+            background: linear-gradient(135deg, #f8f9ff, #eef2ff);
+            border: 2px solid #6f42c1;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 16px 0;
+            box-shadow: 0 4px 12px rgba(111, 66, 193, 0.1);
+        }
+        
+        .table-header {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            gap: 16px;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 13px;
+            color: white;
+            margin-bottom: 12px;
+        }
+        
+        .table-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            gap: 16px;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e1e4e8;
+            font-size: 13px;
+            align-items: center;
+            background: white;
+            border-radius: 6px;
+            margin-bottom: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .table-row:hover {
+            background: linear-gradient(135deg, #f8f9ff, #eef2ff);
+            transform: translateX(4px);
+        }
+        
+        .table-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .status-200 {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 11px;
+            text-align: center;
+        }
+        
+        .status-404 {
+            background: linear-gradient(135deg, #dc3545, #fd7e14);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 11px;
+            text-align: center;
+        }
+        
+        .network-description {
+            text-align: center;
+            margin-top: 20px;
+            padding: 16px;
+            background: rgba(23, 162, 184, 0.1);
+            border-radius: 8px;
+            color: #17a2b8;
+            font-weight: bold;
+            border: 1px solid rgba(23, 162, 184, 0.2);
+        }
+        
+        .key-points {
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #e3f2fd, #f1f8e9);
+            border-radius: 12px;
+            border: 2px solid #17a2b8;
+        }
+        
+        .key-points h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 18px;
+            text-align: center;
+        }
+        
+        .key-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .key-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #17a2b8;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .key-item strong {
+            color: #17a2b8;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .title {
+                font-size: 22px;
+            }
+            
+            .webpage-area {
+                height: 200px;
+            }
+            
+            .webpage-annotation,
+            .devtools-annotation {
+                position: static;
+                margin: 10px;
+                text-align: center;
+            }
+            
+            .table-header,
+            .table-row {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            
+            .devtools-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .devtools-tab {
+                padding: 10px 16px;
+                font-size: 12px;
+            }
+            
+            .key-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">🛠️ 開発者ツールの画面構成</div>
+        
+        <div class="browser-window">
+            <!-- ブラウザヘッダー -->
+            <div class="browser-header">
+                <div class="browser-controls">
+                    <div class="control-btn close"></div>
+                    <div class="control-btn minimize"></div>
+                    <div class="control-btn maximize"></div>
+                </div>
+                <div class="address-bar">🌐 https://www.example.com</div>
+            </div>
+            
+            <!-- 通常のWebページ表示エリア -->
+            <div class="webpage-area">
+                <div class="webpage-annotation">
+                    📱 通常のWebページ表示エリア
+                </div>
+                <div class="webpage-content">
+                    <h1>Webサイトのコンテンツ</h1>
+                    <p>ここに普段見ているWebページが表示されます</p>
+                </div>
+            </div>
+            
+            <!-- 分割線 -->
+            <div class="separator">
+                <div class="separator-icon">F12で開発者ツール表示</div>
+            </div>
+            
+            <!-- 開発者ツールエリア -->
+            <div class="devtools-area">
+                <div class="devtools-annotation">
+                    🔧 開発者ツール表示エリア
+                </div>
+                
+                <!-- タブ -->
+                <div class="devtools-tabs">
+                    <button class="devtools-tab">Elements</button>
+                    <button class="devtools-tab network-highlight">Network</button>
+                    <button class="devtools-tab">Console</button>
+                    <button class="devtools-tab">Sources</button>
+                    <button class="devtools-tab">Performance</button>
+                    <button class="devtools-tab">Application</button>
+                </div>
+                
+                <!-- コンテンツエリア -->
+                <div class="devtools-content">
+                    <div class="network-table">
+                        <div class="table-header">
+                            <div>📁 Name</div>
+                            <div>📊 Status</div>
+                            <div>📄 Type</div>
+                            <div>💾 Size</div>
+                            <div>⏱️ Time</div>
+                        </div>
+                        <div class="table-row">
+                            <div>example.com</div>
+                            <div class="status-200">200</div>
+                            <div>document</div>
+                            <div>25.6 KB</div>
+                            <div>245ms</div>
+                        </div>
+                        <div class="table-row">
+                            <div>style.css</div>
+                            <div class="status-200">200</div>
+                            <div>stylesheet</div>
+                            <div>8.2 KB</div>
+                            <div>67ms</div>
+                        </div>
+                        <div class="table-row">
+                            <div>logo.png</div>
+                            <div class="status-200">200</div>
+                            <div>image</div>
+                            <div>12.4 KB</div>
+                            <div>89ms</div>
+                        </div>
+                        <div class="table-row">
+                            <div>script.js</div>
+                            <div class="status-404">404</div>
+                            <div>script</div>
+                            <div>-</div>
+                            <div>123ms</div>
+                        </div>
+                    </div>
+                    
+                    <div class="network-description">
+                        🎯 ここでHTTP通信の詳細を確認できます！
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="key-points">
+            <h3>📋 重要なポイント</h3>
+            <div class="key-grid">
+                <div class="key-item">
+                    <strong>F12キー</strong>で開発者ツールを開閉できます
+                </div>
+                <div class="key-item">
+                    <strong>Networkタブ</strong>でHTTP通信を確認します
+                </div>
+                <div class="key-item">
+                    <strong>Status列</strong>で成功（200）やエラー（404）を判断
+                </div>
+                <div class="key-item">
+                    <strong>F5キー</strong>で再読み込みして通信を記録
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

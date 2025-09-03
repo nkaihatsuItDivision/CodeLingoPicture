@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Networkタブの実際の表示</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .title-section {
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #17a2b8, #6f42c1);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .title-section h1 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .title-section p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .devtools-window {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .devtools-header {
+            background: #f5f5f5;
+            border-bottom: 1px solid #ddd;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .tab {
+            padding: 8px 16px;
+            background: transparent;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .tab.active {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .tab:not(.active) {
+            color: #666;
+        }
+
+        .tab:hover:not(.active) {
+            background: #e9ecef;
+        }
+
+        .network-controls {
+            background: #fafafa;
+            border-bottom: 1px solid #ddd;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .control-btn {
+            background: #17a2b8;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: #138496;
+            transform: translateY(-1px);
+        }
+
+        .control-btn.clear {
+            background: #6c757d;
+        }
+
+        .network-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .network-table thead {
+            background: #f8f9fa;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .network-table th {
+            padding: 8px 12px;
+            text-align: left;
+            font-weight: bold;
+            font-size: 11px;
+            color: #495057;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .network-table td {
+            padding: 6px 12px;
+            border-bottom: 1px solid #f1f3f4;
+            vertical-align: middle;
+        }
+
+        .network-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .status-200 {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .status-304 {
+            color: #6c757d;
+            font-weight: bold;
+        }
+
+        .type-document {
+            color: #17a2b8;
+            font-weight: 500;
+        }
+
+        .type-stylesheet {
+            color: #6f42c1;
+            font-weight: 500;
+        }
+
+        .type-script {
+            color: #fd7e14;
+            font-weight: 500;
+        }
+
+        .type-image {
+            color: #20c997;
+            font-weight: 500;
+        }
+
+        .size {
+            text-align: right;
+            font-family: monospace;
+        }
+
+        .time {
+            text-align: right;
+            font-family: monospace;
+            color: #6c757d;
+        }
+
+        .name-cell {
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .explanation-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        .explanation-card h3 {
+            color: #17a2b8;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .explanation-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .explanation-card li {
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f3f4;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .explanation-card li:last-child {
+            border-bottom: none;
+        }
+
+        .point-number {
+            background: #17a2b8;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+
+            .title-section h1 {
+                font-size: 24px;
+            }
+
+            .network-table {
+                font-size: 10px;
+            }
+
+            .network-table th,
+            .network-table td {
+                padding: 4px 6px;
+            }
+
+            .name-cell {
+                max-width: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <h1>🌐 Networkタブの実際の表示</h1>
+            <p>ブラウザの開発者ツールで実際に表示される通信一覧の画面</p>
+        </div>
+
+        <div class="devtools-window">
+            <div class="devtools-header">
+                <button class="tab">Elements</button>
+                <button class="tab">Console</button>
+                <button class="tab active">Network</button>
+                <button class="tab">Sources</button>
+                <button class="tab">Application</button>
+            </div>
+
+            <div class="network-controls">
+                <button class="control-btn">🔴 Record</button>
+                <button class="control-btn clear">🗑️ Clear</button>
+                <button class="control-btn">⚙️ Settings</button>
+                <span style="color: #6c757d; margin-left: auto;">15 requests • 2.3 MB transferred</span>
+            </div>
+
+            <table class="network-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Type</th>
+                        <th>Initiator</th>
+                        <th>Size</th>
+                        <th>Time</th>
+                        <th>Waterfall</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="name-cell">example.com</td>
+                        <td class="status-200">200</td>
+                        <td class="type-document">document</td>
+                        <td>Other</td>
+                        <td class="size">45.2 kB</td>
+                        <td class="time">234 ms</td>
+                        <td>▬▬▬▬▬▬▬</td>
+                    </tr>
+                    <tr>
+                        <td class="name-cell">style.css</td>
+                        <td class="status-200">200</td>
+                        <td class="type-stylesheet">stylesheet</td>
+                        <td>example.com</td>
+                        <td class="size">12.8 kB</td>
+                        <td class="time">89 ms</td>
+                        <td>  ▬▬▬</td>
+                    </tr>
+                    <tr>
+                        <td class="name-cell">app.js</td>
+                        <td class="status-200">200</td>
+                        <td class="type-script">script</td>
+                        <td>example.com</td>
+                        <td class="size">156.4 kB</td>
+                        <td class="time">445 ms</td>
+                        <td>    ▬▬▬▬▬▬▬▬▬</td>
+                    </tr>
+                    <tr>
+                        <td class="name-cell">logo.png</td>
+                        <td class="status-200">200</td>
+                        <td class="type-image">png</td>
+                        <td>style.css</td>
+                        <td class="size">8.9 kB</td>
+                        <td class="time">67 ms</td>
+                        <td>      ▬▬</td>
+                    </tr>
+                    <tr>
+                        <td class="name-cell">jquery.min.js</td>
+                        <td class="status-304">304</td>
+                        <td class="type-script">script</td>
+                        <td>example.com</td>
+                        <td class="size">0 B</td>
+                        <td class="time">12 ms</td>
+                        <td>▬</td>
+                    </tr>
+                    <tr>
+                        <td class="name-cell">api/users</td>
+                        <td class="status-200">200</td>
+                        <td class="type-script">xhr</td>
+                        <td>app.js</td>
+                        <td class="size">2.1 kB</td>
+                        <td class="time">178 ms</td>
+                        <td>        ▬▬▬▬</td>
+                    </tr>
+                    <tr>
+                        <td class="name-cell">bootstrap.min.css</td>
+                        <td class="status-200">200</td>
+                        <td class="type-stylesheet">stylesheet</td>
+                        <td>example.com</td>
+                        <td class="size">186.2 kB</td>
+                        <td class="time">523 ms</td>
+                        <td>  ▬▬▬▬▬▬▬▬▬▬▬</td>
+                    </tr>
+                    <tr>
+                        <td class="name-cell">analytics.js</td>
+                        <td class="status-200">200</td>
+                        <td class="type-script">script</td>
+                        <td>Other</td>
+                        <td class="size">45.7 kB</td>
+                        <td class="time">289 ms</td>
+                        <td>          ▬▬▬▬▬▬</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="explanation-card">
+            <h3>📊 Networkタブで確認できる情報</h3>
+            <ul>
+                <li>
+                    <div class="point-number">1</div>
+                    <div><strong>Name</strong>：リクエストしたファイル名やURL</div>
+                </li>
+                <li>
+                    <div class="point-number">2</div>
+                    <div><strong>Status</strong>：HTTPステータスコード（200=成功、404=見つからない等）</div>
+                </li>
+                <li>
+                    <div class="point-number">3</div>
+                    <div><strong>Type</strong>：ファイルの種類（HTML、CSS、JavaScript、画像等）</div>
+                </li>
+                <li>
+                    <div class="point-number">4</div>
+                    <div><strong>Size</strong>：ファイルのサイズ（ダウンロード量）</div>
+                </li>
+                <li>
+                    <div class="point-number">5</div>
+                    <div><strong>Time</strong>：リクエストから完了まで所要時間</div>
+                </li>
+                <li>
+                    <div class="point-number">6</div>
+                    <div><strong>Waterfall</strong>：通信タイミングの視覚化</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>200成功のNetworkタブ表示</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .title-section {
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .title-section h1 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .title-section p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .devtools-window {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .devtools-header {
+            background: #f5f5f5;
+            border-bottom: 1px solid #ddd;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .tab {
+            padding: 8px 16px;
+            background: transparent;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .tab.active {
+            background: #28a745;
+            color: white;
+        }
+
+        .tab:not(.active) {
+            color: #666;
+        }
+
+        .network-controls {
+            background: #fafafa;
+            border-bottom: 1px solid #ddd;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .control-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .success-count {
+            color: #28a745;
+            font-weight: bold;
+            margin-left: auto;
+        }
+
+        .network-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .network-table thead {
+            background: #f8f9fa;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .network-table th {
+            padding: 8px 12px;
+            text-align: left;
+            font-weight: bold;
+            font-size: 11px;
+            color: #495057;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .network-table td {
+            padding: 6px 12px;
+            border-bottom: 1px solid #f1f3f4;
+            vertical-align: middle;
+        }
+
+        .network-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .success-row {
+            background: rgba(40, 167, 69, 0.05) !important;
+            border-left: 4px solid #28a745;
+        }
+
+        .success-row:hover {
+            background: rgba(40, 167, 69, 0.1) !important;
+        }
+
+        .status-200 {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 11px;
+            animation: successGlow 3s infinite;
+        }
+
+        @keyframes successGlow {
+            0%, 100% { box-shadow: 0 0 5px rgba(40, 167, 69, 0.3); }
+            50% { box-shadow: 0 0 15px rgba(40, 167, 69, 0.6); }
+        }
+
+        .status-304 {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 11px;
+        }
+
+        .type-document {
+            background: linear-gradient(135deg, #17a2b8, #20c997);
+            color: white;
+            padding: 3px 6px;
+            border-radius: 3px;
+            font-weight: 500;
+            font-size: 10px;
+        }
+
+        .type-stylesheet {
+            background: linear-gradient(135deg, #6f42c1, #e83e8c);
+            color: white;
+            padding: 3px 6px;
+            border-radius: 3px;
+            font-weight: 500;
+            font-size: 10px;
+        }
+
+        .type-script {
+            background: linear-gradient(135deg, #fd7e14, #ffc107);
+            color: white;
+            padding: 3px 6px;
+            border-radius: 3px;
+            font-weight: 500;
+            font-size: 10px;
+        }
+
+        .type-image {
+            background: linear-gradient(135deg, #20c997, #17a2b8);
+            color: white;
+            padding: 3px 6px;
+            border-radius: 3px;
+            font-weight: 500;
+            font-size: 10px;
+        }
+
+        .name-cell {
+            max-width: 250px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-family: monospace;
+        }
+
+        .success-name {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .size-success {
+            color: #28a745;
+            font-weight: 500;
+            font-family: monospace;
+        }
+
+        .time-success {
+            color: #28a745;
+            font-weight: 500;
+            font-family: monospace;
+        }
+
+        .success-detail-panel {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .detail-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .detail-tab {
+            background: transparent;
+            border: none;
+            padding: 15px 25px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #6c757d;
+            transition: all 0.3s ease;
+        }
+
+        .detail-tab.active {
+            background: white;
+            color: #28a745;
+            border-bottom: 3px solid #28a745;
+        }
+
+        .detail-tab:hover:not(.active) {
+            background: #e9ecef;
+        }
+
+        .detail-content {
+            padding: 25px;
+        }
+
+        .success-info {
+            background: rgba(40, 167, 69, 0.1);
+            border-left: 4px solid #28a745;
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 25px;
+        }
+
+        .success-title {
+            color: #28a745;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .success-message {
+            color: #495057;
+            line-height: 1.6;
+        }
+
+        .performance-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .metric-card {
+            background: white;
+            border: 2px solid #28a745;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(40, 167, 69, 0.2);
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #28a745;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            color: #6c757d;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .success-patterns {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .patterns-title {
+            color: #17a2b8;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pattern-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .pattern-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #28a745;
+            transition: all 0.3s ease;
+        }
+
+        .pattern-card:hover {
+            background: white;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+
+        .pattern-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .pattern-title {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .pattern-description {
+            color: #6c757d;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .status-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .comparison-panel {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 25px;
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-align: center;
+        }
+
+        .success-panel .panel-title {
+            color: #28a745;
+        }
+
+        .error-panel .panel-title {
+            color: #dc3545;
+        }
+
+        .status-example {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            font-family: monospace;
+            font-size: 12px;
+            border-left: 4px solid;
+        }
+
+        .success-example {
+            border-left-color: #28a745;
+            color: #28a745;
+        }
+
+        .error-example {
+            border-left-color: #dc3545;
+            color: #dc3545;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #28a745, rgba(40, 167, 69, 0.1));
+            border-left: 4px solid #28a745;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .highlight-title {
+            color: #28a745;
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .highlight-text {
+            color: #495057;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+
+            .title-section h1 {
+                font-size: 24px;
+            }
+
+            .network-table {
+                font-size: 10px;
+            }
+
+            .network-table th,
+            .network-table td {
+                padding: 4px 6px;
+            }
+
+            .name-cell {
+                max-width: 120px;
+            }
+
+            .status-comparison {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .performance-metrics {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <h1>✅ 200成功のNetworkタブ表示</h1>
+            <p>正常にリクエストが処理された時の開発者ツールでの表示方法</p>
+        </div>
+
+        <div class="devtools-window">
+            <div class="devtools-header">
+                <button class="tab">Elements</button>
+                <button class="tab">Console</button>
+                <button class="tab active">Network</button>
+                <button class="tab">Sources</button>
+                <button class="tab">Application</button>
+            </div>
+
+            <div class="network-controls">
+                <button class="control-btn">🔴 Record</button>
+                <button class="control-btn">🗑️ Clear</button>
+                <button class="control-btn">⚙️ Settings</button>
+                <span class="success-count">✅ All requests successful (12 requests)</span>
+            </div>
+
+            <table class="network-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Type</th>
+                        <th>Initiator</th>
+                        <th>Size</th>
+                        <th>Time</th>
+                        <th>Waterfall</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="success-row">
+                        <td class="name-cell success-name">index.html</td>
+                        <td class="status-200">200</td>
+                        <td class="type-document">document</td>
+                        <td>Other</td>
+                        <td class="size-success">45.2 kB</td>
+                        <td class="time-success">234 ms</td>
+                        <td>▬▬▬▬▬▬▬</td>
+                    </tr>
+                    <tr class="success-row">
+                        <td class="name-cell success-name">style.css</td>
+                        <td class="status-200">200</td>
+                        <td class="type-stylesheet">stylesheet</td>
+                        <td>index.html</td>
+                        <td class="size-success">12.8 kB</td>
+                        <td class="time-success">89 ms</td>
+                        <td>  ▬▬▬</td>
+                    </tr>
+                    <tr class="success-row">
+                        <td class="name-cell success-name">app.js</td>
+                        <td class="status-200">200</td>
+                        <td class="type-script">script</td>
+                        <td>index.html</td>
+                        <td class="size-success">156.4 kB</td>
+                        <td class="time-success">445 ms</td>
+                        <td>    ▬▬▬▬▬▬▬▬▬</td>
+                    </tr>
+                    <tr class="success-row">
+                        <td class="name-cell success-name">logo.png</td>
+                        <td class="status-200">200</td>
+                        <td class="type-image">png</td>
+                        <td>style.css</td>
+                        <td class="size-success">8.9 kB</td>
+                        <td class="time-success">67 ms</td>
+                        <td>      ▬▬</td>
+                    </tr>
+                    <tr>
+                        <td class="name-cell">bootstrap.min.css</td>
+                        <td class="status-304">304</td>
+                        <td class="type-stylesheet">stylesheet</td>
+                        <td>index.html</td>
+                        <td>0 B</td>
+                        <td>12 ms</td>
+                        <td>▬</td>
+                    </tr>
+                    <tr class="success-row">
+                        <td class="name-cell success-name">api/users</td>
+                        <td class="status-200">200</td>
+                        <td class="type-script">xhr</td>
+                        <td>app.js</td>
+                        <td class="size-success">2.1 kB</td>
+                        <td class="time-success">178 ms</td>
+                        <td>        ▬▬▬▬</td>
+                    </tr>
+                    <tr class="success-row">
+                        <td class="name-cell success-name">profile-pic.jpg</td>
+                        <td class="status-200">200</td>
+                        <td class="type-image">jpeg</td>
+                        <td>app.js</td>
+                        <td class="size-success">24.7 kB</td>
+                        <td class="time-success">123 ms</td>
+                        <td>          ▬▬▬</td>
+                    </tr>
+                    <tr class="success-row">
+                        <td class="name-cell success-name">analytics.js</td>
+                        <td class="status-200">200</td>
+                        <td class="type-script">script</td>
+                        <td>index.html</td>
+                        <td class="size-success">45.7 kB</td>
+                        <td class="time-success">289 ms</td>
+                        <td>            ▬▬▬▬▬▬</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="success-detail-panel">
+            <div class="detail-tabs">
+                <button class="detail-tab active">Headers</button>
+                <button class="detail-tab">Preview</button>
+                <button class="detail-tab">Response</button>
+            </div>
+
+            <div class="detail-content">
+                <div class="success-info">
+                    <div class="success-title">✅ 200 OK - リクエスト成功</div>
+                    <div class="success-message">
+                        <strong>Request URL:</strong> https://example.com/api/users<br>
+                        <strong>Status:</strong> リクエストが正常に処理されました。<br>
+                        <strong>結果:</strong> サーバーから期待されたデータが正常に返されています。
+                    </div>
+                </div>
+
+                <div class="performance-metrics">
+                    <div class="metric-card">
+                        <div class="metric-value">178</div>
+                        <div class="metric-label">Response Time (ms)</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">2.1</div>
+                        <div class="metric-label">Content Size (kB)</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">100%</div>
+                        <div class="metric-label">Success Rate</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="status-comparison">
+            <div class="comparison-panel success-panel">
+                <div class="panel-title">✅ 正常な状態（200 OK）</div>
+                
+                <div class="status-example success-example">
+                    Status: 200 OK
+                    Size: 45.2 kB
+                    Time: 234 ms
+                    Content-Type: text/html; charset=utf-8
+                </div>
+                
+                <ul style="margin-left: 20px; color: #28a745; line-height: 1.8;">
+                    <li>✅ 緑色のステータスコード表示</li>
+                    <li>✅ 実際のファイルサイズが表示</li>
+                    <li>✅ レスポンス時間が記録される</li>
+                    <li>✅ 成功を示す微細なアニメーション</li>
+                </ul>
+            </div>
+
+            <div class="comparison-panel error-panel">
+                <div class="panel-title">❌ エラー状態（404等）</div>
+                
+                <div class="status-example error-example">
+                    Status: 404 Not Found
+                    Size: failed
+                    Time: 12 ms
+                    Error: File not found
+                </div>
+                
+                <ul style="margin-left: 20px; color: #dc3545; line-height: 1.8;">
+                    <li>❌ 赤色のステータスコード表示</li>
+                    <li>❌ Sizeに「failed」と表示</li>
+                    <li>❌ エラー行が赤くハイライト</li>
+                    <li>❌ 点滅やエラーアニメーション</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <div class="highlight-title">🔍 200成功の見分け方</div>
+            <div class="highlight-text">
+                <strong>Network画面での成功の特徴:</strong><br>
+                • Status列に緑色の「200」が表示される<br>
+                • Size列に実際のファイルサイズが表示される<br>
+                • Time列に適切なレスポンス時間が記録される<br>
+                • エラーメッセージや警告表示がない<br>
+                • 行が緑色に薄くハイライトされる（ブラウザによる）
+            </div>
+        </div>
+
+        <div class="success-patterns">
+            <div class="patterns-title">📊 成功パターンの種類</div>
+
+            <div class="pattern-grid">
+                <div class="pattern-card">
+                    <div class="pattern-icon">📄</div>
+                    <div class="pattern-title">200 OK（標準成功）</div>
+                    <div class="pattern-description">
+                        最も一般的な成功レスポンス。リクエストが正常に処理され、期待されたコンテンツが返されます。
+                    </div>
+                </div>
+
+                <div class="pattern-card">
+                    <div class="pattern-icon">📝</div>
+                    <div class="pattern-title">201 Created（作成成功）</div>
+                    <div class="pattern-description">
+                        新しいリソースが正常に作成されました。POSTリクエストでよく見られる成功パターンです。
+                    </div>
+                </div>
+
+                <div class="pattern-card">
+                    <div class="pattern-icon">⚡</div>
+                    <div class="pattern-title">304 Not Modified（キャッシュ）</div>
+                    <div class="pattern-description">
+                        ファイルに変更がなく、ブラウザのキャッシュが使用されます。高速表示に貢献する状態です。
+                    </div>
+                </div>
+
+                <div class="pattern-card">
+                    <div class="pattern-icon">🔄</div>
+                    <div class="pattern-title">202 Accepted（受付済み）</div>
+                    <div class="pattern-description">
+                        リクエストは受け付けられましたが、処理はまだ完了していない状態。非同期処理でよく使用されます。
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

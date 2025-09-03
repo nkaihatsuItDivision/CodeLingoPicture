@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Headers画面での詳細確認</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .title-section {
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #17a2b8, #6f42c1);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .title-section h1 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .title-section p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .step-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .step-item {
+            text-align: center;
+            flex: 1;
+            position: relative;
+        }
+
+        .step-number {
+            background: #17a2b8;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 0 auto 10px;
+        }
+
+        .step-text {
+            font-size: 14px;
+            color: #495057;
+            line-height: 1.4;
+        }
+
+        .step-arrow {
+            position: absolute;
+            right: -20px;
+            top: 20px;
+            font-size: 24px;
+            color: #17a2b8;
+        }
+
+        .step-item:last-child .step-arrow {
+            display: none;
+        }
+
+        .detail-panel {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .panel-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .tab-button {
+            background: transparent;
+            border: none;
+            padding: 15px 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #6c757d;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button.active {
+            background: white;
+            color: #17a2b8;
+            border-bottom: 3px solid #17a2b8;
+        }
+
+        .tab-button:hover:not(.active) {
+            background: #e9ecef;
+        }
+
+        .tab-content {
+            padding: 25px;
+        }
+
+        .general-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .general-title {
+            color: #17a2b8;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-row {
+            display: flex;
+            margin-bottom: 12px;
+            align-items: center;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #495057;
+            width: 150px;
+            font-size: 14px;
+        }
+
+        .info-value {
+            color: #6c757d;
+            font-family: monospace;
+            font-size: 13px;
+            background: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            border: 1px solid #dee2e6;
+            flex: 1;
+        }
+
+        .status-success {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .method-get {
+            background: linear-gradient(135deg, #17a2b8, #20c997);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .headers-section {
+            margin-top: 25px;
+        }
+
+        .headers-group {
+            margin-bottom: 25px;
+        }
+
+        .headers-group-title {
+            color: #6f42c1;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-item {
+            display: flex;
+            padding: 10px;
+            border-bottom: 1px solid #f1f3f4;
+            align-items: center;
+        }
+
+        .header-item:last-child {
+            border-bottom: none;
+        }
+
+        .header-name {
+            font-weight: bold;
+            color: #495057;
+            width: 200px;
+            font-size: 13px;
+        }
+
+        .header-value {
+            color: #6c757d;
+            font-family: monospace;
+            font-size: 12px;
+            flex: 1;
+            word-break: break-all;
+        }
+
+        .explanation-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .explanation-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .explanation-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+
+        .card-icon {
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 10px;
+        }
+
+        .card-description {
+            color: #6c757d;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #17a2b8, rgba(23, 162, 184, 0.1));
+            border-left: 4px solid #17a2b8;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .highlight-title {
+            color: #17a2b8;
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .highlight-text {
+            color: #495057;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+
+            .title-section h1 {
+                font-size: 24px;
+            }
+
+            .step-flow {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .step-arrow {
+                display: none;
+            }
+
+            .panel-tabs {
+                overflow-x: auto;
+            }
+
+            .tab-button {
+                white-space: nowrap;
+            }
+
+            .info-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            .info-label {
+                width: auto;
+            }
+
+            .header-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            .header-name {
+                width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <h1>🔍 Headers画面での詳細確認</h1>
+            <p>Network画面でリクエストをクリックした後の詳細情報の見方</p>
+        </div>
+
+        <div class="step-flow">
+            <div class="step-item">
+                <div class="step-number">1</div>
+                <div class="step-text">Network画面で<br>リクエストを選択</div>
+                <div class="step-arrow">→</div>
+            </div>
+            <div class="step-item">
+                <div class="step-number">2</div>
+                <div class="step-text">詳細パネルが<br>右側に表示</div>
+                <div class="step-arrow">→</div>
+            </div>
+            <div class="step-item">
+                <div class="step-number">3</div>
+                <div class="step-text">Headersタブで<br>詳細情報確認</div>
+            </div>
+        </div>
+
+        <div class="detail-panel">
+            <div class="panel-tabs">
+                <button class="tab-button active">Headers</button>
+                <button class="tab-button">Preview</button>
+                <button class="tab-button">Response</button>
+                <button class="tab-button">Initiator</button>
+                <button class="tab-button">Timing</button>
+            </div>
+
+            <div class="tab-content">
+                <div class="general-section">
+                    <div class="general-title">📊 General</div>
+                    
+                    <div class="info-row">
+                        <div class="info-label">Request URL:</div>
+                        <div class="info-value">https://example.com/api/users</div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="info-label">Request Method:</div>
+                        <div class="info-value">
+                            <span class="method-get">GET</span>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="info-label">Status Code:</div>
+                        <div class="info-value">
+                            <span class="status-success">✅ 200 OK</span>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="info-label">Remote Address:</div>
+                        <div class="info-value">93.184.216.34:443</div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="info-label">Referrer Policy:</div>
+                        <div class="info-value">strict-origin-when-cross-origin</div>
+                    </div>
+                </div>
+
+                <div class="headers-section">
+                    <div class="headers-group">
+                        <div class="headers-group-title">📤 Request Headers</div>
+                        <div class="header-item">
+                            <div class="header-name">Accept:</div>
+                            <div class="header-value">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</div>
+                        </div>
+                        <div class="header-item">
+                            <div class="header-name">Accept-Encoding:</div>
+                            <div class="header-value">gzip, deflate, br</div>
+                        </div>
+                        <div class="header-item">
+                            <div class="header-name">Accept-Language:</div>
+                            <div class="header-value">ja,en-US;q=0.9,en;q=0.8</div>
+                        </div>
+                        <div class="header-item">
+                            <div class="header-name">User-Agent:</div>
+                            <div class="header-value">Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36</div>
+                        </div>
+                    </div>
+
+                    <div class="headers-group">
+                        <div class="headers-group-title">📥 Response Headers</div>
+                        <div class="header-item">
+                            <div class="header-name">Content-Type:</div>
+                            <div class="header-value">application/json; charset=utf-8</div>
+                        </div>
+                        <div class="header-item">
+                            <div class="header-name">Content-Length:</div>
+                            <div class="header-value">2847</div>
+                        </div>
+                        <div class="header-item">
+                            <div class="header-name">Server:</div>
+                            <div class="header-value">nginx/1.18.0</div>
+                        </div>
+                        <div class="header-item">
+                            <div class="header-name">Date:</div>
+                            <div class="header-value">Thu, 29 Aug 2025 02:15:30 GMT</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <div class="highlight-title">💡 重要ポイント</div>
+            <div class="highlight-text">
+                <strong>General セクション</strong>で最も重要なのは「Request Method」と「Status Code」です。<br>
+                この2つの情報で、リクエストの種類と結果がすぐに分かります。
+            </div>
+        </div>
+
+        <div class="explanation-cards">
+            <div class="explanation-card">
+                <div class="card-icon">📊</div>
+                <div class="card-title">Headers タブ</div>
+                <div class="card-description">
+                    HTTPリクエスト・レスポンスの詳細なヘッダー情報を確認できます。最も詳細な技術情報が表示されます。
+                </div>
+            </div>
+
+            <div class="explanation-card">
+                <div class="card-icon">👁️</div>
+                <div class="card-title">Preview タブ</div>
+                <div class="card-description">
+                    レスポンスデータを見やすい形で表示します。JSONデータなどが整理されて表示されます。
+                </div>
+            </div>
+
+            <div class="explanation-card">
+                <div class="card-icon">📄</div>
+                <div class="card-title">Response タブ</div>
+                <div class="card-description">
+                    サーバーから返されたデータの生の内容を確認できます。実際のHTMLやJSONの内容が表示されます。
+                </div>
+            </div>
+
+            <div class="explanation-card">
+                <div class="card-icon">🎯</div>
+                <div class="card-title">Initiator タブ</div>
+                <div class="card-description">
+                    このリクエストがどのファイルから発行されたかを確認できます。問題の原因特定に役立ちます。
+                </div>
+            </div>
+
+            <div class="explanation-card">
+                <div class="card-icon">⏱️</div>
+                <div class="card-title">Timing タブ</div>
+                <div class="card-description">
+                    リクエストの各段階にかかった時間を詳細に確認できます。パフォーマンス分析に活用できます。
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

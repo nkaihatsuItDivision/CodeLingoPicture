@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POSTでのForm Data確認</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .title-section {
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #17a2b8, #6f42c1);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .title-section h1 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .title-section p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .comparison-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .method-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .method-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        }
+
+        .method-header {
+            padding: 20px;
+            text-align: center;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .get-header {
+            background: linear-gradient(135deg, #17a2b8, #20c997);
+        }
+
+        .post-header {
+            background: linear-gradient(135deg, #fd7e14, #ffc107);
+        }
+
+        .method-content {
+            padding: 25px;
+        }
+
+        .browser-mockup {
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .address-bar {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 8px;
+            font-family: monospace;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .get-url {
+            color: #17a2b8;
+            word-break: break-all;
+        }
+
+        .post-url {
+            color: #495057;
+        }
+
+        .data-visibility {
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .visible-badge {
+            background: #dc3545;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hidden-badge {
+            background: #28a745;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .devtools-panel {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .devtools-header {
+            background: #f8f9fa;
+            padding: 15px;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .devtools-tab {
+            padding: 8px 16px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            color: #6c757d;
+            border-radius: 4px;
+        }
+
+        .devtools-tab.active {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .request-details {
+            padding: 25px;
+        }
+
+        .request-info {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .info-row {
+            display: flex;
+            margin-bottom: 12px;
+            align-items: center;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #495057;
+            width: 140px;
+            font-size: 14px;
+        }
+
+        .info-value {
+            color: #6c757d;
+            font-family: monospace;
+            font-size: 13px;
+            flex: 1;
+        }
+
+        .method-post {
+            background: linear-gradient(135deg, #fd7e14, #ffc107);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .status-200 {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .form-data-section {
+            margin-top: 25px;
+        }
+
+        .section-title {
+            color: #6f42c1;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .form-data-table th,
+        .form-data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #f1f3f4;
+        }
+
+        .form-data-table th {
+            background: #6f42c1;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .form-data-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .field-name {
+            font-family: monospace;
+            color: #495057;
+            font-weight: bold;
+        }
+
+        .field-value {
+            color: #6c757d;
+        }
+
+        .security-comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .security-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .security-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+
+        .security-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .security-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #495057;
+        }
+
+        .security-description {
+            color: #6c757d;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .advantages {
+            list-style: none;
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        .advantages li {
+            padding: 5px 0;
+            color: #28a745;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .disadvantages {
+            list-style: none;
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        .disadvantages li {
+            padding: 5px 0;
+            color: #dc3545;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #6f42c1, rgba(111, 66, 193, 0.1));
+            border-left: 4px solid #6f42c1;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+        }
+
+        .highlight-title {
+            color: #6f42c1;
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .highlight-text {
+            color: #495057;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+
+            .title-section h1 {
+                font-size: 24px;
+            }
+
+            .comparison-section {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .info-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            .info-label {
+                width: auto;
+            }
+
+            .security-comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <h1>📋 POSTでのForm Data確認</h1>
+            <p>POSTリクエストではデータがURLに表示されず、Form Dataとして送信されます</p>
+        </div>
+
+        <div class="comparison-section">
+            <div class="method-card">
+                <div class="method-header get-header">
+                    🔗 GET リクエスト
+                </div>
+                <div class="method-content">
+                    <div class="browser-mockup">
+                        <div class="address-bar get-url">
+                            https://example.com/login?username=user123&password=secret123
+                        </div>
+                    </div>
+                    <div class="data-visibility">
+                        <div class="visible-badge">
+                            👁️ データが丸見え
+                        </div>
+                    </div>
+                    <p style="color: #6c757d; font-size: 14px; text-align: center;">
+                        パスワードなどの機密情報がアドレスバーに表示されてしまいます
+                    </p>
+                </div>
+            </div>
+
+            <div class="method-card">
+                <div class="method-header post-header">
+                    📋 POST リクエスト
+                </div>
+                <div class="method-content">
+                    <div class="browser-mockup">
+                        <div class="address-bar post-url">
+                            https://example.com/login
+                        </div>
+                    </div>
+                    <div class="data-visibility">
+                        <div class="hidden-badge">
+                            🔒 データが隠されている
+                        </div>
+                    </div>
+                    <p style="color: #6c757d; font-size: 14px; text-align: center;">
+                        URLにはパラメータが表示されず、データは安全に送信されます
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="devtools-panel">
+            <div class="devtools-header">
+                <button class="devtools-tab">Elements</button>
+                <button class="devtools-tab">Console</button>
+                <button class="devtools-tab active">Network</button>
+                <button class="devtools-tab">Sources</button>
+            </div>
+
+            <div class="request-details">
+                <div class="request-info">
+                    <div class="info-row">
+                        <div class="info-label">Request URL:</div>
+                        <div class="info-value">https://example.com/api/login</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Request Method:</div>
+                        <div class="info-value">
+                            <span class="method-post">POST</span>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Status Code:</div>
+                        <div class="info-value">
+                            <span class="status-200">✅ 200 OK</span>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Content-Type:</div>
+                        <div class="info-value">application/x-www-form-urlencoded</div>
+                    </div>
+                </div>
+
+                <div class="form-data-section">
+                    <div class="section-title">📋 Form Data</div>
+                    <table class="form-data-table">
+                        <thead>
+                            <tr>
+                                <th>フィールド名</th>
+                                <th>値</th>
+                                <th>説明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="field-name">username</td>
+                                <td class="field-value">user123</td>
+                                <td>ユーザー名</td>
+                            </tr>
+                            <tr>
+                                <td class="field-name">password</td>
+                                <td class="field-value">••••••••</td>
+                                <td>パスワード（非表示）</td>
+                            </tr>
+                            <tr>
+                                <td class="field-name">remember_me</td>
+                                <td class="field-value">true</td>
+                                <td>ログイン状態保持</td>
+                            </tr>
+                            <tr>
+                                <td class="field-name">csrf_token</td>
+                                <td class="field-value">abc123def456ghi789</td>
+                                <td>セキュリティトークン</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <div class="highlight-title">💡 POSTでのForm Data確認方法</div>
+            <div class="highlight-text">
+                <strong>開発者ツールの使い方：</strong><br>
+                1. F12で開発者ツールを開く<br>
+                2. Networkタブに移動<br>
+                3. フォーム送信後、POSTリクエストをクリック<br>
+                4. Headers画面下部の「Form Data」セクションで送信データを確認
+            </div>
+        </div>
+
+        <div class="security-comparison">
+            <div class="security-card">
+                <div class="security-icon">🔗</div>
+                <div class="security-title">GET リクエスト</div>
+                <div class="security-description">
+                    データがURLに含まれるため、セキュリティ面で注意が必要
+                </div>
+                <ul class="disadvantages">
+                    <li>❌ パスワードが丸見え</li>
+                    <li>❌ ブラウザ履歴に残る</li>
+                    <li>❌ サーバーログに記録</li>
+                    <li>❌ URLで共有すると危険</li>
+                </ul>
+            </div>
+
+            <div class="security-card">
+                <div class="security-icon">🔒</div>
+                <div class="security-title">POST リクエスト</div>
+                <div class="security-description">
+                    データが本文に含まれ、URLには表示されないため安全
+                </div>
+                <ul class="advantages">
+                    <li>✅ データが隠されている</li>
+                    <li>✅ ブラウザ履歴に残らない</li>
+                    <li>✅ 大容量データも送信可能</li>
+                    <li>✅ セキュリティが向上</li>
+                </ul>
+            </div>
+
+            <div class="security-card">
+                <div class="security-icon">🛡️</div>
+                <div class="security-title">HTTPS + POST</div>
+                <div class="security-description">
+                    最も安全な組み合わせ。通信内容が暗号化される
+                </div>
+                <ul class="advantages">
+                    <li>✅ 通信が暗号化される</li>
+                    <li>✅ 盗聴を防げる</li>
+                    <li>✅ データの改ざん防止</li>
+                    <li>✅ 企業レベルのセキュリティ</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

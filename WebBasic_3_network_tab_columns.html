@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Networkタブの各列説明</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .title-section {
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #17a2b8, #6f42c1);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .title-section h1 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .title-section p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .network-explanation {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .table-header {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 2fr;
+            gap: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .column-item {
+            position: relative;
+            text-align: center;
+        }
+
+        .column-header {
+            background: #17a2b8;
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+
+        .column-description {
+            font-size: 14px;
+            color: #495057;
+            line-height: 1.4;
+        }
+
+        .sample-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 2fr;
+            gap: 15px;
+            padding: 15px;
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .sample-row:hover {
+            border-color: #17a2b8;
+            box-shadow: 0 4px 16px rgba(23, 162, 184, 0.1);
+        }
+
+        .sample-cell {
+            text-align: center;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .name-cell {
+            text-align: left;
+            font-family: monospace;
+            color: #495057;
+            background: #f8f9fa;
+        }
+
+        .status-200 {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            font-weight: bold;
+        }
+
+        .status-404 {
+            background: linear-gradient(135deg, #dc3545, #e83e8c);
+            color: white;
+            font-weight: bold;
+        }
+
+        .status-304 {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: white;
+            font-weight: bold;
+        }
+
+        .type-document {
+            background: linear-gradient(135deg, #17a2b8, #20c997);
+            color: white;
+            font-weight: 500;
+        }
+
+        .type-stylesheet {
+            background: linear-gradient(135deg, #6f42c1, #e83e8c);
+            color: white;
+            font-weight: 500;
+        }
+
+        .type-script {
+            background: linear-gradient(135deg, #fd7e14, #ffc107);
+            color: white;
+            font-weight: 500;
+        }
+
+        .size-cell, .time-cell {
+            font-family: monospace;
+            background: #f8f9fa;
+            color: #495057;
+        }
+
+        .waterfall-cell {
+            font-family: monospace;
+            color: #17a2b8;
+            background: #f8f9fa;
+        }
+
+        .status-legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .status-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .status-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+
+        .status-code {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            color: white;
+        }
+
+        .status-200-bg {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+
+        .status-404-bg {
+            background: linear-gradient(135deg, #dc3545, #e83e8c);
+        }
+
+        .status-304-bg {
+            background: linear-gradient(135deg, #6c757d, #495057);
+        }
+
+        .status-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+
+        .status-meaning {
+            font-size: 14px;
+            color: #6c757d;
+            line-height: 1.5;
+        }
+
+        .arrow-down {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 24px;
+            color: #17a2b8;
+        }
+
+        .tips-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .tips-title {
+            color: #17a2b8;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tip-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .tip-emoji {
+            font-size: 20px;
+            margin-top: 2px;
+        }
+
+        .tip-content {
+            flex: 1;
+        }
+
+        .tip-content strong {
+            color: #495057;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+
+            .title-section h1 {
+                font-size: 24px;
+            }
+
+            .table-header,
+            .sample-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .column-item {
+                text-align: left;
+            }
+
+            .sample-cell {
+                text-align: left;
+            }
+
+            .status-legend {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <h1>📋 Networkタブの各列説明</h1>
+            <p>開発者ツールのNetwork画面で表示される各項目の詳細解説</p>
+        </div>
+
+        <div class="network-explanation">
+            <div class="table-header">
+                <div class="column-item">
+                    <div class="column-header">Name</div>
+                    <div class="column-description">リクエストしたファイル名やURLパス</div>
+                </div>
+                <div class="column-item">
+                    <div class="column-header">Status</div>
+                    <div class="column-description">HTTPステータスコード<br>（成功/失敗の状態）</div>
+                </div>
+                <div class="column-item">
+                    <div class="column-header">Type</div>
+                    <div class="column-description">ファイルの種類<br>（HTML、CSS等）</div>
+                </div>
+                <div class="column-item">
+                    <div class="column-header">Initiator</div>
+                    <div class="column-description">リクエストの発行元<br>（どこから呼ばれたか）</div>
+                </div>
+                <div class="column-item">
+                    <div class="column-header">Size</div>
+                    <div class="column-description">ファイルサイズ<br>（ダウンロード容量）</div>
+                </div>
+                <div class="column-item">
+                    <div class="column-header">Time</div>
+                    <div class="column-description">所要時間<br>（応答速度）</div>
+                </div>
+                <div class="column-item">
+                    <div class="column-header">Waterfall</div>
+                    <div class="column-description">タイミングチャート<br>（読み込みの流れ）</div>
+                </div>
+            </div>
+
+            <div class="arrow-down">⬇️ 実際の表示例 ⬇️</div>
+
+            <div class="sample-row">
+                <div class="sample-cell name-cell">index.html</div>
+                <div class="sample-cell status-200">200</div>
+                <div class="sample-cell type-document">document</div>
+                <div class="sample-cell">Other</div>
+                <div class="sample-cell size-cell">45.2 kB</div>
+                <div class="sample-cell time-cell">234 ms</div>
+                <div class="sample-cell waterfall-cell">▬▬▬▬▬▬▬</div>
+            </div>
+
+            <div class="sample-row">
+                <div class="sample-cell name-cell">style.css</div>
+                <div class="sample-cell status-200">200</div>
+                <div class="sample-cell type-stylesheet">stylesheet</div>
+                <div class="sample-cell">index.html</div>
+                <div class="sample-cell size-cell">12.8 kB</div>
+                <div class="sample-cell time-cell">89 ms</div>
+                <div class="sample-cell waterfall-cell">  ▬▬▬</div>
+            </div>
+
+            <div class="sample-row">
+                <div class="sample-cell name-cell">missing.js</div>
+                <div class="sample-cell status-404">404</div>
+                <div class="sample-cell type-script">script</div>
+                <div class="sample-cell">index.html</div>
+                <div class="sample-cell size-cell">0 B</div>
+                <div class="sample-cell time-cell">12 ms</div>
+                <div class="sample-cell waterfall-cell">▬</div>
+            </div>
+        </div>
+
+        <div class="status-legend">
+            <div class="status-card">
+                <div class="status-code status-200-bg">200</div>
+                <div class="status-title">OK（成功）</div>
+                <div class="status-meaning">
+                    リクエストが正常に処理され、ファイルが正しく取得できました。<br>
+                    <strong>緑色</strong>で表示されます。
+                </div>
+            </div>
+
+            <div class="status-card">
+                <div class="status-code status-404-bg">404</div>
+                <div class="status-title">Not Found（見つからない）</div>
+                <div class="status-meaning">
+                    指定されたファイルがサーバーに存在しません。<br>
+                    <strong>赤色</strong>で表示されます。
+                </div>
+            </div>
+
+            <div class="status-card">
+                <div class="status-code status-304-bg">304</div>
+                <div class="status-title">Not Modified（変更なし）</div>
+                <div class="status-meaning">
+                    ファイルに変更がないため、キャッシュを使用。<br>
+                    <strong>グレー</strong>で表示されます。
+                </div>
+            </div>
+        </div>
+
+        <div class="tips-section">
+            <div class="tips-title">💡 Network画面活用のコツ</div>
+            
+            <div class="tip-item">
+                <div class="tip-emoji">🔍</div>
+                <div class="tip-content">
+                    <strong>色で瞬時に判断</strong>
+                    緑（200）は正常、赤（400番台・500番台）はエラーです。一目で状況を把握できます。
+                </div>
+            </div>
+
+            <div class="tip-item">
+                <div class="tip-emoji">📊</div>
+                <div class="tip-content">
+                    <strong>Size列でサイズチェック</strong>
+                    ファイルサイズが大きすぎると、ページの読み込みが遅くなります。最適化の参考にしましょう。
+                </div>
+            </div>
+
+            <div class="tip-item">
+                <div class="tip-emoji">⏱️</div>
+                <div class="tip-content">
+                    <strong>Time列で速度分析</strong>
+                    時間がかかりすぎるリクエストは、パフォーマンス改善のヒントになります。
+                </div>
+            </div>
+
+            <div class="tip-item">
+                <div class="tip-emoji">🔗</div>
+                <div class="tip-content">
+                    <strong>Waterfall列で読み込み順序を確認</strong>
+                    横棒グラフで、どのファイルがいつ読み込まれているかを視覚的に確認できます。
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
