@@ -2,35 +2,70 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>私の趣味紹介</title>
+    <title>プログラミング言語比較</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f0f7ff;
+        }
+    </style>
 </head>
 <body>
-<h2>月間学習計画</h2>
-<table>
-    <tr>
-        <th>週</th>
-        <th>HTML</th>
-        <th>CSS</th>
-        <th>課題</th>
-    </tr>
-    <tr>
-        <td>第1週</td>
-        <td>基本構造</td>
-        <td>-</td>
-        <td>自己紹介ページ</td>
-    </tr>
-    <tr>
-        <td>第2週</td>
-        <td>リスト・リンク</td>
-        <td>基本スタイル</td>
-        <td>メニューページ</td>
-    </tr>
-    <tr>
-        <td>第3週</td>
-        <td>画像・表</td>
-        <td>レイアウト</td>
-        <td>ポートフォリオ</td>
-    </tr>
-</table>
+    <h2>プログラミング言語比較</h2>
+    <table>
+        <tr>
+            <th>言語名</th>
+            <th>難易度</th>
+            <th>用途</th>
+            <th>学習期間</th>
+        </tr>
+        <tr>
+            <td>HTML/CSS</td>
+            <td>易しい</td>
+            <td>Webデザイン</td>
+            <td>1ヶ月</td>
+        </tr>
+        <tr>
+            <td>JavaScript</td>
+            <td>普通</td>
+            <td>Web開発</td>
+            <td>3ヶ月</td>
+        </tr>
+        <tr>
+            <td>Java</td>
+            <td>普通</td>
+            <td>アプリ開発</td>
+            <td>6ヶ月</td>
+        </tr>
+    </table>
 </body>
 </html>
