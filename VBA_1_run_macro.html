@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>マクロ実行方法まとめ</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', 'Hiragino Sans', sans-serif; background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%); min-height: 100vh; padding: 20px; }
+    .container { max-width: 800px; margin: 0 auto; }
+    h1 { color: #fff; text-align: center; margin-bottom: 30px; font-size: 1.8rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+    .methods { display: flex; flex-direction: column; gap: 20px; }
+    .method-card { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); display: flex; gap: 20px; align-items: center; }
+    .method-number { background: #6c5ce7; color: #fff; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; flex-shrink: 0; }
+    .method-content { flex: 1; }
+    .method-title { font-size: 1.2rem; font-weight: bold; color: #333; margin-bottom: 8px; }
+    .method-steps { color: #555; font-size: 0.95rem; line-height: 1.8; }
+    .shortcut { display: inline-block; background: #2d3436; color: #fff; padding: 4px 12px; border-radius: 6px; font-family: 'Consolas', monospace; font-size: 0.9rem; margin: 4px 0; }
+    .recommend { display: inline-block; background: #00b894; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; margin-left: 8px; }
+    .method-card.highlight { border: 3px solid #00b894; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>マクロ実行方法まとめ</h1>
+    <div class="methods">
+      <div class="method-card highlight">
+        <div class="method-number">1</div>
+        <div class="method-content">
+          <div class="method-title">VBEから実行 <span class="recommend">おすすめ</span></div>
+          <div class="method-steps">
+            ① マクロの中にカーソルを置く<br>
+            ② <span class="shortcut">F5</span> キーを押す
+          </div>
+        </div>
+      </div>
+      <div class="method-card">
+        <div class="method-number">2</div>
+        <div class="method-content">
+          <div class="method-title">Excelの「マクロ」ボタンから実行</div>
+          <div class="method-steps">
+            ① Excelに戻る（<span class="shortcut">Alt + F11</span>）<br>
+            ② 「開発」タブ → 「マクロ」をクリック<br>
+            ③ 実行したいマクロを選択 → 「実行」
+          </div>
+        </div>
+      </div>
+      <div class="method-card">
+        <div class="method-number">3</div>
+        <div class="method-content">
+          <div class="method-title">ショートカットキーを割り当てて実行</div>
+          <div class="method-steps">
+            ① 「開発」タブ → 「マクロ」<br>
+            ② マクロを選択 → 「オプション」<br>
+            ③ ショートカットキーを設定
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
