@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>主要コントロール</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', 'Hiragino Sans', sans-serif; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); min-height: 100vh; padding: 20px; }
+    .container { max-width: 900px; margin: 0 auto; }
+    h1 { color: #fff; text-align: center; margin-bottom: 30px; font-size: 1.8rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+    .content { background: #fff; border-radius: 16px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+    .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+    .control-card { background: #f8f9fa; border-radius: 8px; padding: 16px; border: 2px solid #dee2e6; }
+    .control-name { font-weight: bold; color: #333; margin-bottom: 10px; font-size: 1rem; }
+    .control-demo { background: #fff; padding: 10px; border-radius: 4px; margin-bottom: 10px; min-height: 40px; display: flex; align-items: center; }
+    .demo-label { background: #f0f0f0; padding: 4px 8px; font-size: 0.85rem; }
+    .demo-textbox { border: 1px solid #999; padding: 4px 8px; flex: 1; font-size: 0.85rem; }
+    .demo-button { background: #e1e1e1; border: 1px solid #999; padding: 4px 16px; border-radius: 3px; font-size: 0.85rem; }
+    .demo-button-primary { background: #0078d7; color: #fff; border-color: #0078d7; }
+    .demo-combo { border: 1px solid #999; padding: 4px 8px; width: 100%; font-size: 0.85rem; }
+    .demo-check { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; }
+    .demo-list { border: 1px solid #999; padding: 4px; font-size: 0.8rem; height: 60px; overflow: auto; }
+    .demo-list-item { padding: 2px 4px; }
+    .demo-list-item.selected { background: #0078d7; color: #fff; }
+    .control-props { font-size: 0.8rem; color: #666; }
+    .prop { display: inline-block; background: #e9ecef; padding: 2px 6px; border-radius: 3px; margin: 2px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>主要コントロール一覧</h1>
+    <div class="content">
+      <div class="controls">
+        <div class="control-card">
+          <div class="control-name">📝 Label</div>
+          <div class="control-demo">
+            <span class="demo-label">氏名:</span>
+          </div>
+          <div class="control-props">
+            <span class="prop">Caption</span>
+          </div>
+        </div>
+        
+        <div class="control-card">
+          <div class="control-name">📥 TextBox</div>
+          <div class="control-demo">
+            <input type="text" class="demo-textbox" value="入力テキスト">
+          </div>
+          <div class="control-props">
+            <span class="prop">Text</span>
+            <span class="prop">Value</span>
+          </div>
+        </div>
+        
+        <div class="control-card">
+          <div class="control-name">🔘 CommandButton</div>
+          <div class="control-demo">
+            <button class="demo-button demo-button-primary">実行</button>
+          </div>
+          <div class="control-props">
+            <span class="prop">Caption</span>
+            <span class="prop">Click</span>
+          </div>
+        </div>
+        
+        <div class="control-card">
+          <div class="control-name">📋 ComboBox</div>
+          <div class="control-demo">
+            <select class="demo-combo">
+              <option>営業部</option>
+              <option>開発部</option>
+            </select>
+          </div>
+          <div class="control-props">
+            <span class="prop">List</span>
+            <span class="prop">Value</span>
+          </div>
+        </div>
+        
+        <div class="control-card">
+          <div class="control-name">☑️ CheckBox</div>
+          <div class="control-demo">
+            <div class="demo-check">
+              <input type="checkbox" checked> 有効にする
+            </div>
+          </div>
+          <div class="control-props">
+            <span class="prop">Value</span>
+            <span class="prop">Caption</span>
+          </div>
+        </div>
+        
+        <div class="control-card">
+          <div class="control-name">📃 ListBox</div>
+          <div class="control-demo">
+            <div class="demo-list">
+              <div class="demo-list-item">項目1</div>
+              <div class="demo-list-item selected">項目2</div>
+              <div class="demo-list-item">項目3</div>
+            </div>
+          </div>
+          <div class="control-props">
+            <span class="prop">List</span>
+            <span class="prop">ListIndex</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

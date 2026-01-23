@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>定数と変数の違い</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', 'Hiragino Sans', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+    .container { max-width: 900px; margin: 0 auto; }
+    h1 { color: #fff; text-align: center; margin-bottom: 30px; font-size: 1.8rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+    .comparison { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+    .panel { background: #fff; border-radius: 16px; padding: 24px; flex: 1; min-width: 350px; max-width: 420px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+    .panel-variable { border-top: 6px solid #3498db; }
+    .panel-const { border-top: 6px solid #e74c3c; }
+    .panel-title { font-size: 1.3rem; font-weight: bold; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .panel-variable .panel-title { color: #3498db; }
+    .panel-const .panel-title { color: #e74c3c; }
+    .box-visual { display: flex; flex-direction: column; align-items: center; gap: 10px; margin: 20px 0; }
+    .box { width: 120px; height: 80px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; position: relative; }
+    .box-variable { background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border: 3px solid #3498db; color: #1565c0; }
+    .box-const { background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%); border: 3px solid #e74c3c; color: #c62828; }
+    .box-const::after { content: '🔒'; position: absolute; top: -10px; right: -10px; font-size: 1.2rem; }
+    .arrow { font-size: 1.5rem; color: #666; }
+    .code-block { background: #1e1e1e; border-radius: 8px; padding: 16px; margin: 16px 0; }
+    .code-block pre { color: #d4d4d4; font-family: 'Consolas', monospace; font-size: 0.85rem; line-height: 1.6; }
+    .keyword { color: #569cd6; }
+    .type { color: #4ec9b0; }
+    .string { color: #ce9178; }
+    .number { color: #b5cea8; }
+    .comment { color: #6a9955; }
+    .feature { background: #f8f9fa; border-radius: 8px; padding: 12px; margin-top: 16px; }
+    .feature-item { display: flex; align-items: center; gap: 8px; margin: 8px 0; }
+    .feature-item .icon { font-size: 1.2rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>定数（Const）と変数（Dim）の違い</h1>
+    <div class="comparison">
+      <div class="panel panel-variable">
+        <div class="panel-title">📦 変数（Dim）</div>
+        <div class="box-visual">
+          <div class="box box-variable">100</div>
+          <div class="arrow">↓ 変更可能</div>
+          <div class="box box-variable">200</div>
+        </div>
+        <div class="code-block">
+          <pre><span class="keyword">Dim</span> price <span class="keyword">As</span> <span class="type">Long</span>
+price = <span class="number">100</span>
+price = <span class="number">200</span>  <span class="comment">' OK！変更できる</span></pre>
+        </div>
+        <div class="feature">
+          <div class="feature-item"><span class="icon">✅</span> 値を何度でも変更できる</div>
+          <div class="feature-item"><span class="icon">✅</span> 計算結果を格納できる</div>
+          <div class="feature-item"><span class="icon">⚠️</span> 意図しない変更の可能性</div>
+        </div>
+      </div>
+      
+      <div class="panel panel-const">
+        <div class="panel-title">🔒 定数（Const）</div>
+        <div class="box-visual">
+          <div class="box box-const">0.1</div>
+          <div class="arrow">↓ 変更不可</div>
+          <div class="box box-const">0.1</div>
+        </div>
+        <div class="code-block">
+          <pre><span class="keyword">Const</span> TAX_RATE <span class="keyword">As</span> <span class="type">Double</span> = <span class="number">0.1</span>
+TAX_RATE = <span class="number">0.2</span>  <span class="comment">' エラー！変更不可</span></pre>
+        </div>
+        <div class="feature">
+          <div class="feature-item"><span class="icon">🔒</span> 値を変更できない（安全）</div>
+          <div class="feature-item"><span class="icon">📖</span> 意味がわかりやすい</div>
+          <div class="feature-item"><span class="icon">🔧</span> 一箇所変更で全体に反映</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

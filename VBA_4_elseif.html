@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ElseIfによる多分岐</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', 'Hiragino Sans', sans-serif; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); min-height: 100vh; padding: 20px; }
+    .container { max-width: 900px; margin: 0 auto; }
+    h1 { color: #fff; text-align: center; margin-bottom: 30px; font-size: 1.8rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+    .flow-container { background: #fff; border-radius: 16px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+    .flow-row { display: flex; align-items: center; margin: 10px 0; gap: 20px; }
+    .condition { background: #fff3cd; border: 2px solid #ffc107; color: #856404; padding: 12px 20px; border-radius: 8px; font-weight: bold; min-width: 150px; text-align: center; }
+    .arrow { font-size: 1.2rem; color: #666; min-width: 60px; text-align: center; }
+    .arrow-true { color: #28a745; }
+    .arrow-false { color: #dc3545; }
+    .result { padding: 12px 20px; border-radius: 8px; font-weight: bold; }
+    .result-a { background: #d4edda; border: 2px solid #28a745; color: #155724; }
+    .result-b { background: #cce5ff; border: 2px solid #007bff; color: #004085; }
+    .result-c { background: #fff3cd; border: 2px solid #ffc107; color: #856404; }
+    .result-d { background: #f8d7da; border: 2px solid #dc3545; color: #721c24; }
+    .result-else { background: #e2e3e5; border: 2px solid #6c757d; color: #383d41; }
+    .code-block { background: #1e1e1e; border-radius: 8px; padding: 20px; margin-top: 24px; }
+    .code-block pre { color: #d4d4d4; font-family: 'Consolas', monospace; font-size: 0.85rem; line-height: 1.6; }
+    .keyword { color: #569cd6; }
+    .string { color: #ce9178; }
+    .note { background: #fff3cd; border-left: 4px solid #ffc107; padding: 12px; margin-top: 20px; border-radius: 0 8px 8px 0; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>ElseIf による多分岐</h1>
+    <div class="flow-container">
+      <div class="flow-row">
+        <div class="condition">score >= 90 ?</div>
+        <div class="arrow arrow-true">→ True →</div>
+        <div class="result result-a">評価 A</div>
+      </div>
+      <div class="flow-row">
+        <div class="arrow arrow-false" style="margin-left:60px;">↓ False</div>
+      </div>
+      <div class="flow-row">
+        <div class="condition">score >= 80 ?</div>
+        <div class="arrow arrow-true">→ True →</div>
+        <div class="result result-b">評価 B</div>
+      </div>
+      <div class="flow-row">
+        <div class="arrow arrow-false" style="margin-left:60px;">↓ False</div>
+      </div>
+      <div class="flow-row">
+        <div class="condition">score >= 70 ?</div>
+        <div class="arrow arrow-true">→ True →</div>
+        <div class="result result-c">評価 C</div>
+      </div>
+      <div class="flow-row">
+        <div class="arrow arrow-false" style="margin-left:60px;">↓ False</div>
+      </div>
+      <div class="flow-row">
+        <div class="condition">score >= 60 ?</div>
+        <div class="arrow arrow-true">→ True →</div>
+        <div class="result result-d">評価 D</div>
+      </div>
+      <div class="flow-row">
+        <div class="arrow arrow-false" style="margin-left:60px;">↓ False</div>
+      </div>
+      <div class="flow-row">
+        <div class="result result-else" style="margin-left:60px;">評価 F（Else）</div>
+      </div>
+      
+      <div class="note">
+        <strong>⚠️ 注意</strong>：条件は<strong>上から順に</strong>評価される。最初にTrueになった処理だけが実行される。
+      </div>
+      
+      <div class="code-block">
+        <pre><span class="keyword">If</span> score >= 90 <span class="keyword">Then</span>
+    grade = <span class="string">"A"</span>
+<span class="keyword">ElseIf</span> score >= 80 <span class="keyword">Then</span>
+    grade = <span class="string">"B"</span>
+<span class="keyword">ElseIf</span> score >= 70 <span class="keyword">Then</span>
+    grade = <span class="string">"C"</span>
+<span class="keyword">ElseIf</span> score >= 60 <span class="keyword">Then</span>
+    grade = <span class="string">"D"</span>
+<span class="keyword">Else</span>
+    grade = <span class="string">"F"</span>
+<span class="keyword">End If</span></pre>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

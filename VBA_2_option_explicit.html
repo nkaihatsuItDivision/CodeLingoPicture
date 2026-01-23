@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Option Explicitの効果</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', 'Hiragino Sans', sans-serif; background: linear-gradient(135deg, #e74c3c 0%, #f39c12 100%); min-height: 100vh; padding: 20px; }
+    .container { max-width: 900px; margin: 0 auto; }
+    h1 { color: #fff; text-align: center; margin-bottom: 30px; font-size: 1.8rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+    .comparison { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+    .panel { background: #fff; border-radius: 16px; padding: 24px; flex: 1; min-width: 380px; max-width: 420px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+    .panel-bad { border-top: 6px solid #e74c3c; }
+    .panel-good { border-top: 6px solid #27ae60; }
+    .panel-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .panel-bad .panel-title { color: #e74c3c; }
+    .panel-good .panel-title { color: #27ae60; }
+    .code-block { background: #1e1e1e; border-radius: 8px; padding: 16px; margin: 16px 0; overflow-x: auto; }
+    .code-block pre { color: #d4d4d4; font-family: 'Consolas', monospace; font-size: 0.85rem; line-height: 1.6; white-space: pre-wrap; }
+    .code-keyword { color: #569cd6; }
+    .code-type { color: #4ec9b0; }
+    .code-string { color: #ce9178; }
+    .code-comment { color: #6a9955; }
+    .code-error { background: #5c2d2d; color: #f48771; text-decoration: wavy underline #f48771; }
+    .result { padding: 16px; border-radius: 8px; margin-top: 16px; }
+    .result-bad { background: #fdeaea; border: 1px solid #e74c3c; }
+    .result-good { background: #e8f8f0; border: 1px solid #27ae60; }
+    .result-title { font-weight: bold; margin-bottom: 8px; }
+    .result-bad .result-title { color: #e74c3c; }
+    .result-good .result-title { color: #27ae60; }
+    .result-text { font-size: 0.9rem; line-height: 1.6; }
+    .highlight-box { background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; padding: 16px; margin-top: 20px; }
+    .highlight-title { color: #856404; font-weight: bold; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Option Explicit の効果</h1>
+    <div class="comparison">
+      <div class="panel panel-bad">
+        <div class="panel-title">❌ Option Explicit なし</div>
+        <div class="code-block">
+          <pre><span class="code-keyword">Sub</span> BadExample()
+    <span class="code-keyword">Dim</span> userName <span class="code-keyword">As</span> <span class="code-type">String</span>
+    userName = <span class="code-string">"田中"</span>
+    
+    <span class="code-comment">' スペルミス！</span>
+    MsgBox <span class="code-string">"こんにちは、"</span> & <span class="code-error">userNeme</span>
+<span class="code-keyword">End Sub</span></pre>
+        </div>
+        <div class="result result-bad">
+          <div class="result-title">😱 実行結果</div>
+          <div class="result-text">
+            メッセージ：「こんにちは、」<br>
+            <br>
+            <strong>名前が表示されない！</strong><br>
+            userNeme は未宣言の別変数として扱われ、空の値になる。<br>
+            <strong>エラーにならないので気づきにくい！</strong>
+          </div>
+        </div>
+      </div>
+      
+      <div class="panel panel-good">
+        <div class="panel-title">✅ Option Explicit あり</div>
+        <div class="code-block">
+          <pre><span class="code-keyword">Option Explicit</span>
+
+<span class="code-keyword">Sub</span> GoodExample()
+    <span class="code-keyword">Dim</span> userName <span class="code-keyword">As</span> <span class="code-type">String</span>
+    userName = <span class="code-string">"田中"</span>
+    
+    <span class="code-comment">' スペルミス！</span>
+    MsgBox <span class="code-string">"こんにちは、"</span> & <span class="code-error">userNeme</span>
+<span class="code-keyword">End Sub</span></pre>
+        </div>
+        <div class="result result-good">
+          <div class="result-title">🎉 コンパイル時にエラー</div>
+          <div class="result-text">
+            <strong>「コンパイルエラー: 変数が定義されていません。」</strong><br>
+            <br>
+            userNeme が未宣言であることを教えてくれる！<br>
+            <strong>実行前にミスを発見できる！</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="highlight-box">
+      <div class="highlight-title">💡 結論</div>
+      <div style="font-size: 1.1rem; line-height: 1.8;">
+        <strong>Option Explicit は必ず設定しましょう！</strong><br>
+        VBEのオプションで「変数の宣言を強制する」にチェックを入れると、<br>
+        新しいモジュールに自動で追加されます。
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Select Caseの構造</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', 'Hiragino Sans', sans-serif; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); min-height: 100vh; padding: 20px; }
+    .container { max-width: 800px; margin: 0 auto; }
+    h1 { color: #fff; text-align: center; margin-bottom: 30px; font-size: 1.8rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+    .flow-container { background: #fff; border-radius: 16px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+    .select-box { background: #e3f2fd; border: 3px solid #2196f3; border-radius: 12px; padding: 16px; text-align: center; font-weight: bold; color: #1565c0; font-size: 1.1rem; margin-bottom: 20px; }
+    .cases { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin: 20px 0; }
+    .case-item { background: #f8f9fa; border: 2px solid #dee2e6; border-radius: 8px; padding: 16px; min-width: 140px; text-align: center; }
+    .case-value { font-weight: bold; color: #495057; margin-bottom: 8px; }
+    .case-result { background: #d4edda; color: #155724; padding: 8px; border-radius: 4px; font-size: 0.9rem; }
+    .case-else { background: #f8d7da; border-color: #f5c6cb; }
+    .case-else .case-result { background: #f8d7da; color: #721c24; }
+    .arrow { text-align: center; font-size: 1.5rem; color: #666; margin: 10px 0; }
+    .code-block { background: #1e1e1e; border-radius: 8px; padding: 20px; margin-top: 24px; }
+    .code-block pre { color: #d4d4d4; font-family: 'Consolas', monospace; font-size: 0.85rem; line-height: 1.6; }
+    .keyword { color: #569cd6; }
+    .string { color: #ce9178; }
+    .comparison { display: flex; gap: 20px; margin-top: 20px; flex-wrap: wrap; }
+    .compare-item { flex: 1; min-width: 200px; background: #f8f9fa; border-radius: 8px; padding: 16px; }
+    .compare-title { font-weight: bold; margin-bottom: 8px; }
+    .good { color: #28a745; }
+    .bad { color: #dc3545; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Select Case の構造</h1>
+    <div class="flow-container">
+      <div class="select-box">Select Case dayNumber</div>
+      
+      <div class="arrow">↓ 値をチェック</div>
+      
+      <div class="cases">
+        <div class="case-item">
+          <div class="case-value">Case 1</div>
+          <div class="case-result">日曜日</div>
+        </div>
+        <div class="case-item">
+          <div class="case-value">Case 2</div>
+          <div class="case-result">月曜日</div>
+        </div>
+        <div class="case-item">
+          <div class="case-value">Case 3</div>
+          <div class="case-result">火曜日</div>
+        </div>
+        <div class="case-item">
+          <div class="case-value">...</div>
+          <div class="case-result">...</div>
+        </div>
+        <div class="case-item">
+          <div class="case-value">Case 7</div>
+          <div class="case-result">土曜日</div>
+        </div>
+        <div class="case-item case-else">
+          <div class="case-value">Case Else</div>
+          <div class="case-result">不明</div>
+        </div>
+      </div>
+      
+      <div class="code-block">
+        <pre><span class="keyword">Select Case</span> dayNumber
+    <span class="keyword">Case</span> 1
+        dayName = <span class="string">"日曜日"</span>
+    <span class="keyword">Case</span> 2
+        dayName = <span class="string">"月曜日"</span>
+    <span class="keyword">Case</span> 3 <span class="keyword">To</span> 5        <span style="color:#6a9955">' 範囲指定</span>
+        dayName = <span class="string">"平日"</span>
+    <span class="keyword">Case</span> 6, 7          <span style="color:#6a9955">' 複数値</span>
+        dayName = <span class="string">"週末"</span>
+    <span class="keyword">Case Else</span>
+        dayName = <span class="string">"不明"</span>
+<span class="keyword">End Select</span></pre>
+      </div>
+      
+      <div class="comparison">
+        <div class="compare-item">
+          <div class="compare-title good">✅ Select Case向き</div>
+          <ul style="margin-left: 20px; font-size: 0.9rem;">
+            <li>4つ以上の分岐</li>
+            <li>1つの変数を判定</li>
+            <li>値が明確</li>
+          </ul>
+        </div>
+        <div class="compare-item">
+          <div class="compare-title bad">❌ If文向き</div>
+          <ul style="margin-left: 20px; font-size: 0.9rem;">
+            <li>2〜3個の条件</li>
+            <li>複合条件（And/Or）</li>
+            <li>複数の変数を判定</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

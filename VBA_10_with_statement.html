@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Withの効果</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', 'Hiragino Sans', sans-serif; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); min-height: 100vh; padding: 20px; }
+    .container { max-width: 900px; margin: 0 auto; }
+    h1 { color: #fff; text-align: center; margin-bottom: 30px; font-size: 1.8rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+    .comparison { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+    .panel { background: #fff; border-radius: 16px; padding: 24px; flex: 1; min-width: 350px; max-width: 420px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+    .panel-before { border-top: 6px solid #e74c3c; }
+    .panel-after { border-top: 6px solid #27ae60; }
+    .panel-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 16px; text-align: center; }
+    .panel-before .panel-title { color: #e74c3c; }
+    .panel-after .panel-title { color: #27ae60; }
+    .code-block { background: #1e1e1e; border-radius: 8px; padding: 16px; }
+    .code-block pre { color: #d4d4d4; font-family: 'Consolas', monospace; font-size: 0.8rem; line-height: 1.6; }
+    .keyword { color: #569cd6; }
+    .string { color: #ce9178; }
+    .highlight { background: #3d3d00; }
+    .stats { display: flex; justify-content: center; gap: 20px; margin-top: 16px; }
+    .stat { text-align: center; padding: 10px 20px; border-radius: 8px; }
+    .stat-bad { background: #f8d7da; }
+    .stat-good { background: #d4edda; }
+    .stat-value { font-size: 1.5rem; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>With...End With の効果</h1>
+    <div class="comparison">
+      <div class="panel panel-before">
+        <div class="panel-title">❌ Withなし（冗長）</div>
+        <div class="code-block">
+          <pre><span class="highlight">Range("A1")</span>.Value = "タイトル"
+<span class="highlight">Range("A1")</span>.Font.Bold = True
+<span class="highlight">Range("A1")</span>.Font.Size = 14
+<span class="highlight">Range("A1")</span>.Font.Color = vbBlue
+<span class="highlight">Range("A1")</span>.Interior.Color = vbYellow</pre>
+        </div>
+        <div class="stats">
+          <div class="stat stat-bad">
+            <div class="stat-value">5回</div>
+            <div>Range("A1")の記述</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="panel panel-after">
+        <div class="panel-title">✅ Withあり（簡潔）</div>
+        <div class="code-block">
+          <pre><span class="keyword">With</span> Range(<span class="string">"A1"</span>)
+    .Value = <span class="string">"タイトル"</span>
+    .Font.Bold = True
+    .Font.Size = 14
+    .Font.Color = vbBlue
+    .Interior.Color = vbYellow
+<span class="keyword">End With</span></pre>
+        </div>
+        <div class="stats">
+          <div class="stat stat-good">
+            <div class="stat-value">1回</div>
+            <div>Range("A1")の記述</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

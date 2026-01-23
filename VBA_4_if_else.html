@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>If...Elseの動作</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', 'Hiragino Sans', sans-serif; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); min-height: 100vh; padding: 20px; }
+    .container { max-width: 800px; margin: 0 auto; }
+    h1 { color: #fff; text-align: center; margin-bottom: 30px; font-size: 1.8rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+    .flow-container { background: #fff; border-radius: 16px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+    .flow { display: flex; flex-direction: column; align-items: center; }
+    .condition { background: #fff3cd; border: 3px solid #ffc107; color: #856404; padding: 20px 40px; clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%); font-weight: bold; text-align: center; margin: 20px 0; }
+    .branches { display: flex; gap: 60px; justify-content: center; margin: 20px 0; }
+    .branch { display: flex; flex-direction: column; align-items: center; }
+    .branch-label { font-weight: bold; margin-bottom: 10px; padding: 6px 16px; border-radius: 20px; }
+    .true-label { background: #d4edda; color: #155724; }
+    .false-label { background: #f8d7da; color: #721c24; }
+    .process { padding: 16px 24px; border-radius: 8px; font-weight: bold; text-align: center; }
+    .process-true { background: #d4edda; border: 3px solid #28a745; color: #155724; }
+    .process-false { background: #f8d7da; border: 3px solid #dc3545; color: #721c24; }
+    .arrow { font-size: 1.5rem; color: #666; }
+    .end { background: #e3f2fd; border: 2px solid #2196f3; color: #1565c0; padding: 12px 24px; border-radius: 8px; font-weight: bold; margin-top: 20px; }
+    .code-block { background: #1e1e1e; border-radius: 8px; padding: 20px; margin-top: 24px; }
+    .code-block pre { color: #d4d4d4; font-family: 'Consolas', monospace; font-size: 0.9rem; line-height: 1.8; }
+    .keyword { color: #569cd6; }
+    .string { color: #ce9178; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>If...Then...Else の動作</h1>
+    <div class="flow-container">
+      <div class="flow">
+        <div class="condition">条件を判定<br>score >= 60 ?</div>
+        
+        <div class="branches">
+          <div class="branch">
+            <div class="branch-label true-label">True</div>
+            <div class="arrow">↓</div>
+            <div class="process process-true">合格です！</div>
+          </div>
+          <div class="branch">
+            <div class="branch-label false-label">False</div>
+            <div class="arrow">↓</div>
+            <div class="process process-false">不合格です</div>
+          </div>
+        </div>
+        
+        <div class="arrow">↓</div>
+        <div class="end">End If（どちらかの処理後、ここに合流）</div>
+      </div>
+      
+      <div class="code-block">
+        <pre><span class="keyword">If</span> score >= 60 <span class="keyword">Then</span>
+    MsgBox <span class="string">"合格です！"</span>
+<span class="keyword">Else</span>
+    MsgBox <span class="string">"不合格です"</span>
+<span class="keyword">End If</span></pre>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

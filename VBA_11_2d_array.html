@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2次元配列のイメージ</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', 'Hiragino Sans', sans-serif; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); min-height: 100vh; padding: 20px; }
+    .container { max-width: 700px; margin: 0 auto; }
+    h1 { color: #fff; text-align: center; margin-bottom: 30px; font-size: 1.8rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+    .content { background: #fff; border-radius: 16px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+    .grid { display: grid; grid-template-columns: 60px repeat(3, 100px); gap: 3px; margin: 20px auto; width: fit-content; }
+    .cell { padding: 12px; text-align: center; border-radius: 4px; font-size: 0.9rem; }
+    .header { background: #e0e0e0; font-weight: bold; }
+    .row-header { background: #e3f2fd; font-weight: bold; color: #1565c0; }
+    .data { background: #f8f9fa; border: 1px solid #dee2e6; }
+    .highlight { background: #fff3cd; border: 2px solid #ffc107; font-weight: bold; }
+    .code-block { background: #1e1e1e; border-radius: 8px; padding: 16px; margin: 20px 0; }
+    .code-block pre { color: #d4d4d4; font-family: 'Consolas', monospace; font-size: 0.85rem; line-height: 1.6; }
+    .keyword { color: #569cd6; }
+    .string { color: #ce9178; }
+    .number { color: #b5cea8; }
+    .note { text-align: center; color: #666; margin-top: 16px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>2次元配列 = 表形式のデータ</h1>
+    <div class="content">
+      <div class="grid">
+        <div class="cell header"></div>
+        <div class="cell header">列1</div>
+        <div class="cell header">列2</div>
+        <div class="cell header">列3</div>
+        <div class="cell row-header">行1</div>
+        <div class="cell data">田中</div>
+        <div class="cell data">営業部</div>
+        <div class="cell data">350000</div>
+        <div class="cell row-header">行2</div>
+        <div class="cell highlight">山田</div>
+        <div class="cell data">開発部</div>
+        <div class="cell data">400000</div>
+        <div class="cell row-header">行3</div>
+        <div class="cell data">鈴木</div>
+        <div class="cell data">総務部</div>
+        <div class="cell data">320000</div>
+      </div>
+      
+      <p class="note">data(2, 1) = "山田" を取得</p>
+      
+      <div class="code-block">
+        <pre><span class="keyword">Dim</span> data(<span class="number">1</span> <span class="keyword">To</span> <span class="number">3</span>, <span class="number">1</span> <span class="keyword">To</span> <span class="number">3</span>) <span class="keyword">As</span> Variant
+
+data(<span class="number">1</span>, <span class="number">1</span>) = <span class="string">"田中"</span>
+data(<span class="number">2</span>, <span class="number">1</span>) = <span class="string">"山田"</span>  <span style="color:#6a9955">' 2行目1列目</span>
+
+<span style="color:#6a9955">' セル範囲から一括取得</span>
+data = Range(<span class="string">"A1:C3"</span>).Value</pre>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
