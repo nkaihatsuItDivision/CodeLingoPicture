@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VBAのデータ型一覧</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', 'Hiragino Sans', sans-serif; background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%); min-height: 100vh; padding: 20px; }
+    .container { max-width: 900px; margin: 0 auto; }
+    h1 { color: #fff; text-align: center; margin-bottom: 30px; font-size: 1.8rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+    .type-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+    .type-card { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+    .type-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 2px solid #eee; }
+    .type-icon { font-size: 2rem; }
+    .type-name { font-size: 1.3rem; font-weight: bold; color: #2c3e50; }
+    .type-badge { font-size: 0.7rem; padding: 2px 8px; border-radius: 4px; color: #fff; margin-left: auto; }
+    .badge-recommend { background: #27ae60; }
+    .badge-caution { background: #f39c12; }
+    .badge-avoid { background: #e74c3c; }
+    .type-desc { color: #666; font-size: 0.9rem; margin-bottom: 12px; }
+    .type-example { background: #f8f9fa; border-radius: 6px; padding: 12px; font-family: 'Consolas', monospace; font-size: 0.85rem; }
+    .type-example .keyword { color: #569cd6; }
+    .type-example .type { color: #4ec9b0; }
+    .type-example .string { color: #ce9178; }
+    .type-example .number { color: #b5cea8; }
+    .note { background: #fff; border-radius: 12px; padding: 20px; margin-top: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+    .note-title { color: #3498db; font-weight: bold; margin-bottom: 12px; font-size: 1.1rem; }
+    .note-list { margin-left: 20px; line-height: 1.8; color: #333; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>VBA 基本データ型一覧</h1>
+    <div class="type-grid">
+      <div class="type-card">
+        <div class="type-header">
+          <span class="type-icon">📝</span>
+          <span class="type-name">String</span>
+          <span class="type-badge badge-recommend">よく使う</span>
+        </div>
+        <div class="type-desc">文字列を格納する型</div>
+        <div class="type-example">
+          <span class="keyword">Dim</span> name <span class="keyword">As</span> <span class="type">String</span><br>
+          name = <span class="string">"山田太郎"</span>
+        </div>
+      </div>
+      
+      <div class="type-card">
+        <div class="type-header">
+          <span class="type-icon">🔢</span>
+          <span class="type-name">Long</span>
+          <span class="type-badge badge-recommend">推奨</span>
+        </div>
+        <div class="type-desc">整数を格納する型（約-21億〜+21億）</div>
+        <div class="type-example">
+          <span class="keyword">Dim</span> age <span class="keyword">As</span> <span class="type">Long</span><br>
+          age = <span class="number">25</span>
+        </div>
+      </div>
+      
+      <div class="type-card">
+        <div class="type-header">
+          <span class="type-icon">💰</span>
+          <span class="type-name">Double</span>
+          <span class="type-badge badge-recommend">よく使う</span>
+        </div>
+        <div class="type-desc">小数を含む数値を格納する型</div>
+        <div class="type-example">
+          <span class="keyword">Dim</span> price <span class="keyword">As</span> <span class="type">Double</span><br>
+          price = <span class="number">1980.5</span>
+        </div>
+      </div>
+      
+      <div class="type-card">
+        <div class="type-header">
+          <span class="type-icon">📅</span>
+          <span class="type-name">Date</span>
+          <span class="type-badge badge-recommend">よく使う</span>
+        </div>
+        <div class="type-desc">日付・時刻を格納する型</div>
+        <div class="type-example">
+          <span class="keyword">Dim</span> today <span class="keyword">As</span> <span class="type">Date</span><br>
+          today = <span class="number">#2025/1/23#</span>
+        </div>
+      </div>
+      
+      <div class="type-card">
+        <div class="type-header">
+          <span class="type-icon">✅</span>
+          <span class="type-name">Boolean</span>
+          <span class="type-badge badge-recommend">よく使う</span>
+        </div>
+        <div class="type-desc">True/False の2値を格納する型</div>
+        <div class="type-example">
+          <span class="keyword">Dim</span> isOK <span class="keyword">As</span> <span class="type">Boolean</span><br>
+          isOK = <span class="number">True</span>
+        </div>
+      </div>
+      
+      <div class="type-card">
+        <div class="type-header">
+          <span class="type-icon">⚠️</span>
+          <span class="type-name">Integer</span>
+          <span class="type-badge badge-caution">非推奨</span>
+        </div>
+        <div class="type-desc">小さな整数（-32,768〜32,767）</div>
+        <div class="type-example">
+          <span class="keyword">Dim</span> num <span class="keyword">As</span> <span class="type">Integer</span><br>
+          <span style="color: #999;">※ Long を使いましょう</span>
+        </div>
+      </div>
+      
+      <div class="type-card">
+        <div class="type-header">
+          <span class="type-icon">🎲</span>
+          <span class="type-name">Variant</span>
+          <span class="type-badge badge-avoid">避ける</span>
+        </div>
+        <div class="type-desc">何でも入る万能型（処理が遅い）</div>
+        <div class="type-example">
+          <span class="keyword">Dim</span> anything <span class="keyword">As</span> <span class="type">Variant</span><br>
+          <span style="color: #999;">※ 特別な理由がない限り避ける</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="note">
+      <div class="note-title">💡 データ型選びのポイント</div>
+      <ul class="note-list">
+        <li><strong>文字</strong> → String</li>
+        <li><strong>整数</strong> → Long（Integerではなく）</li>
+        <li><strong>小数</strong> → Double</li>
+        <li><strong>日付</strong> → Date</li>
+        <li><strong>Yes/No</strong> → Boolean</li>
+        <li><strong>迷ったら</strong> → 上記から選ぶ（Variantは避ける）</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

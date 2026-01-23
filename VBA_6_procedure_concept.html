@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>プロシージャの役割</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', 'Hiragino Sans', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+    .container { max-width: 900px; margin: 0 auto; }
+    h1 { color: #fff; text-align: center; margin-bottom: 30px; font-size: 1.8rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+    .comparison { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+    .panel { background: #fff; border-radius: 16px; padding: 24px; flex: 1; min-width: 350px; max-width: 420px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+    .panel-bad { border-top: 6px solid #e74c3c; }
+    .panel-good { border-top: 6px solid #27ae60; }
+    .panel-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 16px; }
+    .panel-bad .panel-title { color: #e74c3c; }
+    .panel-good .panel-title { color: #27ae60; }
+    .code-block { background: #1e1e1e; border-radius: 8px; padding: 16px; margin: 16px 0; font-size: 0.8rem; }
+    .code-block pre { color: #d4d4d4; font-family: 'Consolas', monospace; line-height: 1.5; white-space: pre-wrap; }
+    .keyword { color: #569cd6; }
+    .comment { color: #6a9955; }
+    .string { color: #ce9178; }
+    .benefits { margin-top: 16px; }
+    .benefit { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid #eee; }
+    .benefit:last-child { border-bottom: none; }
+    .benefit-icon { font-size: 1.3rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>プロシージャで処理を分割する</h1>
+    <div class="comparison">
+      <div class="panel panel-bad">
+        <div class="panel-title">❌ 分割なし（長い1つの処理）</div>
+        <div class="code-block">
+          <pre><span class="keyword">Sub</span> Main()
+    <span class="comment">' 初期化処理...</span>
+    <span class="comment">' (10行のコード)</span>
+    
+    <span class="comment">' データ処理...</span>
+    <span class="comment">' (30行のコード)</span>
+    
+    <span class="comment">' 出力処理...</span>
+    <span class="comment">' (15行のコード)</span>
+    
+    <span class="comment">' 全部で55行...</span>
+<span class="keyword">End Sub</span></pre>
+        </div>
+        <div class="benefits">
+          <div class="benefit"><span class="benefit-icon">😵</span> 長くて読みにくい</div>
+          <div class="benefit"><span class="benefit-icon">🐛</span> バグを見つけにくい</div>
+          <div class="benefit"><span class="benefit-icon">🔄</span> 再利用できない</div>
+        </div>
+      </div>
+      
+      <div class="panel panel-good">
+        <div class="panel-title">✅ プロシージャで分割</div>
+        <div class="code-block">
+          <pre><span class="keyword">Sub</span> Main()
+    <span class="keyword">Call</span> Initialize     <span class="comment">' 初期化</span>
+    <span class="keyword">Call</span> ProcessData   <span class="comment">' 処理</span>
+    <span class="keyword">Call</span> OutputResult  <span class="comment">' 出力</span>
+<span class="keyword">End Sub</span>
+
+<span class="keyword">Private Sub</span> Initialize()
+    <span class="comment">' 初期化処理</span>
+<span class="keyword">End Sub</span>
+
+<span class="keyword">Private Sub</span> ProcessData()
+    <span class="comment">' データ処理</span>
+<span class="keyword">End Sub</span></pre>
+        </div>
+        <div class="benefits">
+          <div class="benefit"><span class="benefit-icon">📖</span> 処理の流れが明確</div>
+          <div class="benefit"><span class="benefit-icon">🔍</span> 問題箇所を特定しやすい</div>
+          <div class="benefit"><span class="benefit-icon">♻️</span> 再利用できる</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

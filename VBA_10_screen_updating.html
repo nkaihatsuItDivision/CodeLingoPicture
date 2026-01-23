@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ScreenUpdatingの効果</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', 'Hiragino Sans', sans-serif; background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%); min-height: 100vh; padding: 20px; }
+    .container { max-width: 800px; margin: 0 auto; }
+    h1 { color: #fff; text-align: center; margin-bottom: 30px; font-size: 1.8rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+    .content { background: #fff; border-radius: 16px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+    .comparison { display: flex; gap: 30px; justify-content: center; flex-wrap: wrap; margin: 30px 0; }
+    .scenario { text-align: center; }
+    .scenario-title { font-weight: bold; margin-bottom: 10px; }
+    .time-box { width: 150px; height: 150px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .time-slow { background: linear-gradient(135deg, #f8d7da, #f5c6cb); border: 4px solid #e74c3c; }
+    .time-fast { background: linear-gradient(135deg, #d4edda, #c3e6cb); border: 4px solid #28a745; }
+    .time-value { font-size: 2rem; font-weight: bold; }
+    .time-slow .time-value { color: #721c24; }
+    .time-fast .time-value { color: #155724; }
+    .arrow { font-size: 3rem; color: #28a745; align-self: center; }
+    .code-block { background: #1e1e1e; border-radius: 8px; padding: 20px; margin: 20px 0; }
+    .code-block pre { color: #d4d4d4; font-family: 'Consolas', monospace; font-size: 0.9rem; line-height: 1.8; }
+    .keyword { color: #569cd6; }
+    .comment { color: #6a9955; }
+    .warning { background: #fff3cd; border-left: 4px solid #ffc107; padding: 12px; border-radius: 0 8px 8px 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>ScreenUpdating の効果</h1>
+    <div class="content">
+      <div class="comparison">
+        <div class="scenario">
+          <div class="scenario-title">画面更新 ON</div>
+          <div class="time-box time-slow">
+            <div class="time-value">5秒</div>
+            <div>😵 遅い</div>
+          </div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="scenario">
+          <div class="scenario-title">画面更新 OFF</div>
+          <div class="time-box time-fast">
+            <div class="time-value">0.5秒</div>
+            <div>🚀 高速</div>
+          </div>
+        </div>
+      </div>
+      
+      <p style="text-align:center; font-size:1.2rem; font-weight:bold; color:#28a745;">約10倍の高速化！</p>
+      
+      <div class="code-block">
+        <pre>Application.ScreenUpdating = <span class="keyword">False</span>  <span class="comment">' 画面更新OFF</span>
+
+<span class="comment">' ここに処理を書く</span>
+
+Application.ScreenUpdating = <span class="keyword">True</span>   <span class="comment">' 必ず元に戻す！</span></pre>
+      </div>
+      
+      <div class="warning">
+        <strong>⚠️ 重要</strong>：処理後は必ず <code>True</code> に戻すこと！<br>
+        戻し忘れると画面が更新されなくなります。
+      </div>
+    </div>
+  </div>
+</body>
+</html>

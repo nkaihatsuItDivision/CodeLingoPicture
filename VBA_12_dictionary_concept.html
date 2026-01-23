@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dictionaryの概念</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', 'Hiragino Sans', sans-serif; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); min-height: 100vh; padding: 20px; }
+    .container { max-width: 800px; margin: 0 auto; }
+    h1 { color: #fff; text-align: center; margin-bottom: 30px; font-size: 1.8rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+    .content { background: #fff; border-radius: 16px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+    .dict-visual { display: flex; flex-direction: column; gap: 10px; margin: 20px auto; max-width: 400px; }
+    .dict-item { display: flex; align-items: center; background: #f8f9fa; border-radius: 8px; overflow: hidden; }
+    .key { background: #667eea; color: #fff; padding: 12px 20px; font-weight: bold; min-width: 120px; text-align: center; }
+    .arrow { padding: 0 15px; color: #666; }
+    .value { padding: 12px 20px; flex: 1; }
+    .comparison { display: flex; gap: 20px; margin: 30px 0; flex-wrap: wrap; }
+    .compare-item { flex: 1; min-width: 250px; }
+    .compare-title { font-weight: bold; margin-bottom: 10px; padding: 8px; border-radius: 6px; text-align: center; }
+    .array-title { background: #e3f2fd; color: #1565c0; }
+    .dict-title { background: #f3e5f5; color: #7b1fa2; }
+    .code-block { background: #1e1e1e; border-radius: 6px; padding: 12px; }
+    .code-block pre { color: #d4d4d4; font-family: 'Consolas', monospace; font-size: 0.8rem; line-height: 1.5; }
+    .number { color: #b5cea8; }
+    .string { color: #ce9178; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Dictionary = キーと値のペア</h1>
+    <div class="content">
+      <div class="dict-visual">
+        <div class="dict-item"><div class="key">"A001"</div><div class="arrow">→</div><div class="value">田中太郎</div></div>
+        <div class="dict-item"><div class="key">"A002"</div><div class="arrow">→</div><div class="value">山田花子</div></div>
+        <div class="dict-item"><div class="key">"A003"</div><div class="arrow">→</div><div class="value">鈴木一郎</div></div>
+      </div>
+      
+      <div class="comparison">
+        <div class="compare-item">
+          <div class="compare-title array-title">配列（番号でアクセス）</div>
+          <div class="code-block">
+            <pre>data(<span class="number">0</span>) = <span class="string">"田中太郎"</span>
+data(<span class="number">1</span>) = <span class="string">"山田花子"</span>
+<span style="color:#6a9955">' 0番目は誰？</span></pre>
+          </div>
+        </div>
+        <div class="compare-item">
+          <div class="compare-title dict-title">Dictionary（キーでアクセス）</div>
+          <div class="code-block">
+            <pre>dict(<span class="string">"A001"</span>) = <span class="string">"田中太郎"</span>
+dict(<span class="string">"A002"</span>) = <span class="string">"山田花子"</span>
+<span style="color:#6a9955">' A001は田中さん！</span></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

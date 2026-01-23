@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>シートの参照方法</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', 'Hiragino Sans', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+    .container { max-width: 800px; margin: 0 auto; }
+    h1 { color: #fff; text-align: center; margin-bottom: 30px; font-size: 1.8rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+    .content { background: #fff; border-radius: 16px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+    .tabs { display: flex; gap: 5px; margin: 20px 0; background: #e0e0e0; padding: 10px; border-radius: 8px; }
+    .tab { padding: 10px 20px; background: #fff; border: 2px solid #ccc; border-radius: 6px 6px 0 0; font-weight: bold; }
+    .tab.active { background: #d4edda; border-color: #28a745; color: #155724; }
+    .method { background: #f8f9fa; border-radius: 8px; padding: 16px; margin: 12px 0; }
+    .method-title { font-weight: bold; color: #333; margin-bottom: 8px; }
+    .code-block { background: #1e1e1e; border-radius: 6px; padding: 12px; }
+    .code-block pre { color: #d4d4d4; font-family: 'Consolas', monospace; font-size: 0.85rem; line-height: 1.5; }
+    .string { color: #ce9178; }
+    .number { color: #b5cea8; }
+    .comment { color: #6a9955; }
+    .warning { background: #fff3cd; border-left: 4px solid #ffc107; padding: 12px; margin-top: 20px; border-radius: 0 8px 8px 0; }
+    .good { background: #d4edda; border-left: 4px solid #28a745; padding: 12px; margin-top: 12px; border-radius: 0 8px 8px 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>シートの参照方法</h1>
+    <div class="content">
+      <div class="tabs">
+        <div class="tab">Sheet1</div>
+        <div class="tab active">データ</div>
+        <div class="tab">集計</div>
+      </div>
+      
+      <div class="method">
+        <div class="method-title">① シート名で参照</div>
+        <div class="code-block">
+          <pre>Worksheets(<span class="string">"データ"</span>)
+Worksheets(<span class="string">"売上データ"</span>)</pre>
+        </div>
+      </div>
+      
+      <div class="method">
+        <div class="method-title">② インデックス番号で参照</div>
+        <div class="code-block">
+          <pre>Worksheets(<span class="number">1</span>)    <span class="comment">' 最初のシート</span>
+Worksheets(<span class="number">2</span>)    <span class="comment">' 2番目のシート</span></pre>
+        </div>
+      </div>
+      
+      <div class="method">
+        <div class="method-title">③ アクティブシート</div>
+        <div class="code-block">
+          <pre>ActiveSheet    <span class="comment">' 現在選択中のシート</span></pre>
+        </div>
+      </div>
+      
+      <div class="warning">
+        <strong>⚠️ 注意：ThisWorkbook vs ActiveWorkbook</strong><br>
+        <code>ThisWorkbook</code> = マクロが保存されているブック<br>
+        <code>ActiveWorkbook</code> = 現在アクティブなブック（別ブックの可能性あり）
+      </div>
+      
+      <div class="good">
+        <strong>✅ 推奨：ThisWorkbookを使う</strong><br>
+        <code>ThisWorkbook.Worksheets("データ")</code>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

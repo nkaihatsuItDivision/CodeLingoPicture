@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>For Eachの動作</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', 'Hiragino Sans', sans-serif; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); min-height: 100vh; padding: 20px; }
+    .container { max-width: 800px; margin: 0 auto; }
+    h1 { color: #fff; text-align: center; margin-bottom: 30px; font-size: 1.8rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+    .flow-container { background: #fff; border-radius: 16px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+    .collection { display: flex; gap: 10px; justify-content: center; margin: 20px 0; flex-wrap: wrap; }
+    .item { width: 80px; height: 60px; border: 3px solid #dee2e6; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; background: #f8f9fa; }
+    .item.active { border-color: #28a745; background: #d4edda; color: #155724; }
+    .item.done { border-color: #6c757d; background: #e9ecef; color: #6c757d; }
+    .arrow-container { display: flex; justify-content: center; margin: 15px 0; }
+    .arrow { font-size: 1.5rem; color: #28a745; }
+    .process-box { background: #d4edda; border: 3px solid #28a745; border-radius: 12px; padding: 20px; text-align: center; margin: 20px auto; max-width: 400px; }
+    .process-box h3 { color: #155724; margin-bottom: 10px; }
+    .code-block { background: #1e1e1e; border-radius: 8px; padding: 20px; margin-top: 24px; }
+    .code-block pre { color: #d4d4d4; font-family: 'Consolas', monospace; font-size: 0.9rem; line-height: 1.8; }
+    .keyword { color: #569cd6; }
+    .type { color: #4ec9b0; }
+    .label { text-align: center; margin: 10px 0; font-weight: bold; color: #333; }
+    .note { background: #e8f5e9; border-left: 4px solid #28a745; padding: 12px; margin-top: 20px; border-radius: 0 8px 8px 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>For Each の動作</h1>
+    <div class="flow-container">
+      <div class="label">📁 コレクション（Worksheets）</div>
+      <div class="collection">
+        <div class="item done">Sheet1</div>
+        <div class="item done">Sheet2</div>
+        <div class="item active">Sheet3</div>
+        <div class="item">Sheet4</div>
+        <div class="item">Sheet5</div>
+      </div>
+      
+      <div class="arrow-container">
+        <div class="arrow">↓ 1つずつ取り出して処理</div>
+      </div>
+      
+      <div class="process-box">
+        <h3>現在の要素: ws = Sheet3</h3>
+        <p>Debug.Print ws.Name</p>
+      </div>
+      
+      <div class="label" style="margin-top: 30px;">処理の流れ</div>
+      <div class="collection">
+        <div class="item done">1回目<br>Sheet1</div>
+        <div class="item done">2回目<br>Sheet2</div>
+        <div class="item active">3回目<br>Sheet3</div>
+        <div class="item">4回目<br>Sheet4</div>
+        <div class="item">5回目<br>Sheet5</div>
+      </div>
+      
+      <div class="code-block">
+        <pre><span class="keyword">Dim</span> ws <span class="keyword">As</span> <span class="type">Worksheet</span>
+
+<span class="keyword">For Each</span> ws <span class="keyword">In</span> ThisWorkbook.Worksheets
+    Debug.Print ws.Name    <span style="color:#6a9955">' 各シート名を出力</span>
+<span class="keyword">Next</span> ws
+
+<span style="color:#6a9955">' セル範囲にも使える</span>
+<span class="keyword">Dim</span> cell <span class="keyword">As</span> <span class="type">Range</span>
+<span class="keyword">For Each</span> cell <span class="keyword">In</span> Range(<span style="color:#ce9178">"A1:A10"</span>)
+    cell.Value = cell.Value * 2
+<span class="keyword">Next</span> cell</pre>
+      </div>
+      
+      <div class="note">
+        <strong>💡 For Each の特徴</strong><br>
+        ・コレクション内の要素を<strong>自動で1つずつ</strong>取り出す<br>
+        ・インデックスを管理する必要がない<br>
+        ・シート、セル、配列などに使える
+      </div>
+    </div>
+  </div>
+</body>
+</html>

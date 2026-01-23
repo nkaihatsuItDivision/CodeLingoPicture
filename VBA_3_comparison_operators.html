@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>比較演算子一覧</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', 'Hiragino Sans', sans-serif; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); min-height: 100vh; padding: 20px; }
+    .container { max-width: 800px; margin: 0 auto; }
+    h1 { color: #fff; text-align: center; margin-bottom: 30px; font-size: 1.8rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+    .table-container { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+    table { width: 100%; border-collapse: collapse; }
+    th { background: #f5576c; color: #fff; padding: 14px 12px; text-align: left; }
+    td { padding: 14px 12px; border-bottom: 1px solid #eee; }
+    tr:hover { background: #fff5f5; }
+    .operator { font-size: 1.3rem; font-weight: bold; color: #f5576c; text-align: center; font-family: 'Consolas', monospace; }
+    .example { font-family: 'Consolas', monospace; background: #f5f5f5; padding: 4px 8px; border-radius: 4px; }
+    .result-true { font-weight: bold; color: #27ae60; }
+    .result-false { font-weight: bold; color: #e74c3c; }
+    .note { background: #e8f5e9; border-left: 4px solid #27ae60; padding: 16px; margin-top: 20px; border-radius: 0 8px 8px 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>⚖️ 比較演算子一覧</h1>
+    <div class="table-container">
+      <table>
+        <tr>
+          <th>演算子</th>
+          <th>意味</th>
+          <th>例</th>
+          <th>結果</th>
+        </tr>
+        <tr>
+          <td class="operator">=</td>
+          <td>等しい</td>
+          <td class="example">5 = 5</td>
+          <td class="result-true">True</td>
+        </tr>
+        <tr>
+          <td class="operator">&lt;&gt;</td>
+          <td>等しくない</td>
+          <td class="example">5 &lt;&gt; 3</td>
+          <td class="result-true">True</td>
+        </tr>
+        <tr>
+          <td class="operator">&gt;</td>
+          <td>より大きい</td>
+          <td class="example">5 &gt; 3</td>
+          <td class="result-true">True</td>
+        </tr>
+        <tr>
+          <td class="operator">&lt;</td>
+          <td>より小さい</td>
+          <td class="example">5 &lt; 3</td>
+          <td class="result-false">False</td>
+        </tr>
+        <tr>
+          <td class="operator">&gt;=</td>
+          <td>以上</td>
+          <td class="example">5 &gt;= 5</td>
+          <td class="result-true">True</td>
+        </tr>
+        <tr>
+          <td class="operator">&lt;=</td>
+          <td>以下</td>
+          <td class="example">5 &lt;= 3</td>
+          <td class="result-false">False</td>
+        </tr>
+      </table>
+      <div class="note">
+        <strong>💡 ポイント</strong><br>
+        比較結果は必ず <span class="result-true">True</span> か <span class="result-false">False</span> のどちらか。<br>
+        If文の条件として使います。
+      </div>
+    </div>
+  </div>
+</body>
+</html>

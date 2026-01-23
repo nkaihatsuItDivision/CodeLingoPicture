@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>配列のイメージ</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', 'Hiragino Sans', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+    .container { max-width: 800px; margin: 0 auto; }
+    h1 { color: #fff; text-align: center; margin-bottom: 30px; font-size: 1.8rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+    .content { background: #fff; border-radius: 16px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+    .array-visual { display: flex; gap: 5px; justify-content: center; margin: 30px 0; }
+    .array-item { width: 70px; text-align: center; }
+    .index { font-size: 0.8rem; color: #666; margin-bottom: 5px; }
+    .value { height: 50px; border: 3px solid #667eea; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; background: linear-gradient(135deg, #e8e0ff, #d4c8ff); color: #4a3d80; }
+    .comparison { display: flex; gap: 30px; margin: 30px 0; flex-wrap: wrap; justify-content: center; }
+    .compare-item { flex: 1; min-width: 250px; padding: 20px; border-radius: 12px; }
+    .variable { background: #f8d7da; border: 2px solid #f5c6cb; }
+    .array { background: #d4edda; border: 2px solid #c3e6cb; }
+    .compare-title { font-weight: bold; margin-bottom: 12px; }
+    .variable .compare-title { color: #721c24; }
+    .array .compare-title { color: #155724; }
+    .code-block { background: #1e1e1e; border-radius: 6px; padding: 12px; }
+    .code-block pre { color: #d4d4d4; font-family: 'Consolas', monospace; font-size: 0.8rem; line-height: 1.5; }
+    .keyword { color: #569cd6; }
+    .number { color: #b5cea8; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>配列 = 複数のデータをまとめて管理</h1>
+    <div class="content">
+      <div class="array-visual">
+        <div class="array-item"><div class="index">(0)</div><div class="value">85</div></div>
+        <div class="array-item"><div class="index">(1)</div><div class="value">72</div></div>
+        <div class="array-item"><div class="index">(2)</div><div class="value">90</div></div>
+        <div class="array-item"><div class="index">(3)</div><div class="value">68</div></div>
+        <div class="array-item"><div class="index">(4)</div><div class="value">95</div></div>
+      </div>
+      <p style="text-align:center; color:#666;">scores(0)〜scores(4) で5つのデータを管理</p>
+      
+      <div class="comparison">
+        <div class="compare-item variable">
+          <div class="compare-title">❌ 変数で管理（面倒）</div>
+          <div class="code-block">
+            <pre><span class="keyword">Dim</span> score1 <span class="keyword">As</span> Long
+<span class="keyword">Dim</span> score2 <span class="keyword">As</span> Long
+<span class="keyword">Dim</span> score3 <span class="keyword">As</span> Long
+<span class="keyword">Dim</span> score4 <span class="keyword">As</span> Long
+<span class="keyword">Dim</span> score5 <span class="keyword">As</span> Long</pre>
+          </div>
+        </div>
+        <div class="compare-item array">
+          <div class="compare-title">✅ 配列で管理（簡単）</div>
+          <div class="code-block">
+            <pre><span class="keyword">Dim</span> scores(<span class="number">4</span>) <span class="keyword">As</span> Long
+
+<span class="keyword">For</span> i = <span class="number">0</span> <span class="keyword">To</span> <span class="number">4</span>
+    Debug.Print scores(i)
+<span class="keyword">Next</span> i</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

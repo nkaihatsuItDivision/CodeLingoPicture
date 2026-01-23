@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>エラー処理の重要性</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', 'Hiragino Sans', sans-serif; background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); min-height: 100vh; padding: 20px; }
+    .container { max-width: 900px; margin: 0 auto; }
+    h1 { color: #fff; text-align: center; margin-bottom: 30px; font-size: 1.8rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+    .comparison { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+    .panel { background: #fff; border-radius: 16px; padding: 24px; flex: 1; min-width: 350px; max-width: 420px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+    .panel-bad { border-top: 6px solid #e74c3c; }
+    .panel-good { border-top: 6px solid #27ae60; }
+    .panel-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 16px; text-align: center; }
+    .panel-bad .panel-title { color: #e74c3c; }
+    .panel-good .panel-title { color: #27ae60; }
+    .scenario { background: #f8f9fa; border-radius: 8px; padding: 16px; margin: 16px 0; }
+    .scenario-title { font-weight: bold; margin-bottom: 8px; }
+    .error-box { background: #f8d7da; border: 2px solid #e74c3c; border-radius: 8px; padding: 12px; margin: 10px 0; }
+    .error-icon { font-size: 2rem; text-align: center; margin-bottom: 8px; }
+    .success-box { background: #d4edda; border: 2px solid #28a745; border-radius: 8px; padding: 12px; margin: 10px 0; }
+    .result-item { display: flex; align-items: center; gap: 8px; margin: 8px 0; }
+    .result-icon { font-size: 1.2rem; }
+    .code-block { background: #1e1e1e; border-radius: 6px; padding: 12px; margin: 12px 0; }
+    .code-block pre { color: #d4d4d4; font-family: 'Consolas', monospace; font-size: 0.8rem; line-height: 1.5; }
+    .keyword { color: #569cd6; }
+    .comment { color: #6a9955; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>なぜエラー処理が必要？</h1>
+    <div class="comparison">
+      <div class="panel panel-bad">
+        <div class="panel-title">❌ エラー処理なし</div>
+        <div class="code-block">
+          <pre><span class="keyword">Sub</span> NoErrorHandling()
+    <span class="keyword">Dim</span> ws <span class="keyword">As</span> Worksheet
+    <span class="keyword">Set</span> ws = Worksheets(<span style="color:#ce9178">"存在しない"</span>)
+    <span class="comment">' ↑ ここでエラー発生！</span>
+<span class="keyword">End Sub</span></pre>
+        </div>
+        <div class="error-box">
+          <div class="error-icon">💥</div>
+          <div style="text-align:center; font-weight:bold;">実行時エラー '9'</div>
+          <div style="text-align:center; font-size:0.9rem;">インデックスが有効範囲にありません</div>
+        </div>
+        <div class="result-item"><span class="result-icon">😱</span> マクロが途中で停止</div>
+        <div class="result-item"><span class="result-icon">😵</span> ユーザーが混乱</div>
+        <div class="result-item"><span class="result-icon">⚠️</span> データが中途半端な状態に</div>
+      </div>
+      
+      <div class="panel panel-good">
+        <div class="panel-title">✅ エラー処理あり</div>
+        <div class="code-block">
+          <pre><span class="keyword">Sub</span> WithErrorHandling()
+    <span class="keyword">On Error GoTo</span> ErrorHandler
+    <span class="keyword">Dim</span> ws <span class="keyword">As</span> Worksheet
+    <span class="keyword">Set</span> ws = Worksheets(<span style="color:#ce9178">"存在しない"</span>)
+    <span class="keyword">Exit Sub</span>
+ErrorHandler:
+    MsgBox <span style="color:#ce9178">"シートが見つかりません"</span>
+<span class="keyword">End Sub</span></pre>
+        </div>
+        <div class="success-box">
+          <div style="text-align:center; font-weight:bold;">✅ エラーをキャッチ</div>
+          <div style="text-align:center; font-size:0.9rem;">わかりやすいメッセージを表示</div>
+        </div>
+        <div class="result-item"><span class="result-icon">😊</span> マクロが安全に終了</div>
+        <div class="result-item"><span class="result-icon">📢</span> ユーザーに状況を通知</div>
+        <div class="result-item"><span class="result-icon">🛡️</span> データを保護</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

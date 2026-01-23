@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>エラー処理のフロー</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', 'Hiragino Sans', sans-serif; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); min-height: 100vh; padding: 20px; }
+    .container { max-width: 700px; margin: 0 auto; }
+    h1 { color: #fff; text-align: center; margin-bottom: 30px; font-size: 1.8rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+    .content { background: #fff; border-radius: 16px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+    .flow { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .flow-item { padding: 14px 24px; border-radius: 8px; font-weight: bold; text-align: center; min-width: 280px; }
+    .start { background: #e3f2fd; border: 2px solid #2196f3; color: #1565c0; }
+    .process { background: #fff3cd; border: 2px solid #ffc107; color: #856404; }
+    .error { background: #f8d7da; border: 2px solid #dc3545; color: #721c24; }
+    .handler { background: #d4edda; border: 2px solid #28a745; color: #155724; }
+    .cleanup { background: #e8daef; border: 2px solid #9b59b6; color: #6c3483; }
+    .end { background: #f8f9fa; border: 2px solid #6c757d; color: #495057; }
+    .arrow { font-size: 1.3rem; color: #666; }
+    .arrow-error { color: #dc3545; font-weight: bold; }
+    .branch { display: flex; gap: 40px; align-items: flex-start; }
+    .branch-item { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .branch-label { font-size: 0.85rem; padding: 4px 12px; border-radius: 12px; }
+    .label-normal { background: #d4edda; color: #155724; }
+    .label-error { background: #f8d7da; color: #721c24; }
+    .code-block { background: #1e1e1e; border-radius: 8px; padding: 16px; margin-top: 20px; }
+    .code-block pre { color: #d4d4d4; font-family: 'Consolas', monospace; font-size: 0.8rem; line-height: 1.5; }
+    .keyword { color: #569cd6; }
+    .comment { color: #6a9955; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>エラー処理の流れ</h1>
+    <div class="content">
+      <div class="flow">
+        <div class="flow-item start">On Error GoTo ErrorHandler</div>
+        <div class="arrow">↓</div>
+        <div class="flow-item process">メイン処理</div>
+        <div class="arrow">↓</div>
+        
+        <div class="branch">
+          <div class="branch-item">
+            <div class="branch-label label-normal">正常終了</div>
+            <div class="arrow">↓</div>
+            <div class="flow-item cleanup">CleanUp（後処理）</div>
+            <div class="arrow">↓</div>
+            <div class="flow-item end">Exit Sub</div>
+          </div>
+          <div class="branch-item">
+            <div class="branch-label label-error">エラー発生</div>
+            <div class="arrow arrow-error">↓</div>
+            <div class="flow-item error">ErrorHandler:</div>
+            <div class="arrow">↓</div>
+            <div class="flow-item handler">エラーメッセージ表示</div>
+            <div class="arrow">↓</div>
+            <div class="flow-item cleanup">Resume CleanUp</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="code-block">
+        <pre><span class="keyword">Sub</span> SafeProcess()
+    <span class="keyword">On Error GoTo</span> ErrorHandler
+    <span class="comment">' メイン処理</span>
+CleanUp:
+    <span class="comment">' 後処理（必ず実行）</span>
+    <span class="keyword">Exit Sub</span>
+ErrorHandler:
+    MsgBox <span style="color:#ce9178">"エラー: "</span> & Err.Description
+    <span class="keyword">Resume</span> CleanUp
+<span class="keyword">End Sub</span></pre>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
